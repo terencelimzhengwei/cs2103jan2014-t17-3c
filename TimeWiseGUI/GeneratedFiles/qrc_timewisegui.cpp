@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Resource object code
 **
-** Created by: The Resource Compiler for Qt version 5.2.0
+** Created by: The Resource Compiler for Qt version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -9,7 +9,7 @@
 #include <QtCore/qglobal.h>
 
 static const unsigned char qt_resource_data[] = {
-  // C:/Users/Terence/Documents/Visual Studio 2012/Projects/TiMEWiSE/TimeWiseGUI/123.jpg
+  // C:/Users/Jian Xiang/Desktop/New folder/TimeWiseGUI/123.jpg
   0x0,0x0,0x17,0x4a,
   0xff,
   0xd8,0xff,0xe0,0x0,0x10,0x4a,0x46,0x49,0x46,0x0,0x1,0x1,0x1,0x0,0x60,0x0,

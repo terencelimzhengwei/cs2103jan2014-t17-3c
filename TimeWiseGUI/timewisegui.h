@@ -18,6 +18,7 @@ public:
 private slots:
 	void lineEditReturnPressed();
 	void updateTime();
+	void on_userInput_textChanged();
 
 private:
 	Ui::TimeWiseGUIClass ui;

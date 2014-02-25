@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.1
+** Created by: Qt User Interface Compiler version 5.2.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -148,7 +148,7 @@ public:
         QObject::connect(userInput, SIGNAL(returnPressed()), TimeWiseGUIClass, SLOT(lineEditReturnPressed()));
         QObject::connect(userInput, SIGNAL(textChanged(QString)), TimeWiseGUIClass, SLOT(on_userInput_textChanged()));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(TimeWiseGUIClass);

@@ -8,6 +8,7 @@ class Task
 public:
 	Task(void);
 	~Task(void);
+
 /*
 	//getter functions
 	TASK_TYPE			getTaskType()		const { return _taskType;			}
@@ -20,15 +21,16 @@ public:
 	std::time_t				getFromDate()		const { return _taskFromDate;		}
 	std::time_t				getToDate()			const { return _taskToDate;			}
 	std::time_t				getDueDate()		const { return _taskFromDate;		}*/
+	std::string getDescription();
+	void addDescription(std::string desc);
 private:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
 	TASK_STATUS _taskStatus;
-	PRIORITY _taskPriority;
-	std::string category;
-	std::time_t _taskDate;
-	std::time_t	_taskStartTime;
-	std::time_t	_taskEndTime;
-	unsigned long long _taskIndex;
+	//PRIORITY _taskPriority;
+	//std::string category;
+	//std::string _taskDate;
+	//std::string	_taskStartTime;
+	//std::string	_taskEndTime;
+	//unsigned long long _taskIndex;
 };
-

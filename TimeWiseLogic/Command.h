@@ -1,23 +1,17 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
-#include <string>
 #include "Constants.h"
-/* @author Tran Hue Mai
- *=======================
- 
- Command Add
- 
- *=======================
- */
+#include <string>
 
 class Command
 {
+public:
+	Command(void);
+	~Command(void);
+	void setType(CMD_TYPE type);
+	void setDescription(std::string desc);
 private:
 	CMD_TYPE _type;
-	string _description;
-public:
-	CMD_TYPE setType(CMD_TYPE);
-	string setDescription(string);
-}
-#endif
+	std::string _description;
+};
+

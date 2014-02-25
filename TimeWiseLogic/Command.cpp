@@ -1,12 +1,19 @@
-// @ Tran Hue Mai
 #include "Command.h"
 
-using namespace std;
 
-CMD_TYPE Command::setType(CMD_TYPE type) {
-	_type = type;
+Command::Command(void){
 }
 
-string Command::setDescription(description) {
-	_description = description
+
+Command::~Command(void){
+}
+
+void Command::setType(CMD_TYPE type)
+{
+	_type=type;
+}
+
+void Command::setDescription(std::string desc)
+{
+	_description=desc;
 }

@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Command.h" />
     <ClInclude Include="CommandProcessor.h" />
     <ClInclude Include="CompletedTaskList.h" />
     <ClInclude Include="Constants.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="TimeWiseLogic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandProcessor.cpp" />
     <ClCompile Include="CompletedTaskList.cpp" />
     <ClCompile Include="Exceptions.cpp" />

@@ -51,3 +51,13 @@ void TimeWiseGUI::on_userInput_textChanged() {
 		ui.label_help->setText("List of Commands: add, delete, done, edit, filter, find");
 	}
 }
+
+void TimeWiseGUI::on_userInput_returnPressed() {
+	QString input = ui.userInput->text();
+	std::string userCommand = input.toLocal8Bit().constData();
+
+	std::string messageLog = processCommand(userCommand);
+
+	QString output = QString::fromStdString(messageLog);
+	ui.userInput->setText(output);
+}

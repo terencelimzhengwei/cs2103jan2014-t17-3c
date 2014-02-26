@@ -5,7 +5,9 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QFontDatabase>
+#include <string>
 #include "ui_timewisegui.h"
+#include "TimeWiseLogic.h"
 
 
 class TimeWiseGUI : public QMainWindow
@@ -20,6 +22,7 @@ private slots:
 	void lineEditReturnPressed();
 	void updateTime();
 	void on_userInput_textChanged();
+	void on_userInput_returnPressed();
 
 private:
 	Ui::TimeWiseGUIClass ui;

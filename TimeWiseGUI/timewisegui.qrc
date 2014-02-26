@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="TimeWiseGUI">
     <file>123.jpg</file>
+    <file>Homestead-Display.ttf</file>
+    <file>comesinhandy.ttf</file>
   </qresource>
 </RCC>

@@ -32,15 +32,15 @@
    <widget class="QLabel" name="label_task">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>281</width>
+      <x>20</x>
+      <y>0</y>
+      <width>171</width>
       <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(0, 0, 127);
-font: 75 italic 42pt &quot;Christopherhand&quot;;</string>
+font: italic 45pt &quot;Christopherhand&quot;;</string>
     </property>
     <property name="text">
      <string>Your Tasks</string>
@@ -108,12 +108,12 @@ color: rgb(255, 170, 0);</string>
      </attribute>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>11</x>
       <y>343</y>
-      <width>791</width>
+      <width>796</width>
       <height>87</height>
      </rect>
     </property>
@@ -184,15 +184,10 @@ color: rgb(170, 0, 0);</string>
      </item>
     </layout>
    </widget>
-   <zorder>userInput</zorder>
+   <zorder>layoutWidget</zorder>
    <zorder>label_task</zorder>
-   <zorder>label_mlog</zorder>
-   <zorder>label_help</zorder>
-   <zorder>label_desc</zorder>
    <zorder>label_date</zorder>
    <zorder>label_time</zorder>
-   <zorder></zorder>
-   <zorder>label</zorder>
    <zorder>tabWidget</zorder>
   </widget>
  </widget>

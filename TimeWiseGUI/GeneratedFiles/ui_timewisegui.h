@@ -37,7 +37,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QTableView *tableView;
     QWidget *tab_2;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout;
     QLabel *label_desc;
@@ -58,9 +58,9 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         label_task = new QLabel(centralWidget);
         label_task->setObjectName(QStringLiteral("label_task"));
-        label_task->setGeometry(QRect(10, 10, 281, 51));
+        label_task->setGeometry(QRect(20, 0, 171, 51));
         label_task->setStyleSheet(QLatin1String("color: rgb(0, 0, 127);\n"
-"font: 75 italic 42pt \"Christopherhand\";"));
+"font: italic 45pt \"Christopherhand\";"));
         label_date = new QLabel(centralWidget);
         label_date->setObjectName(QStringLiteral("label_date"));
         label_date->setGeometry(QRect(520, 10, 271, 31));
@@ -89,10 +89,10 @@ public:
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         tabWidget->addTab(tab_2, QString());
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(11, 343, 791, 87));
-        horizontalLayout = new QHBoxLayout(widget);
+        layoutWidget = new QWidget(centralWidget);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(11, 343, 796, 87));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -100,26 +100,26 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        label_desc = new QLabel(widget);
+        label_desc = new QLabel(layoutWidget);
         label_desc->setObjectName(QStringLiteral("label_desc"));
         label_desc->setStyleSheet(QLatin1String("font: 75 12pt \"Rockwell Condensed\";\n"
 "color: rgb(170, 0, 0);"));
 
         verticalLayout->addWidget(label_desc);
 
-        label_help = new QLabel(widget);
+        label_help = new QLabel(layoutWidget);
         label_help->setObjectName(QStringLiteral("label_help"));
 
         verticalLayout->addWidget(label_help);
 
-        userInput = new QLineEdit(widget);
+        userInput = new QLineEdit(layoutWidget);
         userInput->setObjectName(QStringLiteral("userInput"));
         userInput->setMinimumSize(QSize(601, 20));
         userInput->setMaximumSize(QSize(800, 20));
 
         verticalLayout->addWidget(userInput);
 
-        label_mlog = new QLabel(widget);
+        label_mlog = new QLabel(layoutWidget);
         label_mlog->setObjectName(QStringLiteral("label_mlog"));
 
         verticalLayout->addWidget(label_mlog);
@@ -127,21 +127,17 @@ public:
 
         horizontalLayout->addLayout(verticalLayout);
 
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QStringLiteral("label"));
         label->setPixmap(QPixmap(QString::fromUtf8(":/TimeWiseGUI/123.jpg")));
 
         horizontalLayout->addWidget(label);
 
         TimeWiseGUIClass->setCentralWidget(centralWidget);
-        userInput->raise();
+        layoutWidget->raise();
         label_task->raise();
-        label_mlog->raise();
-        label_help->raise();
-        label_desc->raise();
         label_date->raise();
         label_time->raise();
-        label->raise();
         tabWidget->raise();
 
         retranslateUi(TimeWiseGUIClass);

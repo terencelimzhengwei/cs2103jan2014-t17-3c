@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QDateTime>
 #include <QTimer>
+#include <QFontDatabase>
 #include "ui_timewisegui.h"
 
 

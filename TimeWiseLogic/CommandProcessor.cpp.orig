@@ -1,0 +1,18 @@
+#include "CommandProcessor.h"
+
+
+CommandProcessor::CommandProcessor(void)
+{
+}
+
+
+CommandProcessor::~CommandProcessor(void)
+{
+}
+
+void CommandProcessor::executeCommand(Command cmd, TaskList& taskList)
+{
+	Task task;
+	task.addDescription(cmd.getDescription());
+	taskList.addTask(task);
+}

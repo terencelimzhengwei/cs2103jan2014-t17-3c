@@ -1,4 +1,8 @@
 #pragma once
+#include <string>
+#include "Command.h"
+#include "Constants.h"
+using namespace std;
 
 //To be done by Anthony.
 
@@ -7,6 +11,11 @@ class Parser
 public:
 	Parser(void);
 	~Parser(void);
+
+	Command interpretCommand(string action);
+	CMD_TYPE determineCommandType(string commandTypeString);
+	string getFirstWord(string action);
+	string removeFirstWord(string action);
 };
 
 //Example for you to reference

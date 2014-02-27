@@ -4,27 +4,32 @@
 #include <string>
 using namespace std;
 
-Parser::Parser(void)
-{
+Parser::Parser(void) {
 }
 
-Parser::~Parser(void)
-{
+Parser::~Parser(void) {
 }
 
 Command Parser::interpretCommand(string action) {
 	string commandTypeString = getFirstWord(action);
 	string description = removeFirstWord(action);
+	Command cmd;
 
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
-
+<<<<<<< local
+=======
+	Command cmd;
+>>>>>>> other
 	switch (commandType) {
 	case ADD: 
-		Command cmd;
 		cmd.setType(commandType); 
 		cmd.setDescription(description);
-		return cmd;
+<<<<<<< local
+		break;
+=======
+>>>>>>> other
 	}
+	return cmd;
 }
 
 CMD_TYPE Parser::determineCommandType(string commandTypeString) {

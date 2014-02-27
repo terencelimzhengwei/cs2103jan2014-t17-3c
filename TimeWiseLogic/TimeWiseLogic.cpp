@@ -23,10 +23,11 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 }
 
 bool TimeWiseLogic::parseCommand(std::string commandLine){
-	_cmd = _parser.interpretCommand(commandLine);
+	_cmd =_parser.interpretCommand(commandLine);
 	return true;
 }
 
-TaskList TimeWiseLogic::getTaskList(){
+TaskList TimeWiseLogic::getTaskList()
+{
 	return _taskList;
 }

@@ -24,7 +24,7 @@ void CommandProcessor::executeCommand(Command cmd) {
 Task CommandProcessor::formTask(Command cmd) {
 	Task temp;
 	std::string taskDescription = cmd.getDescription();
-	temp.addDescription(taskDescription);
+	temp.setDescription(taskDescription);
 	return temp;
 }
 

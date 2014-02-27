@@ -12,11 +12,13 @@ class Date
 {
 public:
 	Date(void);
+	Date(int day, int month, int year);
 	~Date(void);
 
 	int getDayNumber();
 	int getMonth();
 	int getYear();
+	bool checkOverdue();
 
 private:
 	time_t _currentTime;

@@ -6,14 +6,13 @@ class ClockTime
 {
 public:
 	ClockTime();
-	
+	ClockTime(int time);	
 	~ClockTime(void);
-	void setTimeNow(std::string timeNow);
+	void setTimeNow(int time);
 	std::string getTimeInString();
-private:
-	std::string _timeInString;
+	bool checkOverdueTime();
 
-	time_t currentTime;
-	struct tm _timeNow;
+private:
+	int _time;
 
 };

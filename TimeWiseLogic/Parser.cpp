@@ -15,14 +15,13 @@ Command Parser::interpretCommand(string action) {
 	string description = removeFirstWord(action);
 
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
-
+	Command cmd;
 	switch (commandType) {
 	case ADD: 
-		Command cmd;
 		cmd.setType(commandType); 
 		cmd.setDescription(description);
-		return cmd;
 	}
+	return cmd;
 }
 
 CMD_TYPE Parser::determineCommandType(string commandTypeString) {

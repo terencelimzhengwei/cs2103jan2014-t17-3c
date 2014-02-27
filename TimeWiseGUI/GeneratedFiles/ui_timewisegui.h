@@ -17,9 +17,9 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -35,7 +35,7 @@ public:
     QTabWidget *tabWidget;
     QWidget *tab;
     QVBoxLayout *verticalLayout_2;
-    QListView *listView;
+    QTextBrowser *textBrowser;
     QWidget *tab_2;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
@@ -80,10 +80,10 @@ public:
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        listView = new QListView(tab);
-        listView->setObjectName(QStringLiteral("listView"));
+        textBrowser = new QTextBrowser(tab);
+        textBrowser->setObjectName(QStringLiteral("textBrowser"));
 
-        verticalLayout_2->addWidget(listView);
+        verticalLayout_2->addWidget(textBrowser);
 
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();

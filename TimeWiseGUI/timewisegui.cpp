@@ -52,10 +52,15 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 	std::string userCommand = input.toLocal8Bit().constData();
 
-	//std::string messageLog = _logic.processCommand(userCommand);
+	std::string messageLog = _logic.processCommand(userCommand);
+	
+	TaskList taskList = _logic.getTaskList();
+	std::string taskDescription = (taskList.getTask(0)).getDescription();
+	QString outputTask = QString::fromStdString(taskDescription);
+	ui.textBrowser->setText(outputTask);
 
-	//QString output = QString::fromStdString(messageLog);
-	//ui.label_mlog->setText(output);
+	QString outputMessage = QString::fromStdString(messageLog);
+	ui.label_mlog->setText(outputMessage);
 
 	ui.userInput->clear();
 }

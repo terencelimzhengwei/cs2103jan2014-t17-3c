@@ -98,7 +98,7 @@ color: rgb(255, 170, 0);</string>
      </attribute>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QListView" name="listView"/>
+       <widget class="QTextBrowser" name="textBrowser"/>
       </item>
      </layout>
     </widget>

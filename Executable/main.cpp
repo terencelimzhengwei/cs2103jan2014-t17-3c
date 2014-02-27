@@ -3,10 +3,12 @@
 
 int main(){
 	TimeWiseLogic logic;
-	logic.processCommand("add motherfucker");
-	TaskList tasklist = logic.getTaskList();
-	Task task=tasklist.getTask(0);
-	std::cout<<task.getDescription()<<endl;
+	std::string feedback;
+	feedback= logic.processCommand("add testing only");
+	cout<<feedback<<endl;
+	TaskList taskList = logic.getTaskList();
+	std::string taskDescription = (taskList.getTask(0)).getDescription();
+	cout<<taskDescription<<endl;
 
 	system("pause");
 	return 0;

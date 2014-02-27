@@ -2,8 +2,8 @@
 #include "TimeWiseLogic.h"
 
 
-TimeWiseLogic::TimeWiseLogic(void)
-{
+TimeWiseLogic::TimeWiseLogic(void){
+	_commandProcessor.setTaskList(_taskList);
 }
 
 
@@ -16,13 +16,17 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		return "ERROR";
 	}
 	else{
-		//_commandProcessor.executeCommand(_cmd,_feedback);
+		_commandProcessor.executeCommand(_cmd);
 		return "SUCCESSFUL";
 	}
 
 }
 
 bool TimeWiseLogic::parseCommand(std::string commandLine){
-	//_cmd = _parser.interpretCommand(commandLine);
+	_cmd = _parser.interpretCommand(commandLine);
 	return true;
+}
+
+TaskList TimeWiseLogic::getTaskList(){
+	return _taskList;
 }

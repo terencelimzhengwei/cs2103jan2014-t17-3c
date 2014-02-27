@@ -12,7 +12,8 @@ public:
 	~CommandProcessor(void);
 	void executeCommand(Command);
 	Task formTask(Command);
+	void setTaskList(TaskList& taskList);
 private:
-	TaskList _list;
+	TaskList* _list;
 };
 #endif

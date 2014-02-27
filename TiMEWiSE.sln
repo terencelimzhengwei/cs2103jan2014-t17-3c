@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeWiseUnitTest", "TimeWis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeWiseLogic", "TimeWiseLogic\TimeWiseLogic.vcxproj", "{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Executable", "Executable\Executable.vcxproj", "{67C36086-5112-480B-BEFA-1C67F48E5B08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Debug|Win32.Build.0 = Debug|Win32
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Release|Win32.ActiveCfg = Release|Win32
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Release|Win32.Build.0 = Release|Win32
+		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Debug|Win32.ActiveCfg = Debug|Win32
+		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Debug|Win32.Build.0 = Debug|Win32
+		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Release|Win32.ActiveCfg = Release|Win32
+		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

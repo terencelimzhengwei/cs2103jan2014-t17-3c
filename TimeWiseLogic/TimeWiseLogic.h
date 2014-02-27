@@ -24,7 +24,7 @@ private:
 	TaskList _taskList;
 	Storage _storage;
 
-	//Command _cmd;
-	//Feedback _feedback;
+	Command _cmd;
+	std::string _feedback;
 
 };

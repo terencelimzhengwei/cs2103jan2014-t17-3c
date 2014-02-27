@@ -9,9 +9,15 @@ namespace TimeWiseUnitTest
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(ProcessCommandTest)
 		{
-			// TODO: Your test code here
+			TimeWiseLogic logic;
+			std::string feedback;
+			feedback= logic.processCommand("add testing only");
+			Assert::AreEqual("SUCCESSFUL", feedback.c_str());
+			TaskList taskList = logic.getTaskList();
+			std::string taskDescription = (taskList.getTask(0)).getDescription();
+			Assert::AreEqual("testing only", taskDescription.c_str());
 		}
 
 	};

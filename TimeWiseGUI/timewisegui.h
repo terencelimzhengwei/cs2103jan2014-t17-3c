@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QFontDatabase>
 #include <string>
+#include <sstream>
 #include "ui_timewisegui.h"
 #include "TimeWiseLogic.h"
 

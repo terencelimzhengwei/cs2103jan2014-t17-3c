@@ -23,10 +23,6 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent)
 TimeWiseGUI::~TimeWiseGUI() {
 }
 
-void TimeWiseGUI::lineEditReturnPressed(){
-	ui.userInput->clear();
-}
-
 void TimeWiseGUI::updateTime() {
 	QDate date = QDate::currentDate();
 	ui.label_date->setText(date.toString());
@@ -56,8 +52,10 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 	std::string userCommand = input.toLocal8Bit().constData();
 
-	std::string messageLog = _logic.processCommand(userCommand);
+	//std::string messageLog = _logic.processCommand(userCommand);
 
-	QString output = QString::fromStdString(messageLog);
-	ui.userInput->setText(output);
+	//QString output = QString::fromStdString(messageLog);
+	//ui.label_mlog->setText(output);
+
+	ui.userInput->clear();
 }

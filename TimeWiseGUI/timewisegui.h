@@ -19,7 +19,6 @@ public:
 	~TimeWiseGUI();
 
 private slots:
-	void lineEditReturnPressed();
 	void updateTime();
 	void on_userInput_textChanged();
 	void on_userInput_returnPressed();

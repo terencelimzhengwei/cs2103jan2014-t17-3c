@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -17,9 +17,9 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTabWidget>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -35,7 +35,7 @@ public:
     QTabWidget *tabWidget;
     QWidget *tab;
     QVBoxLayout *verticalLayout_2;
-    QTableView *tableView;
+    QListView *listView;
     QWidget *tab_2;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
@@ -80,10 +80,10 @@ public:
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        tableView = new QTableView(tab);
-        tableView->setObjectName(QStringLiteral("tableView"));
+        listView = new QListView(tab);
+        listView->setObjectName(QStringLiteral("listView"));
 
-        verticalLayout_2->addWidget(tableView);
+        verticalLayout_2->addWidget(listView);
 
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -141,10 +141,10 @@ public:
         tabWidget->raise();
 
         retranslateUi(TimeWiseGUIClass);
-        QObject::connect(userInput, SIGNAL(returnPressed()), TimeWiseGUIClass, SLOT(lineEditReturnPressed()));
         QObject::connect(userInput, SIGNAL(textChanged(QString)), TimeWiseGUIClass, SLOT(on_userInput_textChanged()));
+        QObject::connect(userInput, SIGNAL(returnPressed()), TimeWiseGUIClass, SLOT(on_userInput_returnPressed()));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(TimeWiseGUIClass);

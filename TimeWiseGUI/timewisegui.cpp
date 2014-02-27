@@ -56,7 +56,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 	std::string userCommand = input.toLocal8Bit().constData();
 
-	std::string messageLog = processCommand(userCommand);
+	std::string messageLog = _logic.processCommand(userCommand);
 
 	QString output = QString::fromStdString(messageLog);
 	ui.userInput->setText(output);

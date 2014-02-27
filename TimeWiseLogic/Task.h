@@ -2,6 +2,8 @@
 
 #include "Constants.h"
 #include <string>
+#include "Date.h"
+#include "ClockTime.h"
 
 class Task
 {
@@ -27,10 +29,9 @@ private:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
 	TASK_STATUS _taskStatus;
-	//PRIORITY _taskPriority;
-	//std::string category;
-	//std::string _taskDate;
-	//std::string	_taskStartTime;
-	//std::string	_taskEndTime;
-	//unsigned long long _taskIndex;
+	PRIORITY _taskPriority;
+	std::string _category;
+	Date _date;
+	ClockTime _time;
+	unsigned long long _taskIndex;
 };

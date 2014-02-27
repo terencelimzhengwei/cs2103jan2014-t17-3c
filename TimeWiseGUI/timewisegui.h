@@ -26,6 +26,7 @@ private slots:
 
 private:
 	Ui::TimeWiseGUIClass ui;
+	TimeWiseLogic _logic;
 };
 
 #endif // TIMEWISEGUI_H

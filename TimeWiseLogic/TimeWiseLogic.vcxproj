@@ -65,6 +65,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Calendar.h" />
+    <ClInclude Include="ClockTime.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandProcessor.h" />
     <ClInclude Include="CompletedTaskList.h" />
@@ -76,11 +77,11 @@
     <ClInclude Include="Storage.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskList.h" />
-    <ClInclude Include="Time.h" />
     <ClInclude Include="TimeWiseLogic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Calendar.cpp" />
+    <ClCompile Include="ClockTime.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandProcessor.cpp" />
     <ClCompile Include="CompletedTaskList.cpp" />
@@ -91,7 +92,6 @@
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskList.cpp" />
-    <ClCompile Include="Time.cpp" />
     <ClCompile Include="TimeWiseLogic.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

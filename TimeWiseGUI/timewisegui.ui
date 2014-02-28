@@ -94,11 +94,11 @@ color: rgb(255, 170, 0);</string>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>List Mode</string>
      </attribute>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTextBrowser" name="textBrowser"/>
+       <widget class="QTableView" name="tableView"/>
       </item>
      </layout>
     </widget>

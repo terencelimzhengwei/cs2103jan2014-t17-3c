@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -19,7 +19,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QTabWidget>
-#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -35,7 +35,7 @@ public:
     QTabWidget *tabWidget;
     QWidget *tab;
     QVBoxLayout *verticalLayout_2;
-    QTextBrowser *textBrowser;
+    QTableView *tableView;
     QWidget *tab_2;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
@@ -80,10 +80,10 @@ public:
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        textBrowser = new QTextBrowser(tab);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
+        tableView = new QTableView(tab);
+        tableView->setObjectName(QStringLiteral("tableView"));
 
-        verticalLayout_2->addWidget(textBrowser);
+        verticalLayout_2->addWidget(tableView);
 
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -156,7 +156,7 @@ public:
         label_task->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
         label_date->setText(QApplication::translate("TimeWiseGUIClass", "SAT 20 feb 2014", 0));
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "13:20:20", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("TimeWiseGUIClass", "Tab 1", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("TimeWiseGUIClass", "List Mode", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("TimeWiseGUIClass", "Tab 2", 0));
         label_desc->setText(QApplication::translate("TimeWiseGUIClass", "What would you like to do today?", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, delete, done, edit, filter, find", 0));

@@ -5,14 +5,12 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QFontDatabase>
+#include <QString>
 #include <string>
-#include <sstream>
 #include "ui_timewisegui.h"
 #include "TimeWiseLogic.h"
 
-
-class TimeWiseGUI : public QMainWindow
-{
+class TimeWiseGUI : public QMainWindow {
 	Q_OBJECT
 
 public:

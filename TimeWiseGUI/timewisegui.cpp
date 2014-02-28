@@ -1,4 +1,8 @@
 #include "timewisegui.h"
+#include "tableModel.h"
+#include <stdio.h>
+#include <qdatetime.h>
+#include <QHeaderView>
 
 const char* ADD_COMMAND = "add";
 const char* DELETE_COMMAND = "delete";
@@ -15,9 +19,26 @@ const char* FILTER_FORMAT = "filter: #category";
 const char* FIND_FORMAT = "find: keywords";
 const char* DEFAULT_DISPLAY = "List of Commands: add, delete, done, edit, filter, find";
 
-TimeWiseGUI::TimeWiseGUI(QWidget *parent)
-	: QMainWindow(parent) {
+TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
+
+	ui.tableView->setModel( table() );
+	
+	//set column widths. Hardcoded and very primitive.
+	ui.tableView->setColumnWidth(0, 40);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(1, 350);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(2, 100);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(3, 100);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(4, 60);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(5, 100);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch);
+	ui.tableView->setMinimumWidth(770);
+	ui.tableView->setMaximumWidth(770);
 
 	//set date and time
 	QDate date = QDate::currentDate();
@@ -65,22 +86,24 @@ void TimeWiseGUI::on_userInput_textChanged() {
 
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
-	//convert Qstring to string
+	
 	std::string userCommand = input.toLocal8Bit().constData();
 
+	//displays description in the correct box of the table. Hardcoded and very primitive.
 	std::string messageLog = _logic.processCommand(userCommand);
-	
 	TaskList taskList = _logic.getTaskList();
-	ostringstream outstr;
 	for(int i = 0; i < taskList.size(); i++) {
-		std::string taskDescription = (taskList.getTask(i)).getDescription();
-		outstr << i+1 << ". " << taskDescription << endl;
+		for(int j = 0; j < 2; j++) {
+			if(j == 0) {
+				table()->setItem(i, j, "1.");
+			} else {
+				std::string taskDescription = (taskList.getTask(i)).getDescription();
+				QString qTask = QString::fromStdString(taskDescription);
+				table()->setItem(i, j, qTask);
+			}
+		}
 	}
-	string allTasks = outstr.str();
-	//convert string to Qstring
-	QString outputTasks = QString::fromStdString(allTasks);
-	ui.textBrowser->setText(outputTasks);
-	
+
 	QString outputMessage = QString::fromStdString(messageLog);
 	ui.label_mlog->setText(outputMessage);
 

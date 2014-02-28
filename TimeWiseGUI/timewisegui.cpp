@@ -89,13 +89,14 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	
 	std::string userCommand = input.toLocal8Bit().constData();
 
-	//displays description in the correct box of the table. Hardcoded and very primitive.
+	//displays task detail in the correct box of the table. Hardcoded and very primitive.
 	std::string messageLog = _logic.processCommand(userCommand);
 	TaskList taskList = _logic.getTaskList();
 	for(int i = 0; i < taskList.size(); i++) {
 		for(int j = 0; j < 2; j++) {
 			if(j == 0) {
-				table()->setItem(i, j, "1.");
+				QString numbering = QString::number(i+1);
+				table()->setItem(i, j, numbering);
 			} else {
 				std::string taskDescription = (taskList.getTask(i)).getDescription();
 				QString qTask = QString::fromStdString(taskDescription);

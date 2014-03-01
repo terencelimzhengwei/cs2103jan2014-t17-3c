@@ -70,6 +70,9 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="Command_Add.h" />
     <ClInclude Include="CommandProcessor.h" />
+    <ClInclude Include="Command_Delete.h" />
+    <ClInclude Include="Command_Display.h" />
+    <ClInclude Include="Command_Edit.h" />
     <ClInclude Include="CompletedTaskList.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Date.h" />
@@ -85,7 +88,6 @@
     <ClCompile Include="Calendar.cpp" />
     <ClCompile Include="ClockTime.cpp" />
     <ClCompile Include="Command.cpp" />
-    <ClCompile Include="Command_Add.cpp" />
     <ClCompile Include="CommandProcessor.cpp" />
     <ClCompile Include="CompletedTaskList.cpp" />
     <ClCompile Include="Date.cpp" />

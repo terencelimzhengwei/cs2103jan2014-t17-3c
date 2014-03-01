@@ -5,7 +5,7 @@
 Task::Task(void){
 	_taskDescription="";
 	_taskType = FLOATING;
-	_taskStatus = UNDONE;
+	_taskStatus = UNCOMPLETED;
 }
 
 
@@ -21,7 +21,7 @@ void Task::setDescription(std::string desc){
 }
 
 void Task::setStatusAsDone(){
-	_taskStatus=DONE;
+	_taskStatus=COMPLETED;
 }
 
 void Task::setStatusAsOverdue(){

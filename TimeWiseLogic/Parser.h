@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
+#include <stack>
+#include <vector>
 #include "Command.h"
 #include "Constants.h"
+#include "Calendar.h"
 using namespace std;
 
 //To be done by Anthony.
@@ -16,6 +19,23 @@ public:
 	CMD_TYPE determineCommandType(string commandTypeString);
 	string getFirstWord(string action);
 	string removeFirstWord(string action);
+	void convertToLowerCase(std::string& str);
+	bool contains(char ch, string input);
+	bool isAllNumbers(string);
+	int toNum(string);
+	bool convertIfNum(const string &numInStr, int &num);
+	bool isDateFormat(string);
+	bool containsDay(string);
+	std::stack<string> splitStringBy(char delimiter, string input);
+	TASK_TYPE determineTaskType(string trimmedInput);
+	bool is24HourTimeFormat(string);
+	std::string getStringAfter(char, string);
+	std::string getStringBefore(char, string);
+	void removeWhiteSpaces(string&);
+	std::string extractSchedule(string &input);
+	bool isPreposition(string);
+	void removeSymbol(string&);
+	bool isTimeFormat(string);
 };
 
 //Example for you to reference
@@ -78,10 +98,10 @@ bool contains(char ch, string input);
 // to check if the whole string input is just number
 // this function is used to identify string of a potential time format or date, month, year 
 // However this function does not check if it is a valid time, date, month or year
-bool isNum(string);
+bool isAllNumbers(string);
 
 // precondition: @string must consist of all number
-// this function should be preceeded by isNum() method
+// this function should be preceeded by isAllNumbers() method
 int toNum(string);
 
 bool convertIfNum(const string &numInStr, int &num);
@@ -213,7 +233,7 @@ bool isTimeFormat(string);
 	}
 
 
-	bool StringProcess::isNum(string str){
+	bool StringProcess::isAllNumbers(string str){
 	if (str.empty()) {
 	return false;
 	}
@@ -227,14 +247,14 @@ bool isTimeFormat(string);
 	}
 
 	int StringProcess::toNum(string str){
-	assert(isNum(str));
+	assert(isAllNumbers(str));
 	return stoi(str);
 	}
 
 	bool StringProcess::convertIfNum(const string &numInStr, int &num){
 	bool result = false;
 
-	if( isNum(numInStr) ){
+	if( isAllNumbers(numInStr) ){
 	num = toNum(numInStr);
 	result = true;
 	}
@@ -262,9 +282,9 @@ bool isTimeFormat(string);
 	strAftFirstSlash = str.substr(slashIndex.at(0)+1, slashIndex.at(1)-(slashIndex.at(0)+1));
 	strAftSecondSlash = str.substr(slashIndex.at(1)+1);
 
-	if( (isNum(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
-	&& (isNum(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty()) 
-	&& (isNum(strAftSecondSlash) && (strAftSecondSlash.size() == 4 || strAftSecondSlash.size() == 2))){
+	if( (isAllNumbers(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
+	&& (isAllNumbers(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty()) 
+	&& (isAllNumbers(strAftSecondSlash) && (strAftSecondSlash.size() == 4 || strAftSecondSlash.size() == 2))){
 	correctFormat = true;	// if two slashes and the str before & after first slash is a num with less than 3 digits
 	// and the str aft the second slash is a num with not more than 4 and less than 2 digits
 	}
@@ -273,8 +293,8 @@ bool isTimeFormat(string);
 	strBfrFirstSlash = str.substr(0, slashIndex.at(0));
 	strAftFirstSlash = str.substr(slashIndex.at(0)+1);
 
-	if( (isNum(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
-	&& (isNum(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty())){
+	if( (isAllNumbers(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
+	&& (isAllNumbers(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty())){
 	correctFormat = true; // the same with the above without checking the str aft second slash
 	}
 	}
@@ -386,7 +406,7 @@ bool isTimeFormat(string);
 	correctFormat = false;
 	}
 	else{
-	if(isNum(str)){
+	if(isAllNumbers(str)){
 	correctFormat = true;
 	}
 	else{
@@ -593,11 +613,11 @@ bool isTimeFormat(string);
 	beforeDot = _time.substr(0, _time.find('.'));
 	afterDot = _time.substr(_time.find('.')+1);
 
-	if(beforeDot.size() <= 2 && beforeDot.size() > 0 && afterDot.size() == 2 && isNum(beforeDot) && isNum(afterDot)){
+	if(beforeDot.size() <= 2 && beforeDot.size() > 0 && afterDot.size() == 2 && isAllNumbers(beforeDot) && isAllNumbers(afterDot)){
 	isTime = true;
 	}
 	}
-	else if(isNum(_time)){
+	else if(isAllNumbers(_time)){
 	isTime = true;
 	}
 	}

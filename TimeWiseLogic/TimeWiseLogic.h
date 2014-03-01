@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TIMEWISELOGIC_H
+#define TIMEWISELOGIC_H
 
 #include "Constants.h"
 #include "TaskList.h"
@@ -24,7 +26,8 @@ private:
 	TaskList _taskList;
 	Storage _storage;
 
-	Command _cmd;
+	Command_Add _cmd;
 	std::string _feedback;
 
 };
+#endif

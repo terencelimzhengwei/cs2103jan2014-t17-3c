@@ -12,6 +12,7 @@ public:
 	~Task(void);
 	
 	//getter functions
+	//int getIndex();
 	std::string getDescription();
 	Date getDate();
 	ClockTime getEndTime();
@@ -21,6 +22,7 @@ public:
 	
 
 	//setter functions
+	//void setIndex(int)
 	void setDescription(std::string desc);
 	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);

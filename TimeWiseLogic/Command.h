@@ -28,7 +28,7 @@ public:
 		return _type;
 	}
 
-private:
+protected:
 	void setCommandType (CMD_TYPE type) {
 		_type = type;
 	}
@@ -37,7 +37,7 @@ private:
 	int getIndex () {
 		return _taskIndex;
 	}
-	std::string getDescrition() {
+	std::string getDescription() {
 		return _taskDescription;
 	}
 	Date getDate() {
@@ -54,11 +54,15 @@ private:
 	TASK_STATUS getTaskStatus(){
 		return _taskStatus;
 	}
-
+	PRIORITY getTaskPriority() {
+		return _taskPriority;
+	}
 	std::string getTaskCategory(){
 		return _category;
 	}
-	
+	TASK_TYPE getTaskType() {
+		return _taskType;
+	}
 	//setter for fields  
 	void setIndex(int taskIndex) {
 		_taskIndex = taskIndex;

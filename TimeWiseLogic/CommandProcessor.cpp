@@ -12,7 +12,7 @@ void CommandProcessor::setTaskList(TaskList& taskList){
 	_list=&taskList;
 }
 
-void CommandProcessor::executeCommand(Command cmd) {
+void CommandProcessor::executeCommand(Command_Add cmd) {
 	switch (cmd.getType()) {
 	case ADD: 
 		Task newTask;
@@ -21,7 +21,7 @@ void CommandProcessor::executeCommand(Command cmd) {
 	}
 }
 
-Task CommandProcessor::formTask(Command cmd) {
+Task CommandProcessor::formTask(Command_Add cmd) {
 	Task temp;
 	std::string taskDescription = cmd.getDescription();
 	temp.setDescription(taskDescription);

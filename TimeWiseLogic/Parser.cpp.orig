@@ -1,6 +1,6 @@
 #include "Parser.h"
 #include "Constants.h"
-#include "Command.h"
+#include "Command_Add.h"
 #include <string>
 using namespace std;
 
@@ -10,24 +10,16 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
-Command Parser::interpretCommand(string action) {
+Command_Add Parser::interpretCommand(string action) {
 	string commandTypeString = getFirstWord(action);
 	string description = removeFirstWord(action);
-	Command cmd;
 
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
-<<<<<<< local
-=======
-	Command cmd;
->>>>>>> other
+	Command_Add cmd;
 	switch (commandType) {
 	case ADD: 
 		cmd.setType(commandType); 
 		cmd.setDescription(description);
-<<<<<<< local
-		break;
-=======
->>>>>>> other
 	}
 	return cmd;
 }

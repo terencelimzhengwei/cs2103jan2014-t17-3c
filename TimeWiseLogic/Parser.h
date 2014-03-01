@@ -1,11 +1,21 @@
 #pragma once
+#ifndef PARSER_H
+#define PARSER_H
+
 #include <string>
+<<<<<<< local
+#include "Command_Add.h"
+=======
 #include <stack>
 #include <vector>
 #include "Command.h"
+>>>>>>> other
 #include "Constants.h"
+<<<<<<< local
+=======
 #include "Calendar.h"
 using namespace std;
+>>>>>>> other
 
 //To be done by Anthony.
 
@@ -15,6 +25,12 @@ public:
 	Parser(void);
 	~Parser(void);
 
+<<<<<<< local
+	Command_Add interpretCommand(std::string action);
+	CMD_TYPE determineCommandType(std::string commandTypeString);
+	std::string getFirstWord(std::string action);
+	std::string removeFirstWord(std::string action);
+=======
 	Command interpretCommand(string action);
 	CMD_TYPE determineCommandType(string commandTypeString);
 	string getFirstWord(string action);
@@ -36,7 +52,10 @@ public:
 	bool isPreposition(string);
 	void removeSymbol(string&);
 	bool isTimeFormat(string);
+>>>>>>> other
 };
+
+#endif
 
 //Example for you to reference
 /*//@author A0098939B

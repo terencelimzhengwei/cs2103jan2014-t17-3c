@@ -46,7 +46,7 @@ bool Task::checkOverdue()
 }
 
 void Task::setTaskType(TASK_TYPE type){
-	_taskType=type;
+	_taskType = type;
 }
 
 Date Task::getDate(){

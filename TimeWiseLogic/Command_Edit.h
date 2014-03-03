@@ -1,7 +1,8 @@
 #pragma once
-#include "command.h"
-class Command_Edit : public Command
-{
+#include "Command.h"
+
+
+class Command_Edit : public Command {
 public:
 	Command_Edit() {
 		init();
@@ -11,7 +12,7 @@ public:
 	std::string	getDescription(){ 
 		return Command::getDescription();		
 	}
-	int getIndex() {
+	unsigned long long  getIndex() {
 		return Command::getIndex();		
 	}
 	Date getDate(){

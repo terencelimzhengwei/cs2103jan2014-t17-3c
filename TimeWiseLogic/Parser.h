@@ -3,19 +3,12 @@
 #define PARSER_H
 
 #include <string>
-<<<<<<< local
-#include "Command_Add.h"
-=======
 #include <stack>
 #include <vector>
 #include "Command.h"
->>>>>>> other
 #include "Constants.h"
-<<<<<<< local
-=======
 #include "Calendar.h"
 using namespace std;
->>>>>>> other
 
 //To be done by Anthony.
 
@@ -24,35 +17,27 @@ class Parser
 public:
 	Parser(void);
 	~Parser(void);
-
-<<<<<<< local
-	Command_Add interpretCommand(std::string action);
+	Command* interpretCommand(std::string action);
 	CMD_TYPE determineCommandType(std::string commandTypeString);
 	std::string getFirstWord(std::string action);
 	std::string removeFirstWord(std::string action);
-=======
-	Command interpretCommand(string action);
-	CMD_TYPE determineCommandType(string commandTypeString);
-	string getFirstWord(string action);
-	string removeFirstWord(string action);
 	void convertToLowerCase(std::string& str);
-	bool contains(char ch, string input);
-	bool isAllNumbers(string);
-	int toNum(string);
-	bool convertIfNum(const string &numInStr, int &num);
-	bool isDateFormat(string);
-	bool containsDay(string);
-	std::stack<string> splitStringBy(char delimiter, string input);
-	TASK_TYPE determineTaskType(string trimmedInput);
-	bool is24HourTimeFormat(string);
-	std::string getStringAfter(char, string);
-	std::string getStringBefore(char, string);
-	void removeWhiteSpaces(string&);
-	std::string extractSchedule(string &input);
-	bool isPreposition(string);
-	void removeSymbol(string&);
-	bool isTimeFormat(string);
->>>>>>> other
+	bool contains(char ch, std::string input);
+	bool isAllNumbers(std::string);
+	int toNum(std::string);
+	bool convertIfNum(const std::string &numInStr, int &num);
+	bool isDateFormat(std::string);
+	bool containsDay(std::string);
+	std::stack <std::string> splitStringBy(char delimiter, std::string input);
+	TASK_TYPE determineTaskType(std::string trimmedInput);
+	bool is24HourTimeFormat(std::string);
+	std::string getStringAfter(char, std::string);
+	std::string getStringBefore(char, std::string);
+	void removeWhiteSpaces(std::string&);
+	std::string extractSchedule(std::string &input);
+	bool isPreposition(std::string);
+	void removeSymbol(std::string&);
+	bool isTimeFormat(std::string);
 };
 
 #endif

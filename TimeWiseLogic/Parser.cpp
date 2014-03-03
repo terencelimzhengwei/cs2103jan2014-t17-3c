@@ -1,11 +1,4 @@
 #include "Parser.h"
-<<<<<<< local
-#include "Constants.h"
-#include "Command_Add.h"
-#include <string>
-using namespace std;
-=======
->>>>>>> other
 
 Parser::Parser(void) {
 }
@@ -13,22 +6,17 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
-<<<<<<< local
-Command_Add Parser::interpretCommand(string action) {
-	string commandTypeString = getFirstWord(action);
-	string description = removeFirstWord(action);
-=======
-Command Parser::interpretCommand(std::string action) {
+Command* Parser::interpretCommand(std::string action) {
 	std::string commandTypeString = getFirstWord(action);
 	std::string description = removeFirstWord(action);
->>>>>>> other
 
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
-	Command_Add cmd;
+	Command *cmd;
 	switch (commandType) {
 	case ADD: 
-		cmd.setType(commandType); 
-		cmd.setDescription(description);
+		cmd = new Command_Add();
+		cmd->setCommandType(); 
+		cmd->setDescription(description);
 	}
 	return cmd;
 }
@@ -98,7 +86,7 @@ void Parser::convertToLowerCase(std::string &str){
 	for(unsigned int i = 0; i < str.length(); i++){
 		// convert ONLY the upper case
 		if(str[i] >= 'A' && str[i] <= 'Z'){ 
-			str[i] += 32;	// convert to small case by adding the number difference as in ASCII 
+			str[i] += 32;   // convert to small case by adding the number difference as in ASCII 
 		}
 	}
 }
@@ -140,11 +128,11 @@ bool Parser::convertIfNum(const std::string &numInStr, int &num){
 }
 
 bool Parser::isDateFormat(std::string str){
-	std::vector<int> slashIndex;		// hold the indexes of '/' found in str
-	int numOfSlash;				// total num of '/' found
-	std::string	strBfrFirstSlash,	// str before first slash
-		strAftFirstSlash,	// str after first slash
-		strAftSecondSlash;	// str aft second slash
+	std::vector<int> slashIndex;            // hold the indexes of '/' found in str
+	int numOfSlash;                         // total num of '/' found
+	std::string     strBfrFirstSlash,       // str before first slash
+		strAftFirstSlash,       // str after first slash
+		strAftSecondSlash;      // str aft second slash
 	bool correctFormat = false;
 	removeSymbol(str);
 
@@ -163,7 +151,7 @@ bool Parser::isDateFormat(std::string str){
 		if( (isAllNumbers(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
 			&& (isAllNumbers(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty()) 
 			&& (isAllNumbers(strAftSecondSlash) && (strAftSecondSlash.size() == 4 || strAftSecondSlash.size() == 2))){
-				correctFormat = true;	// if two slashes and the str before & after first slash is a num with less than 3 digits
+				correctFormat = true;   // if two slashes and the str before & after first slash is a num with less than 3 digits
 				// and the str aft the second slash is a num with not more than 4 and less than 2 digits
 		}
 	}
@@ -189,7 +177,7 @@ bool Parser::containsDay(std::string str){
 	if( str== "today" || str == "tomorrow" ){
 		contains = true;
 	}
-	else{	
+	else{   
 		for(int i = 0; i<7; i++){
 			if(str == DAY[i]||str==DAY_ABBR[i]){
 				contains = true;
@@ -305,24 +293,24 @@ std::string Parser::extractSchedule(std::string &input){
 		words.pop();
 
 		if( isDateFormat(word) || containsDay(word) ){
-			date.push(word);	
+			date.push(word);        
 
 			// to throw the preposition word preceeding the date
-			if(!words.empty() && isPreposition(words.top()) ){	
+			if(!words.empty() && isPreposition(words.top()) ){      
 				words.pop();
 			}
 		}
 		else if( isTimeFormat(word) ){
-			time.push(word);	
+			time.push(word);        
 
 			// to throw the preposition word preceeding the date
-			if(!words.empty() && isPreposition(words.top())){	
+			if(!words.empty() && isPreposition(words.top())){       
 				words.pop();
 			}
 		}
 		else{
 			taskWords.push(originalWord);
-		}	
+		}       
 
 	}
 
@@ -427,7 +415,7 @@ void Parser::removeSymbol(std::string& word){
 }
 
 bool Parser::isTimeFormat(std::string time){
-	int length = time.size();				  
+	int length = time.size();                                 
 	std::string period; 
 	std::string beforeDot, afterDot;
 	std::string _time;
@@ -436,7 +424,7 @@ bool Parser::isTimeFormat(std::string time){
 	if(length >= 3){
 		period = time.substr(length-2, 2); // get the last 2 characters from the string
 	}
-	else{	
+	else{   
 		return isTime;
 	}
 

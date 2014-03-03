@@ -11,30 +11,24 @@
 #include "Date.h"
 #include "ClockTime.h"
 #include "Constants.h"
-#include "Command_Add.h"
-#include "Command_Edit.h"
-#include "Command_Delete.h"
-#include "Command_Display.h"
 
 class Command
 {
 public:
 	Command(void);
-	~Command(void);
+	virtual ~Command(void){};
 
-	void init();
-					
 	CMD_TYPE getCommandType() {
-		return _type;
+			return _type;
 	}
-
 protected:
+	void init();
 	void setCommandType (CMD_TYPE type) {
 		_type = type;
 	}
 
 	//getter for fields
-	int getIndex () {
+	unsigned long long getIndex () {
 		return _taskIndex;
 	}
 	std::string getDescription() {
@@ -109,7 +103,6 @@ private:
 	PRIORITY _taskPriority;
 	std::string _category;
 	unsigned long long _taskIndex;
-
 	Date _date;
 	ClockTime _startTime;
 	ClockTime _endTime;

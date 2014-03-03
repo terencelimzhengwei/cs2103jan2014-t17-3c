@@ -1,12 +1,7 @@
 #pragma once
-
-#ifndef COMMAND_ADD_H
-#define COMMAND_ADD_H
 #include "Command.h"
 
-
-class Command_Add: public Command
-{
+class Command_Add: public Command {
 public:
 	Command_Add() {
 		init();
@@ -17,7 +12,7 @@ public:
 	std::string	getDescription(){ 
 		return Command::getDescription();		
 	}
-	int getIndex() {
+	unsigned long long getIndex() {
 		return Command::getIndex();		
 	}
 	Date getDate(){
@@ -70,4 +65,3 @@ public:
 	
 };
 
-#endif

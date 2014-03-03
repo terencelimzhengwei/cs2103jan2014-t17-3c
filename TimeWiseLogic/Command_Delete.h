@@ -1,5 +1,6 @@
 #pragma once
-#include "command.h"
+#include "Command.h"
+
 class Command_Delete : public Command
 {
 public:

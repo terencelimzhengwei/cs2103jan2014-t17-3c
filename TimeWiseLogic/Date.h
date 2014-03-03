@@ -6,7 +6,7 @@
 #include <string>
 #include <ctime>
 #include "Calendar.h"
-#include "Parser.h"
+//#include "Parser.h"
 
 class Date
 {
@@ -30,7 +30,7 @@ private:
 	int _day;
 	std::string _dayInString;
 
-	Parser _parser;
+	//Parser _parser;
 
 	void setDateAsToday();
 	void setDate(int day, int month, int year);

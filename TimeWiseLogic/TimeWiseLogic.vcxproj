@@ -89,6 +89,10 @@
     <ClCompile Include="ClockTime.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandProcessor.cpp" />
+    <ClCompile Include="Command_Add.cpp" />
+    <ClCompile Include="Command_Delete.cpp" />
+    <ClCompile Include="Command_Display.cpp" />
+    <ClCompile Include="Command_Edit.cpp" />
     <ClCompile Include="CompletedTaskList.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="Exceptions.cpp" />

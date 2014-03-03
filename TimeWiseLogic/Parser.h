@@ -17,7 +17,7 @@ class Parser
 public:
 	Parser(void);
 	~Parser(void);
-	Command* interpretCommand(std::string action);
+	Command interpretCommand(std::string action);
 	CMD_TYPE determineCommandType(std::string commandTypeString);
 	std::string getFirstWord(std::string action);
 	std::string removeFirstWord(std::string action);

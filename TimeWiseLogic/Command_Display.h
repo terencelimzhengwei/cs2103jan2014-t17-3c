@@ -4,17 +4,10 @@
 class Command_Display : public Command
 {
 public:
-	Command_Display(){
-		init();
-		setCommandType(DISPLAY);
-	}
+	Command_Display();
 	~Command_Display(void);
 
-	int	getIndex() { 
-		return Command::getIndex();		
-	}
-	void setIndex(int idx){ 
-		Command::setIndex(idx);			
-	}
+	unsigned long long 	getIndex();
+	void setIndex(unsigned long long);
 };
 

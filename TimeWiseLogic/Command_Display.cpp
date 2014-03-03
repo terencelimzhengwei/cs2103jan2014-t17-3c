@@ -11,7 +11,8 @@ Command_Display::~Command_Display(){};
 unsigned long long Command_Display::getIndex() { 
 		return Command::getIndex();		
 }
-void Command_Display::setIndex(unsigned long long idx){ 
+void Command_Display::setIndex(int idx)
+{ 
 		Command::setIndex(idx);			
 }
 

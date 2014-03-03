@@ -8,6 +8,6 @@ public:
 	~Command_Display(void);
 
 	unsigned long long 	getIndex();
-	void setIndex(unsigned long long);
+	void setIndex(int);
 };
 

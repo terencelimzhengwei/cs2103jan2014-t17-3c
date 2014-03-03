@@ -10,10 +10,6 @@ const std::string Command::DEFAULT_CATEGORY = "Undefined";
 Command::Command(void){
 }
 
-
-Command::~Command(void){
-}
-
 void Command::init() {
 	_type = DEFAULT_COMMAND_TYPE;
 	_taskIndex = DEFAULT_TASK_INDEX;

@@ -42,7 +42,7 @@ protected:
 	TASK_STATUS _taskStatus;
 	PRIORITY _taskPriority;
 	std::string _category;
-	unsigned long long _taskIndex;
+	int _taskIndex;
 
 	Date _date;
 	ClockTime _startTime;

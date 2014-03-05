@@ -12,9 +12,10 @@ public:
 	~Task(void);
 	
 	//getter functions
-	//int getIndex();
+	unsigned long long getIndex();
 	std::string getDescription();
-	Date getDate();
+	Date getEndDate();
+	Date getStartDate();
 	ClockTime getEndTime();
 	ClockTime getStartTime();
 	TASK_STATUS getTaskStatus();
@@ -22,14 +23,16 @@ public:
 	
 
 	//setter functions
-	//void setIndex(int)
+	void setIndex(unsigned long long);
 	void setDescription(std::string desc);
 	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);
-	void setDate(Date date);
+	void setEndDate(Date endDate);
+	void setStartDate(Date startDate);
 	void setStartTime(ClockTime startTime);
 	void setEndTime(ClockTime endTime);
 	void setStatusAsDone();
+	void setStatusasUndone();
 	void setStatusAsOverdue();
 	void setTaskType(TASK_TYPE type);
 
@@ -42,9 +45,10 @@ protected:
 	TASK_STATUS _taskStatus;
 	PRIORITY _taskPriority;
 	std::string _category;
-	int _taskIndex;
+	unsigned long long _taskIndex;
 
-	Date _date;
+	Date _endDate;
+	Date _startDate;
 	ClockTime _startTime;
 	ClockTime _endTime;
 

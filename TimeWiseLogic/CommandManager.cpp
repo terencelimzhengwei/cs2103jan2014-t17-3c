@@ -127,11 +127,11 @@ void CommandManager::ClearCommandList(std::list<Command*>* pList)
 }
 
 bool CommandManager::undoable(Command* pCommand){
-	if(pCommand->getType()==ADD){
+	if(pCommand->getType() == ADD){
 		return true;
-	}else if(pCommand->getType()==DELETE){
+	}else if(pCommand->getType() == DELETE){
 		return true;
-	}else if(pCommand->getType()==EDIT){
+	}else if(pCommand->getType() == EDIT){
 		return true;
 	}
 	return false;

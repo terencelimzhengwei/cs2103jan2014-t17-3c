@@ -14,31 +14,31 @@ Command_Add::~Command_Add(void) {
 
 //setter for fields
 void Command_Add::setIndex(int taskIndex) {
-	_taskIndex=taskIndex;
+	_taskIndex = taskIndex;
 }
 void Command_Add:: setDescription(std::string description){
-	_taskDescription=description;
+	_taskDescription = description;
 }
 void Command_Add::setPriority(PRIORITY taskPriority) {
-	_taskPriority=taskPriority;
+	_taskPriority = taskPriority;
 }
 void Command_Add::setCategory(std::string category) {
-	_category=category;
+	_category = category;
 }
 void Command_Add::setStartDate(Date date) {
-	_startDate=date;
+	_startDate = date;
 }
 void Command_Add::setStartTime(ClockTime startTime) {
-	_startTime=startTime;
+	_startTime = startTime;
 }
 void Command_Add::setEndTime(ClockTime endTime) {
-	_endTime=endTime;
+	_endTime = endTime;
 }
-void Command_Add:: setTaskStatus(TASK_STATUS taskStatus) {
-	_taskStatus=taskStatus;
-}
+/*void Command_Add:: setTaskStatus(TASK_STATUS taskStatus) {
+	_taskStatus = taskStatus;
+}*/
 void Command_Add::setTaskType(TASK_TYPE taskType) {
-	_taskType=taskType;
+	_taskType = taskType;
 }
 
 void Command_Add::setEndDate(Date date){
@@ -48,12 +48,26 @@ void Command_Add::setEndDate(Date date){
 bool Command_Add::execute(TaskList& tasklist){
 	Task newTask;
 	newTask.setDescription(_taskDescription);
+	newTask.setStartDate(_startDate);
+	newTask.setEndDate(_endDate);
+	newTask.setPriority(_taskPriority);
+	newTask.setCategory(_category);
+	newTask.setStartTime(_startTime);
+	newTask.setEndTime(_endTime);
+	newTask.setStatusasUndone();
+	newTask.setTaskType(_taskType);
 	tasklist.addTask(newTask);
 	return true;
 }
 
-bool Command_Add::undo(TaskList& tasklist){
-	return true;
+bool Command_Add::undo(TaskList& taskList){
+	if (taskList.isEmpty()){
+		return false;
+	} else {
+		unsigned int taskIndex = taskList.size();
+		taskList.deleteTask(taskIndex);
+		return true;
+	}
 }
 
 

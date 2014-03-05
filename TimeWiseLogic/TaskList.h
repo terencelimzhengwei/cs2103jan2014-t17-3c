@@ -9,9 +9,10 @@ public:
 	TaskList(void);
 	~TaskList(void);
 
-	void addTask(Task task);
-	Task getTask(int index);
-	//void deleteTask(const int& taskIndex);
+	void addTask(Task);
+	void addTask(unsigned int, Task);
+	Task getTask(unsigned int);
+	bool deleteTask(unsigned int&);
 	//void clearTask();
 	//std::string searchTask(std::string& keyWord);
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------

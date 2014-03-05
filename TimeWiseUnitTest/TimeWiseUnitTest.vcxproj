@@ -52,7 +52,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\TiMEWiSE\TimeWiseLogic;C:\Users\Jian Xiang\Desktop\TimeWise\TimeWiseLogic;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Hue Mai Tran\Desktop\cs2103jan2014-t17-3c\TimeWiseLogic;D:\TiMEWiSE\TimeWiseLogic;C:\Users\Jian Xiang\Desktop\TimeWise\TimeWiseLogic;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>

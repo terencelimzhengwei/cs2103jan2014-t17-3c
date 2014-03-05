@@ -27,13 +27,15 @@ namespace TimeWiseUnitTest
 			newTask.setDescription("hello");
 			newTask.setCategory("testing");
 			newTask.setPriority(HIGH);
-			Date newdate(28,2,2014);
-			newTask.setDate(newdate);
+			Date startDate(28,2,2014);
+			Date endDate(4,3,2014);
+			newTask.setStartDate(startDate);
+			newTask.setEndDate(endDate);
 			ClockTime newTime(1200);
 			newTask.setEndTime(newTime);
 		}
 
-		TEST_METHOD(CommandTest)
+		TEST_METHOD(AddCommandTest)
 		{
 			TaskList _taskList;
 			Parser _parser;
@@ -44,6 +46,9 @@ namespace TimeWiseUnitTest
 			std::string taskDescription = (_taskList.getTask(0)).getDescription();
 			Assert::AreEqual("testing", taskDescription.c_str());
 			
+		}
+
+		TEST_METHOD(EditCommandTest) {
 		}
 
 	};

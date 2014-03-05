@@ -11,15 +11,15 @@ public:
 	void setDescription(std::string);
 	void setPriority(PRIORITY);
 	void setCategory(std::string);
-	void setStartDate(Date);
 	void setEndDate(Date);
+	void setStartDate(Date);
 	void setStartTime(ClockTime);
 	void setEndTime(ClockTime);
-	void setTaskStatus(TASK_STATUS);
-	void setTaskType(TASK_TYPE taskType);
+	//void setTaskStatus(TASK_STATUS);
+	void setTaskType(TASK_TYPE);
 
-	virtual bool execute(TaskList& tasklist);
-	virtual bool undo(TaskList& tasklist);
+	virtual bool execute(TaskList&);
+	virtual bool undo(TaskList&);
 
 private:
 	std::string _taskDescription;

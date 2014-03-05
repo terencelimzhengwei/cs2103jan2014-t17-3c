@@ -3,9 +3,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-// TiMEWiSE Command Base Class
-//I dont really understand what exactly the flag methods do
-//Will update once I pick it up
 #include <list>
 #include <string>
 #include "Date.h"

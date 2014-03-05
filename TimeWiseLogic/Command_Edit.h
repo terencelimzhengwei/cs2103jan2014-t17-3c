@@ -1,5 +1,6 @@
 #pragma once
 #include "Command.h"
+#include <stack>
 
 
 class Command_Edit : public Command {
@@ -23,12 +24,13 @@ public:
 	virtual bool undo(TaskList& taskList);
 
 private:
+	std::stack<Task> _beforeEdit;
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
 	TASK_STATUS _taskStatus;
 	PRIORITY _taskPriority;
 	std::string _category;
-	int _taskIndex;
+	unsigned int _taskIndex;
 	Date _startDate;
 	Date _endDate;
 	ClockTime _startTime;

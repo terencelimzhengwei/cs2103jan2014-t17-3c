@@ -5,7 +5,9 @@
 #include <string>
 #include <stack>
 #include <vector>
-#include "Command.h"
+#include "Command_Add.h"
+#include "Command_Delete.h"
+#include "Command_Edit.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;
@@ -17,7 +19,7 @@ class Parser
 public:
 	Parser(void);
 	~Parser(void);
-	Command interpretCommand(std::string action);
+	Command* interpretCommand(std::string action);
 	CMD_TYPE determineCommandType(std::string commandTypeString);
 	std::string getFirstWord(std::string action);
 	std::string removeFirstWord(std::string action);

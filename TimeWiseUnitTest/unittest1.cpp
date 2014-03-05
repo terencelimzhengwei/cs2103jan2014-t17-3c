@@ -14,7 +14,7 @@ namespace TimeWiseUnitTest
 			TimeWiseLogic logic;
 			std::string feedback;
 			feedback= logic.processCommand("add testing only");
-			Assert::AreEqual("SUCCESSFUL", feedback.c_str());
+			Assert::AreEqual("SUCCESS", feedback.c_str());
 			TaskList& taskList = logic.getTaskList();
 			int length = taskList.size();
 			std::string taskDescription = (taskList.getTask(0)).getDescription();
@@ -31,6 +31,19 @@ namespace TimeWiseUnitTest
 			newTask.setDate(newdate);
 			ClockTime newTime(1200);
 			newTask.setEndTime(newTime);
+		}
+
+		TEST_METHOD(CommandTest)
+		{
+			TaskList _taskList;
+			Parser _parser;
+			std::string commandLine = "add testing";
+			Command* command;
+			command = _parser.interpretCommand(commandLine);
+			command->execute(_taskList);
+			std::string taskDescription = (_taskList.getTask(0)).getDescription();
+			Assert::AreEqual("testing", taskDescription.c_str());
+			
 		}
 
 	};

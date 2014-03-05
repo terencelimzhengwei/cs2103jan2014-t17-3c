@@ -2,15 +2,25 @@
 #include "Command_Delete.h"
 
 Command_Delete::Command_Delete() {
-		init(); 
-		setCommandType(DELETE);
+	_type=DELETE;
 }
-Command_Delete::~Command_Delete(){};
 
-unsigned long long Command_Delete::getIndex(){ 
-		return Command::getIndex();		
+Command_Delete::~Command_Delete(){
 }
-std::string Command_Delete::getDescription(){
-		return Command::getDescription();		
+
+void Command_Delete::setDeletionIndex(int index){
+	_deletionIndex=index;
+}
+
+void Command_Delete::setDeletionString(std::string deletionString){
+	_deletionString=deletionString;
+}
+
+bool Command_Delete::execute(TaskList& tasklist){
+	return true;
+}
+
+bool Command_Delete::undo(TaskList& taskList){
+	return true;
 }
 

@@ -6,8 +6,8 @@
 #include "TaskList.h"
 #include "Storage.h"
 #include "Parser.h"
-#include "CommandProcessor.h"
 #include "Command.h"
+#include "CommandManager.h"
 
 class TimeWiseLogic
 {
@@ -22,12 +22,12 @@ public:
 
 
 private:
-	CommandProcessor _commandProcessor;
 	Parser _parser;
 	TaskList _taskList;
 	Storage _storage;
+	CommandManager *_manager;
 
-	Command _cmd;
+	Command* _cmd;
 	std::string _feedback;
 
 };

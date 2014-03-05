@@ -6,21 +6,19 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
-Command Parser::interpretCommand(std::string action) {
+Command* Parser::interpretCommand(std::string action)
+{
 	std::string commandTypeString = getFirstWord(action);
 	std::string description = removeFirstWord(action);
-
+	Command* cmd;
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
-	Command cmd;
 	switch (commandType) {
 	case ADD: 
-		/* I need to declare a sub class here but i dont know why since we have to return a cmd object
-		cmd = new Command_Add();-> gives error
-		cmd->setCommandType(); 
-		cmd->setDescription(description);
-	}*/
-		break;
+		Command_Add*newCommand =new Command_Add;
+		newCommand->setDescription(description);
+		return newCommand;
 	}
+	cmd=NULL;
 	return cmd;
 }
 

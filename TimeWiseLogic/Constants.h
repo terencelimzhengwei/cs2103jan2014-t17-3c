@@ -29,7 +29,12 @@ const char DATE_SEPARATOR = '-';
 
 const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before"};
 
-
+const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
+const int DEFAULT_TASK_INDEX = -1;
+const PRIORITY DEFAULT_PRIORITY = LOW;
+const TASK_TYPE DEFAULT_TASK_TYPE = FLOATING;
+const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
+const std::string DEFAULT_CATEGORY = "";
 
 
 

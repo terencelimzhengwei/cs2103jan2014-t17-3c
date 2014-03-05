@@ -3,7 +3,7 @@
 
 
 TimeWiseLogic::TimeWiseLogic(void){
-	_commandProcessor.setTaskList(_taskList);
+	_manager = new CommandManager(_taskList);
 }
 
 
@@ -16,8 +16,8 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		return "ERROR";
 	}
 	else{
-		_commandProcessor.executeCommand(_cmd);
-		return "SUCCESSFUL";
+		_manager->DoCommand(_cmd);
+		return "SUCCESS";
 	}
 
 }

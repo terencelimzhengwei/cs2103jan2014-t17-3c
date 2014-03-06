@@ -6,56 +6,129 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
-Command* Parser::interpretCommand(std::string action)
-{
-	std::string commandTypeString = getFirstWord(action);
-	std::string description = removeFirstWord(action);
-	Command* cmd;
+Command* Parser::interpretCommand(string action) {
+	string commandTypeString = getFirstWord(action);
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
+	
+	string parameter = removeFirstWord(action);
+	vector<string> parameters = splitBySpace(parameter);
+	unsigned int parameterNum = parameters.size();
+
+	Command* cmd;
+
 	switch (commandType) {
-	case ADD: 
-		Command_Add*newCommand =new Command_Add;
-		newCommand->setDescription(description);
-		return newCommand;
+	case ADD: {
+			/* I need to declare a sub class here but i dont know why since we have to return a cmd object */
+			Command_Add* commandAdd = new Command_Add;
+			unsigned int wordReading = parameterNum - 1;
+
+			// Get category from user command
+			string category;
+			if(parameters[wordReading][0]=='!') {
+				wordReading--;
+				category = replaceWord("!","",parameters[wordReading]);
+			}
+
+			// Get priority from user command
+			string priority;
+			if(parameters[wordReading][0]=='!') {
+				wordReading--;
+				priority = replaceWord("!","",parameters[wordReading]);
+			}
+
+			// Get time from user command
+			string time = parameters[wordReading--];
+			if(isPreposition(parameters[wordReading])) {
+				wordReading--;
+			}
+
+			// Get date from user command
+			string date = parameters[wordReading--];
+			if(isPreposition(parameters[wordReading])) {
+				wordReading--;
+			}
+
+			// Get description
+			string description;
+			for(unsigned int i=0 ; i<=wordReading; i++) {
+				if(i) {
+					description += " ";
+				}
+				description += parameters[i];
+			}
+
+			date = replaceWord("/","",date);
+			time = replaceWord(":","",time);
+
+			commandAdd->setCategory(category);
+			commandAdd->setDescription(description);
+			commandAdd->setStartDate(Date((toNum(date)/10000)%100,(toNum(date)/100)%100,toNum(date)%100));
+			commandAdd->setStartTime(ClockTime(toNum(time)));
+
+			break;
+		}
+	case DELETE:
+		if(isAllNumbers(parameter)) {
+			unsigned int id = toNum(parameter);	// Check whether ID type is correct
+		} else if(parameter == "all") {
+			
+		} else {
+			// Not invalid command
+		}
+		break;
+	case DONE:
+		if(isAllNumbers(parameter)) {
+			unsigned int id = toNum(parameter);	// Check whether ID type is correct
+		} else if(parameter != "") { // check is "itemToProcess" a category
+		} else {
+			// Not invalid command
+		}
+		break;
+	case SEARCH:
+			// Keyword is parameter
+		break;
+	case FILTER:
+		break;
+	case EDIT:
+		break;
 	}
-	cmd=NULL;
-	return cmd;
+	return *cmd;
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	convertToLowerCase(commandTypeString);
 
-	if(commandTypeString == "add"){
+	if(commandTypeString == "add") {
 		return ADD;
 	}
-	else if(commandTypeString == "delete"){
+	else if(commandTypeString == "delete") {
 		return DELETE;
 	}
-	else if(commandTypeString == "search"){
+	else if(commandTypeString == "search") {
 		return SEARCH;
 	}
-	else if(commandTypeString == "edit"){
+	else if(commandTypeString == "edit") {
 		return EDIT;
 	}
-	else if(commandTypeString == "display"){
+	else if(commandTypeString == "display") {
 		return DISPLAY;
 	}
-	else if(commandTypeString == "done"){
+	else if(commandTypeString == "done") {
 		return DONE;
 	}
-	else if(commandTypeString == "undone"){
+	else if(commandTypeString == "undone") {
 		return UNDONE;
 	}
-	else if(commandTypeString == "undo"){
+	else if(commandTypeString == "undo") {
 		return UNDO;
 	}
-	else if(commandTypeString == "redo"){
+	else if(commandTypeString == "redo") {
 		return REDO;
 	}
-	else if(commandTypeString == "clear"){
+	else if(commandTypeString == "clear") {
 		return CLEAR;
 	}
-	else{
+	else {
 		return UNDEFINED;
 	}
 
@@ -71,7 +144,7 @@ std::string Parser::getFirstWord(std::string action) {
 	return userCommand;
 }
 
-string Parser::removeFirstWord(std::string action) {
+std::string Parser::removeFirstWord(std::string action) {
 	unsigned int tStart = 0;
 	unsigned int tEnd = 0;
 
@@ -80,6 +153,15 @@ string Parser::removeFirstWord(std::string action) {
 
 	std::string userText = action.substr(tStart, tEnd - tStart);
 	return userText;
+}
+
+std::string Parser::replaceWord(std::string search, std::string replace, std::string subject) {
+	int pos;
+	do {
+		pos = subject.find(search);
+		if(pos!=-1)	subject.replace(pos, search.length(), replace);
+	} while(pos!=-1);
+	return subject;
 }
 
 void Parser::convertToLowerCase(std::string &str){
@@ -188,6 +270,13 @@ bool Parser::containsDay(std::string str){
 	}
 
 	return contains;
+}
+
+vector<std::string> Parser::splitBySpace(std::string input) {
+	vector<string> tokens;
+	istringstream iss(input);
+	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<vector<string> >(tokens));
+	return tokens;
 }
 
 stack<std::string> Parser::splitStringBy(char delimiter, std::string input){

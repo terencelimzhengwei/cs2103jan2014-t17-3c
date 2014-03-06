@@ -5,14 +5,14 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <sstream>
+#include "Command.h"
 #include "Command_Add.h"
-#include "Command_Delete.h"
-#include "Command_Edit.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;
 
-//To be done by Anthony.
+//To be done by Antony.
 
 class Parser
 {
@@ -23,6 +23,7 @@ public:
 	CMD_TYPE determineCommandType(std::string commandTypeString);
 	std::string getFirstWord(std::string action);
 	std::string removeFirstWord(std::string action);
+	std::string replaceWord(std::string search, std::string replace, std::string subject);
 	void convertToLowerCase(std::string& str);
 	bool contains(char ch, std::string input);
 	bool isAllNumbers(std::string);
@@ -30,7 +31,8 @@ public:
 	bool convertIfNum(const std::string &numInStr, int &num);
 	bool isDateFormat(std::string);
 	bool containsDay(std::string);
-	std::stack <std::string> splitStringBy(char delimiter, std::string input);
+	std::vector<std::string> splitBySpace(std::string input);
+	std::stack<std::string> splitStringBy(char delimiter, std::string input);
 	TASK_TYPE determineTaskType(std::string trimmedInput);
 	bool is24HourTimeFormat(std::string);
 	std::string getStringAfter(char, std::string);

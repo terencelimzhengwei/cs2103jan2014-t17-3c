@@ -8,6 +8,8 @@
 #include <sstream>
 #include "Command.h"
 #include "Command_Add.h"
+#include "Command_Delete.h"
+#include "Command_Edit.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;

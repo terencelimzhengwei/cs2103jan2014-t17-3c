@@ -14,8 +14,6 @@ Command* Parser::interpretCommand(string action) {
 	vector<string> parameters = splitBySpace(parameter);
 	unsigned int parameterNum = parameters.size();
 
-	Command* cmd;
-
 	switch (commandType) {
 	case ADD: {
 			/* I need to declare a sub class here but i dont know why since we have to return a cmd object */
@@ -65,15 +63,17 @@ Command* Parser::interpretCommand(string action) {
 			commandAdd->setStartDate(Date((toNum(date)/10000)%100,(toNum(date)/100)%100,toNum(date)%100));
 			commandAdd->setStartTime(ClockTime(toNum(time)));
 
-			break;
+			return commandAdd;
 		}
 	case DELETE:
 		if(isAllNumbers(parameter)) {
+			Command_Delete* commandDelete = new Command_Delete;
 			unsigned int id = toNum(parameter);	// Check whether ID type is correct
+			commandDelete->setDeletionIndex(id);
 		} else if(parameter == "all") {
-			
+			return NULL;
 		} else {
-			// Not invalid command
+			return NULL;
 		}
 		break;
 	case DONE:
@@ -90,9 +90,11 @@ Command* Parser::interpretCommand(string action) {
 	case FILTER:
 		break;
 	case EDIT:
+		Command_Edit* commandEdit = new Command_Edit;
+		commandEdit->setIndex(toNum(parameters[0]));
 		break;
 	}
-	return *cmd;
+	return NULL;
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {

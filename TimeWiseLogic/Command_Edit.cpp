@@ -4,16 +4,15 @@
 
 Command_Edit::Command_Edit() {
 	_type = EDIT;
-	_taskIndex = DEFAULT_TASK_INDEX;
+	_taskIndex = DEFAULT_INDEX;
 	_taskPriority = DEFAULT_PRIORITY;
-	_taskType = DEFAULT_TASK_TYPE;
-	_taskStatus = DEFAULT_TASK_STATUS;
-	_category = DEFAULT_CATEGORY;
+	_category = DEFAULT_EMPTY;
+	_taskEdited=NULL;
 }
 Command_Edit::~Command_Edit(){
 }
 
-void Command_Edit::setIndex(int taskIndex) {
+void Command_Edit::setIndex(unsigned int taskIndex) {
 	_taskIndex = taskIndex;
 }
 void Command_Edit::setDescription(std::string description){
@@ -34,12 +33,6 @@ void Command_Edit::setStartTime(ClockTime startTime) {
 void Command_Edit::setEndTime(ClockTime endTime) {
 	_endTime = endTime;
 }
-void Command_Edit::setTaskStatus(TASK_STATUS taskStatus) {
-	_taskStatus = taskStatus;
-}
-void Command_Edit::setTaskType(TASK_TYPE taskType) {
-	_taskType = taskType;
-}
 
 void Command_Edit::setEndDate(Date date){
 	_endDate = date;
@@ -52,39 +45,49 @@ bool Command_Edit::execute(TaskList& taskList){
 	} else if(index < 0 || index > taskList.size() - 1) {
 		return false;
 	} else {
-		Task temp = taskList.getTask(index);
-		_beforeEdit.push(temp);
-		temp.setDescription(_taskDescription);
-		temp.setStartDate(_startDate);
-		temp.setEndDate(_endDate);
-		temp.setPriority(_taskPriority);
-		temp.setCategory(_category);
-		temp.setStartTime(_startTime);
-		temp.setEndTime(_endTime);
-		temp.setTaskType(_taskType);
-		switch(_taskStatus) {
-		case COMPLETED:
-		temp.setStatusAsDone();
-		case UNCOMPLETED:
-		temp.setStatusasUndone();
-		case OVERDUE:
-		temp.setStatusAsOverdue();
-		default:
-		break;
+		_taskEdited = taskList.getTask(index);
+		_originalTask=*_taskEdited;
+		if(_header=="description"){
+			_taskEdited->setDescription(_taskDescription);
+		}else if(_header=="start date"){
+			_taskEdited->setStartDate(_startDate);
+		}else if(_header=="end date"){
+			_taskEdited->setEndDate(_endDate);
+		}else if(_header=="priority"){
+			_taskEdited->setPriority(_taskPriority);
+		}else if(_header=="category"){
+			_taskEdited->setCategory(_category);
+		}else if(_header=="start time"){
+			_taskEdited->setStartTime(_startTime);
+		}else if(_header=="end time"){
+			_taskEdited->setEndTime(_endTime);
 		}
-		bool deleteOldTask = taskList.deleteTask(_taskIndex);
-		//add the edited task into the list
-		taskList.addTask(_taskIndex,temp);
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::undo(TaskList& taskList){
+	if(_header=="description"){
+		_taskEdited->setDescription(_originalTask.getDescription());
+	}else if(_header=="start date"){
+		_taskEdited->setStartDate(_originalTask.getStartDate());
+	}else if(_header=="end date"){
+		_taskEdited->setEndDate(_originalTask.getEndDate());
+	}else if(_header=="priority"){
+		_taskEdited->setPriority(_originalTask.getPriority());
+	}else if(_header=="category"){
+		_taskEdited->setCategory(_originalTask.getTaskCategory());
+	}else if(_header=="start time"){
+		_taskEdited->setStartTime(_originalTask.getStartTime());
+	}else if(_header=="end time"){
+		_taskEdited->setEndTime(_originalTask.getEndTime());
 	}
 	return true;
 }
 
-bool Command_Edit::undo(TaskList& taskList){
-	Task temp = _beforeEdit.top();
-	taskList.deleteTask(_taskIndex);
-	taskList.addTask(_taskIndex, temp);
-	_beforeEdit.pop();
-	return true;
+void Command_Edit::setHeader(std::string header){
+	_header=header;
 }
 
 

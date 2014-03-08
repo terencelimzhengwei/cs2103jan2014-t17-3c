@@ -9,6 +9,14 @@ Date::Date(int day, int month, int year){
 	_year=year;
 }
 
+Date::Date(Date& date){
+	_dayNumber = date._dayNumber;
+	_month = date._month;
+	_year =date._year;
+	_day = date._day;
+	_dayInString = date._dayInString;
+}
+
 Date::~Date(){
 }
 
@@ -49,4 +57,22 @@ bool Date::checkOverdue(){
 
 	return overdue;
 
+}
+
+std::string Date::getDayOfTheWeek(){
+	return _dayInString;
+}
+
+std::string Date::toString(){
+	std::ostringstream convert;
+	std::string space = " ";
+	convert<<_year;
+	std::string year=convert.str();
+	year = year.substr(2);
+	convert.str(std::string());
+	std::string dateInString;
+	convert<<_dayNumber<<space<<MONTH_ABBR[_month-1]<<space<<year;
+	
+	dateInString=convert.str();
+	return dateInString;
 }

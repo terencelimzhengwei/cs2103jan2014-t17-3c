@@ -1,27 +1,19 @@
 #include "TaskList.h"
 #include <iterator>
 
-TaskList::TaskList(void)
-{
+TaskList::TaskList(void){
 }
 
 
-TaskList::~TaskList(void)
-{
-}
-
-void TaskList::addTask(Task task){
-	_taskList.push_back(task);
-}
-
-void TaskList::addTask(unsigned int taskIndex, Task task) {
-	std::vector<Task>:: iterator it;
-	it = _taskList.begin();
-
-	for (int i = 1; i < taskIndex; i++) {
-		it++;
+TaskList::~TaskList(void){
+	for(int i=0;i<size();i++){
+		delete _taskList[i];
+		_taskList[i]=NULL;
 	}
-	_taskList.insert(it,task);
+}
+
+void TaskList::addTask(Task& task){
+	_taskList.push_back(&task);
 }
 
 bool TaskList::deleteTask(unsigned int& userIdx) {
@@ -37,7 +29,9 @@ bool TaskList::deleteTask(unsigned int& userIdx) {
 		return true;
 	}
 }
-Task TaskList::getTask(unsigned int index){
+
+Task* TaskList::getTask(unsigned int index)
+{
 	return _taskList[index];
 }
 
@@ -47,4 +41,25 @@ bool TaskList::isEmpty(){
 
 int TaskList::size(){
 	return _taskList.size();
+}
+
+unsigned int TaskList::getTaskIndex(Task* task){
+	for(int i=0;i<_taskList.size();i++){
+		if(task==getTask(i)){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+void TaskList::clearTask(){
+	_taskList.clear();
+}
+
+Task* TaskList::searchTask(std::string& keyWord){
+	for(int i=0;i<size();i++){
+		if(_taskList[i]->hasKeyword(keyWord)){
+			return _taskList[i];
+		}
+	}
 }

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <ctime>
+#include <sstream>
 #include "Calendar.h"
 //#include "Parser.h"
 
@@ -12,14 +13,16 @@ class Date
 {
 public:
 	Date(void);
+	Date(Date& date);
 	Date(int day, int month, int year);
 	~Date(void);
 
 	int getDayNumber();
+	std::string getDayOfTheWeek();
 	int getMonth();
 	int getYear();
 	bool checkOverdue();
-
+	std::string toString();
 private:
 	time_t _currentTime;
 	struct tm _timeNow ;
@@ -29,8 +32,6 @@ private:
 	int _year;
 	int _day;
 	std::string _dayInString;
-
-	//Parser _parser;
 
 	void setDateAsToday();
 	void setDate(int day, int month, int year);

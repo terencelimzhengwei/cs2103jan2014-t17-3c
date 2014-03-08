@@ -22,9 +22,9 @@ Command* Parser::interpretCommand(string action) {
 
 			// Get category from user command
 			string category;
-			if(parameters[wordReading][0]=='!') {
+			if(parameters[wordReading][0]=='#') {
 				wordReading--;
-				category = replaceWord("!","",parameters[wordReading]);
+				category = replaceWord("#","",parameters[wordReading]);
 			}
 
 			// Get priority from user command

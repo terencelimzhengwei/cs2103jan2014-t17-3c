@@ -9,16 +9,16 @@ public:
 	TaskList(void);
 	~TaskList(void);
 
-	void addTask(Task);
-	void addTask(unsigned int, Task);
-	Task getTask(unsigned int);
+	void addTask(Task&);
+	Task* getTask(unsigned int);
 	bool deleteTask(unsigned int&);
-	//void clearTask();
-	//std::string searchTask(std::string& keyWord);
+	unsigned int getTaskIndex(Task* task);
+	void clearTask();
+	Task* searchTask(std::string& keyWord);
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
 	int size();
 
 private:
-	std::vector<Task> _taskList;
+	std::vector<Task*> _taskList;
 };

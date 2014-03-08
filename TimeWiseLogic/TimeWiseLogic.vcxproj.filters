@@ -66,6 +66,12 @@
     <ClInclude Include="CommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Command_Clear.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Undoable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Storage.cpp">
@@ -114,6 +120,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Clear.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Undoable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

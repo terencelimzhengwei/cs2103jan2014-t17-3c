@@ -1,8 +1,8 @@
 #pragma once
-#include "Command.h"
+#include "Command_Undoable.h"
 #include <stack>
 
-class Command_Delete : public Command{
+class Command_Delete : public Command_Undoable{
 public:
 	Command_Delete();
 	~Command_Delete(void);
@@ -13,8 +13,9 @@ public:
 	virtual bool undo(TaskList& taskList);
 
 private:
-	std::stack<Task> _beforeDelete;
+	Task* _taskDeleted;
 	unsigned int _deletionIndex;
 	std::string _deletionString;
+	std::string _lastCmdCalled;
 };
 

@@ -9,6 +9,10 @@ ClockTime::ClockTime(int time){
 
 }
 
+ClockTime::ClockTime(ClockTime& time){
+	_time= time._time;
+}
+
 
 ClockTime::~ClockTime(void){
 }
@@ -39,4 +43,12 @@ bool ClockTime::checkOverdueTime(){
 		hasElapsed = false;
 	}
 	return hasElapsed;
+}
+
+std::string ClockTime::toString(){
+	std::ostringstream stream;
+	stream<<_time;
+	std::string timeInString;
+	timeInString = stream.str();
+	return timeInString;
 }

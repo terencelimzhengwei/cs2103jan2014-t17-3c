@@ -6,7 +6,6 @@
 #include "TaskList.h"
 #include "Storage.h"
 #include "Parser.h"
-#include "Command.h"
 #include "CommandManager.h"
 
 class TimeWiseLogic

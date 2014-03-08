@@ -1,6 +1,7 @@
 #include "CommandManager.h"
 
 CommandManager::~CommandManager(void){
+	Clear();
 }
 
 bool CommandManager::CanUndo() const
@@ -46,6 +47,9 @@ void CommandManager::DoCommand(Command* pCommand)
 	if (pCommand->execute(_taskList)){
 		if(undoable(pCommand)){
 			AddUndo(pCommand);
+		}else{
+			delete pCommand;
+			pCommand=NULL;
 		}
 	}
 }

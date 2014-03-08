@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include <string>
+#include <algorithm>
 #include "Date.h"
 #include "ClockTime.h"
 
@@ -20,6 +21,7 @@ public:
 	ClockTime getStartTime();
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
+	PRIORITY getPriority();
 	
 
 	//setter functions
@@ -27,10 +29,10 @@ public:
 	void setDescription(std::string desc);
 	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);
-	void setEndDate(Date endDate);
-	void setStartDate(Date startDate);
-	void setStartTime(ClockTime startTime);
-	void setEndTime(ClockTime endTime);
+	void setEndDate(Date& endDate);
+	void setStartDate(Date& startDate);
+	void setStartTime(ClockTime& startTime);
+	void setEndTime(ClockTime& endTime);
 	void setStatusAsDone();
 	void setStatusasUndone();
 	void setStatusAsOverdue();
@@ -38,6 +40,7 @@ public:
 
 	//check overdue
 	bool checkOverdue();
+	bool hasKeyword(std::string keyword);
 
 protected:
 	std::string _taskDescription;
@@ -47,10 +50,8 @@ protected:
 	std::string _category;
 	unsigned long long _taskIndex;
 
-	Date _endDate;
-	Date _startDate;
-	ClockTime _startTime;
-	ClockTime _endTime;
-
-
+	Date *_endDate;
+	Date *_startDate;
+	ClockTime *_startTime;
+	ClockTime *_endTime;
 };

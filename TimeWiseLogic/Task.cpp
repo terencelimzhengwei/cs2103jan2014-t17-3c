@@ -3,13 +3,36 @@
 
 
 Task::Task(void){
-	_taskDescription="";
-	_taskType = FLOATING;
-	_taskStatus = UNCOMPLETED;
+	_taskDescription=DEFAULT_EMPTY;
+	_taskType = DEFAULT_TASK_TYPE;
+	_taskStatus = DEFAULT_TASK_STATUS;
+	_taskPriority=DEFAULT_PRIORITY;
+	_category=DEFAULT_EMPTY;
+	_startTime = NULL;
+	_endTime = NULL;
+	_startDate = NULL;
+	_endDate = NULL;
+	_taskIndex= DEFAULT_INDEX;
 }
 
 
 Task::~Task(void){
+	if(_startTime!=NULL){
+		delete _startTime;
+		_startTime=NULL;
+	}
+	if(_startDate!=NULL){
+		delete _startDate;
+		_startTime=NULL;
+	}
+	if(_endDate!=NULL){
+		delete _endDate;
+		_startTime=NULL;
+	}
+	if(_endTime!=NULL){
+		delete _endTime;
+		_startTime=NULL;
+	}
 }
 
 std::string Task::getDescription(){
@@ -38,11 +61,11 @@ void Task::setStatusAsOverdue(){
 bool Task::checkOverdue()
 {
 	bool overdue = false;
-	if(_endDate.checkOverdue()){
+	if(_endDate->checkOverdue()){
 		return true;
 	}
 	else{
-		if(_endTime.checkOverdueTime()){
+		if(_endTime->checkOverdueTime()){
 			return true;
 		}
 	}
@@ -57,18 +80,18 @@ void Task::setTaskType(TASK_TYPE type){
 }
 
 Date Task::getEndDate(){
-	return _endDate;
+	return *_endDate;
 }
 Date Task::getStartDate(){
-	return _startDate;
+	return *_startDate;
 }
 
 ClockTime Task::getEndTime(){
-	return _endTime;
+	return *_endTime;
 }
 
 ClockTime Task::getStartTime(){
-	return _startTime;
+	return *_startTime;
 }
 
 TASK_STATUS Task::getTaskStatus(){
@@ -80,11 +103,11 @@ std::string Task::getTaskCategory()
 	return _category;
 }
 
-void Task::setStartTime(ClockTime startTime){
-	_startTime = startTime;
+void Task::setStartTime(ClockTime& startTime){
+	_startTime = &startTime;
 }
-void Task::setEndTime(ClockTime endTime){
-	_endTime = endTime;
+void Task::setEndTime(ClockTime& endTime){
+	_endTime = &endTime;
 }
 
 void Task::setPriority(PRIORITY taskPriority){
@@ -98,9 +121,29 @@ void Task::setCategory(std::string category){
 void Task::setIndex(unsigned long long index){ 
 	_taskIndex = index;
 }
-void Task::setEndDate(Date endDate) {
-	_endDate = endDate;
+void Task::setEndDate(Date& endDate) {
+	_endDate = &endDate;
 }
-void Task::setStartDate(Date startDate) {
-	_startDate = startDate;
+void Task::setStartDate(Date& startDate) {
+	_startDate = &startDate;
+}
+
+bool Task::hasKeyword(std::string keyword){
+	unsigned int index;
+	std::string keywordInLowerCase = keyword;
+	std::string taskInLowerCase = _taskDescription;
+
+	transform(keywordInLowerCase.begin(), keywordInLowerCase.end(), keywordInLowerCase.begin(), ::tolower);
+	transform(taskInLowerCase.begin(), taskInLowerCase.end(), taskInLowerCase.begin(), ::tolower);
+
+	index=taskInLowerCase.find(keywordInLowerCase);
+
+	if(index!=std::string::npos){
+		return true;
+	}
+	return false;
+}
+
+PRIORITY Task::getPriority(){
+	return _taskPriority;
 }

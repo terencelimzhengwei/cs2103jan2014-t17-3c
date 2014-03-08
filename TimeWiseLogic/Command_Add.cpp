@@ -3,19 +3,32 @@
 
 Command_Add::Command_Add() {
 	_type = ADD;
-	_taskIndex = DEFAULT_TASK_INDEX;
 	_taskPriority = DEFAULT_PRIORITY;
 	_taskType = DEFAULT_TASK_TYPE;
-	_taskStatus = DEFAULT_TASK_STATUS;
-	_category = DEFAULT_CATEGORY;
+	_category = DEFAULT_EMPTY;
+	_endDate=NULL;
+	_endTime=NULL;
+	_startDate=NULL;
+	_startTime=NULL;
+	_addedTask=NULL;
 }
 Command_Add::~Command_Add(void) {
+	if(_startTime!=NULL){
+		_startTime=NULL;
+	}
+	if(_startDate!=NULL){
+		_startTime=NULL;
+	}
+	if(_endDate!=NULL){
+		_startTime=NULL;
+	}
+	if(_endTime!=NULL){
+		_startTime=NULL;
+	}
+	_addedTask=NULL;
 }
 
 //setter for fields
-void Command_Add::setIndex(int taskIndex) {
-	_taskIndex = taskIndex;
-}
 void Command_Add:: setDescription(std::string description){
 	_taskDescription = description;
 }
@@ -25,38 +38,42 @@ void Command_Add::setPriority(PRIORITY taskPriority) {
 void Command_Add::setCategory(std::string category) {
 	_category = category;
 }
-void Command_Add::setStartDate(Date date) {
-	_startDate = date;
+void Command_Add::setStartDate(Date& date) {
+	_startDate = new Date(date);
 }
-void Command_Add::setStartTime(ClockTime startTime) {
-	_startTime = startTime;
+void Command_Add::setStartTime(ClockTime& startTime) {
+	_startTime = new ClockTime(startTime);
 }
-void Command_Add::setEndTime(ClockTime endTime) {
-	_endTime = endTime;
+void Command_Add::setEndTime(ClockTime& endTime) {
+	_endTime = new ClockTime(endTime);
 }
-/*void Command_Add:: setTaskStatus(TASK_STATUS taskStatus) {
-	_taskStatus = taskStatus;
-}*/
 void Command_Add::setTaskType(TASK_TYPE taskType) {
 	_taskType = taskType;
 }
 
-void Command_Add::setEndDate(Date date){
-	_endDate=date;
+void Command_Add::setEndDate(Date& date){
+	_endDate=new Date(date);
 }
 
 bool Command_Add::execute(TaskList& tasklist){
-	Task newTask;
-	newTask.setDescription(_taskDescription);
-	newTask.setStartDate(_startDate);
-	newTask.setEndDate(_endDate);
-	newTask.setPriority(_taskPriority);
-	newTask.setCategory(_category);
-	newTask.setStartTime(_startTime);
-	newTask.setEndTime(_endTime);
-	newTask.setStatusasUndone();
-	newTask.setTaskType(_taskType);
-	tasklist.addTask(newTask);
+	_addedTask = new Task;
+	_addedTask->setDescription(_taskDescription);
+	_addedTask->setPriority(_taskPriority);
+	_addedTask->setCategory(_category);
+	if(hasEndDate()){
+		_addedTask->setEndDate(*_endDate);
+	}
+	if(hasEndTime()){
+		_addedTask->setEndTime(*_endTime);
+	}
+	if(hasStartDate()){
+		_addedTask->setStartDate(*_startDate);
+	}
+	if(hasStartTime()){
+		_addedTask->setStartTime(*_startTime);
+	}
+	_addedTask->setTaskType(_taskType);
+	tasklist.addTask(*_addedTask);
 	return true;
 }
 
@@ -64,11 +81,38 @@ bool Command_Add::undo(TaskList& taskList){
 	if (taskList.isEmpty()){
 		return false;
 	} else {
-		unsigned int taskIndex = taskList.size();
-		taskList.deleteTask(taskIndex);
+		unsigned int index = taskList.getTaskIndex(_addedTask);
+		taskList.deleteTask(index);
 		return true;
 	}
 }
 
+bool Command_Add::hasEndDate(){
+	if(_endDate==NULL){
+		return false;
+	}
+	return true;
+}
+
+bool Command_Add::hasStartDate(){
+	if(_startDate==NULL){
+		return false;
+	}
+	return true;
+}
+
+bool Command_Add::hasStartTime(){
+	if(_startTime==NULL){
+		return false;
+	}
+	return true;
+}
+
+bool Command_Add::hasEndTime(){
+	if(_endTime==NULL){
+		return false;
+	}
+	return true;
+}
 
 

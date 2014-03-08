@@ -99,7 +99,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 				QString numbering = QString::number(i+1);
 				table()->setItem(i, j, numbering);
 			} else {
-				std::string taskDescription = (taskList.getTask(i)).getDescription();
+				std::string taskDescription = (taskList.getTask(i))->getDescription();
 				QString qTask = QString::fromStdString(taskDescription);
 				table()->setItem(i, j, qTask);
 			}

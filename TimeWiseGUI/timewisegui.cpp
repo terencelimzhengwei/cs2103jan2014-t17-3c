@@ -52,8 +52,14 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 
 	//font setting
 	QFontDatabase fontDatabase; 
-	fontDatabase.addApplicationFont(":/comesinhandy.ttf");
-	fontDatabase.addApplicationFont(":/Homestead Display.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/CFJackStory-Regular.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/Homestead Display.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/EHSMB.TTF");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/comesinhandy.ttf");
+
+	ui.label_date->setFont(QFont("Electronic Highway Sign",18,75));
+	ui.label_time->setFont(QFont("Electronic Highway Sign",13,75));
+	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
 }
 
 TimeWiseGUI::~TimeWiseGUI() {

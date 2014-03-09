@@ -70,13 +70,10 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="Command_Add.h" />
-    <ClInclude Include="Command_Block.h" />
     <ClInclude Include="Command_Clear.h" />
     <ClInclude Include="Command_Delete.h" />
     <ClInclude Include="Command_Done.h" />
     <ClInclude Include="Command_Edit.h" />
-    <ClInclude Include="Command_Filter.h" />
-    <ClInclude Include="Command_Search.h" />
     <ClInclude Include="Command_Undoable.h" />
     <ClInclude Include="Command_Undone.h" />
     <ClInclude Include="CompletedTaskList.h" />
@@ -96,13 +93,10 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Command_Add.cpp" />
-    <ClCompile Include="Command_Block.cpp" />
     <ClCompile Include="Command_Clear.cpp" />
     <ClCompile Include="Command_Delete.cpp" />
     <ClCompile Include="Command_Done.cpp" />
     <ClCompile Include="Command_Edit.cpp" />
-    <ClCompile Include="Command_Filter.cpp" />
-    <ClCompile Include="Command_Search.cpp" />
     <ClCompile Include="Command_Undoable.cpp" />
     <ClCompile Include="Command_Undone.cpp" />
     <ClCompile Include="CompletedTaskList.cpp" />

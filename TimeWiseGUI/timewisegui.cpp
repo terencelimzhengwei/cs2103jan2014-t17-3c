@@ -11,7 +11,6 @@ const char* EDIT_COMMAND = "edit";
 const char* FILTER_COMMAND = "filter";
 const char* FIND_COMMAND = "find";
 
-//
 const char* ADD_FORMAT = "add: 'description' due_date due_time !priority #category";
 const char* DELETE_FORMAT = "delete: ID or all";
 const char* DONE_FORMAT = "done: ID or #category";
@@ -24,11 +23,11 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
 	ui.tableView->setModel( table() );
-	
+
 	//set column widths. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 40);
+	ui.tableView->setColumnWidth(0, 30);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 350);
+	ui.tableView->setColumnWidth(1, 300);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(2, 100);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
@@ -36,10 +35,10 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(4, 60);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(5, 100);
+	ui.tableView->setColumnWidth(5, 110);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(770);
-	ui.tableView->setMaximumWidth(770);
+	ui.tableView->setMinimumWidth(700);
+	ui.tableView->setMaximumWidth(700);
 
 	//set date and time
 	QDate date = QDate::currentDate();

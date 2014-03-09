@@ -11,6 +11,8 @@
 #include "Command_Delete.h"
 #include "Command_Edit.h"
 #include "Command_Clear.h"
+#include "Command_Done.h"
+#include "Command_Undone.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;

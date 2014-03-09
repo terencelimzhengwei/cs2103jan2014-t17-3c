@@ -12,11 +12,11 @@ public:
 	void setDescription(std::string);
 	void setPriority(PRIORITY);
 	void setCategory(std::string);
-	void setStartDate(Date);
+	void setStartDate(Date& startDate);
 	void setIndex(unsigned int);
-	void setEndDate(Date);
-	void setStartTime(ClockTime);
-	void setEndTime(ClockTime);
+	void setEndDate(Date& endDate);
+	void setStartTime(ClockTime& startTime);
+	void setEndTime(ClockTime& endTime);
 	void setHeader(std::string);
 
 	virtual bool execute(TaskList& tasklist);
@@ -26,10 +26,10 @@ private:
 	std::string _taskDescription;
 	PRIORITY _taskPriority;
 	std::string _category;
-	Date _startDate;
-	Date _endDate;
-	ClockTime _startTime;
-	ClockTime _endTime;
+	Date* _startDate;
+	Date* _endDate;
+	ClockTime* _startTime;
+	ClockTime* _endTime;
 
 	Task* _taskEdited;
 	Task _originalTask;

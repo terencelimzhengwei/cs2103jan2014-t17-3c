@@ -16,18 +16,9 @@ void TaskList::addTask(Task& task){
 	_taskList.push_back(&task);
 }
 
-bool TaskList::deleteTask(unsigned int& userIdx) {
-	unsigned int index = userIdx - 1; 
-	if(_taskList.empty()) {
-		return false;
-		//exception
-	}
-	else if(index < 0 || index > _taskList.size() - 1) {
-		return false;
-	} else {
-		_taskList.erase(_taskList.begin() + index);
-		return true;
-	}
+bool TaskList::deleteTask(unsigned int& index) {
+	_taskList.erase(_taskList.begin() + index);
+	return true;
 }
 
 Task* TaskList::getTask(unsigned int index)
@@ -62,4 +53,16 @@ Task* TaskList::searchTask(std::string& keyWord){
 			return _taskList[i];
 		}
 	}
+	return NULL;
+}
+
+std::vector<Task> TaskList::getTasksWithKeyword(std::string& keyword){
+	std::vector<Task> searchedTask;
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasKeyword(keyword)){
+			searchedTask.push_back(*_taskList[i]);
+		}
+	}
+	return searchedTask;
 }

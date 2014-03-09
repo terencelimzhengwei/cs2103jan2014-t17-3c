@@ -8,6 +8,10 @@ Command_Edit::Command_Edit() {
 	_taskPriority = DEFAULT_PRIORITY;
 	_category = DEFAULT_EMPTY;
 	_taskEdited=NULL;
+	_startTime=NULL;
+	_startDate=NULL;
+	_endTime=NULL;
+	_endDate=NULL;
 }
 Command_Edit::~Command_Edit(){
 }
@@ -24,44 +28,48 @@ void Command_Edit::setPriority(PRIORITY taskPriority) {
 void Command_Edit::setCategory(std::string category) {
 	_category = category;
 }
-void Command_Edit::setStartDate(Date date) {
-	_startDate = date;
+void Command_Edit::setStartDate(Date& startDate)
+{
+	_startDate = &startDate;
 }
-void Command_Edit::setStartTime(ClockTime startTime) {
-	_startTime = startTime;
+void Command_Edit::setStartTime(ClockTime& startTime)
+{
+	_startTime = &startTime;
 }
-void Command_Edit::setEndTime(ClockTime endTime) {
-	_endTime = endTime;
+void Command_Edit::setEndTime(ClockTime& endTime)
+{
+	_endTime = &endTime;
 }
 
-void Command_Edit::setEndDate(Date date){
-	_endDate = date;
+void Command_Edit::setEndDate(Date& endDate)
+{
+	_endDate = &endDate;
 }
 
 bool Command_Edit::execute(TaskList& taskList){
-	unsigned int index = _taskIndex - 1;
-	if (taskList.isEmpty()) {
-		return false;
-	} else if(index < 0 || index > taskList.size() - 1) {
-		return false;
-	} else {
-		_taskEdited = taskList.getTask(index);
-		_originalTask=*_taskEdited;
-		if(_header=="description"){
-			_taskEdited->setDescription(_taskDescription);
-		}else if(_header=="start date"){
-			_taskEdited->setStartDate(_startDate);
-		}else if(_header=="end date"){
-			_taskEdited->setEndDate(_endDate);
-		}else if(_header=="priority"){
-			_taskEdited->setPriority(_taskPriority);
-		}else if(_header=="category"){
-			_taskEdited->setCategory(_category);
-		}else if(_header=="start time"){
-			_taskEdited->setStartTime(_startTime);
-		}else if(_header=="end time"){
-			_taskEdited->setEndTime(_endTime);
-		}
+
+	_taskEdited = taskList.getTask(_taskIndex);
+	_originalTask=*_taskEdited;
+	if(_header=="description"){
+		_taskEdited->setDescription(_taskDescription);
+		return true;
+	}else if(_header=="start date"){
+		_taskEdited->setStartDate(*_startDate);
+		return true;
+	}else if(_header=="end date"){
+		_taskEdited->setEndDate(*_endDate);
+		return true;
+	}else if(_header=="priority"){
+		_taskEdited->setPriority(_taskPriority);
+		return true;
+	}else if(_header=="category"){
+		_taskEdited->setCategory(_category);
+		return true;
+	}else if(_header=="start time"){
+		_taskEdited->setStartTime(*_startTime);
+		return true;
+	}else if(_header=="end time"){
+		_taskEdited->setEndTime(*_endTime);
 		return true;
 	}
 	return false;

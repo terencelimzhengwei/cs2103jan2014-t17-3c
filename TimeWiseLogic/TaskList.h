@@ -15,6 +15,7 @@ public:
 	unsigned int getTaskIndex(Task* task);
 	void clearTask();
 	Task* searchTask(std::string& keyWord);
+	std::vector<Task> getTasksWithKeyword(std::string& keyword);
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
 	int size();

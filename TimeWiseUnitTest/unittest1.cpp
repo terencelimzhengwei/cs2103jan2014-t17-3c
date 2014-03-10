@@ -45,15 +45,15 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted[2]->execute(_taskList);
 			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
-			Assert::AreEqual("1600",_taskList.getTask(2)->getEndTime().toString().c_str());
-			Assert::AreEqual("12 Mar 14",_taskList.getTask(2)->getEndDate().toString().c_str());
+			Assert::AreEqual("1600",_taskList.getTask(2)->getEndTime()->toString().c_str());
+			Assert::AreEqual("12 Mar 14",_taskList.getTask(2)->getEndDate()->toString().c_str());
 
 			commandToBeExecuted[3]->execute(_taskList);
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(3)->getDescription().c_str());
-			Assert::AreEqual("1600",_taskList.getTask(3)->getEndTime().toString().c_str());
-			Assert::AreEqual("12 Mar 14",_taskList.getTask(3)->getEndDate().toString().c_str());
-			Assert::AreEqual("1200",_taskList.getTask(3)->getStartTime().toString().c_str());
-			Assert::AreEqual("10 Mar 14",_taskList.getTask(3)->getStartDate().toString().c_str());
+			Assert::AreEqual("1600",_taskList.getTask(3)->getEndTime()->toString().c_str());
+			Assert::AreEqual("12 Mar 14",_taskList.getTask(3)->getEndDate()->toString().c_str());
+			Assert::AreEqual("1200",_taskList.getTask(3)->getStartTime()->toString().c_str());
+			Assert::AreEqual("10 Mar 14",_taskList.getTask(3)->getStartDate()->toString().c_str());
 
 		}
 
@@ -184,7 +184,7 @@ namespace TimeWiseUnitTest
 			ClockTime* time = new ClockTime(2359);
 			edit1->setEndTime(*time);
 			edit1->execute(_taskList);
-			Assert::AreEqual("2359",(_taskList.getTask(2)->getEndTime().toString()).c_str());
+			Assert::AreEqual("2359",(_taskList.getTask(2)->getEndTime()->toString()).c_str());
 
 
 		}

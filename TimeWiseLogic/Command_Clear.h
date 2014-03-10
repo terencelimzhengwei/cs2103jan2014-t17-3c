@@ -1,6 +1,6 @@
 #pragma once
-#include "Command_Undoable.h"
-class Command_Clear:public Command_Undoable{
+#include "Command.h"
+class Command_Clear:public Command{
 public:
 	Command_Clear(void);
 	~Command_Clear(void);

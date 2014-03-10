@@ -15,11 +15,20 @@ public:
 	unsigned int getTaskIndex(Task* task);
 	void clearTask();
 	Task* searchTask(std::string& keyWord);
-	std::vector<Task> getTasksWithKeyword(std::string& keyword);
+	void getTasksWithKeyword(std::string& keyword);
+	std::vector<Task*> getSearchResults();
+	void updateCompletedTaskList();
+	void updateOverdueTaskList();
+	void deleteCompletedTaskList();
+	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
 	int size();
 
 private:
 	std::vector<Task*> _taskList;
+	std::vector<Task*> _overdueTaskList;
+	std::vector<Task*> _completedTaskList;
+	std::vector<Task*> _searchedTaskList;
+	std::vector<std::vector<Task*>> _clashList;
 };

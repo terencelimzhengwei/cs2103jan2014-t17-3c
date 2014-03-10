@@ -75,14 +75,14 @@
     <ClInclude Include="Command_Edit.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
-    <ClInclude Include="Command_Undoable.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Command_Search.h">
+      <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
     <ClInclude Include="Command_Done.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
     <ClInclude Include="Command_Undone.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,9 +122,6 @@
     <ClCompile Include="CommandManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Add.cpp">
-      <Filter>Source Files\Command Derived</Filter>
-    </ClCompile>
     <ClCompile Include="Command_Clear.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
@@ -137,14 +134,17 @@
     <ClCompile Include="Command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Undoable.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Command_Undone.cpp">
+      <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
     <ClCompile Include="Command_Done.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Undone.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Command_Search.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Add.cpp">
+      <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

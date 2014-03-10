@@ -13,6 +13,7 @@
 #include "Command_Clear.h"
 #include "Command_Done.h"
 #include "Command_Undone.h"
+#include "Command_Search.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;

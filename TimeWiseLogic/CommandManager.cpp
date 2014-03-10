@@ -61,10 +61,12 @@ void CommandManager::Undo()
 		m_nCleanCount--;
 		Command* pCommand = undoList.back();
 		undoList.pop_back();
-		if (pCommand->undo(_taskList))
+		if (pCommand->undo(_taskList)){
 			AddRedo(pCommand);
-		else
+		}else{
 			delete pCommand;
+			pCommand=NULL;
+		}
 	}
 }
 
@@ -75,10 +77,12 @@ void CommandManager::Redo()
 		m_nCleanCount++;
 		Command* pCommand = redoList.back();
 		redoList.pop_back();
-		if (pCommand->execute(_taskList))
+		if (pCommand->execute(_taskList)){
 			AddUndo(pCommand);
-		else
+		}else{
 			delete pCommand;
+			pCommand=NULL;
+		}
 	}
 }
 

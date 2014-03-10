@@ -1,8 +1,8 @@
 #pragma once
-#include "Command_Undoable.h"
+#include "Command.h"
 #include <stack>
 
-class Command_Delete : public Command_Undoable{
+class Command_Delete : public Command{
 public:
 	Command_Delete();
 	~Command_Delete(void);

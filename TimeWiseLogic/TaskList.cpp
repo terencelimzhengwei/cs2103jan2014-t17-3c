@@ -56,13 +56,59 @@ Task* TaskList::searchTask(std::string& keyWord){
 	return NULL;
 }
 
-std::vector<Task> TaskList::getTasksWithKeyword(std::string& keyword){
-	std::vector<Task> searchedTask;
+void TaskList::getTasksWithKeyword(std::string& keyword){
+	_searchedTaskList.clear();
 
 	for(int i=0;i<_taskList.size();i++){
 		if(_taskList[i]->hasKeyword(keyword)){
-			searchedTask.push_back(*_taskList[i]);
+			_searchedTaskList.push_back(_taskList[i]);
 		}
 	}
-	return searchedTask;
+}
+
+std::vector<Task*> TaskList::getSearchResults()
+{
+	return _searchedTaskList;
+}
+
+void TaskList::updateOverdueTaskList(){
+	_overdueTaskList.clear();
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->checkOverdue()){
+			_overdueTaskList.push_back(_taskList[i]);
+		}
+	}
+}
+
+void TaskList::deleteCompletedTaskList(){
+	for(int i=0;i<_taskList.size();i++){
+		for(int j=0;j<_completedTaskList.size();j++){
+			if(_taskList[i]==_completedTaskList[j]){
+				_taskList.erase(_taskList.begin()+i);
+				_completedTaskList.erase(_completedTaskList.begin()+j);
+			}
+		}
+	}
+}
+
+void TaskList::deleteOverdueTaskList(){
+	for(int i=0;i<_taskList.size();i++){
+		for(int j=0;j<_overdueTaskList.size();j++){
+			if(_taskList[i]==_overdueTaskList[j]){
+				_taskList.erase(_taskList.begin()+i);
+				_overdueTaskList.erase(_overdueTaskList.begin()+j);
+			}
+		}
+	}
+}
+
+void TaskList::updateCompletedTaskList(){
+	_completedTaskList.clear();
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->getTaskStatus()==COMPLETED){
+			_completedTaskList.push_back(_taskList[i]);
+		}
+	}
 }

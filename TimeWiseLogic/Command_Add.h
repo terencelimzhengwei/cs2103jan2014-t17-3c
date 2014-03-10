@@ -1,7 +1,7 @@
 #pragma once
-#include "Command_Undoable.h"
+#include "Command.h"
 
-class Command_Add: public Command_Undoable {
+class Command_Add: public Command {
 public:
 	Command_Add();
 	~Command_Add(void);

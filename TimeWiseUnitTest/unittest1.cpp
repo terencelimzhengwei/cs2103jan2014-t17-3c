@@ -249,5 +249,52 @@ namespace TimeWiseUnitTest
 			newUndone->execute(_taskList);
 			Assert::AreEqual(static_cast<int>(UNCOMPLETED),static_cast<int>(_taskList.getTask(3)->getTaskStatus()));
 		}
+
+		TEST_METHOD(CommandSearchKeywordTest) {
+			TaskList _taskList;
+			std::vector<Command_Add*> commandToBeExecuted;
+			ClockTime startTime(1200);
+			ClockTime endTime(1600);
+			Date startDate(10,3,2014);
+			Date endDate(12,3,2014);
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
+			commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setCategory("test");
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setEndDate(endDate);
+			commandToBeExecuted[2]->setEndTime(endTime);
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setStartDate(startDate);
+			commandToBeExecuted[3]->setStartTime(startTime);
+			commandToBeExecuted[3]->setEndDate(endDate);
+			commandToBeExecuted[3]->setEndTime(endTime);
+
+			commandToBeExecuted[0]->execute(_taskList);
+			commandToBeExecuted[1]->execute(_taskList);
+			commandToBeExecuted[2]->execute(_taskList);
+			commandToBeExecuted[3]->execute(_taskList);
+
+			Command_Search* search = new Command_Search();
+			search->setKeyword("task");
+			search->execute(_taskList);
+			std::vector<Task*> searchedtask= _taskList.getSearchResults();
+			Assert::AreEqual(_taskList.getTask(0)->getDescription().c_str(),searchedtask[0]->getDescription().c_str());
+			Assert::AreEqual(_taskList.getTask(1)->getDescription().c_str(),searchedtask[1]->getDescription().c_str());
+			Assert::AreEqual(_taskList.getTask(2)->getDescription().c_str(),searchedtask[2]->getDescription().c_str());
+			Assert::AreEqual(_taskList.getTask(3)->getDescription().c_str(),searchedtask[3]->getDescription().c_str());
+			search->setKeyword("check timed task without priority and cat");
+			search->execute(_taskList);
+			std::vector<Task*> searchedtask1= _taskList.getSearchResults();
+			Assert::AreEqual("check timed task without priority and cat",searchedtask1[0]->getDescription().c_str());
+
+		}
 	};
 }

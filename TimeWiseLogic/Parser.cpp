@@ -11,12 +11,15 @@ Command* Parser::interpretCommand(string action) {
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
 	
 	string parameter = removeFirstWord(action);
-	vector<string> parameters = splitBySpace(parameter);
+	Command_Add* commandAdd = new Command_Add;
+	commandAdd->setDescription(parameter);
+	return commandAdd;
+	/*/*vector<string> parameters = splitBySpace(parameter);
 	unsigned int parameterNum = parameters.size();
 
 	switch (commandType) {
 	case ADD: {
-			/* I need to declare a sub class here but i dont know why since we have to return a cmd object */
+			/ * I need to declare a sub class here but i dont know why since we have to return a cmd object * /
 			Command_Add* commandAdd = new Command_Add;
 			unsigned int wordReading = parameterNum - 1;
 
@@ -93,7 +96,7 @@ Command* Parser::interpretCommand(string action) {
 		Command_Edit* commandEdit = new Command_Edit;
 		commandEdit->setIndex(toNum(parameters[0]));
 		break;
-	}
+	}*/
 	return NULL;
 }
 

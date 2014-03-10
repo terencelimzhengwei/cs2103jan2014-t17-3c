@@ -6,10 +6,7 @@ TaskList::TaskList(void){
 
 
 TaskList::~TaskList(void){
-	for(int i=0;i<size();i++){
-		delete _taskList[i];
-		_taskList[i]=NULL;
-	}
+	_taskList.clear();
 }
 
 void TaskList::addTask(Task& task){

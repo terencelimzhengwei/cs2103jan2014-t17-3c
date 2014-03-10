@@ -26,6 +26,7 @@ Command_Add::~Command_Add(void) {
 		_startTime=NULL;
 	}
 	_addedTask=NULL;
+
 }
 
 //setter for fields

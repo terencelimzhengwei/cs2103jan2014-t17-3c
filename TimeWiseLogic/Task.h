@@ -15,10 +15,10 @@ public:
 	//getter functions
 	unsigned long long getIndex();
 	std::string getDescription();
-	Date getEndDate();
-	Date getStartDate();
-	ClockTime getEndTime();
-	ClockTime getStartTime();
+	Date* getEndDate();
+	Date* getStartDate();
+	ClockTime* getEndTime();
+	ClockTime* getStartTime();
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
 	PRIORITY getPriority();

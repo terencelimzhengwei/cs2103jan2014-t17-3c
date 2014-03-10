@@ -79,17 +79,17 @@ bool Command_Edit::undo(TaskList& taskList){
 	if(_header=="description"){
 		_taskEdited->setDescription(_originalTask.getDescription());
 	}else if(_header=="start date"){
-		_taskEdited->setStartDate(_originalTask.getStartDate());
+		_taskEdited->setStartDate(*_originalTask.getStartDate());
 	}else if(_header=="end date"){
-		_taskEdited->setEndDate(_originalTask.getEndDate());
+		_taskEdited->setEndDate(*_originalTask.getEndDate());
 	}else if(_header=="priority"){
 		_taskEdited->setPriority(_originalTask.getPriority());
 	}else if(_header=="category"){
 		_taskEdited->setCategory(_originalTask.getTaskCategory());
 	}else if(_header=="start time"){
-		_taskEdited->setStartTime(_originalTask.getStartTime());
+		_taskEdited->setStartTime(*_originalTask.getStartTime());
 	}else if(_header=="end time"){
-		_taskEdited->setEndTime(_originalTask.getEndTime());
+		_taskEdited->setEndTime(*_originalTask.getEndTime());
 	}
 	return true;
 }

@@ -79,19 +79,23 @@ void Task::setTaskType(TASK_TYPE type){
 	_taskType = type;
 }
 
-Date Task::getEndDate(){
-	return *_endDate;
+Date* Task::getEndDate()
+{
+	return _endDate;
 }
-Date Task::getStartDate(){
-	return *_startDate;
-}
-
-ClockTime Task::getEndTime(){
-	return *_endTime;
+Date* Task::getStartDate()
+{
+	return _startDate;
 }
 
-ClockTime Task::getStartTime(){
-	return *_startTime;
+ClockTime* Task::getEndTime()
+{
+	return _endTime;
+}
+
+ClockTime* Task::getStartTime()
+{
+	return _startTime;
 }
 
 TASK_STATUS Task::getTaskStatus(){

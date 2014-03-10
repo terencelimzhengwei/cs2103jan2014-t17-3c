@@ -2,6 +2,7 @@
 #define TIMEWISEGUI_H
 
 #include <QtWidgets/QMainWindow>
+#include <QStandardItemModel>
 #include <QDateTime>
 #include <QTimer>
 #include <QFontDatabase>
@@ -16,6 +17,8 @@ class TimeWiseGUI : public QMainWindow {
 public:
 	TimeWiseGUI(QWidget *parent = 0);
 	~TimeWiseGUI();
+	QStandardItemModel *model;
+	void setData();
 
 private slots:
 	void updateTime();

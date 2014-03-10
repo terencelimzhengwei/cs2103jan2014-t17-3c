@@ -163,7 +163,7 @@
     <property name="font">
      <font>
       <family>Electronic Highway Sign</family>
-      <pointsize>20</pointsize>
+      <pointsize>19</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -171,7 +171,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
-font: 75 20pt &quot;Electronic Highway Sign&quot;;</string>
+font: 75 19pt &quot;Electronic Highway Sign&quot;;</string>
     </property>
     <property name="text">
      <string>Date</string>
@@ -229,11 +229,6 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
      </item>
     </layout>
    </widget>
-   <zorder>tableView</zorder>
-   <zorder>label_date</zorder>
-   <zorder>label_time</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>label_help</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -78,13 +78,13 @@ public:
         label_date->setPalette(palette);
         QFont font1;
         font1.setFamily(QStringLiteral("Electronic Highway Sign"));
-        font1.setPointSize(20);
+        font1.setPointSize(19);
         font1.setBold(false);
         font1.setItalic(false);
         font1.setWeight(9);
         label_date->setFont(font1);
         label_date->setStyleSheet(QLatin1String("color: rgb(255, 255, 255);\n"
-"font: 75 20pt \"Electronic Highway Sign\";"));
+"font: 75 19pt \"Electronic Highway Sign\";"));
         label_time = new QLabel(centralWidget);
         label_time->setObjectName(QStringLiteral("label_time"));
         label_time->setGeometry(QRect(510, 60, 141, 20));
@@ -116,11 +116,6 @@ public:
         verticalLayout->addWidget(label_mlog);
 
         TimeWiseGUIClass->setCentralWidget(centralWidget);
-        tableView->raise();
-        label_date->raise();
-        label_time->raise();
-        layoutWidget->raise();
-        label_help->raise();
 
         retranslateUi(TimeWiseGUIClass);
 

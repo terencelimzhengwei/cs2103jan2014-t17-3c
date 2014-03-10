@@ -22,23 +22,37 @@ const char* DEFAULT_DISPLAY = "List of Commands: add, delete, done, edit, filter
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
-	ui.tableView->setModel( table() );
+	//set up tableView
+	model = new QStandardItemModel (0, 5, this);
+	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
+	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Start Date")));
+	model->setHorizontalHeaderItem(2, new QStandardItem(QString("Due Date")));
+	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Start Time")));
+	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
+	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
+	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
+	ui.tableView->setModel(model);
 
-	//set column widths. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 30);
+	//set column widths of table. Hardcoded and very primitive.
+	ui.tableView->setColumnWidth(0, 240);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 300);
+	ui.tableView->setColumnWidth(1, 80);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 100);
+	ui.tableView->setColumnWidth(2, 80);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 100);
+	ui.tableView->setColumnWidth(3, 80);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 60);
+	ui.tableView->setColumnWidth(4, 80);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(5, 110);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch);
+	ui.tableView->setColumnWidth(5, 40);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(6, 80);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
 	ui.tableView->setMinimumWidth(700);
 	ui.tableView->setMaximumWidth(700);
+
+	//set up row heights of table.
+	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
 
 	//set date and time
 	QDate date = QDate::currentDate();
@@ -57,8 +71,8 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/EHSMB.TTF");
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/comesinhandy.ttf");
 
-	ui.label_date->setFont(QFont("Electronic Highway Sign",18,75));
-	ui.label_time->setFont(QFont("Electronic Highway Sign",13,75));
+	ui.label_date->setFont(QFont("Electronic Highway Sign",19,75));
+	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
 	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
 }
 
@@ -97,22 +111,72 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 	//displays task detail in the correct box of the table. Hardcoded and very primitive.
 	std::string messageLog = _logic.processCommand(userCommand);
-	TaskList taskList = _logic.getTaskList();
-	for(int i = 0; i < taskList.size(); i++) {
-		for(int j = 0; j < 2; j++) {
-			if(j == 0) {
-				QString numbering = QString::number(i+1);
-				table()->setItem(i, j, numbering);
-			} else {
-				std::string taskDescription = (taskList.getTask(i))->getDescription();
-				QString qTask = QString::fromStdString(taskDescription);
-				table()->setItem(i, j, qTask);
-			}
-		}
-	}
+	
+	setData();
 
 	QString outputMessage = QString::fromStdString(messageLog);
 	ui.label_mlog->setText(outputMessage);
 
 	ui.userInput->clear();
+}
+
+void TimeWiseGUI::setData() {
+	TaskList taskList = _logic.getTaskList();
+	for(int i = 0; i < taskList.size(); i++) {
+		for(int j = 0; j < 7; j++) {
+			model->setRowCount(i+1);
+
+			switch (j) {
+			case 0: {
+				std::string taskDescription = (taskList.getTask(i))->getDescription();
+				QString qTask = QString::fromStdString(taskDescription);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			} /*
+			case 1: {
+				std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
+				QString qTask = QString::fromStdString(taskStartDate);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 2: {
+				std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
+				QString qTask = QString::fromStdString(taskEndDate);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 3: {
+				std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
+				QString qTask = QString::fromStdString(taskStartTime);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 4: {
+				std::string taskEndTime = taskList.getTask(i)->getEndTime()->toString();
+				QString qTask = QString::fromStdString(taskEndTime);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 5: {
+				PRIORITY taskPriority = taskList.getTask(i)->getPriority();
+				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 6: {
+				std::string taskCategory= taskList.getTask(i)->getTaskCategory();
+				QString qTask = QString::fromStdString(taskCategory);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}*/
+			}
+		}
+	}
 }

@@ -33,6 +33,9 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
 	ui.tableView->setModel(model);
 	
+	//allows long texts to be wrapped.
+	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
 	//set column widths of table. Hardcoded and very primitive.
 	ui.tableView->setColumnWidth(0, 240);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);

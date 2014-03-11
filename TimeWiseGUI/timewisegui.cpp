@@ -32,17 +32,17 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
 	ui.tableView->setModel(model);
-
+	
 	//set column widths of table. Hardcoded and very primitive.
 	ui.tableView->setColumnWidth(0, 240);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 80);
+	ui.tableView->setColumnWidth(1, 70);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 80);
+	ui.tableView->setColumnWidth(2, 70);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 80);
+	ui.tableView->setColumnWidth(3, 70);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 80);
+	ui.tableView->setColumnWidth(4, 70);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(5, 40);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
@@ -121,9 +121,13 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 }
 
 void TimeWiseGUI::setData() {
+	//clears the contents in the table before displaying updated taskList
+	model->removeRows(0, model->rowCount());
+	
 	TaskList taskList = _logic.getTaskList();
 	for(int i = 0; i < taskList.size(); i++) {
 		for(int j = 0; j < 7; j++) {
+			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
 
 			switch (j) {

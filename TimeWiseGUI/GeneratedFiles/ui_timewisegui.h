@@ -53,13 +53,15 @@ public:
         tableView->setObjectName(QStringLiteral("tableView"));
         tableView->setGeometry(QRect(50, 111, 701, 191));
         QFont font;
-        font.setFamily(QStringLiteral("CF Jack Story"));
-        font.setPointSize(11);
+        font.setFamily(QStringLiteral("Leelawadee"));
+        font.setPointSize(10);
         font.setBold(false);
         font.setItalic(false);
         font.setWeight(9);
         tableView->setFont(font);
-        tableView->setStyleSheet(QStringLiteral("font: 75 11pt \"CF Jack Story\";"));
+        tableView->setStyleSheet(QStringLiteral("font: 75 10pt \"Leelawadee\";"));
+        tableView->setFrameShape(QFrame::StyledPanel);
+        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
         label_date = new QLabel(centralWidget);
         label_date->setObjectName(QStringLiteral("label_date"));
         label_date->setGeometry(QRect(511, 31, 241, 31));

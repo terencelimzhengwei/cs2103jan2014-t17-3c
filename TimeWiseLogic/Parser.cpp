@@ -14,12 +14,12 @@ Command* Parser::interpretCommand(string action) {
 	Command_Add* commandAdd = new Command_Add;
 	commandAdd->setDescription(parameter);
 	return commandAdd;
-	/*/*vector<string> parameters = splitBySpace(parameter);
-	unsigned int parameterNum = parameters.size();
+	/*vector<string> parameters = splitBySpace(parameter);
+	unsigned int parameterNum = parameters.size();*/
 
-	switch (commandType) {
+	/*switch (commandType) {
 	case ADD: {
-			/ * I need to declare a sub class here but i dont know why since we have to return a cmd object * /
+			//I need to declare a sub class here but i dont know why since we have to return a cmd object 
 			Command_Add* commandAdd = new Command_Add;
 			unsigned int wordReading = parameterNum - 1;
 
@@ -73,6 +73,7 @@ Command* Parser::interpretCommand(string action) {
 			Command_Delete* commandDelete = new Command_Delete;
 			unsigned int id = toNum(parameter);	// Check whether ID type is correct
 			commandDelete->setDeletionIndex(id);
+			return commandDelete;
 		} else if(parameter == "all") {
 			return NULL;
 		} else {
@@ -96,8 +97,8 @@ Command* Parser::interpretCommand(string action) {
 		Command_Edit* commandEdit = new Command_Edit;
 		commandEdit->setIndex(toNum(parameters[0]));
 		break;
-	}*/
-	return NULL;
+	}
+	return NULL;*/
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {

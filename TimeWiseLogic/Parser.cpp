@@ -7,51 +7,64 @@ Parser::~Parser(void) {
 }
 
 Command* Parser::interpretCommand(string action) {
-	string commandTypeString = getFirstWord(action);
+	/*string commandTypeString = getFirstWord(action);
 	CMD_TYPE commandType = determineCommandType(commandTypeString);
 	
 	string parameter = removeFirstWord(action);
 	Command_Add* commandAdd = new Command_Add;
 	commandAdd->setDescription(parameter);
 	return commandAdd;
-	/*vector<string> parameters = splitBySpace(parameter);
+	vector<string> parameters = splitBySpace(parameter);
 	unsigned int parameterNum = parameters.size();*/
 
-	/*switch (commandType) {
+	
+	string commandTypeString = getFirstWord(action);
+	CMD_TYPE commandType = determineCommandType(commandTypeString);
+	
+	string parameter = removeFirstWord(action);
+	vector<string> parameters = splitBySpace(parameter);
+	unsigned int parameterNum = parameters.size();
+
+	switch (commandType) {
 	case ADD: {
 			//I need to declare a sub class here but i dont know why since we have to return a cmd object 
 			Command_Add* commandAdd = new Command_Add;
-			unsigned int wordReading = parameterNum - 1;
+			int wordReading = parameterNum - 1;
 
 			// Get category from user command
-			string category;
-			if(parameters[wordReading][0]=='#') {
-				wordReading--;
-				category = replaceWord("#","",parameters[wordReading]);
+			string category = "";
+			if(wordReading>=0 && parameters[wordReading][0]=='#') {
+				category = replaceWord("#","",parameters[wordReading--]);
 			}
 
 			// Get priority from user command
-			string priority;
-			if(parameters[wordReading][0]=='!') {
-				wordReading--;
-				priority = replaceWord("!","",parameters[wordReading]);
+			string priority = "";
+			if(wordReading>=0 && parameters[wordReading][0]=='!') {
+				priority = replaceWord("!","",parameters[wordReading--]);
 			}
 
 			// Get time from user command
-			string time = parameters[wordReading--];
-			if(isPreposition(parameters[wordReading])) {
-				wordReading--;
+			string time = "";
+			if(wordReading>=0 && isTimeFormat(parameters[wordReading])) {
+				time = parameters[wordReading--];
+				if(wordReading>=0 && isPreposition(parameters[wordReading])) {
+					wordReading--;
+				}
 			}
 
 			// Get date from user command
-			string date = parameters[wordReading--];
-			if(isPreposition(parameters[wordReading])) {
-				wordReading--;
+			string date = "";
+			if(wordReading>=0 && isDateFormat(parameters[wordReading])) {
+				date = parameters[wordReading--];
+				if(wordReading>=0 && isPreposition(parameters[wordReading])) {
+					wordReading--;
+				}
 			}
 
+
 			// Get description
-			string description;
-			for(unsigned int i=0 ; i<=wordReading; i++) {
+			string description = "";
+			for(int i=0 ; i<=wordReading; i++) {
 				if(i) {
 					description += " ";
 				}
@@ -61,21 +74,22 @@ Command* Parser::interpretCommand(string action) {
 			date = replaceWord("/","",date);
 			time = replaceWord(":","",time);
 
-			commandAdd->setCategory(category);
+			/*commandAdd->setCategory(category);*/
 			commandAdd->setDescription(description);
-			commandAdd->setStartDate(Date((toNum(date)/10000)%100,(toNum(date)/100)%100,toNum(date)%100));
-			commandAdd->setStartTime(ClockTime(toNum(time)));
+			if(date!="") {
+				int dateInt = toNum(date);
+				commandAdd->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
+			}
+			/*commandAdd->setStartTime(ClockTime(toNum(time)));*/
 
 			return commandAdd;
 		}
 	case DELETE:
-		if(isAllNumbers(parameter)) {
+		if(true /*isAllNumbers(parameter)*/) {
 			Command_Delete* commandDelete = new Command_Delete;
 			unsigned int id = toNum(parameter);	// Check whether ID type is correct
 			commandDelete->setDeletionIndex(id);
 			return commandDelete;
-		} else if(parameter == "all") {
-			return NULL;
 		} else {
 			return NULL;
 		}
@@ -98,7 +112,7 @@ Command* Parser::interpretCommand(string action) {
 		commandEdit->setIndex(toNum(parameters[0]));
 		break;
 	}
-	return NULL;*/
+	return NULL;
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {

@@ -73,21 +73,27 @@ Command* Parser::interpretCommand(string action) {
 
 			date = replaceWord("/","",date);
 			time = replaceWord(":","",time);
+			
+			if(category!="") {
+				commandAdd->setCategory(category);
+			}
 
-			commandAdd->setCategory(category);
 			commandAdd->setDescription(description);
+			
 			if(date!="") {
 				int dateInt = toNum(date);
-				commandAdd->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
+				commandAdd->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
 			}
-			/*commandAdd->setStartTime(ClockTime(toNum(time)));*/
-
+			
+			if(time!="") {
+				commandAdd->setEndTime(ClockTime(toNum(time)));
+			}
 			return commandAdd;
 		}
 	case DELETE:
-		if(true /*isAllNumbers(parameter)*/) {
+		if(isAllNumbers(parameter)) {
 			Command_Delete* commandDelete = new Command_Delete;
-			unsigned int id = toNum(parameter);	// Check whether ID type is correct
+			unsigned int id = toNum(parameter) - 1;
 			commandDelete->setDeletionIndex(id);
 			return commandDelete;
 		} else {
@@ -96,21 +102,71 @@ Command* Parser::interpretCommand(string action) {
 		break;
 	case DONE:
 		if(isAllNumbers(parameter)) {
-			unsigned int id = toNum(parameter);	// Check whether ID type is correct
-		} else if(parameter != "") { // check is "itemToProcess" a category
+			Command_Done* commandDone = new Command_Done;
+			unsigned int id = toNum(parameter) - 1;
+			commandDone->setCompletedIndex(id);
 		} else {
-			// Not invalid command
+			return NULL;
 		}
-		break;
-	case SEARCH:
-			// Keyword is parameter
-		break;
+	case UNDONE:
+		if(isAllNumbers(parameter)) {
+			Command_Undone* commandUndone = new Command_Undone;
+			unsigned int id = toNum(parameter) - 1;
+			commandUndone->setUncompletedIndex(id);
+		} else {
+			return NULL;
+		}
+	case SEARCH: {
+			Command_Search* commandSearch = new Command_Search;
+			commandSearch->setKeyword(parameter);
+			return commandSearch;
+		}
 	case FILTER:
-		break;
+		return NULL;
 	case EDIT:
 		Command_Edit* commandEdit = new Command_Edit;
+
 		commandEdit->setIndex(toNum(parameters[0]));
-		break;
+		string header = parameters[1];
+		int contentStartPoint = 2;
+		if(header=="start" || header=="due") {
+			header += parameters[2];
+			contentStartPoint = 3;
+		}
+		string content = "";
+		for(int i=0 ; (i+contentStartPoint)<parameters.size() ; i++) {
+			if(i) {
+				content += " ";
+			}
+			content += parameters[contentStartPoint+i];
+		}
+
+		if(header=="description") {
+			commandEdit->setDescription(content);
+		} else if(header=="startdate") {
+			int dateInt = toNum(replaceWord("/","",content));
+			commandEdit->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
+		} else if(header=="starttime") {
+			int timeInt = toNum(replaceWord("/","",content));
+			commandEdit->setStartTime(ClockTime(timeInt));
+		} else if(header=="duedate") {
+			int dateInt = toNum(replaceWord("/","",content));
+			commandEdit->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
+		} else if(header=="duetime") {
+			int timeInt = toNum(replaceWord("/","",content));
+			commandEdit->setEndTime(ClockTime(timeInt));
+		} else if(header=="category") {
+			commandEdit->setCategory(content);
+		} else if(header=="priority") {
+			if(content=="!H") {
+				commandEdit->setPriority(HIGH);
+			} else if(content=="!M") {
+				commandEdit->setPriority(MEDIUM);
+			} else if(content=="!L") {
+				commandEdit->setPriority(LOW);
+			}
+		}
+		return commandEdit;
 	}
 	return NULL;
 }

@@ -1,13 +1,30 @@
 #pragma once
+#ifndef STORAGE_H
+#define STORAGE_H
 
-//To be done by Jianxiang
+#include "TaskList.h"
+#include "Parser.h"
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 
 class Storage
 {
+private:
+	std::string _fileName;
+	Parser _parser;
+
 public:
 	Storage(void);
 	~Storage(void);
+
+	void retrieveFile(TaskList&);
+	void saveFile(TaskList&);
+
+	std::string removeFirstWord(std::string);
 };
+#endif
 
 //Example?
 /*//@author A0085616Y

@@ -11,13 +11,13 @@ const char* EDIT_COMMAND = "edit";
 const char* FILTER_COMMAND = "filter";
 const char* FIND_COMMAND = "find";
 
-const char* ADD_FORMAT = "add: 'description' due_date due_time !priority #category";
+const char* ADD_FORMAT = "add: description start_date due_date start_time due_time !priority #category";
 const char* DELETE_FORMAT = "delete: ID or all";
 const char* DONE_FORMAT = "done: ID or #category";
 const char* EDIT_FORMAT = "edit: ID header contents";
 const char* FILTER_FORMAT = "filter: #category";
 const char* FIND_FORMAT = "find: keywords";
-const char* DEFAULT_DISPLAY = "List of Commands: add, delete, done, edit, filter, find";
+const char* DEFAULT_DISPLAY = "List of Commands: add, delete, done, edit, filter, find, undo, redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -56,6 +56,8 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
+
+	this->setWindowFlags(Qt::CustomizeWindowHint);
 
 	//set date and time
 	QDate date = QDate::currentDate();
@@ -140,14 +142,14 @@ void TimeWiseGUI::setData() {
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			} /*
+			}
 			case 1: {
 				std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
 				QString qTask = QString::fromStdString(taskStartDate);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}
+			}/*
 			case 2: {
 				std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
 				QString qTask = QString::fromStdString(taskEndDate);
@@ -175,14 +177,14 @@ void TimeWiseGUI::setData() {
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}
+			}*/
 			case 6: {
 				std::string taskCategory= taskList.getTask(i)->getTaskCategory();
 				QString qTask = QString::fromStdString(taskCategory);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}*/
+			}
 			}
 		}
 	}

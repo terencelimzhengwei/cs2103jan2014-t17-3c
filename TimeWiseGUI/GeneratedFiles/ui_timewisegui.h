@@ -17,6 +17,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -35,6 +36,8 @@ public:
     QLabel *label_help;
     QLineEdit *userInput;
     QLabel *label_mlog;
+    QPushButton *pushButton_minimize;
+    QPushButton *pushButton_close;
 
     void setupUi(QMainWindow *TimeWiseGUIClass)
     {
@@ -102,7 +105,7 @@ public:
         verticalLayout->setContentsMargins(0, 0, 0, 0);
         label_help = new QLabel(layoutWidget);
         label_help->setObjectName(QStringLiteral("label_help"));
-        label_help->setStyleSheet(QStringLiteral("font: 75 11pt \"Leelawadee\";"));
+        label_help->setStyleSheet(QStringLiteral("font: 75 10pt \"Leelawadee\";"));
 
         verticalLayout->addWidget(label_help);
 
@@ -117,9 +120,29 @@ public:
 
         verticalLayout->addWidget(label_mlog);
 
+        pushButton_minimize = new QPushButton(centralWidget);
+        pushButton_minimize->setObjectName(QStringLiteral("pushButton_minimize"));
+        pushButton_minimize->setGeometry(QRect(770, 0, 21, 20));
+        pushButton_minimize->setStyleSheet(QLatin1String("font: 75 6pt \"Impact\";\n"
+"background-color: transparent\n"
+"rgb(255, 0, 0)"));
+        pushButton_close = new QPushButton(centralWidget);
+        pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
+        pushButton_close->setGeometry(QRect(790, 0, 21, 20));
+        pushButton_close->setStyleSheet(QLatin1String("font: 75 11pt \"MS Shell Dlg 2\";\n"
+"background-color: transparent\n"
+"rgb(255, 0, 0)"));
         TimeWiseGUIClass->setCentralWidget(centralWidget);
+        pushButton_close->raise();
+        tableView->raise();
+        label_date->raise();
+        label_time->raise();
+        layoutWidget->raise();
+        pushButton_minimize->raise();
 
         retranslateUi(TimeWiseGUIClass);
+        QObject::connect(pushButton_close, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(close()));
+        QObject::connect(pushButton_minimize, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(showMinimized()));
 
         QMetaObject::connectSlotsByName(TimeWiseGUIClass);
     } // setupUi
@@ -129,8 +152,10 @@ public:
         TimeWiseGUIClass->setWindowTitle(QApplication::translate("TimeWiseGUIClass", "TimeWiseGUI", 0));
         label_date->setText(QApplication::translate("TimeWiseGUIClass", "Date", 0));
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "Time", 0));
-        label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Delete, Done, Edit, Filter, Find", 0));
+        label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: add, delete, done, edit, filter, find, undo, redo", 0));
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
+        pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
+        pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));
     } // retranslateUi
 
 };

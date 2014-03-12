@@ -213,10 +213,10 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
      <item>
       <widget class="QLabel" name="label_help">
        <property name="styleSheet">
-        <string notr="true">font: 75 11pt &quot;Leelawadee&quot;;</string>
+        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
        </property>
        <property name="text">
-        <string>You may: Add, Delete, Done, Edit, Filter, Find</string>
+        <string>You may: add, delete, done, edit, filter, find, undo, redo</string>
        </property>
       </widget>
      </item>
@@ -235,13 +235,88 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="pushButton_minimize">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>0</y>
+      <width>21</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 6pt &quot;Impact&quot;;
+background-color: transparent
+rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string>_</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_close">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>0</y>
+      <width>21</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;
+background-color: transparent
+rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </widget>
+   <zorder>pushButton_close</zorder>
+   <zorder>tableView</zorder>
+   <zorder>label_date</zorder>
+   <zorder>label_time</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>pushButton_minimize</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="timewisegui.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_close</sender>
+   <signal>clicked()</signal>
+   <receiver>TimeWiseGUIClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>802</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>41</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_minimize</sender>
+   <signal>clicked()</signal>
+   <receiver>TimeWiseGUIClass</receiver>
+   <slot>showMinimized()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>766</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>407</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>lineEditReturnPressed()</slot>
   <slot>on_userInput_textChanged()</slot>

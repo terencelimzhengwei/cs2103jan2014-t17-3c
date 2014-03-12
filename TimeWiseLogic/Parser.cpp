@@ -74,7 +74,7 @@ Command* Parser::interpretCommand(string action) {
 			date = replaceWord("/","",date);
 			time = replaceWord(":","",time);
 
-			/*commandAdd->setCategory(category);*/
+			commandAdd->setCategory(category);
 			commandAdd->setDescription(description);
 			if(date!="") {
 				int dateInt = toNum(date);

@@ -14,6 +14,8 @@
 #include "Command_Done.h"
 #include "Command_Undone.h"
 #include "Command_Search.h"
+#include "Command_Undo.h"
+#include "Command_Redo.h"
 #include "Constants.h"
 #include "Calendar.h"
 using namespace std;

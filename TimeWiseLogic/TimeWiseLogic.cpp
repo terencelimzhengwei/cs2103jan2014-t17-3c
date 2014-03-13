@@ -16,8 +16,9 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		return "ERROR";
 	}
 	else{
-		_manager->DoCommand(_cmd);
-		return "SUCCESS";
+			_manager->DoCommand(_cmd);
+			_storage.saveFile(_taskList);
+			return "SUCCESS";
 	}
 
 }

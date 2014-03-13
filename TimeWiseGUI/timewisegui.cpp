@@ -144,31 +144,39 @@ void TimeWiseGUI::setData() {
 				break;
 			}
 			case 1: {
-				std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
-				QString qTask = QString::fromStdString(taskStartDate);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				if(taskList.getTask(i)->getStartDate()!=NULL){
+					std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
+					QString qTask = QString::fromStdString(taskStartDate);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
 				break;
-			}/*
+			}
 			case 2: {
-				std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
-				QString qTask = QString::fromStdString(taskEndDate);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				if(taskList.getTask(i)->getEndDate()!=NULL){
+					std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
+					QString qTask = QString::fromStdString(taskEndDate);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
 				break;
 			}
 			case 3: {
-				std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
-				QString qTask = QString::fromStdString(taskStartTime);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				if(taskList.getTask(i)->getStartTime()!=NULL){
+					std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
+					QString qTask = QString::fromStdString(taskStartTime);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
 				break;
 			}
 			case 4: {
-				std::string taskEndTime = taskList.getTask(i)->getEndTime()->toString();
-				QString qTask = QString::fromStdString(taskEndTime);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				if(taskList.getTask(i)->getEndTime()!=NULL){
+					std::string taskEndTime = taskList.getTask(i)->getEndTime()->toString();
+					QString qTask = QString::fromStdString(taskEndTime);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
 				break;
 			}
 			case 5: {
@@ -177,12 +185,14 @@ void TimeWiseGUI::setData() {
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}*/
+			}
 			case 6: {
-				std::string taskCategory= taskList.getTask(i)->getTaskCategory();
-				QString qTask = QString::fromStdString(taskCategory);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				if(taskList.getTask(i)->getTaskCategory()!=""){
+					std::string taskCategory= taskList.getTask(i)->getTaskCategory();
+					QString qTask = QString::fromStdString(taskCategory);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
 				break;
 			}
 			}

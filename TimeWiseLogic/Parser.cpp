@@ -121,12 +121,22 @@ Command* Parser::interpretCommand(string action) {
 			commandSearch->setKeyword(parameter);
 			return commandSearch;
 		}
-	case FILTER:
-		return NULL;
+	case CLEAR:{
+		Command_Clear* newCommand= new Command_Clear;
+		return newCommand;
+			   }
+	case UNDO:{
+		Command_Undo* newCommand= new Command_Undo;
+		return newCommand;
+			   }
+	case REDO:{
+		Command_Redo* newCommand= new Command_Redo;
+		return newCommand;
+			   }
 	case EDIT:
 		Command_Edit* commandEdit = new Command_Edit;
 
-		commandEdit->setIndex(toNum(parameters[0]));
+		commandEdit->setIndex(toNum(parameters[0])-1);
 		string header = parameters[1];
 		int contentStartPoint = 2;
 		if(header=="start" || header=="due") {
@@ -140,6 +150,8 @@ Command* Parser::interpretCommand(string action) {
 			}
 			content += parameters[contentStartPoint+i];
 		}
+
+		commandEdit->setHeader(header);
 
 		if(header=="description") {
 			commandEdit->setDescription(content);

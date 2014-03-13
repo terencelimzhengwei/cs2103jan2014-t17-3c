@@ -41,16 +41,22 @@ Command* CommandManager::getLastRedoCommand() const
 
 void CommandManager::DoCommand(Command* pCommand)
 {
-	// Clear redo list
-	ClearRedoList();
-	// Execute the command and add it to undo list if succeeded
-	if (pCommand->execute(_taskList)){
+	if(pCommand->getType()==UNDO){
+		Undo();
+	}else if(pCommand->getType()==REDO){
+		Redo();
+	}else{
+		// Clear redo list
+		ClearRedoList();
+		// Execute the command and add it to undo list if succeeded
+		if (pCommand->execute(_taskList)){
 		if(undoable(pCommand)){
 			AddUndo(pCommand);
 		}else{
 			delete pCommand;
 			pCommand=NULL;
 		}
+	}
 	}
 }
 
@@ -140,6 +146,8 @@ bool CommandManager::undoable(Command* pCommand){
 	}else if(pCommand->getType() == DELETE){
 		return true;
 	}else if(pCommand->getType() == EDIT){
+		return true;
+	}else if(pCommand->getType() == CLEAR){
 		return true;
 	}
 	return false;

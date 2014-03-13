@@ -12,12 +12,25 @@ Storage::~Storage(void)
 void Storage::saveFile(TaskList& listOfTasks){ 
 	std::ofstream writeFile(_fileName);
 	for(int i = 0; i < listOfTasks.size(); i++) { 
-		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n" 
-			<< "Start_Date: " << listOfTasks.getTask(i)->getStartDate() << "\n"
-			<< "End_Date: " << listOfTasks.getTask(i)->getEndDate() << "\n"
-			<< "Start_Time: " << listOfTasks.getTask(i)->getStartTime() << "\n"
-			<< "End_Time: " << listOfTasks.getTask(i)->getEndTime() << "\n"
-			<< "Priority: " << listOfTasks.getTask(i)->getPriority() << "\n"
+		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n";
+		writeFile << "Start_Date: ";
+		if(listOfTasks.getTask(i)->getStartDate()!=NULL){
+			writeFile<< listOfTasks.getTask(i)->getStartDate()->toString();
+		}
+
+		writeFile <<"\n"<< "End_Date: ";
+		if(listOfTasks.getTask(i)->getEndDate()!=NULL){
+			writeFile<< listOfTasks.getTask(i)->getEndDate()->toString();
+		}
+		writeFile <<"\n"<< "Start_Time: ";
+		if(listOfTasks.getTask(i)->getStartTime()!=NULL){
+			writeFile<< listOfTasks.getTask(i)->getStartTime()->toString();
+		}
+		writeFile<<"\n"<< "End_Time: ";
+		if(listOfTasks.getTask(i)->getEndTime()!=NULL){
+			writeFile<< listOfTasks.getTask(i)->getEndTime()->toString();
+		}
+		writeFile<<"\n"<< "Priority: " << listOfTasks.getTask(i)->getPriority() << "\n"
 			<< "Category: " << listOfTasks.getTask(i)->getTaskCategory() << "\n"
 			<< "Status: " << listOfTasks.getTask(i)->getTaskStatus() << "\n"
 			<< "==========" << std::endl;
@@ -34,16 +47,16 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 			std::ostringstream outstr;
 			while (userInput != "==========") {
 				std::string details = removeFirstWord(userInput); 
-				
+
 				outstr << details << "";
-				
+
 				getline(input, userInput);
 			} 
 			std::string entireTask = outstr.str();
 			_parser.interpretCommand(entireTask);
 		} 
 	}
-	
+
 	input.close();
 }
 

@@ -39,9 +39,9 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 
 			commandToBeExecuted[1]->execute(_taskList);
-			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(1)->getDescription().c_str());
-			Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(1)->getPriority()));
-			Assert::AreEqual("test",_taskList.getTask(1)->getTaskCategory().c_str());
+			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(0)->getPriority()));
+			Assert::AreEqual("test",_taskList.getTask(0)->getTaskCategory().c_str());
 
 			commandToBeExecuted[2]->execute(_taskList);
 			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
@@ -92,16 +92,16 @@ namespace TimeWiseUnitTest
 			Command_Delete* commandToBeDeleted = new Command_Delete;
 			commandToBeDeleted->setDeletionIndex(0);
 			commandToBeDeleted->execute(_taskList);
-			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(1);
 			commandToBeDeleted->execute(_taskList);
-			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(1);
 			commandToBeDeleted->execute(_taskList);
-			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(0);
 			commandToBeDeleted->execute(_taskList);
 			Assert::AreEqual(0,_taskList.size());
@@ -295,6 +295,23 @@ namespace TimeWiseUnitTest
 			std::vector<Task*> searchedtask1= _taskList.getSearchResults();
 			Assert::AreEqual("check timed task without priority and cat",searchedtask1[0]->getDescription().c_str());
 
+		}
+		TEST_METHOD(ClockTimeTest) {
+			ClockTime* newTime = new ClockTime(1200);
+			ClockTime* otherTime = new ClockTime(1230);
+			Assert::AreEqual(1200, newTime->getTime());
+			Assert::AreEqual("1200",newTime->toString().c_str());
+			Assert::IsTrue(newTime->checkOverdueTime());
+			Assert::IsFalse(newTime->isLater(otherTime));
+		}
+		TEST_METHOD(DateTest) {
+			Date* newDate = new Date(12,2,2014);
+			Date* otherDate = new Date(15,2,2014);
+			Assert::AreEqual(12,newDate->getDayNumber());
+			Assert::AreEqual(2,newDate->getMonth());
+			Assert::AreEqual(2014,newDate->getYear());
+			Assert::IsFalse(newDate->isLater(otherDate));
+			Assert::IsTrue(newDate->checkOverdue());
 		}
 	};
 }

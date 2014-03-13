@@ -41,6 +41,7 @@ public:
 	//check overdue
 	bool checkOverdue();
 	bool hasKeyword(std::string keyword);
+	bool checkLater(Task* otherTask);
 
 protected:
 	std::string _taskDescription;

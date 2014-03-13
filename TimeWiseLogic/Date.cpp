@@ -76,3 +76,41 @@ std::string Date::toString(){
 	dateInString=convert.str();
 	return dateInString;
 }
+
+TIMEDATE_STATUS Date::isLater(Date* otherDate)
+{
+	if(otherDate==NULL){
+		return LATER;
+	}
+	if(_year>otherDate->_year){
+		return LATER;
+	}else if(_year<otherDate->_year){
+		return EARLIER;
+	}else{
+		if(_month>otherDate->_month){
+			return LATER;
+		}else if(_month<otherDate->_month){
+			return EARLIER;
+		}else{
+			if(_dayNumber>otherDate->_dayNumber){
+				return LATER;
+			}else if(_dayNumber<otherDate->_dayNumber){
+				return EARLIER;
+			}else{
+				return SAME;
+			}
+		}
+	}
+}
+
+int Date::getDayNumber(){
+	return _dayNumber;
+}
+
+int Date::getMonth(){
+	return _month;
+}
+
+int Date::getYear(){
+	return _year;
+}

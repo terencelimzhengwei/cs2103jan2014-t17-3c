@@ -3,6 +3,8 @@
 #include <string>
 #include <ctime>
 #include <sstream>
+#include "Constants.h"
+
 class ClockTime
 {
 public:
@@ -12,7 +14,9 @@ public:
 	~ClockTime(void);
 	void setTimeNow(int time);
 	std::string toString();
+	int getTime();
 	bool checkOverdueTime();
+	TIMEDATE_STATUS isLater(ClockTime* otherTime);
 
 private:
 	int _time;

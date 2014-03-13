@@ -151,3 +151,24 @@ bool Task::hasKeyword(std::string keyword){
 PRIORITY Task::getPriority(){
 	return _taskPriority;
 }
+
+bool Task::checkLater(Task* otherTask){
+	if(_endDate==NULL){
+		return false;
+	}
+	if((_endDate->isLater(otherTask->getEndDate()))==LATER){
+		return true;
+	}else if((_endDate->isLater(otherTask->getEndDate()))==EARLIER){
+		return false;
+	}else{
+		if(_endTime==NULL){
+			return false;
+		}
+		if((_endTime->isLater(otherTask->getEndTime()))==LATER){
+			return true;
+		}else if((_endTime->isLater(otherTask->getEndTime()))==EARLIER){
+			return false;
+		}
+	}
+	return true;
+}

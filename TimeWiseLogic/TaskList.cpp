@@ -10,6 +10,12 @@ TaskList::~TaskList(void){
 }
 
 void TaskList::addTask(Task& task){
+	for(int i=0;i<_taskList.size();i++){
+		if(!task.checkLater(_taskList[i])){
+			_taskList.insert(_taskList.begin()+i,&task);
+			return;
+		}
+	}  
 	_taskList.push_back(&task);
 }
 

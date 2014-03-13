@@ -7,6 +7,7 @@
 #include <ctime>
 #include <sstream>
 #include "Calendar.h"
+#include "Constants.h"
 //#include "Parser.h"
 
 class Date
@@ -22,6 +23,7 @@ public:
 	int getMonth();
 	int getYear();
 	bool checkOverdue();
+	TIMEDATE_STATUS isLater(Date* otherDate);
 	std::string toString();
 private:
 	time_t _currentTime;

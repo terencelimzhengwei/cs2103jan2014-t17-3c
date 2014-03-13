@@ -68,3 +68,18 @@ std::string ClockTime::toString(){
 		return timeInString;
 	}
 }
+TIMEDATE_STATUS ClockTime::isLater(ClockTime* otherTime)
+{
+	if(otherTime==NULL){
+		return LATER;
+	}else if(_time>otherTime->getTime()){
+		return LATER;
+	}else if(_time==otherTime->getTime()){
+		return SAME;
+	}
+	return EARLIER;
+}
+
+int ClockTime::getTime(){
+	return _time;
+}

@@ -146,7 +146,7 @@ void TimeWiseGUI::setData() {
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}/*
+			}
 			case 1: {
 				if(taskList.getTask(i)->getStartDate()!=NULL){
 					std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
@@ -198,7 +198,7 @@ void TimeWiseGUI::setData() {
 					model->setItem(i, j, item);
 				}
 				break;
-			}*/
+			}
 			}
 		}
 	}

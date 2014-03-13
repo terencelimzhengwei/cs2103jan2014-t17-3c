@@ -41,6 +41,7 @@ Command* Parser::interpretCommand(string action) {
 			string priority = "";
 			if(wordReading>=0 && parameters[wordReading][0]=='!') {
 				priority = replaceWord("!","",parameters[wordReading--]);
+
 			}
 
 			// Get time from user command
@@ -61,7 +62,6 @@ Command* Parser::interpretCommand(string action) {
 				}
 			}
 
-
 			// Get description
 			string description = "";
 			for(int i=0 ; i<=wordReading; i++) {
@@ -71,11 +71,22 @@ Command* Parser::interpretCommand(string action) {
 				description += parameters[i];
 			}
 
+			// Set the commandAdd
 			date = replaceWord("/","",date);
 			time = replaceWord(":","",time);
 			
 			if(category!="") {
 				commandAdd->setCategory(category);
+			}
+
+			if(priority!="") {
+				if(priority=="H" || priority=="high") {
+					commandAdd->setPriority(HIGH);
+				} else if(priority=="M" || priority=="medium") {
+					commandAdd->setPriority(MEDIUM);
+				} else if(priority=="L" || priority=="low") {
+					commandAdd->setPriority(LOW);
+				}
 			}
 
 			commandAdd->setDescription(description);
@@ -121,18 +132,18 @@ Command* Parser::interpretCommand(string action) {
 			commandSearch->setKeyword(parameter);
 			return commandSearch;
 		}
-	case CLEAR:{
-		Command_Clear* newCommand= new Command_Clear;
-		return newCommand;
-			   }
-	case UNDO:{
-		Command_Undo* newCommand= new Command_Undo;
-		return newCommand;
-			   }
-	case REDO:{
-		Command_Redo* newCommand= new Command_Redo;
-		return newCommand;
-			   }
+	case CLEAR: {
+			Command_Clear* newCommand= new Command_Clear;
+			return newCommand;
+		}
+	case UNDO: {
+			Command_Undo* newCommand= new Command_Undo;
+			return newCommand;
+		}
+	case REDO: {
+			Command_Redo* newCommand= new Command_Redo;
+			return newCommand;
+		}
 	case EDIT:
 		Command_Edit* commandEdit = new Command_Edit;
 
@@ -170,11 +181,12 @@ Command* Parser::interpretCommand(string action) {
 		} else if(header=="category") {
 			commandEdit->setCategory(content);
 		} else if(header=="priority") {
-			if(content=="!H") {
+			content = replaceWord("!", "", content);
+			if(content=="H" || content=="high") {
 				commandEdit->setPriority(HIGH);
-			} else if(content=="!M") {
+			} else if(content=="M" || content=="medium") {
 				commandEdit->setPriority(MEDIUM);
-			} else if(content=="!L") {
+			} else if(content=="L" || content=="low") {
 				commandEdit->setPriority(LOW);
 			}
 		}
@@ -184,7 +196,7 @@ Command* Parser::interpretCommand(string action) {
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
-	convertToLowerCase(commandTypeString);
+	commandTypeString = convertToLowerCase(commandTypeString);
 
 	if(commandTypeString == "add") {
 		return ADD;
@@ -222,6 +234,51 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 
 }
 
+vector<int> Parser::extractDate(string command, int start, int end) {
+	int wordReading = end;
+	vector<string> parameters = splitBySpace(removeFirstWord(command));
+	vector<string> dateComponent;
+	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
+
+	if(wordReading>=0) {
+		dateComponent = explode('/',parameters[wordReading]);
+		if(dateComponent.size() == 2 || dateComponent.size() == 3) {
+			if(isAllNumbers(dateComponent[0]) && isAllNumbers(dateComponent[1])) {
+				if(dateComponent[0].length()<=2 && dateComponent[1].length()<=2) {
+						output[2] = toNum(dateComponent[0]);
+						output[1] = toNum(dateComponent[1]);
+						if(dateComponent.size() == 3) {
+							output[0] = toNum(dateComponent[2]);
+							if(dateComponent[2].length()==2) {
+							// !! Need to change the code to get the current century
+								output[0] += 2000;
+							}
+						} else {
+							// !! Need to change the code to get the current year
+							output[0] = 2014;
+						}
+				}
+			}
+			output[3] = 1;
+		} else {
+			// Sun, Mon, Tue, Wed, Thur, Fri, Sat
+			// Waiting to be completed
+		}
+	}
+	
+	if(wordReading>=1) {
+		dateComponent.clear();
+		dateComponent.push_back(parameters[wordReading-1]);
+		dateComponent.push_back(parameters[wordReading]);
+	}
+
+	if(wordReading>=2) {
+		//dateCandidate[1] = parameters[wordReading-2] + parameters[wordReading+1] + parameters[wordReading];
+	}
+
+	return output;
+}
+
 std::string Parser::getFirstWord(std::string action) {
 	unsigned int tStart = 0;
 	unsigned int tEnd = 0;
@@ -252,7 +309,8 @@ std::string Parser::replaceWord(std::string search, std::string replace, std::st
 	return subject;
 }
 
-void Parser::convertToLowerCase(std::string &str){
+string Parser::convertToLowerCase(std::string input){
+	string str = input;
 
 	for(unsigned int i = 0; i < str.length(); i++){
 		// convert ONLY the upper case
@@ -260,6 +318,8 @@ void Parser::convertToLowerCase(std::string &str){
 			str[i] += 32;   // convert to small case by adding the number difference as in ASCII 
 		}
 	}
+
+	return str;
 }
 
 bool Parser::contains(char ch, std::string str){
@@ -285,7 +345,7 @@ bool Parser::isAllNumbers(std::string str){
 	return true;
 }
 
-int Parser::toNum(std::string str){
+int Parser::toNum(std::string str) {
 	//assert(isAllNumbers(str));
 	return stoi(str);
 }
@@ -343,7 +403,7 @@ bool Parser::isDateFormat(std::string str){
 bool Parser::containsDay(std::string str){
 	bool contains = false;
 	removeSymbol(str);
-	convertToLowerCase(str);
+	str = convertToLowerCase(str);
 
 	if( str== "today" || str == "tomorrow" ){
 		contains = true;
@@ -365,6 +425,30 @@ vector<std::string> Parser::splitBySpace(std::string input) {
 	istringstream iss(input);
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<vector<string> >(tokens));
 	return tokens;
+}
+
+vector<string> Parser::explode(char delimiter, string input) {
+	removeWhiteSpaces(input);
+	vector<string> splittedStr;
+	string str;
+	int pos;
+
+	while(!input.empty()) {
+		pos = input.find(delimiter);
+		if(pos == string::npos) {
+			str = input;
+			input.clear();
+		} else {
+			str = input.substr(0, pos);
+			input.erase(0, pos+1);
+		}
+		removeWhiteSpaces(str);
+
+		if(!str.empty()) {
+			splittedStr.push_back(str);
+		}
+	}
+	return splittedStr;
 }
 
 stack<std::string> Parser::splitStringBy(char delimiter, std::string input){
@@ -455,112 +539,10 @@ void Parser::removeWhiteSpaces(std::string& str){
 	}
 }
 
-std::string Parser::extractSchedule(std::string &input){
-	removeWhiteSpaces(input);
-	stack<std::string> words = splitStringBy(' ', input);
-	stack<std::string> taskWords;
-	stack<std::string> date;
-	stack<std::string> time;
-	std::string schedule;
-	std::string word,originalWord;
-
-	while(!words.empty()){
-		word = words.top();
-		originalWord = word;
-		removeSymbol(word);
-		words.pop();
-
-		if( isDateFormat(word) || containsDay(word) ){
-			date.push(word);        
-
-			// to throw the preposition word preceeding the date
-			if(!words.empty() && isPreposition(words.top()) ){      
-				words.pop();
-			}
-		}
-		else if( isTimeFormat(word) ){
-			time.push(word);        
-
-			// to throw the preposition word preceeding the date
-			if(!words.empty() && isPreposition(words.top())){       
-				words.pop();
-			}
-		}
-		else{
-			taskWords.push(originalWord);
-		}       
-
-	}
-
-	input.clear();
-	while(!taskWords.empty()){
-		input += taskWords.top();
-		input += " ";
-		taskWords.pop();
-	}
-	removeWhiteSpaces(input);
-
-	if(date.empty() && time.empty()){
-		schedule = "";
-	}
-	else if(date.size() == 1 && time.size() == 2){
-		schedule = date.top();
-		date.pop();
-		schedule += " ";
-		schedule += time.top();
-		time.pop();
-		schedule += " - ";
-		schedule += time.top();
-		time.pop();
-	}
-	else if(date.size() == 2 && time.size() == 2){
-		schedule = date.top();
-		date.pop();
-		schedule += " ";
-		schedule += time.top();
-		time.pop();
-		schedule += " - ";
-		schedule += date.top();
-		date.pop();
-		schedule += " ";
-		schedule += time.top();
-		time.pop();
-	}
-	else if( date.size() == 2 && time.empty()){
-		schedule += date.top();
-		date.pop();
-		schedule += " - ";
-		schedule += date.top();
-		date.pop();
-	}
-	else if( time.size() == 2 && date.size() == 0){
-		schedule += time.top();
-		time.pop();
-		schedule += " - "; 
-		schedule += time.top();
-		time.pop();
-	}
-	// deadline task or wrong schedule format
-	else{ 
-		while(!date.empty()){
-			schedule += date.top();
-			date.pop();
-		}
-		schedule += " ";
-		while(!time.empty()){
-			schedule += time.top();
-			time.pop();
-		}
-	}
-	removeWhiteSpaces(schedule);
-
-	return schedule;
-}
-
-bool Parser::isPreposition(std::string word){
+bool Parser::isPreposition(std::string word) {
 	bool matchFound = false;
 	removeSymbol(word);
-	for(int i = 0; i < MAX_PREPOSITION; i++){
+	for(int i = 0; i < MAX_PREPOSITION; i++) {
 		if(word == PREPOSITION[i]){
 			matchFound = true;
 			break;
@@ -592,37 +574,16 @@ void Parser::removeSymbol(std::string& word){
 	}
 }
 
-bool Parser::isTimeFormat(std::string time){
-	int length = time.size();                                 
-	std::string period; 
-	std::string beforeDot, afterDot;
-	std::string _time;
+bool Parser::isTimeFormat(string time) {
 	bool isTime = false;
 
-	if(length >= 3){
-		period = time.substr(length-2, 2); // get the last 2 characters from the string
-	}
-	else{   
-		return isTime;
-	}
+	time = replaceWord(":", "", time);
 
-
-	if(period == "am" || period == "pm"){
-		_time = time.substr(0, time.size()-2); //remove the last two characters which is (am/pm)
-
-		if(contains('.',_time)){
-			beforeDot = _time.substr(0, _time.find('.'));
-			afterDot = _time.substr(_time.find('.')+1);
-
-			if(beforeDot.size() <= 2 && beforeDot.size() > 0 && afterDot.size() == 2 && isAllNumbers(beforeDot) && isAllNumbers(afterDot)){
-				isTime = true;
-			}
-		}
-		else if(isAllNumbers(_time)){
+	if(time.length()==4 && isAllNumbers(time)) {
+		int timeInt = toNum(time);
+		if((timeInt%100) < 60 && (timeInt/100 < 24))
 			isTime = true;
-		}
 	}
-
+	
 	return isTime;
-
 }

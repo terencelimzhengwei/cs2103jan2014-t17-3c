@@ -57,6 +57,10 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
 
+	//enable table to scroll to the bottom whenever a new row is inserted.
+	connect(ui.tableView->model(), SIGNAL(rowsInserted (const QModelIndex &, int, int )), ui.tableView, SLOT(scrollToBottom ()));
+
+	//remove title header of main window
 	this->setWindowFlags(Qt::CustomizeWindowHint);
 
 	//set date and time
@@ -142,7 +146,7 @@ void TimeWiseGUI::setData() {
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-			}
+			}/*
 			case 1: {
 				if(taskList.getTask(i)->getStartDate()!=NULL){
 					std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
@@ -194,7 +198,7 @@ void TimeWiseGUI::setData() {
 					model->setItem(i, j, item);
 				}
 				break;
-			}
+			}*/
 			}
 		}
 	}

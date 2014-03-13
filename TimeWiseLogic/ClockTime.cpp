@@ -47,8 +47,24 @@ bool ClockTime::checkOverdueTime(){
 
 std::string ClockTime::toString(){
 	std::ostringstream stream;
+	int timeInt = _time;
 	stream<<_time;
 	std::string timeInString;
 	timeInString = stream.str();
-	return timeInString;
+
+	switch(timeInString.size()){
+	case 1:
+		if(timeInString[0]=='0'){
+			return "0000";
+		}else{
+			return "000"+timeInString;
+		}
+		break;
+	case 2:
+		return "00"+timeInString;
+	case 3:
+		return "0"+timeInString;
+	default:
+		return timeInString;
+	}
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.1
+** Created by: Qt User Interface Compiler version 5.2.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -66,7 +66,7 @@ public:
         tableView->setFrameShape(QFrame::StyledPanel);
         tableView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         tableView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
-        tableView->setAutoScroll(false);
+        tableView->setAutoScroll(true);
         tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
         label_date = new QLabel(centralWidget);
         label_date->setObjectName(QStringLiteral("label_date"));

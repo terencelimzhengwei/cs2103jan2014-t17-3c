@@ -60,6 +60,9 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	//enable table to scroll to the bottom whenever a new row is inserted.
 	connect(ui.tableView->model(), SIGNAL(rowsInserted (const QModelIndex &, int, int )), ui.tableView, SLOT(scrollToBottom ()));
 
+	//set cursor to userInput lineEdit as soon as program is opened.
+	QTimer::singleShot(0, ui.userInput, SLOT(setFocus()));
+	
 	//remove title header of main window
 	this->setWindowFlags(Qt::CustomizeWindowHint);
 

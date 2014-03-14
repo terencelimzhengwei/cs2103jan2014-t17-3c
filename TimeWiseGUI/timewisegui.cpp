@@ -31,6 +31,7 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
 	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
+	setData();
 	ui.tableView->setModel(model);
 	
 	//allows long texts to be wrapped.

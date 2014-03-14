@@ -322,8 +322,9 @@ string Parser::convertToLowerCase(std::string input){
 	return str;
 }
 
-bool Parser::contains(char ch, std::string str){
-	if(str.find(ch) == std::string::npos){
+bool Parser::contains(std::string ch, std::string input)
+{
+	if(input.find(ch) == std::string::npos){
 		return false;
 	}
 	else{
@@ -586,4 +587,110 @@ bool Parser::isTimeFormat(string time) {
 	}
 	
 	return isTime;
+}
+
+PRIORITY Parser::getPriority(std::string input){
+	std::string characterlist;
+	characterlist=input.substr(1);
+	if(characterlist=="h"||characterlist=="high"){
+		return HIGH;
+	}else if(characterlist=="m"||characterlist=="medium"){
+		return MEDIUM;
+	}else if(characterlist=="l"||characterlist=="low"){
+		return LOW;
+	}else{
+		//exceptions
+		return LOW;
+	}
+}
+
+Date* Parser::createDate(std::string date)
+{
+	Date* _date = new Date;
+	std::string dateString=date;
+	std::vector<std::string> dateVector;
+	std::string temp;
+	std::string day="",month="",year="";
+	int _day,_month,_year;
+	unsigned int index=0, index1=0;
+	index=dateString.find_first_of("/");
+	day=dateString.substr(0,index);
+	temp=dateString.substr(index+1);
+	if(temp.find_first_of("/")!=std::string::npos){
+		index1=temp.find_first_of("/");
+		month=temp.substr(index+1,index1);
+		year=temp.substr(index1+1);
+		_year=toNum(year);
+	}else{
+		month=temp.substr(index+1);
+		_year = _date->getCurrentYear();
+	}
+
+	_day = toNum(day);
+	_month = toNum(month);
+	if(_year<100){
+		_year=_year+2000;
+	}
+	Date* newDate = new Date(_day,_month,_year);
+	return newDate;
+}
+
+ClockTime* Parser::createTime(std::string time)
+{
+	int timeTemp;
+	if(time.size()==4 && isAllNumbers(time)){
+		ClockTime* newTime = new ClockTime(toNum(time));
+		return newTime;
+	}else if(contains("am",time)){
+		if(contains(".",time)){
+			replaceWord(".","",time);
+			timeTemp=toNum(time);
+			if(timeTemp>=1200){
+				timeTemp=timeTemp-1200;
+			}
+			ClockTime* newTime = new ClockTime(timeTemp);
+			return newTime;
+		}else{
+			timeTemp=toNum(time);
+			if(timeTemp!=12){
+				timeTemp*=100;
+			}else{
+				timeTemp=0;
+			}
+			ClockTime* newTime = new ClockTime(timeTemp);
+			return newTime;
+		}
+	}else if(contains("pm",time)){
+		if(contains(".",time)){
+			replaceWord(".","",time);
+			timeTemp=toNum(time);
+			if(timeTemp<1200){
+				timeTemp=timeTemp+1200;
+			}
+			ClockTime* newTime = new ClockTime(timeTemp);
+			return newTime;
+		}else{
+			timeTemp=toNum(time);
+			if(timeTemp!=12){
+				timeTemp=(timeTemp*100)+1200;
+			}else{
+				timeTemp=1200;
+			}
+			ClockTime* newTime = new ClockTime(timeTemp);
+			return newTime;
+		}
+	}
+	return NULL;
+
+}
+
+TASK_STATUS Parser::getTaskStatus(std::string input){
+	if(input==TASK_STATUS_STRING[0]){
+		return UNCOMPLETED;
+	}else if(input==TASK_STATUS_STRING[1]){
+		return COMPLETED;
+	}else if(input==TASK_STATUS_STRING[2]){
+		return OVERDUE;
+	}
+	return UNCOMPLETED;
 }

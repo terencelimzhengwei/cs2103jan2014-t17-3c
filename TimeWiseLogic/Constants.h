@@ -11,6 +11,8 @@ static const int PRIORITY_COUNT			= 3;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
 static const int MAX_PREPOSITION        = 9;
+static const int HEADER_COUNT			= 9;
+
 
 
 enum TASK_STATUS{UNCOMPLETED,OVERDUE,COMPLETED};

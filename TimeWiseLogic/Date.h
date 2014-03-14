@@ -25,6 +25,12 @@ public:
 	bool checkOverdue();
 	TIMEDATE_STATUS isLater(Date* otherDate);
 	std::string toString();
+	std::string toSaveFormat();
+
+	int getCurrentYear();
+	int getCurrentMonth();
+	int getCurrentDay();
+
 private:
 	time_t _currentTime;
 	struct tm _timeNow ;

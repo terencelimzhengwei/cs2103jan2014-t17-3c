@@ -114,3 +114,39 @@ int Date::getMonth(){
 int Date::getYear(){
 	return _year;
 }
+
+std::string Date::toSaveFormat(){
+	std::ostringstream convert;
+	std::string slash = "/";
+	std::string dateInString;
+	convert<<_dayNumber<<slash<<_month<<slash<<_year;
+	dateInString=convert.str();
+	return dateInString;
+}
+
+int Date::getCurrentYear(){
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisYear = _timeNow.tm_year + 1900;
+
+	return thisYear;
+}
+
+int Date::getCurrentMonth(){
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisMonth = _timeNow.tm_mon + 1;
+
+	return thisMonth;
+}
+
+int Date::getCurrentDay(){
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisDay = _timeNow.tm_mday;
+
+	return thisDay;
+}

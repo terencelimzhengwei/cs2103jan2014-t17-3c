@@ -4,6 +4,7 @@
 
 TimeWiseLogic::TimeWiseLogic(void){
 	_manager = new CommandManager(_taskList);
+	initLogic();
 }
 
 
@@ -31,4 +32,8 @@ bool TimeWiseLogic::parseCommand(std::string commandLine){
 TaskList TimeWiseLogic::getTaskList()
 {
 	return _taskList;
+}
+
+void TimeWiseLogic::initLogic(){
+	_storage.retrieveFile(_taskList);
 }

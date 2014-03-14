@@ -72,7 +72,6 @@ Command* Parser::interpretCommand(string action) {
 			}
 
 			// Set the commandAdd
-			date = replaceWord("/","",date);
 			time = replaceWord(":","",time);
 			
 			if(category!="") {
@@ -92,12 +91,11 @@ Command* Parser::interpretCommand(string action) {
 			commandAdd->setDescription(description);
 			
 			if(date!="") {
-				int dateInt = toNum(date);
-				commandAdd->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
+				commandAdd->setEndDate(*createDate(date));
 			}
 			
 			if(time!="") {
-				commandAdd->setEndTime(ClockTime(toNum(time)));
+				commandAdd->setEndTime(*createTime(time));
 			}
 			return commandAdd;
 		}
@@ -618,7 +616,7 @@ Date* Parser::createDate(std::string date)
 	temp=dateString.substr(index+1);
 	if(temp.find_first_of("/")!=std::string::npos){
 		index1=temp.find_first_of("/");
-		month=temp.substr(index+1,index1);
+		month=temp.substr(0,index1);
 		year=temp.substr(index1+1);
 		_year=toNum(year);
 	}else{

@@ -51,6 +51,9 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 		while(!input.eof()) {
 			taskHeader=0;
 			getline(input,userInput);
+			if(userInput==""){
+				return;
+			}
 			Task* newTask = new Task;
 			while (userInput != "==========") {
 				std::string details = _parser.removeFirstWord(userInput); 
@@ -61,28 +64,28 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 					break;
 				case 1:
 					taskHeader++;
-					if(details!=""||details!=" "){
+					if(details==""||details==" "){
 						break;
 					}else{
 						newTask->setStartDate(*_parser.createDate(details));
 					}break;
 				case 2:
 					taskHeader++;
-					if(details!=""||details!=" "){
+					if(details==""||details==" "){
 						break;
 					}else{
 						newTask->setEndDate(*_parser.createDate(details));
 					}break;
 				case 3:
 					taskHeader++;
-					if(details!=""||details!=" "){
+					if(details==""||details==" "){
 						break;
 					}else{
 						newTask->setStartTime(*_parser.createTime(details));
 					}break;
 				case 4:
 					taskHeader++;
-					if(details!=""||details!=" "){
+					if(details==""||details==" "){
 						break;
 					}else{
 						newTask->setEndTime(*_parser.createTime(details));

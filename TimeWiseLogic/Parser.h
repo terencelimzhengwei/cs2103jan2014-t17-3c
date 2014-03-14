@@ -33,7 +33,7 @@ public:
 	string removeFirstWord(std::string action);
 	string replaceWord(std::string search, std::string replace, std::string subject);
 	string convertToLowerCase(string str);
-	bool contains(char ch, std::string input);
+	bool contains(std::string ch, std::string input);
 	bool isAllNumbers(std::string);
 	int toNum(std::string);
 	bool convertIfNum(const std::string &numInStr, int &num);
@@ -52,6 +52,12 @@ public:
 	bool isPreposition(std::string);
 	void removeSymbol(std::string&);
 	bool isTimeFormat(std::string);
+
+	TASK_STATUS getTaskStatus(std::string);
+
+	PRIORITY getPriority(std::string input);
+	ClockTime* createTime(std::string time);
+	Date* createDate(std::string date);
 };
 
 #endif

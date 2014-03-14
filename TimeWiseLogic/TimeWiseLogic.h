@@ -14,7 +14,6 @@ public:
 	TimeWiseLogic(void);
 	~TimeWiseLogic(void);
 
-	void initLogic();
 	TaskList getTaskList();
 	std::string processCommand(std::string commandLine);
 	bool parseCommand(std::string commandLine);
@@ -28,6 +27,8 @@ private:
 
 	Command* _cmd;
 	std::string _feedback;
+
+	void initLogic();
 
 };
 #endif

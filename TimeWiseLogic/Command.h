@@ -5,6 +5,7 @@
 
 #include <list>
 #include <string>
+#include <assert.h>
 #include "Date.h"
 #include "ClockTime.h"
 #include "Constants.h"

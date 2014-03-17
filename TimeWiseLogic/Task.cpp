@@ -60,6 +60,7 @@ void Task::setStatusAsOverdue(){
 
 bool Task::checkOverdue()
 {
+	assert(_endDate!=NULL);
 	bool overdue = false;
 	if(_endDate->checkOverdue()){
 		return true;
@@ -79,22 +80,18 @@ void Task::setTaskType(TASK_TYPE type){
 	_taskType = type;
 }
 
-Date* Task::getEndDate()
-{
+Date* Task::getEndDate(){
 	return _endDate;
 }
-Date* Task::getStartDate()
-{
+Date* Task::getStartDate(){
 	return _startDate;
 }
 
-ClockTime* Task::getEndTime()
-{
+ClockTime* Task::getEndTime(){
 	return _endTime;
 }
 
-ClockTime* Task::getStartTime()
-{
+ClockTime* Task::getStartTime(){
 	return _startTime;
 }
 
@@ -102,8 +99,7 @@ TASK_STATUS Task::getTaskStatus(){
 	return _taskStatus;
 }
 
-std::string Task::getTaskCategory()
-{
+std::string Task::getTaskCategory(){
 	return _category;
 }
 
@@ -123,6 +119,7 @@ void Task::setCategory(std::string category){
 }
 
 void Task::setIndex(unsigned long long index){ 
+	assert(index>=0);
 	_taskIndex = index;
 }
 void Task::setEndDate(Date& endDate) {
@@ -156,6 +153,7 @@ bool Task::checkLater(Task* otherTask){
 	if(_endDate==NULL){
 		return false;
 	}
+	assert(_endDate!=NULL);
 	if((_endDate->isLater(otherTask->getEndDate()))==LATER){
 		return true;
 	}else if((_endDate->isLater(otherTask->getEndDate()))==EARLIER){
@@ -164,6 +162,7 @@ bool Task::checkLater(Task* otherTask){
 		if(_endTime==NULL){
 			return false;
 		}
+		assert(_endTime!=NULL);
 		if((_endTime->isLater(otherTask->getEndTime()))==LATER){
 			return true;
 		}else if((_endTime->isLater(otherTask->getEndTime()))==EARLIER){

@@ -84,11 +84,11 @@
     <ClInclude Include="Command_Undone.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
-    <ClInclude Include="Command_Undo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Command_Redo.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Undo.h">
+      <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,11 +152,11 @@
     <ClCompile Include="Command_Add.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Undo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Command_Redo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Undo.cpp">
+      <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

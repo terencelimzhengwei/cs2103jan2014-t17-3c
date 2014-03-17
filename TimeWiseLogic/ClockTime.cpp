@@ -5,6 +5,8 @@ ClockTime::ClockTime(){
 }
 
 ClockTime::ClockTime(int time){
+	assert(time<=2400);
+	assert(time>=0);
 	_time=time;
 
 }
@@ -19,8 +21,9 @@ ClockTime::~ClockTime(void){
 
 
 
-void ClockTime::setTimeNow(int time)
-{
+void ClockTime::setTimeNow(int time){
+	assert(time>=0);
+	assert(time<=2400);
 	_time=time;
 }
 

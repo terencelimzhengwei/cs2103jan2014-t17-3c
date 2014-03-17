@@ -14,8 +14,8 @@ public:
 	bool deleteTask(unsigned int&);
 	unsigned int getTaskIndex(Task* task);
 	void clearTask();
-	Task* searchTask(std::string& keyWord);
-	void getTasksWithKeyword(std::string& keyword);
+	Task* getTaskWithKeyword(std::string& keyWord);
+	void populateSearchList(std::string& keyword);
 	std::vector<Task*> getSearchResults();
 	void updateCompletedTaskList();
 	void updateOverdueTaskList();

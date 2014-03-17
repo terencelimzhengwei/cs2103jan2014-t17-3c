@@ -15,7 +15,7 @@ void Command_Search::setKeyword(std::string keyword){
 }
 
 bool Command_Search::execute(TaskList& tasklist){
-	tasklist.getTasksWithKeyword(_keyword);
+	tasklist.populateSearchList(_keyword);
 	return true;
 }
 

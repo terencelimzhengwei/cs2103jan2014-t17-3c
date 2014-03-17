@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Date.h"
 #include "ClockTime.h"
+#include <assert.h>
 
 class Task
 {

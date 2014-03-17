@@ -20,12 +20,15 @@ void TaskList::addTask(Task& task){
 }
 
 bool TaskList::deleteTask(unsigned int& index) {
+	assert(index>=0);
+	assert(index<_taskList.size());
 	_taskList.erase(_taskList.begin() + index);
 	return true;
 }
 
-Task* TaskList::getTask(unsigned int index)
-{
+Task* TaskList::getTask(unsigned int index){
+	assert(index>=0);
+	assert(index<_taskList.size());
 	return _taskList[index];
 }
 
@@ -38,6 +41,7 @@ int TaskList::size(){
 }
 
 unsigned int TaskList::getTaskIndex(Task* task){
+	assert(task!=NULL);
 	for(int i=0;i<_taskList.size();i++){
 		if(task==getTask(i)){
 			return i;
@@ -50,7 +54,7 @@ void TaskList::clearTask(){
 	_taskList.clear();
 }
 
-Task* TaskList::searchTask(std::string& keyWord){
+Task* TaskList::getTaskWithKeyword(std::string& keyWord){
 	for(int i=0;i<size();i++){
 		if(_taskList[i]->hasKeyword(keyWord)){
 			return _taskList[i];
@@ -59,7 +63,7 @@ Task* TaskList::searchTask(std::string& keyWord){
 	return NULL;
 }
 
-void TaskList::getTasksWithKeyword(std::string& keyword){
+void TaskList::populateSearchList(std::string& keyword){
 	_searchedTaskList.clear();
 
 	for(int i=0;i<_taskList.size();i++){
@@ -69,8 +73,7 @@ void TaskList::getTasksWithKeyword(std::string& keyword){
 	}
 }
 
-std::vector<Task*> TaskList::getSearchResults()
-{
+std::vector<Task*> TaskList::getSearchResults(){
 	return _searchedTaskList;
 }
 

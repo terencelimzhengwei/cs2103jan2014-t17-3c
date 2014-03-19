@@ -5,6 +5,7 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <iostream>
 #include <sstream>
 #include "Command.h"
 #include "Command_Add.h"
@@ -17,6 +18,7 @@
 #include "Command_Undo.h"
 #include "Command_Redo.h"
 #include "Constants.h"
+#include "Exceptions.h"
 #include "Calendar.h"
 using namespace std;
 
@@ -24,13 +26,21 @@ using namespace std;
 
 class Parser
 {
+private:
+	std::vector<string> _feedbackExceptiontoUI;
 public:
 	Parser(void);
 	~Parser(void);
+	std::string getFeedback();
 	Command* interpretCommand(std::string action);
 	CMD_TYPE determineCommandType(std::string commandTypeString);
 	string getFirstWord(std::string action);
 	string removeFirstWord(std::string action);
+	//flag functions
+	void flagArg(std::string);
+	void flagDescription(std::string);
+	void flagIndex(int);
+	void flagNumber(std::string);//check whether the the user input contains a number
 	string replaceWord(std::string search, std::string replace, std::string subject);
 	string convertToLowerCase(string str);
 	bool contains(std::string ch, std::string input);

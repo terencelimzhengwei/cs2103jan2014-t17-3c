@@ -39,6 +39,16 @@ const TASK_TYPE DEFAULT_TASK_TYPE = FLOATING;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 const std::string DEFAULT_EMPTY = "";
 
+// These string store exception messages to be displayed by TextBuddy in the CLI 
+// in case of user input error.
 
+static const char* USER_INPUT_INDEX_OUT_OF_RANGE_EXCEPTION = "Error! The task index that you entered is out of range.";
+static const char* MISSING_TASK_DESCRIPTION = "Error! You have not entered any task description";
+static const char* INVALID_USER_INPUT_COMMAND_WORD = "Error! Invalid command!";
+static const char* NO_ARGUMENT_EXCEPTION = "Error! No input detected";
+static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number";
+static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter is invalid";
+static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
+static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
 
 #endif // !_CONSTANTS_H

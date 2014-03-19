@@ -14,7 +14,7 @@ TimeWiseLogic::~TimeWiseLogic(void)
 
 std::string TimeWiseLogic::processCommand(std::string commandLine){
 	if(!parseCommand(commandLine)){
-		return "ERROR";
+		return _parser.getFeedback();
 	}
 	else{
 			_manager->DoCommand(_cmd);

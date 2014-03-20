@@ -62,6 +62,7 @@ Command* Parser::interpretCommand(string action) {
 						if(wordReading>=0 && isPreposition(parameters[wordReading])) {
 							wordReading--;
 						}
+					}
 
 						// Get description
 						string description = "";
@@ -99,8 +100,6 @@ Command* Parser::interpretCommand(string action) {
 							commandAdd->setEndTime(*createTime(time));
 						}
 						return commandAdd;
-					}
-
 
 				} catch(NoArgumentException& nae) {
 					_feedbackExceptiontoUI.push_back(nae.what());

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <qdatetime.h>
 #include <QHeaderView>
+#include <QShortcut>
 
 const char* ADD_COMMAND = "add";
 const char* DELETE_COMMAND = "delete";
@@ -87,6 +88,11 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.label_date->setFont(QFont("Electronic Highway Sign",19,75));
 	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
 	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
+
+	QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
+	QShortcut *shortcut1 = new QShortcut(QKeySequence("Ctrl+Y"), this);
+	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
+	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
 }
 
 TimeWiseGUI::~TimeWiseGUI() {
@@ -206,4 +212,14 @@ void TimeWiseGUI::setData() {
 			}
 		}
 	}
+}
+
+void TimeWiseGUI::undo(){
+	_logic.processCommand("undo");
+	setData();
+}
+
+void TimeWiseGUI::redo(){
+	_logic.processCommand("redo");
+	setData();
 }

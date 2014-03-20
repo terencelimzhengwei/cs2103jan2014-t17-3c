@@ -24,6 +24,8 @@ private slots:
 	void updateTime();
 	void on_userInput_textChanged();
 	void on_userInput_returnPressed();
+	void undo();
+	void redo();
 
 private:
 	Ui::TimeWiseGUIClass ui;

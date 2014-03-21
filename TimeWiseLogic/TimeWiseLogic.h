@@ -5,7 +5,7 @@
 #include "Constants.h"
 #include "TaskList.h"
 #include "Storage.h"
-#include "Parser.h"
+#include "CommandCreator.h"
 #include "CommandManager.h"
 
 class TimeWiseLogic
@@ -20,7 +20,7 @@ public:
 
 
 private:
-	Parser _parser;
+	CommandCreator _creator ;
 	TaskList _taskList;
 	Storage _storage;
 	CommandManager *_manager;

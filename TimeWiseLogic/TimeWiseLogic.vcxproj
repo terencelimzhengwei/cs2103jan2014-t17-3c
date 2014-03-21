@@ -71,6 +71,7 @@
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="Command_Add.h" />
     <ClInclude Include="Command_Clear.h" />
+    <ClInclude Include="CommandCreator.h" />
     <ClInclude Include="Command_Delete.h" />
     <ClInclude Include="Command_Done.h" />
     <ClInclude Include="Command_Edit.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Command_Add.cpp" />
     <ClCompile Include="Command_Clear.cpp" />
+    <ClCompile Include="CommandCreator.cpp" />
     <ClCompile Include="Command_Delete.cpp" />
     <ClCompile Include="Command_Done.cpp" />
     <ClCompile Include="Command_Edit.cpp" />

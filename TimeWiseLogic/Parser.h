@@ -7,18 +7,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include "Command.h"
-#include "Command_Add.h"
-#include "Command_Delete.h"
-#include "Command_Edit.h"
-#include "Command_Clear.h"
-#include "Command_Done.h"
-#include "Command_Undone.h"
-#include "Command_Search.h"
-#include "Command_Undo.h"
-#include "Command_Redo.h"
-#include "Constants.h"
-#include "Exceptions.h"
+#include "ClockTime.h"
+#include "Date.h"
 #include "Calendar.h"
 using namespace std;
 
@@ -27,21 +17,13 @@ using namespace std;
 class Parser
 {
 private:
-	std::vector<string> _feedbackExceptiontoUI;
 public:
 	Parser(void);
 	~Parser(void);
-	std::string getFeedback();
-	Command* interpretCommand(std::string action);
-	CMD_TYPE determineCommandType(std::string commandTypeString);
-	string getFirstWord(std::string action);
-	string removeFirstWord(std::string action);
-	//flag functions
-	void flagArg(std::string);
-	void flagDescription(std::string);
-	void flagIndex(int);
-	void flagNumber(std::string);//check whether the the user input contains a number
-	string replaceWord(std::string search, std::string replace, std::string subject);
+	CMD_TYPE determineCommandType(std::string);
+	string getFirstWord(std::string);
+	string removeFirstWord(std::string);
+	string replaceWord(std::string, std::string, std::string);
 	string convertToLowerCase(string str);
 	bool contains(std::string ch, std::string input);
 	bool isAllNumbers(std::string);

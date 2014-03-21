@@ -6,7 +6,7 @@ Command_Clear::Command_Clear(void){
 
 
 Command_Clear::~Command_Clear(void){
-	if(_lastCmdCalled=="execute"){
+	if(_lastCmdCalled == "execute"){
 		if(!_deletedTasks.empty()){
 			for(int i=0;i<_deletedTasks.size();i++){
 				delete _deletedTasks[i];

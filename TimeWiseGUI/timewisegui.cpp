@@ -158,6 +158,11 @@ void TimeWiseGUI::setData() {
 	model->removeRows(0, model->rowCount());
 	
 	TaskList taskList = _logic.getTaskList();
+	//updates task status every second to ensure tasks that are overdue becomes overdue.
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(taskList.updateOverdueTaskList()));
+	timer->start(1000);
+
 	for(int i = 0; i < taskList.size(); i++) {
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -166,9 +171,20 @@ void TimeWiseGUI::setData() {
 			switch (j) {
 			case 0: {
 				std::string taskDescription = (taskList.getTask(i))->getDescription();
+
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
+
+				TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
+				QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+
+				//highlight description in red if that task is overdue
+				QColor rowColor = Qt::red;
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				}
+
 				break;
 			}
 			case 1: {

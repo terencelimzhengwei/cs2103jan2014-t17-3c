@@ -21,6 +21,7 @@ public:
 	void populateSearchList(TASK_STATUS status);
 
 	std::vector<Task*> getSearchResults();
+	std::vector<Task*> getOverdueTasks();
 	void updateCompletedTaskList();
 	void updateOverdueTaskList();
 	void deleteCompletedTaskList();

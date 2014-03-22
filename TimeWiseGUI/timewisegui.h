@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QFontDatabase>
 #include <QString>
+#include <QCompleter>
 #include <string>
 #include <stdexcept>
 #include "ui_timewisegui.h"
@@ -32,6 +33,7 @@ private slots:
 private:
 	Ui::TimeWiseGUIClass ui;
 	TimeWiseLogic _logic;
+	QCompleter *descCompleter;
 };
 
 #endif // TIMEWISEGUI_H

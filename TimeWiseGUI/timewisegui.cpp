@@ -89,10 +89,23 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
 	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
 
+	//hotkeys
 	QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
 	QShortcut *shortcut1 = new QShortcut(QKeySequence("Ctrl+Y"), this);
 	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
 	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
+
+	//"auto-complete" for search function
+	QStringList descList;
+	TaskList taskList = _logic.getTaskList();
+	for(int i = 0; i < taskList.size(); i++) {
+		string taskDescription = "search " + taskList.getTask(i)->getDescription();
+		QString qTask = QString::fromStdString(taskDescription);
+		descList << qTask;
+	}
+	descCompleter = new QCompleter(descList, this);
+	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+	ui.userInput->setCompleter(descCompleter);
 }
 
 TimeWiseGUI::~TimeWiseGUI() {
@@ -121,6 +134,17 @@ void TimeWiseGUI::on_userInput_textChanged() {
 		ui.label_help->setText(EDIT_FORMAT);
 	} else if(ui.userInput->text() == SEARCH_COMMAND) {
 		ui.label_help->setText(SEARCH_FORMAT);
+		/*QStringList descList;
+		TaskList taskList = _logic.getTaskList();
+		for(int i = 0; i < taskList.size(); i++) {
+			string taskDescription = taskList.getTask(i)->getDescription();
+			QString qTask = QString::fromStdString(taskDescription);
+			descList << qTask;
+		}
+		descCompleter = new QCompleter(descList, this);
+		descCompleter->setCompletionColumn(2);
+		descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+		ui.userInput->setCompleter(descCompleter);*/
 	} else if(ui.userInput->text() == "") {
 		ui.label_help->setText(DEFAULT_DISPLAY);
 	}
@@ -161,10 +185,6 @@ void TimeWiseGUI::setData() {
 	model->removeRows(0, model->rowCount());
 	
 	TaskList taskList = _logic.getTaskList();
-	//updates task status every second to ensure tasks that are overdue becomes overdue.
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(taskList.updateOverdueTaskList()));
-	timer->start(1000);
 
 	for(int i = 0; i < taskList.size(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();

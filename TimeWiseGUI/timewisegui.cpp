@@ -6,19 +6,19 @@
 #include <QShortcut>
 
 const char* ADD_COMMAND = "add";
+const char* CLEAR_COMMAND = "clear";
 const char* DELETE_COMMAND = "delete";
 const char* DONE_COMMAND = "done";
 const char* EDIT_COMMAND = "edit";
-const char* FILTER_COMMAND = "filter";
-const char* FIND_COMMAND = "find";
+const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: description start_date due_date start_time due_time !priority #category";
-const char* DELETE_FORMAT = "delete: ID or all";
+const char* CLEAR_FORMAT = "clear";
+const char* DELETE_FORMAT = "delete: ID or keywords";
 const char* DONE_FORMAT = "done: ID or #category";
 const char* EDIT_FORMAT = "edit: ID header contents";
-const char* FILTER_FORMAT = "filter: #category";
-const char* FIND_FORMAT = "find: keywords";
-const char* DEFAULT_DISPLAY = "List of Commands: add, delete, done, edit, filter, find, undo, redo";
+const char* SEARCH_FORMAT = "search: keywords or <status> or !priority or #category";
+const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, done, edit, search, undo, redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -108,16 +108,16 @@ void TimeWiseGUI::updateTime() {
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
+	} else if(ui.userInput->text() == CLEAR_COMMAND) {
+		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
 		ui.label_help->setText(DELETE_FORMAT);
 	} else if(ui.userInput->text() == DONE_COMMAND) {
 		ui.label_help->setText(DONE_FORMAT);
 	} else if(ui.userInput->text() == EDIT_COMMAND) {
 		ui.label_help->setText(EDIT_FORMAT);
-	} else if(ui.userInput->text() == FILTER_COMMAND) {
-		ui.label_help->setText(FILTER_FORMAT);
-	} else if(ui.userInput->text() == FIND_COMMAND) {
-		ui.label_help->setText(FIND_FORMAT);
+	} else if(ui.userInput->text() == SEARCH_COMMAND) {
+		ui.label_help->setText(SEARCH_FORMAT);
 	} else if(ui.userInput->text() == "") {
 		ui.label_help->setText(DEFAULT_DISPLAY);
 	}

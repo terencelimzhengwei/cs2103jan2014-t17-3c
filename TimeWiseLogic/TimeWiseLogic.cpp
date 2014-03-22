@@ -36,4 +36,5 @@ TaskList TimeWiseLogic::getTaskList()
 
 void TimeWiseLogic::initLogic(){
 	_storage.retrieveFile(_taskList);
+	_taskList.updateOverdueTaskList();
 }

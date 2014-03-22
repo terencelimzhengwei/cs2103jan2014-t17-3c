@@ -10,6 +10,7 @@
 #include "ClockTime.h"
 #include "Constants.h"
 #include "TaskList.h"
+#include "Exceptions.h"
 
 class Command
 {

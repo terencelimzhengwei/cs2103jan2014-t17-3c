@@ -167,6 +167,10 @@ void TimeWiseGUI::setData() {
 	timer->start(1000);
 
 	for(int i = 0; i < taskList.size(); i++) {
+		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
+		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+		QColor rowColor(255, 0, 0, 50);
+
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
@@ -178,16 +182,10 @@ void TimeWiseGUI::setData() {
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
-
-				TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
-				QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-
 				//highlight description in red if that task is overdue
-				QColor rowColor = Qt::red;
 				if(qStatus == "overdue") {
 					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
 				}
-
 				break;
 			}
 			case 1: {
@@ -196,6 +194,9 @@ void TimeWiseGUI::setData() {
 					QString qTask = QString::fromStdString(taskStartDate);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
+				}
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
 				}
 				break;
 			}
@@ -206,6 +207,9 @@ void TimeWiseGUI::setData() {
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				}
 				break;
 			}
 			case 3: {
@@ -214,6 +218,9 @@ void TimeWiseGUI::setData() {
 					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
+				}
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
 				}
 				break;
 			}
@@ -224,6 +231,9 @@ void TimeWiseGUI::setData() {
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				}
 				break;
 			}
 			case 5: {
@@ -231,6 +241,9 @@ void TimeWiseGUI::setData() {
 				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				}
 				break;
 			}
 			case 6: {
@@ -240,7 +253,11 @@ void TimeWiseGUI::setData() {
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
+				if(qStatus == "overdue") {
+					model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				}
 				break;
+
 			}
 			}
 		}

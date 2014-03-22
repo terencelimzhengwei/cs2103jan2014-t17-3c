@@ -60,14 +60,17 @@ void Task::setStatusAsOverdue(){
 
 bool Task::checkOverdue()
 {
-	bool overdue = false;
-	if(_endDate->checkOverdue()==LATER){
-		setStatusAsOverdue();
-		return true;
-	}else if(_endDate->checkOverdue()==SAME){
-		if(_endTime->checkOverdueTime()){
+	if(_endDate==NULL){
+		return false;
+	}else{
+		if(_endDate->checkOverdue()==LATER){
 			setStatusAsOverdue();
 			return true;
+		}else if(_endDate->checkOverdue()==SAME){
+			if(_endTime->checkOverdueTime()){
+				setStatusAsOverdue();
+				return true;
+			}
 		}
 	}
 	return false;

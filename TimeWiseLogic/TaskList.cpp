@@ -160,3 +160,7 @@ void TaskList::updateCompletedTaskList(){
 		}
 	}
 }
+
+std::vector<Task*> TaskList::getOverdueTasks(){
+	return _overdueTaskList;
+}

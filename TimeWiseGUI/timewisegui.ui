@@ -225,7 +225,7 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
         <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
        </property>
        <property name="text">
-        <string>You may: add, delete, done, edit, filter, find, undo, redo</string>
+        <string>List of Commands: add, clear, delete, done, edit, search, undo, redo</string>
        </property>
       </widget>
      </item>

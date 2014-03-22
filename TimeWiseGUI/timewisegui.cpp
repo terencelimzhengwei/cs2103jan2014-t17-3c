@@ -126,17 +126,31 @@ void TimeWiseGUI::on_userInput_textChanged() {
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 	
-	std::string userCommand = input.toLocal8Bit().constData();
+	try {
+		checkEmpty(input);
+		
+		std::string userCommand = input.toLocal8Bit().constData();
 
-	//displays task detail in the correct box of the table. Hardcoded and very primitive.
-	std::string messageLog = _logic.processCommand(userCommand);
-	
-	setData();
+		//displays task detail in the correct box of the table. Hardcoded and very primitive.
+		std::string messageLog = _logic.processCommand(userCommand);
 
-	QString outputMessage = QString::fromStdString(messageLog);
-	ui.label_mlog->setText(outputMessage);
+		setData();
 
-	ui.userInput->clear();
+		QString outputMessage = QString::fromStdString(messageLog);
+		ui.label_mlog->setText(outputMessage);
+
+		ui.userInput->clear();
+	}
+
+	catch(const std::invalid_argument& e) {
+		ui.label_mlog->setText(e.what());
+	}
+}
+
+int TimeWiseGUI::checkEmpty(QString input) {
+	if(input.size() == 0) {
+		throw std::invalid_argument( "cannot enter empty input!" );
+	}
 }
 
 void TimeWiseGUI::setData() {

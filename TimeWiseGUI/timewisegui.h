@@ -8,6 +8,7 @@
 #include <QFontDatabase>
 #include <QString>
 #include <string>
+#include <stdexcept>
 #include "ui_timewisegui.h"
 #include "TimeWiseLogic.h"
 
@@ -19,6 +20,7 @@ public:
 	~TimeWiseGUI();
 	QStandardItemModel *model;
 	void setData();
+	int checkEmpty(QString input);
 
 private slots:
 	void updateTime();

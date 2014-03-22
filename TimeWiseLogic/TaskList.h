@@ -23,7 +23,7 @@ public:
 	std::vector<Task*> getSearchResults();
 	std::vector<Task*> getOverdueTasks();
 	void updateCompletedTaskList();
-	void updateOverdueTaskList();
+	bool updateOverdueTaskList();
 	void deleteCompletedTaskList();
 	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------

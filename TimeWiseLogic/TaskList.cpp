@@ -119,14 +119,18 @@ std::vector<Task*> TaskList::getSearchResults(){
 	return _searchedTaskList;
 }
 
-void TaskList::updateOverdueTaskList(){
+bool TaskList::updateOverdueTaskList(){
+	int previousSize=_overdueTaskList.size();
 	_overdueTaskList.clear();
-
 	for(int i=0;i<_taskList.size();i++){
 		if(_taskList[i]->checkOverdue()){
 			_overdueTaskList.push_back(_taskList[i]);
 		}
 	}
+	if(_overdueTaskList.size()!=previousSize){
+		return true;
+	}
+	return false;
 }
 
 void TaskList::deleteCompletedTaskList(){

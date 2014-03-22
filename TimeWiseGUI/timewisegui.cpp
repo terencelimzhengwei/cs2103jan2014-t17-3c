@@ -103,6 +103,9 @@ void TimeWiseGUI::updateTime() {
 	ui.label_date->setText(date.toString());
 	QTime time = QTime::currentTime();
 	ui.label_time->setText(time.toString());
+	if(_logic.getTaskList().updateOverdueTaskList()){
+		setData();
+	}
 }
 
 void TimeWiseGUI::on_userInput_textChanged() {

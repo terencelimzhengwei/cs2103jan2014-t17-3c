@@ -22,7 +22,7 @@ public:
 	std::string getDayOfTheWeek();
 	int getMonth();
 	int getYear();
-	bool checkOverdue();
+	TIMEDATE_STATUS checkOverdue();
 	TIMEDATE_STATUS isLater(Date* otherDate);
 	std::string toString();
 	std::string toSaveFormat();

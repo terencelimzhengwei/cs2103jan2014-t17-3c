@@ -305,17 +305,6 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
 			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
 			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
-			search->setDate(&endDate);
-			search->execute(_taskList);
-			std::vector<Task*> searchedtask3= _taskList.getSearchResults();
-			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
-			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
-			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
-
-
-
-
-
 
 		}
 		TEST_METHOD(ClockTimeTest) {
@@ -333,7 +322,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(2,newDate->getMonth());
 			Assert::AreEqual(2014,newDate->getYear());
 			Assert::AreEqual(static_cast<int>(EARLIER),static_cast<int>(newDate->isLater(otherDate)));
-			Assert::IsTrue(newDate->checkOverdue());
+			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->checkOverdue()));
 		}
 	};
 }

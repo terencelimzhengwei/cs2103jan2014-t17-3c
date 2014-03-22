@@ -15,7 +15,11 @@ public:
 	unsigned int getTaskIndex(Task* task);
 	void clearTask();
 	Task* getTaskWithKeyword(std::string& keyWord);
-	void populateSearchList(std::string& keyword);
+	void populateSearchList(std::string& keyword,SEARCH_TYPE searchType);
+	void populateSearchList(Date* date,SEARCH_TYPE searchType);
+	void populateSearchList(PRIORITY priority);
+	void populateSearchList(TASK_STATUS status);
+
 	std::vector<Task*> getSearchResults();
 	void updateCompletedTaskList();
 	void updateOverdueTaskList();

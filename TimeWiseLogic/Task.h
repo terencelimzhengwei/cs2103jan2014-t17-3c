@@ -42,6 +42,10 @@ public:
 	//check overdue
 	bool checkOverdue();
 	bool hasKeyword(std::string keyword);
+	bool hasPriority(PRIORITY priority);
+	bool hasDate(Date* date);
+	bool hasCategory(std::string category);
+	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 
 protected:

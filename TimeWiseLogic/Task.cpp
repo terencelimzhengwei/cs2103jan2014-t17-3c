@@ -171,3 +171,46 @@ bool Task::checkLater(Task* otherTask){
 	}
 	return true;
 }
+
+bool Task::hasPriority(PRIORITY priority){
+	if(_taskPriority==priority){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasDate(Date* date){
+	if(_endDate==NULL && date == NULL){
+		return true;
+	}else if(_endDate==NULL){
+		return false;
+	}
+
+	if (_endDate->compare(date)){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasCategory(std::string category){
+	unsigned int index;
+	std::string keywordInLowerCase = category;
+	std::string categoryInLowerCase = _category;
+
+	transform(keywordInLowerCase.begin(), keywordInLowerCase.end(), keywordInLowerCase.begin(), ::tolower);
+	transform(categoryInLowerCase.begin(), categoryInLowerCase.end(), categoryInLowerCase.begin(), ::tolower);
+
+	index=categoryInLowerCase.find(keywordInLowerCase);
+
+	if(index!=std::string::npos){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasStatus(TASK_STATUS status){
+	if(_taskStatus==status){
+		return true;
+	}
+	return false;
+}

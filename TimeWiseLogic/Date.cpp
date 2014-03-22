@@ -150,3 +150,16 @@ int Date::getCurrentDay(){
 
 	return thisDay;
 }
+
+bool Date::compare(Date* date){
+	if(date==NULL){
+		return false;
+	}
+	int day = date->getDayNumber();
+	int month = date->getMonth();
+	int year = date->getYear();
+	if(day==_dayNumber&&month==_month&&year==_year){
+		return true;
+	}
+ 	return false;
+}

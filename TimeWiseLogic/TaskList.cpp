@@ -63,11 +63,53 @@ Task* TaskList::getTaskWithKeyword(std::string& keyWord){
 	return NULL;
 }
 
-void TaskList::populateSearchList(std::string& keyword){
+void TaskList::populateSearchList(std::string& keyword,SEARCH_TYPE searchType){
+	_searchedTaskList.clear();
+
+	if(searchType==KEYWORD){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]->hasKeyword(keyword)){
+				_searchedTaskList.push_back(_taskList[i]);
+			}
+		}
+	}else if(searchType==CATEGORY){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]->hasCategory(keyword)){
+				_searchedTaskList.push_back(_taskList[i]);
+			}
+		}
+	}
+	return;
+}
+
+void TaskList::populateSearchList(Date* date,SEARCH_TYPE searchType){
+	_searchedTaskList.clear();
+
+	if(searchType==DATE){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]->hasDate(date)){
+				_searchedTaskList.push_back(_taskList[i]);
+			}
+		}
+	}
+	return;
+}
+
+void TaskList::populateSearchList(PRIORITY priority){
 	_searchedTaskList.clear();
 
 	for(int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->hasKeyword(keyword)){
+		if(_taskList[i]->hasPriority(priority)){
+			_searchedTaskList.push_back(_taskList[i]);
+		}
+	}
+}
+
+void TaskList::populateSearchList(TASK_STATUS status){
+	_searchedTaskList.clear();
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasStatus(status)){
 			_searchedTaskList.push_back(_taskList[i]);
 		}
 	}

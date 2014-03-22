@@ -294,6 +294,28 @@ namespace TimeWiseUnitTest
 			search->execute(_taskList);
 			std::vector<Task*> searchedtask1= _taskList.getSearchResults();
 			Assert::AreEqual("check timed task without priority and cat",searchedtask1[0]->getDescription().c_str());
+			search->setCategory("test");
+			search->execute(_taskList);
+			std::vector<Task*> searchedtask2= _taskList.getSearchResults();
+			Assert::AreEqual(1,static_cast<int>(searchedtask2.size()));
+			Assert::AreEqual("test",searchedtask2[0]->getTaskCategory().c_str());
+			search->setDate(&endDate);
+			search->execute(_taskList);
+			std::vector<Task*> searchedtask3= _taskList.getSearchResults();
+			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
+			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
+			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
+			search->setDate(&endDate);
+			search->execute(_taskList);
+			std::vector<Task*> searchedtask3= _taskList.getSearchResults();
+			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
+			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
+			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
+
+
+
+
+
 
 		}
 		TEST_METHOD(ClockTimeTest) {
@@ -301,8 +323,8 @@ namespace TimeWiseUnitTest
 			ClockTime* otherTime = new ClockTime(1230);
 			Assert::AreEqual(1200, newTime->getTime());
 			Assert::AreEqual("1200",newTime->toString().c_str());
-			Assert::IsTrue(newTime->checkOverdueTime());
-			Assert::IsFalse(newTime->isLater(otherTime));
+			//Assert::IsTrue(newTime->checkOverdueTime());
+			Assert::AreEqual(static_cast<int>(EARLIER),static_cast<int>(newTime->isLater(otherTime)));
 		}
 		TEST_METHOD(DateTest) {
 			Date* newDate = new Date(12,2,2014);
@@ -310,7 +332,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(12,newDate->getDayNumber());
 			Assert::AreEqual(2,newDate->getMonth());
 			Assert::AreEqual(2014,newDate->getYear());
-			Assert::IsFalse(newDate->isLater(otherDate));
+			Assert::AreEqual(static_cast<int>(EARLIER),static_cast<int>(newDate->isLater(otherDate)));
 			Assert::IsTrue(newDate->checkOverdue());
 		}
 	};

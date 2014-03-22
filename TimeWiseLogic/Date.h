@@ -31,6 +31,8 @@ public:
 	int getCurrentMonth();
 	int getCurrentDay();
 
+	bool compare(Date* date);
+
 private:
 	time_t _currentTime;
 	struct tm _timeNow ;

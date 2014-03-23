@@ -6,43 +6,46 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
+
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	commandTypeString = convertToLowerCase(commandTypeString);
 
-	if(commandTypeString == "add") {
+	if(commandTypeString == CMD_TYPE_STRING[0]) {
 		return ADD;
 	}
-	else if(commandTypeString == "delete") {
+	else if(commandTypeString == CMD_TYPE_STRING[1]) {
 		return DELETE;
 	}
-	else if(commandTypeString == "search") {
-		return SEARCH;
-	}
-	else if(commandTypeString == "edit") {
+	else if(commandTypeString == CMD_TYPE_STRING[2]) {
 		return EDIT;
 	}
-	else if(commandTypeString == "display") {
+	else if(commandTypeString == CMD_TYPE_STRING[3]) {
+		return CLEAR;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[4]) {
 		return DISPLAY;
 	}
-	else if(commandTypeString == "done") {
+	else if(commandTypeString == CMD_TYPE_STRING[5]) {
 		return DONE;
 	}
-	else if(commandTypeString == "undone") {
+	else if(commandTypeString == CMD_TYPE_STRING[5]) {
 		return UNDONE;
 	}
-	else if(commandTypeString == "undo") {
+	else if(commandTypeString == CMD_TYPE_STRING[7]) {
 		return UNDO;
 	}
-	else if(commandTypeString == "redo") {
+	else if(commandTypeString == CMD_TYPE_STRING[8]) {
 		return REDO;
 	}
-	else if(commandTypeString == "clear") {
-		return CLEAR;
+	else if(commandTypeString == CMD_TYPE_STRING[9]) {
+		return SEARCH;
+	} 
+	else if(commandTypeString == CMD_TYPE_STRING[10]) {
+		return FILTER;
 	}
 	else {
 		return UNDEFINED;
 	}
-
 }
 
 vector<int> Parser::extractDate(string command, int start, int end) {
@@ -114,7 +117,9 @@ std::string Parser::replaceWord(std::string search, std::string replace, std::st
 	int pos;
 	do {
 		pos = subject.find(search);
-		if(pos!=-1)	subject.replace(pos, search.length(), replace);
+		if(pos!=-1) {
+			subject.replace(pos, search.length(), replace);
+		}
 	} while(pos!=-1);
 	return subject;
 }
@@ -329,7 +334,7 @@ std::string Parser::getStringBefore(char ch, std::string str){
 
 
 void Parser::removeWhiteSpaces(std::string& str){
-	// to remove the preceeding white spaces
+	// to remove the preceding white spaces
 	while(!str.empty()){
 		if(str[0] == ' '){
 			str.erase(0,1);
@@ -364,7 +369,7 @@ bool Parser::isPreposition(std::string word) {
 }
 
 void Parser::removeSymbol(std::string& word){
-	// to remove the preceeding symbols
+	// to remove the preceding symbols
 	while(!word.empty()){
 		if(word[0] == ','){
 			word.erase(0,1);
@@ -389,8 +394,7 @@ bool Parser::isTimeFormat(string time) {
 	bool isTime = false;
 
 	time = replaceWord(":", "", time);
-
-	if(time.length()==4 && isAllNumbers(time)) {
+	if(time.length()== 4 && isAllNumbers(time)) {
 		int timeInt = toNum(time);
 		if((timeInt%100) < 60 && (timeInt/100 < 24))
 			isTime = true;
@@ -495,11 +499,11 @@ ClockTime* Parser::createTime(std::string time)
 }
 
 TASK_STATUS Parser::getTaskStatus(std::string input){
-	if(input==TASK_STATUS_STRING[0]){
+	if(input == TASK_STATUS_STRING[0]){
 		return UNCOMPLETED;
-	}else if(input==TASK_STATUS_STRING[1]){
+	}else if(input == TASK_STATUS_STRING[1]){
 		return COMPLETED;
-	}else if(input==TASK_STATUS_STRING[2]){
+	}else if(input == TASK_STATUS_STRING[2]){
 		return OVERDUE;
 	}
 	return UNCOMPLETED;

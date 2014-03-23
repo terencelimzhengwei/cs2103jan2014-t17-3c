@@ -16,13 +16,12 @@ void Command_Done::setCompletedIndex(unsigned int index){
 }
 
 bool Command_Done::execute(TaskList& tasklist){
-	_task=tasklist.getTask(_taskIndex);
-	_task->setStatusAsDone();
+	_task=tasklist.setTaskAsDone(_taskIndex);
 	return true;
 }
 
 bool Command_Done::undo(TaskList& tasklist){
-	unsigned int index = tasklist.getTaskIndex(_task);
-	tasklist.getTask(index)->setStatusasUndone();
+	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
+	tasklist.setTaskAsUndone(index);
 	return true;
 }

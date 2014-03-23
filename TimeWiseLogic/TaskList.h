@@ -11,9 +11,15 @@ public:
 	~TaskList(void);
 
 	void addTask(Task&);
+	void addTaskToDoneList(Task&);
+	Task* setTaskAsDone(unsigned int index);
+	Task* setTaskAsUndone(unsigned int index);
 	Task* getTask(unsigned int);
+	Task* getCompletedTask(unsigned int);
 	bool deleteTask(unsigned int&);
+	bool deleteTaskFromCompletedList(unsigned int&);
 	unsigned int getTaskIndex(Task* task);
+	unsigned int getTaskIndexInCompletedList(Task* task);
 	void clearTask();
 	Task* getTaskWithKeyword(std::string& keyWord);
 	void populateSearchList(std::string& keyword,SEARCH_TYPE searchType);

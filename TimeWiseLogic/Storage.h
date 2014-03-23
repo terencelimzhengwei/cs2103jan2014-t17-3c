@@ -12,8 +12,14 @@
 class Storage
 {
 private:
-	std::string _fileName;
+	std::string _undoneFileName;
+	std::string _doneFileName;
 	Parser _parser;
+
+	void saveUndoneTasks(TaskList&);
+	void saveDoneTasks(TaskList&);
+	void retrieveDoneTasks(TaskList&);
+	void retrieveUndoneTasks(TaskList&);
 
 public:
 	Storage(void);

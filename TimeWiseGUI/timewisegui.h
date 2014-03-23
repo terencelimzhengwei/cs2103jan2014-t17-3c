@@ -8,6 +8,7 @@
 #include <QFontDatabase>
 #include <QString>
 #include <QCompleter>
+#include <QMessageBox>
 #include <string>
 #include <stdexcept>
 #include "ui_timewisegui.h"
@@ -22,6 +23,9 @@ public:
 	QStandardItemModel *model;
 	void setData();
 	int checkEmpty(QString input);
+	void autoComplete();
+	void setOverdueMessage(int overdueCount);
+	int numberOfOverdues();
 
 private slots:
 	void updateTime();

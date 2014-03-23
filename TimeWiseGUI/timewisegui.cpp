@@ -95,17 +95,9 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
 	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
 
-	//"auto-complete" for search function
-	QStringList descList;
-	TaskList taskList = _logic.getTaskList();
-	for(int i = 0; i < taskList.undoneSize(); i++) {
-		string taskDescription = "search " + taskList.getTask(i)->getDescription();
-		QString qTask = QString::fromStdString(taskDescription);
-		descList << qTask;
+	if(numberOfOverdues() > 0) {
+		setOverdueMessage(numberOfOverdues());
 	}
-	descCompleter = new QCompleter(descList, this);
-	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-	ui.userInput->setCompleter(descCompleter);
 }
 
 TimeWiseGUI::~TimeWiseGUI() {
@@ -148,6 +140,8 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		std::string userCommand = input.toLocal8Bit().constData();
 
 		std::string messageLog = _logic.processCommand(userCommand);
+
+		autoComplete();
 
 		setData();
 
@@ -262,4 +256,39 @@ void TimeWiseGUI::undo(){
 void TimeWiseGUI::redo(){
 	_logic.processCommand("redo");
 	setData();
+}
+
+//Currently I used a uncustomizable boring QMessageBox. If necessary, can make it customizable with QDialogue (requires new class)
+void TimeWiseGUI::setOverdueMessage(int overdueCount) {
+	QMessageBox overdueInfo;
+	ostringstream outstr;
+	
+	outstr << "You have " << overdueCount << " overdue task(s).";
+	std::string overdueReminder = outstr.str();
+	QString qOverdue = QString::fromStdString(overdueReminder);
+
+	overdueInfo.setText(qOverdue);
+	overdueInfo.setIcon(QMessageBox::Information);
+	overdueInfo.exec();
+}
+
+int TimeWiseGUI::numberOfOverdues() {
+	TaskList taskList = _logic.getTaskList();
+	std::vector<Task*> overdueTaskList = taskList.getOverdueTasks();
+	int overdueTasksCount = overdueTaskList.size(); 
+	return overdueTasksCount;
+}
+
+//"auto-complete" for search functions
+void TimeWiseGUI::autoComplete() {
+	QStringList descList;
+	TaskList taskList = _logic.getTaskList();
+	for(int i = 0; i < taskList.undoneSize(); i++) {
+		string taskDescription = "search " + taskList.getTask(i)->getDescription();
+		QString qTask = QString::fromStdString(taskDescription);
+		descList << qTask;
+	}
+	descCompleter = new QCompleter(descList, this);
+	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+	ui.userInput->setCompleter(descCompleter);
 }

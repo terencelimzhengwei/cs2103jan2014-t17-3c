@@ -400,5 +400,188 @@ namespace TimeWiseUnitTest
 			std::vector<Task*> overdueTask = _taskList.getOverdueTasks();
 			Assert::AreEqual(2,static_cast<int>(overdueTask.size()));
 		}
-	};
+
+		TEST_METHOD(ParserTest_GetFirstWord) {
+			Parser _parser;
+			std::string expectedCase1 = "add";
+			std::string validInput1 = _parser.getFirstWord("add dinner with Mai");
+			std::string expectedCase2 = NULL;
+			std::string invalidInput2 = _parser.getFirstWord("");
+			std::string validInput3 = _parser.getFirstWord("  add do homework");
+			std::string expectedCase3 = "add";
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, invalidInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+		}
+
+		TEST_METHOD(ParserTest_RemoveFirstWord) {
+			Parser _parser;
+			std::string validInput1 = _parser.removeFirstWord("edit 1");
+			std::string expectedCase1 = "1";
+			std::string validInput2= _parser.removeFirstWord("clear");
+			std::string expectedCase2 = "";
+			std::string validInput3 = _parser.removeFirstWord(" add do homework");
+			std::string expectedCase3 = "do homework";
+			std::string validInput4= _parser.removeFirstWord("       add do homework");
+			std::string expectedCase4 = "do homework";
+			std::string validInput5 = _parser.removeFirstWord("undone 1   ");
+			std::string expectedCase5 = "1   ";
+			std::string validInput6 = _parser.removeFirstWord("add   hello kitty");
+			std::string expectedCase6 = "   hello kitty";
+			std::string validInput7 = _parser.removeFirstWord("  add   do homework");
+			std::string expectedCase7 = "   do homework";
+			std::string invalidInput8 = _parser.removeFirstWord("");
+			std::string expectedCase8 = NULL;
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, validInput4);
+			Assert::AreEqual(expectedCase5, validInput5);
+			Assert::AreEqual(expectedCase6, validInput6);
+			Assert::AreEqual(expectedCase7, validInput7);
+			Assert::AreEqual(expectedCase8, invalidInput8);
+		}
+
+		/*TEST_METHOD(ParserTest_SplitBySpace) {
+			//vector to be converted to string for comparison
+			std:: string word = "add";
+			Parser _parser;
+			std::string input[10] = {"go", "to", "the", "zoo", "on", "21/05/2014", "at", "7pm", "!H", "#leisure"};
+			std::vector<string> validInput1 = _parser.splitBySpace("go to the zoo on 21/05/2014 at 7pm !H #leisure");
+			std::vector<string> expectedCase1;
+			for (int i = 0; i < 12; i ++) {
+				expectedCase1.push_back(input[i]);
+			}
+			std::vector<string> validInput2= _parser.splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
+			std::vector<string> expectedCase2;
+			for (int i = 0; i < 10; i ++) {
+				expectedCase2.push_back(input[i]);
+			}
+			std::vector<string> validInput3= _parser.splitBySpace("go to the zoo          on 21/05/2014 at 7pm !H #leisure");
+			std::vector<string> expectedCase3;
+			for (int i = 0; i < 10; i ++) {
+				expectedCase3.push_back(input[i]);
+			}
+			std::vector<string> invalidInput4 = _parser.splitBySpace("");
+			std::vector<string> expectedCase4;
+			expectedCase4.push_back(NULL);
+			std::vector<string> invalidInput5= _parser.splitBySpace("  ");
+			std::vector<string> expectedCase5;
+			expectedCase5.push_back(NULL);
+			
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, invalidInput4);
+			Assert::AreEqual(expectedCase5, invalidInput5);
+		}*/
+		
+		TEST_METHOD(ParserTest_ReplaceWord) {
+			Parser _parser;
+			std::string validInput1 = _parser.replaceWord("!", "", "!low");
+			std::string expectedCase1 = "low";
+			std::string validInput2= _parser.replaceWord("!", "", "#personal");
+			std::string expectedCase2 = "personal";
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+		}
+
+		TEST_METHOD(ParserTest_IsTimeFormat) {
+			Parser _parser;
+			bool validInput1 = _parser.isTimeFormat("8pm");
+			bool expectedCase1 = true;
+			bool validInput2= _parser.isTimeFormat("16:00");
+			bool expectedCase2 = true;
+			bool validInput3= _parser.isTimeFormat("1630");
+			bool expectedCase3 = true;
+			bool validInput4= _parser.isTimeFormat("8.30am");
+			bool expectedCase4 = true;
+			bool validInput5= _parser.isTimeFormat("0000");
+			bool expectedCase5 = true;
+			bool invalidInput6= _parser.isTimeFormat("am");
+			bool expectedCase6 = false;
+			bool invalidInput7= _parser.isTimeFormat("2400");
+			bool expectedCase7 = false;
+			bool invalidInput8= _parser.isTimeFormat("4/03");
+			bool expectedCase8 = false;
+			bool invalidInput9= _parser.isTimeFormat("430");
+			bool expectedCase9 = false;
+			bool invalidInput10 = _parser.isTimeFormat("hello");
+			bool expectedCase10 = false;
+
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, validInput4);
+			Assert::AreEqual(expectedCase5, validInput5);
+			Assert::AreEqual(expectedCase6, invalidInput6);
+			Assert::AreEqual(expectedCase7, invalidInput7);
+			Assert::AreEqual(expectedCase8, invalidInput8);
+			Assert::AreEqual(expectedCase9, invalidInput9);
+			Assert::AreEqual(expectedCase10, invalidInput10);
+		}
+
+		TEST_METHOD(ParserTest_IsDateFormat) {
+			Parser _parser;
+			bool validInput1 = _parser.isDateFormat("22/12/2013");
+			bool expectedCase1 = true;
+			bool validInput2= _parser.isDateFormat("22/12");
+			bool expectedCase2 = true;
+			bool validInput3= _parser.isDateFormat("22-07-2013");
+			bool expectedCase3 = true;
+			bool validInput4= _parser.isDateFormat("22-12");
+			bool expectedCase4 = true;
+			bool validInput5= _parser.isDateFormat("22.12.2013");
+			bool expectedCase5 = true;
+			bool validInput6= _parser.isDateFormat("22.12");
+			bool expectedCase6 = true;
+			bool validInput7= _parser.isDateFormat("tomorrow");
+			bool expectedCase7 = true;
+			bool validInput8= _parser.isDateFormat("today");
+			bool expectedCase8 = true;
+			bool validInput9= _parser.isDateFormat("tmr");
+			bool expectedCase9 = true;
+			bool invalidInput10 = _parser.isDateFormat("tonight");
+			bool expectedCase10 = true;
+			bool invalidInput11 = _parser.isDateFormat("2day");
+			bool expectedCase11 = true;
+			bool invalidInput12 = _parser.isDateFormat("22,12,2013");
+			bool expectedCase12 = false;
+			bool invalidInput13 = _parser.isDateFormat("22,12");
+			bool expectedCase13 = false;
+			bool invalidInput14 = _parser.isDateFormat("45/07/2013");
+			bool expectedCase14 = false;
+			bool invalidInput15 = _parser.isDateFormat("15/15/2013");
+			bool expectedCase15 = false;
+			bool invalidInput16 = _parser.isDateFormat("15/07/403");
+			bool expectedCase16 = false;
+			bool invalidInput17 = _parser.isDateFormat("15/07/13");
+			bool expectedCase17 = false;
+			bool invalidInput18 = _parser.isDateFormat("hello/hello/2013");
+			bool expectedCase18 = false;
+			bool invalidInput19 = _parser.isDateFormat("hello");
+			bool expectedCase19 = false;
+			
+
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, validInput4);
+			Assert::AreEqual(expectedCase5, validInput5);
+			Assert::AreEqual(expectedCase6, validInput6);
+			Assert::AreEqual(expectedCase7, validInput7);
+			Assert::AreEqual(expectedCase8, validInput8);
+			Assert::AreEqual(expectedCase9, validInput9);
+			Assert::AreEqual(expectedCase10, invalidInput10);
+			Assert::AreEqual(expectedCase6, invalidInput11);
+			Assert::AreEqual(expectedCase7, invalidInput12);
+			Assert::AreEqual(expectedCase8, invalidInput13);
+			Assert::AreEqual(expectedCase9, invalidInput14);
+			Assert::AreEqual(expectedCase10, invalidInput15);
+			Assert::AreEqual(expectedCase6, invalidInput16);
+			Assert::AreEqual(expectedCase7, invalidInput17);
+			Assert::AreEqual(expectedCase8, invalidInput18);
+			Assert::AreEqual(expectedCase9, invalidInput19);
+		}
+};
 }

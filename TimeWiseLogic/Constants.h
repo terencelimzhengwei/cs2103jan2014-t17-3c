@@ -6,7 +6,7 @@
 #include <string>
 #include <ctime>
 
-static const int CMD_TYPE_COUNT		    = 9;
+static const int CMD_TYPE_COUNT		    = 11;
 static const int PRIORITY_COUNT			= 3;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
@@ -23,7 +23,7 @@ enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum SEARCH_TYPE{KEYWORD,CATEGORY,STATUS,PRI,EMPTYSLOT,DATE,DEFAULT};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
-{ "add","delete","edit","clear","display","block","search","filter","undefined"	};
+{ "add","delete","edit","clear","display", "done", "undone","undo", "redo","search","filter"};
 static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};

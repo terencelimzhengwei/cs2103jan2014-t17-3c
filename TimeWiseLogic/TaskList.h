@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Task.h"
+#include "Clash.h"
 
 class TaskList
 {
@@ -29,11 +30,11 @@ public:
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
 	int size();
+	std::vector<Clash> checkClashes(Task* task);
 
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;
-	std::vector<std::vector<Task*>> _clashList;
 };

@@ -168,3 +168,14 @@ void TaskList::updateCompletedTaskList(){
 std::vector<Task*> TaskList::getOverdueTasks(){
 	return _overdueTaskList;
 }
+
+std::vector<Clash> TaskList::checkClashes(Task* task){
+	std::vector<Clash> clashList;
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->checkClash(task)){
+			Clash clashes(_taskList[i],task);
+			clashList.push_back(clashes);
+		}
+	}
+	return clashList;
+}

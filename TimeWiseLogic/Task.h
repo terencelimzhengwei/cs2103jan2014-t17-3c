@@ -47,6 +47,7 @@ public:
 	bool hasCategory(std::string category);
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
+	bool checkClash(Task* task);
 
 protected:
 	std::string _taskDescription;

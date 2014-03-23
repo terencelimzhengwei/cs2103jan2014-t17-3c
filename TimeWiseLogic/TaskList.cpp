@@ -27,8 +27,6 @@ bool TaskList::deleteTask(unsigned int& index) {
 }
 
 Task* TaskList::getTask(unsigned int index){
-	assert(index>=0);
-	assert(index<_taskList.size());
 	return _taskList[index];
 }
 
@@ -178,4 +176,50 @@ std::vector<Clash> TaskList::checkClashes(Task* task){
 		}
 	}
 	return clashList;
+}
+
+void TaskList::addTaskToDoneList(Task& task){
+	for(int i=0;i<_completedTaskList.size();i++){
+		if(!task.checkLater(_taskList[i])){
+			_completedTaskList.insert(_taskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_completedTaskList.push_back(&task);
+
+}
+
+Task* TaskList::setTaskAsDone(unsigned int index){
+	Task* task;
+	task=_taskList[index];
+	addTaskToDoneList(*task);
+	deleteTask(index);
+	return task;
+}
+
+Task* TaskList::setTaskAsUndone(unsigned int index){
+	Task* task;
+	task=_completedTaskList[index];
+	addTask(*task);
+	deleteTaskFromCompletedList(index);
+	return task;
+}
+
+bool TaskList::deleteTaskFromCompletedList(unsigned int& index){
+	_completedTaskList.erase(_completedTaskList.begin() + index);
+	return true;
+}
+
+unsigned int TaskList::getTaskIndexInCompletedList(Task* task){
+	assert(task!=NULL);
+	for(int i=0;i<_completedTaskList.size();i++){
+		if(task==_completedTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+Task* TaskList::getCompletedTask(unsigned int index){
+	return _completedTaskList[index];
 }

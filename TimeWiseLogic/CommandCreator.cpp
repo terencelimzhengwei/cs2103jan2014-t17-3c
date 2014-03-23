@@ -235,6 +235,7 @@ Command* CommandCreator::createCommandDone(std::string parameter){
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
 		commandDone->setCompletedIndex(id);
+		return commandDone;
 	} else {
 		throw NotANumberException();
 		return NULL;

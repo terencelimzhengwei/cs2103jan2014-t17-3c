@@ -149,6 +149,10 @@ bool CommandManager::undoable(Command* pCommand){
 		return true;
 	}else if(pCommand->getType() == CLEAR){
 		return true;
+	}else if(pCommand->getType() == UNDONE){
+		return true;
+	}else if(pCommand->getType() == DONE){
+		return true;
 	}
 	return false;
 }

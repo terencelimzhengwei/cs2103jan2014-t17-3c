@@ -35,7 +35,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Timewise background2.png);}</string>
+   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Background new.jpg);}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTableView" name="tableView">
@@ -280,12 +280,30 @@ rgb(255, 0, 0)</string>
      <string>X</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_title">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>40</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 26pt &quot;CF Jack Story&quot;;
+color: rgb(0, 85, 255);</string>
+    </property>
+    <property name="text">
+     <string>Your Tasks</string>
+    </property>
+   </widget>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
    <zorder>label_date</zorder>
    <zorder>label_time</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>pushButton_minimize</zorder>
+   <zorder>label_title</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

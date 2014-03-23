@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -38,6 +38,7 @@ public:
     QLabel *label_mlog;
     QPushButton *pushButton_minimize;
     QPushButton *pushButton_close;
+    QLabel *label_title;
 
     void setupUi(QMainWindow *TimeWiseGUIClass)
     {
@@ -49,7 +50,7 @@ public:
         TimeWiseGUIClass->setMinimumSize(QSize(815, 458));
         TimeWiseGUIClass->setMaximumSize(QSize(815, 458));
         TimeWiseGUIClass->setAutoFillBackground(false);
-        TimeWiseGUIClass->setStyleSheet(QStringLiteral("#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Timewise background2.png);}"));
+        TimeWiseGUIClass->setStyleSheet(QStringLiteral("#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Background new.jpg);}"));
         centralWidget = new QWidget(TimeWiseGUIClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tableView = new QTableView(centralWidget);
@@ -135,6 +136,11 @@ public:
         pushButton_close->setStyleSheet(QLatin1String("font: 75 11pt \"MS Shell Dlg 2\";\n"
 "background-color: transparent\n"
 "rgb(255, 0, 0)"));
+        label_title = new QLabel(centralWidget);
+        label_title->setObjectName(QStringLiteral("label_title"));
+        label_title->setGeometry(QRect(60, 40, 201, 31));
+        label_title->setStyleSheet(QLatin1String("font: 75 26pt \"CF Jack Story\";\n"
+"color: rgb(0, 85, 255);"));
         TimeWiseGUIClass->setCentralWidget(centralWidget);
         pushButton_close->raise();
         tableView->raise();
@@ -142,6 +148,7 @@ public:
         label_time->raise();
         layoutWidget->raise();
         pushButton_minimize->raise();
+        label_title->raise();
 
         retranslateUi(TimeWiseGUIClass);
         QObject::connect(pushButton_close, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(close()));
@@ -159,6 +166,7 @@ public:
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
         pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
         pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));
+        label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
     } // retranslateUi
 
 };

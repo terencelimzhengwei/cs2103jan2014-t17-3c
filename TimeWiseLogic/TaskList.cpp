@@ -34,7 +34,7 @@ bool TaskList::isEmpty(){
 	return _taskList.size()==0;
 }
 
-int TaskList::size(){
+int TaskList::undoneSize(){
 	return _taskList.size();
 }
 
@@ -53,7 +53,7 @@ void TaskList::clearTask(){
 }
 
 Task* TaskList::getTaskWithKeyword(std::string& keyWord){
-	for(int i=0;i<size();i++){
+	for(int i=0;i<undoneSize();i++){
 		if(_taskList[i]->hasKeyword(keyWord)){
 			return _taskList[i];
 		}
@@ -181,7 +181,7 @@ std::vector<Clash> TaskList::checkClashes(Task* task){
 void TaskList::addTaskToDoneList(Task& task){
 	for(int i=0;i<_completedTaskList.size();i++){
 		if(!task.checkLater(_taskList[i])){
-			_completedTaskList.insert(_taskList.begin()+i,&task);
+			_completedTaskList.insert(_completedTaskList.begin()+i,&task);
 			return;
 		}
 	} 
@@ -222,4 +222,8 @@ unsigned int TaskList::getTaskIndexInCompletedList(Task* task){
 
 Task* TaskList::getCompletedTask(unsigned int index){
 	return _completedTaskList[index];
+}
+
+int TaskList::doneSize(){
+	return _completedTaskList.size();
 }

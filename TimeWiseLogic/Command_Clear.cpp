@@ -23,7 +23,7 @@ bool Command_Clear::execute(TaskList& tasklist){
 	if(!_deletedTasks.empty()){
 		_deletedTasks.clear();
 	}
-	for(int i=0;i<tasklist.size();i++){
+	for(int i=0;i<tasklist.undoneSize();i++){
 		_deletedTasks.push_back(tasklist.getTask(i));
 	}
 	tasklist.clearTask();

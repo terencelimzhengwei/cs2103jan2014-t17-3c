@@ -98,7 +98,7 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	//"auto-complete" for search function
 	QStringList descList;
 	TaskList taskList = _logic.getTaskList();
-	for(int i = 0; i < taskList.size(); i++) {
+	for(int i = 0; i < taskList.undoneSize(); i++) {
 		string taskDescription = "search " + taskList.getTask(i)->getDescription();
 		QString qTask = QString::fromStdString(taskDescription);
 		descList << qTask;
@@ -186,7 +186,7 @@ void TimeWiseGUI::setData() {
 	
 	TaskList taskList = _logic.getTaskList();
 
-	for(int i = 0; i < taskList.size(); i++) {
+	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 		QColor rowColor(255, 0, 0, 50);

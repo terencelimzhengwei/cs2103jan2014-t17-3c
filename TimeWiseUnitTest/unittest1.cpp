@@ -104,7 +104,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(0);
 			commandToBeDeleted->execute(_taskList);
-			Assert::AreEqual(0,_taskList.size());
+			Assert::AreEqual(0,_taskList.undoneSize());
 		}
 
 		TEST_METHOD(CommandClearTest) {
@@ -136,7 +136,7 @@ namespace TimeWiseUnitTest
 
 			Command_Clear* clear = new Command_Clear;
 			clear->execute(_taskList);
-			Assert::AreEqual(0,_taskList.size());
+			Assert::AreEqual(0,_taskList.undoneSize());
 
 		}
 

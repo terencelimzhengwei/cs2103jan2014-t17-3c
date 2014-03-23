@@ -35,7 +35,8 @@ public:
 	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
-	int size();
+	int undoneSize();
+	int doneSize();
 	std::vector<Clash> checkClashes(Task* task);
 
 private:

@@ -23,7 +23,7 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 
 void Storage::saveUndoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_undoneFileName);
-	for(int i = 0; i < listOfTasks.size(); i++) { 
+	for(int i = 0; i < listOfTasks.undoneSize(); i++) { 
 		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n";
 		writeFile << "Start_Date: ";
 		if(listOfTasks.getTask(i)->getStartDate()!=NULL){
@@ -45,7 +45,7 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks){
 		writeFile<<"\n"<< "Priority: " << PRIORITY_STRING[listOfTasks.getTask(i)->getPriority()] << "\n"
 			<< "Category: " << listOfTasks.getTask(i)->getTaskCategory() << "\n"
 			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getTask(i)->getTaskStatus()] << "\n";
-		if(i==listOfTasks.size()-1){
+		if(i==listOfTasks.undoneSize()-1){
 			writeFile<< "==========";
 		}else{
 			writeFile<< "=========="<<std::endl;
@@ -55,7 +55,7 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks){
 
 void Storage::saveDoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_doneFileName);
-	for(int i = 0; i < listOfTasks.size(); i++) { 
+	for(int i = 0; i < listOfTasks.doneSize(); i++) { 
 		writeFile << "Description: " << listOfTasks.getCompletedTask(i)->getDescription() << "\n";
 		writeFile << "Start_Date: ";
 		if(listOfTasks.getCompletedTask(i)->getStartDate()!=NULL){
@@ -77,7 +77,7 @@ void Storage::saveDoneTasks(TaskList& listOfTasks){
 		writeFile<<"\n"<< "Priority: " << PRIORITY_STRING[listOfTasks.getCompletedTask(i)->getPriority()] << "\n"
 			<< "Category: " << listOfTasks.getCompletedTask(i)->getTaskCategory() << "\n"
 			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getCompletedTask(i)->getTaskStatus()] << "\n";
-		if(i==listOfTasks.size()-1){
+		if(i==listOfTasks.undoneSize()-1){
 			writeFile<< "==========";
 		}else{
 			writeFile<< "=========="<<std::endl;

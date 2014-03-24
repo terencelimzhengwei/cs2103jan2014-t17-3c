@@ -35,5 +35,6 @@ private:
 	Task _originalTask;
 	unsigned int _taskIndex;
 	std::string _header;
+	DISPLAY_TYPE _displayType;
 };
 

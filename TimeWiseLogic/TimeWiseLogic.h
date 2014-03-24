@@ -16,7 +16,7 @@ public:
 
 	TaskList getTaskList();
 	std::string processCommand(std::string commandLine);
-	bool parseCommand(std::string commandLine);
+	DISPLAY_TYPE getScreenToDisplay();
 
 
 private:
@@ -28,8 +28,12 @@ private:
 	Command* _cmd;
 	std::string _feedback;
 
+	DISPLAY_TYPE _displayType;
 
 	void initLogic();
+	DISPLAY_TYPE setScreenToDisplay(Command* cmd);
+	bool parseCommand(std::string commandLine);
+
 
 };
 #endif

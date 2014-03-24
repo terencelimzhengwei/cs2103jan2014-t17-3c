@@ -38,6 +38,7 @@ public:
 	int undoneSize();
 	int doneSize();
 	std::vector<Clash> checkClashes(Task* task);
+	void deleteSearchedTasks();
 
 private:
 	std::vector<Task*> _taskList;

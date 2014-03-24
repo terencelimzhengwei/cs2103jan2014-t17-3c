@@ -87,7 +87,7 @@ void Storage::saveDoneTasks(TaskList& listOfTasks){
 
 void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 	std::string userInput="";
-	std::ifstream input(_undoneFileName);
+	std::ifstream input(_doneFileName);
 	std::string temp;
 	int taskHeader;
 

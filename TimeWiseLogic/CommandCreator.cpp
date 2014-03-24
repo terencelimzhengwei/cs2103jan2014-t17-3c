@@ -76,20 +76,24 @@ Command* CommandCreator::interpretCommand(std::string userInput) {
 		}
 	} catch (InvalidCommandWordException& icwe) {
 		_feedbackExceptiontoUI.push_back(icwe.what());
+		throw InvalidCommandWordException();
 	} catch (NoArgumentException& nae) {
 		_feedbackExceptiontoUI.push_back(nae.what());
+		throw NoArgumentException();
 	} catch (InvalidAddCommandInputException& iacie) {
 		_feedbackExceptiontoUI.push_back(iacie.what());
+		throw InvalidAddCommandInputException();
 	} catch (OutOfRangeException& oore) {
 		_feedbackExceptiontoUI.push_back(oore.what());
+		throw OutOfRangeException();
 	} catch (NotANumberException& nane) {
 		_feedbackExceptiontoUI.push_back(nane.what());
+		throw NotANumberException();
 	}
 
 }
 
 Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters ) {
-	Command_Add* commandAdd = new Command_Add;
 	std::vector<std::string> dates;
 	std::vector<std::string> times;
 	std::string category = "";
@@ -97,7 +101,6 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	string description = "";
 	flagArg(parameter);
 	int wordReading = parameterNum - 1;
-
 	if(_parser.isCategory(parameters.back())){
 		category=_parser.replaceWord("#","",parameters.back());
 		parameters.pop_back();
@@ -122,7 +125,7 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 			}
 		}else{
 			while(!parameters.empty()){
-				description = parameters.front()+" ";
+				description += parameters.front()+" ";
 				parameters.erase(parameters.begin());
 			}
 		}
@@ -135,6 +138,8 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	for(int i=0;i<times.size();i++){
 		times[i] = _parser.replaceWord(":","",times[i]);
 	}
+
+	Command_Add* commandAdd = new Command_Add;
 
 	if(category!="") {
 		commandAdd->setCategory(category);
@@ -163,6 +168,8 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 			commandAdd->setEndDate(*_parser.createDate(dates.back()));
 			break;
 		default:
+			delete commandAdd;
+			commandAdd=NULL;
 			throw InvalidAddCommandInputException();
 		}
 	}
@@ -177,6 +184,8 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 			commandAdd->setEndTime(*_parser.createTime(times.back()));
 			break;
 		default:
+			delete commandAdd;
+			commandAdd=NULL;
 			throw InvalidAddCommandInputException();
 		}
 	}
@@ -189,9 +198,9 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	
 Command* CommandCreator::createCommandDelete(std::string parameter) {
 	if(_parser.isAllNumbers(parameter)) {
-		Command_Delete* commandDelete = new Command_Delete;
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
+		Command_Delete* commandDelete = new Command_Delete;
 		commandDelete->setDeletionIndex(id);
 		return commandDelete;
 	} else {
@@ -253,9 +262,9 @@ Command* CommandCreator::createCommandEdit(vector<std::string> parameters){
 
 Command* CommandCreator::createCommandDone(std::string parameter){
 	if(_parser.isAllNumbers(parameter)) {
-		Command_Done* commandDone = new Command_Done;
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
+		Command_Done* commandDone = new Command_Done;
 		commandDone->setCompletedIndex(id);
 		return commandDone;
 	} else {
@@ -266,9 +275,9 @@ Command* CommandCreator::createCommandDone(std::string parameter){
 
 Command* CommandCreator::createCommandUndone(std::string parameter){
 	if(_parser.isAllNumbers(parameter)) {
-		Command_Undone* commandUndone = new Command_Undone;
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
+		Command_Undone* commandUndone = new Command_Undone;
 		commandUndone->setUncompletedIndex(id);
 	} else {
 		throw NotANumberException();
@@ -297,13 +306,12 @@ Command* CommandCreator::createCommandClear(std::string parameter){
 	}else{
 		throw InvalidClearCommandInputException();
 	}
-
 	return newCommand;
 }
 
 Command* CommandCreator::createCommandSearch(std::string parameter){
-	Command_Search* commandSearch = new Command_Search;
 	flagArg(parameter);
+	Command_Search* commandSearch = new Command_Search;
 	commandSearch->setKeyword(parameter);
 	return commandSearch;
 }

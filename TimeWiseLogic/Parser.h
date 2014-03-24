@@ -40,6 +40,8 @@ public:
 	string getStringAfter(char, std::string);
 	string getStringBefore(char, std::string);
 	void removeWhiteSpaces(std::string&);
+	bool isCategory(std::string&);
+	bool isPriority(std::string&);
 
 	bool isPreposition(std::string);
 	void removeSymbol(std::string&);

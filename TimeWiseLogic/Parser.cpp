@@ -510,3 +510,18 @@ TASK_STATUS Parser::getTaskStatus(std::string input){
 	return UNCOMPLETED;
 }
 
+bool Parser::isCategory(std::string& input){
+	if(input[0]=='#'){
+		return true;
+	}
+	return false;
+}
+
+bool Parser::isPriority(std::string& input){
+	if(input[0]=='!'){
+		return true;
+	}
+	return false;
+}
+
+

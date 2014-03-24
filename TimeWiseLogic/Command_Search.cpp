@@ -25,18 +25,6 @@ bool Command_Search::execute(TaskList& tasklist){
 	case KEYWORD:
 		tasklist.populateSearchList(_keyword,KEYWORD);
 		return true;
-	case CATEGORY:
-		tasklist.populateSearchList(_category,CATEGORY);
-		return true;
-	case DATE:
-		tasklist.populateSearchList(_date,DATE);
-		return true;
-	case STATUS:
-		tasklist.populateSearchList(_status);
-		return true;
-	case PRI:
-		tasklist.populateSearchList(_priority);
-		return true;
 	default:
 		return false;
 	}

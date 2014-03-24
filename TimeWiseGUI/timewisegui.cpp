@@ -106,21 +106,23 @@ int TimeWiseGUI::checkEmpty(QString input) {
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 	switch(displayType){
 	case MAIN: {
-		TaskList taskList = _logic.getTaskList();
-		setMainData(taskList);
+		setMainData();
+		ui.label_title->setText("Your Tasks");
 		break;
 	}
 	case SEARCHED: {
-		vector<Task*> taskList = _logic.getTaskList().getSearchResults();
-		setSearchedData(taskList);
+		setSearchedData();
+		ui.label_title->setText("Searched Tasks");
 		break;
 	}
 	}
 }
 
-void TimeWiseGUI::setMainData(TaskList taskList) {
+void TimeWiseGUI::setMainData() {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
+
+	TaskList taskList = _logic.getTaskList();
 
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
@@ -202,9 +204,11 @@ void TimeWiseGUI::setMainData(TaskList taskList) {
 	}
 }
 
-void TimeWiseGUI::setSearchedData(vector<Task*> taskList) {
+void TimeWiseGUI::setSearchedData() {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
+
+	vector<Task*> taskList = _logic.getTaskList().getSearchResults();
 
 	for(int i = 0; i < taskList.size(); i++) {
 		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
@@ -346,7 +350,7 @@ void TimeWiseGUI::updateTime() {
 	QTime time = QTime::currentTime();
 	ui.label_time->setText(time.toString());
 	if(_logic.getTaskList().updateOverdueTaskList()){
-		setData();
+		setMainData();
 	}
 }
 
@@ -373,12 +377,12 @@ void TimeWiseGUI::setupHotKeys() {
 
 void TimeWiseGUI::undo(){
 	_logic.processCommand("undo");
-	setData();
+	setMainData();
 }
 
 void TimeWiseGUI::redo(){
 	_logic.processCommand("redo");
-	setData();
+	setMainData();
 }
 
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {

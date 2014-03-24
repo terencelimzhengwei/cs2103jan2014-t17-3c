@@ -26,8 +26,8 @@ public:
 	void setupFont();
 	void setupHotKeys();
 	void displayTaskList(DISPLAY_TYPE displayType);
-	void setMainData(TaskList);
-	void setSearchedData(vector<Task*>);
+	void setMainData();
+	void setSearchedData();
 	int checkEmpty(QString input);
 	void autoComplete();
 	void setOverdueMessage(int overdueCount);

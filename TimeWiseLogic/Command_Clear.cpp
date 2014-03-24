@@ -4,6 +4,11 @@ Command_Clear::Command_Clear(void){
 	_type=CLEAR;
 }
 
+Command_Clear::Command_Clear(CLEAR_TYPE clearType){
+	_type=CLEAR;
+	_clearType=clearType;
+}
+
 
 Command_Clear::~Command_Clear(void){
 	if(_lastCmdCalled == "execute"){
@@ -23,21 +28,78 @@ bool Command_Clear::execute(TaskList& tasklist){
 	if(!_deletedTasks.empty()){
 		_deletedTasks.clear();
 	}
-	for(int i=0;i<tasklist.undoneSize();i++){
-		_deletedTasks.push_back(tasklist.getTask(i));
+	switch(_clearType){
+	case ALL:
+		clearAll(tasklist);
+		break;
+	case UNCOMPLETED_TASKS:
+		clearUncompletedTasks(tasklist);
+		break;
+	case COMPLETED_TASKS:
+		clearCompletedTasks(tasklist);
+		break;
+	default:
+		_lastCmdCalled="execute";
+		return false;
 	}
-	tasklist.clearTask();
+
 	_lastCmdCalled="execute";
+
 	return true;
 }
 
 bool Command_Clear::undo(TaskList& tasklist){
-	if(tasklist.isEmpty()){
-		for(int i=0;i<_deletedTasks.size();i++){
-			tasklist.addTask(*_deletedTasks[i]);
-		}
-		_lastCmdCalled="undo";
-		return true;
+	switch(_clearType){
+	case ALL:
+		undoCompletedTasks(tasklist);
+		undoUncompletedTasks(tasklist);
+		break;
+	case UNCOMPLETED_TASKS:
+		undoUncompletedTasks(tasklist);
+		break;
+	case COMPLETED_TASKS:
+		undoCompletedTasks(tasklist);
+		break;
+	default:
+		return false;
 	}
-	return false;
+	_lastCmdCalled="undo";
+
+	return true;
+}
+
+void Command_Clear::clearCompletedTasks(TaskList& tasklist){
+	for(int i=0;i<tasklist.doneSize();i++){
+		_deletedTasks.push_back(tasklist.getCompletedTask(i));
+	}
+	tasklist.clearCompletedTasks();
+}
+
+void Command_Clear::clearUncompletedTasks(TaskList& tasklist){
+	for(int i=0;i<tasklist.undoneSize();i++){
+		_deletedTasks.push_back(tasklist.getTask(i));
+	}
+	tasklist.clearTask();
+}
+
+void Command_Clear::clearAll(TaskList& tasklist){
+	clearCompletedTasks(tasklist);
+	clearUncompletedTasks(tasklist);
+}
+
+void Command_Clear::undoCompletedTasks(TaskList& tasklist){
+	for(int i=0;i<_deletedTasks.size();i++){
+		tasklist.addTaskToDoneList(*_deletedTasks[i]);
+	}
+}
+
+void Command_Clear::undoUncompletedTasks(TaskList& tasklist){
+	for(int i=0;i<_deletedTasks.size();i++){
+		tasklist.addTask(*_deletedTasks[i]);
+	}
+}
+
+void Command_Clear::undoAll(TaskList& tasklist){
+	undoCompletedTasks(tasklist);
+	undoUncompletedTasks(tasklist);
 }

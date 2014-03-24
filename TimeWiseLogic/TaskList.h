@@ -31,7 +31,7 @@ public:
 	std::vector<Task*> getOverdueTasks();
 	void updateCompletedTaskList();
 	bool updateOverdueTaskList();
-	void deleteCompletedTaskList();
+	void clearCompletedTasks();
 	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();

@@ -104,13 +104,14 @@ std::string Parser::getFirstWord(std::string action) {
 }
 
 std::string Parser::removeFirstWord(std::string action) {
-		unsigned int tStart = 0;
-		unsigned int tEnd = 0;
-		tStart = action.find_first_of(" ") + 1;
-		tEnd = action.size();
+	std::string first;
+	std::istringstream iss(action);
+	iss >> first;
 
-		std::string userText = action.substr(tStart, tEnd - tStart);
-		return userText;	
+	std::ostringstream oss;
+	oss << iss.rdbuf();
+
+	return oss.str();
 }
 
 std::string Parser::replaceWord(std::string search, std::string replace, std::string subject) {

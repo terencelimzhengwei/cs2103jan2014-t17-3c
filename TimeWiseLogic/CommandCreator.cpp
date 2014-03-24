@@ -58,7 +58,7 @@ Command* CommandCreator::interpretCommand(std::string userInput) {
 				return createCommandUndone(parameter);
 			}
 			case CLEAR: {
-				return createCommandClear();
+				return createCommandClear(parameter);
 			}
 			case UNDO: {
 				return createCommandUndo();
@@ -264,8 +264,18 @@ Command* CommandCreator::createCommandRedo(){
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandClear(){
-	Command_Clear* newCommand = new Command_Clear;
+Command* CommandCreator::createCommandClear(std::string parameter){
+	Command_Clear* newCommand;
+	if(parameter=="all"){
+		newCommand=new Command_Clear(ALL);
+	}else if(parameter=="done"){
+		newCommand=new Command_Clear(COMPLETED_TASKS);
+	}else if(parameter==""||parameter=="undone"){
+		newCommand=new Command_Clear(UNCOMPLETED_TASKS);
+	}else{
+		throw InvalidClearCommandInputException();
+	}
+
 	return newCommand;
 }
 

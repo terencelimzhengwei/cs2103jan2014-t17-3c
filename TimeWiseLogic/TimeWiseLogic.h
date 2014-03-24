@@ -28,6 +28,7 @@ private:
 	Command* _cmd;
 	std::string _feedback;
 
+
 	void initLogic();
 
 };

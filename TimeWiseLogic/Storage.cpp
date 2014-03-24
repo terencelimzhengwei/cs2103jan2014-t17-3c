@@ -100,7 +100,8 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 			}
 			Task* newTask = new Task;
 			while (userInput != "==========") {
-				std::string details = _parser.removeFirstWord(userInput); 
+				std::string details = _parser.removeFirstWord(userInput);
+				_parser.removeWhiteSpaces(details);
 				switch(taskHeader){
 				case 0 :
 					newTask->setDescription(details);
@@ -182,7 +183,8 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 			}
 			Task* newTask = new Task;
 			while (userInput != "==========") {
-				std::string details = _parser.removeFirstWord(userInput); 
+				std::string details = _parser.removeFirstWord(userInput);
+				_parser.removeWhiteSpaces(details);
 				switch(taskHeader){
 				case 0 :
 					newTask->setDescription(details);

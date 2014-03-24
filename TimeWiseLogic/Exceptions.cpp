@@ -30,3 +30,7 @@ const char* InvalidDateTimeFormatException::what() const throw(){
 	return INVALID_USER_INPUT_DATE_TIME;
 }
 
+const char* InvalidClearCommandInputException::what() const throw(){
+	return INVALID_USER_INPUT_COMMAND_CLEAR;
+}
+

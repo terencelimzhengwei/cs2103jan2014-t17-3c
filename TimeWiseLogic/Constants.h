@@ -21,6 +21,7 @@ enum CMD_TYPE{ADD,DELETE,EDIT,CLEAR,DISPLAY,BLOCK,SEARCH,FILTER, UNDO,REDO,UNDON
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum SEARCH_TYPE{KEYWORD,CATEGORY,STATUS,PRI,EMPTYSLOT,DATE,DEFAULT};
+enum CLEAR_TYPE{ALL,UNCOMPLETED_TASKS,COMPLETED_TASKS};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
 { "add","delete","edit","clear","display", "done", "undone","undo", "redo","search","filter"};
@@ -51,5 +52,6 @@ static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you ent
 static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter is invalid";
 static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
 static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
+static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid parameters for Clear. Only accepts ALL,DONE,UNDONE";
 
 #endif // !_CONSTANTS_H

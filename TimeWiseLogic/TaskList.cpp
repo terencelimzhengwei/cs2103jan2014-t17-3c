@@ -131,15 +131,8 @@ bool TaskList::updateOverdueTaskList(){
 	return false;
 }
 
-void TaskList::deleteCompletedTaskList(){
-	for(int i=0;i<_taskList.size();i++){
-		for(int j=0;j<_completedTaskList.size();j++){
-			if(_taskList[i]==_completedTaskList[j]){
-				_taskList.erase(_taskList.begin()+i);
-				_completedTaskList.erase(_completedTaskList.begin()+j);
-			}
-		}
-	}
+void TaskList::clearCompletedTasks(){
+	_completedTaskList.clear();
 }
 
 void TaskList::deleteOverdueTaskList(){

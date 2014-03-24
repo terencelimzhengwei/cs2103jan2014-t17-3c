@@ -30,7 +30,7 @@ public:
 	Command* createCommandAdd(std::string, unsigned int, vector<std::string>);
 	Command* createCommandDelete(std::string);
 	Command* createCommandEdit(vector<std::string>);
-	Command* createCommandClear();
+	Command* createCommandClear(std::string);
 	Command* createCommandDone(std::string);
 	Command* createCommandUndone(std::string);
 	Command* createCommandSearch(std::string);

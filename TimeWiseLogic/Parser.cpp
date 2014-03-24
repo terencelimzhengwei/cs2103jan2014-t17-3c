@@ -453,6 +453,7 @@ Date* Parser::createDate(std::string date)
 ClockTime* Parser::createTime(std::string time)
 {
 	int timeTemp;
+	removeWhiteSpaces(time);
 	if(time.size()==4 && isAllNumbers(time)){
 		ClockTime* newTime = new ClockTime(toNum(time));
 		return newTime;

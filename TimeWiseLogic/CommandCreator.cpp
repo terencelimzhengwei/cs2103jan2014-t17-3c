@@ -90,51 +90,51 @@ Command* CommandCreator::interpretCommand(std::string userInput) {
 
 Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters ) {
 	Command_Add* commandAdd = new Command_Add;
+	std::vector<std::string> dates;
+	std::vector<std::string> times;
+	std::string category = "";
+	std::string priority = "";
+	string description = "";
 	flagArg(parameter);
 	int wordReading = parameterNum - 1;
 
-	// Get category from user command
-	std::string category = "";
-	if(wordReading>=0 && parameters[wordReading][0]=='#') {
-		category =_parser.replaceWord("#","",parameters[wordReading--]);
+	if(_parser.isCategory(parameters.back())){
+		category=_parser.replaceWord("#","",parameters.back());
+		parameters.pop_back();
+	}
+	if(_parser.isPriority(parameters.back())){
+		priority=_parser.replaceWord("!","",parameters.back());
+		parameters.pop_back();
 	}
 
-	// Get priority from user command
-	std::string priority = "";
-	if(wordReading>=0 && parameters[wordReading][0]=='!') {
-		priority = _parser.replaceWord("!","",parameters[wordReading--]);
-
-	}
-
-	// Get time from user command
-	string time = "";
-	if(wordReading >= 0 && _parser.isTimeFormat(parameters[wordReading])) {
-		time = parameters[wordReading--];
-		if( wordReading >= 0 && _parser.isPreposition(parameters[wordReading])) {
-			wordReading--;
+	while(!parameters.empty()){
+		if(_parser.isTimeFormat(parameters.back())){
+			times.push_back(parameters.back());
+			parameters.pop_back();
+			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
+				parameters.pop_back();
+			}
+		}else if(_parser.isDateFormat(parameters.back())){
+			dates.push_back(parameters.back());
+			parameters.pop_back();
+			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
+				parameters.pop_back();
+			}
+		}else{
+			while(!parameters.empty()){
+				description = parameters.front()+" ";
+				parameters.erase(parameters.begin());
+			}
 		}
+
 	}
 
-	// Get date from user command
-	string date = "";
-	if(wordReading >=0 && _parser.isDateFormat(parameters[wordReading])) {
-		date = parameters[wordReading--];
-		if(wordReading>=0 && _parser.isPreposition(parameters[wordReading])) {
-			wordReading--;
-		}
-	}
-
-	// Get description
-	string description = "";
-	for(int i=0 ; i<=wordReading; i++) {
-		if(i) {
-			description += " ";
-		}
-		description += parameters[i];
-	}
 	flagDescription(description);
-	// Set the commandAdd
-	time = _parser.replaceWord(":","",time);
+	_parser.removeWhiteSpaces(description);
+
+	for(int i=0;i<times.size();i++){
+		times[i] = _parser.replaceWord(":","",times[i]);
+	}
 
 	if(category!="") {
 		commandAdd->setCategory(category);
@@ -152,13 +152,35 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 
 	commandAdd->setDescription(description);
 
-	if(date!="") {
-		commandAdd->setEndDate(*_parser.createDate(date));
+	if(!dates.empty()) {
+		switch(dates.size()){
+		case 1:
+			commandAdd->setEndDate(*_parser.createDate(dates.back()));
+			break;
+		case 2:
+			commandAdd->setStartDate(*_parser.createDate(dates.back()));
+			dates.pop_back();
+			commandAdd->setEndDate(*_parser.createDate(dates.back()));
+			break;
+		default:
+			throw InvalidAddCommandInputException();
+		}
+	}
+	if(!times.empty()) {
+		switch(times.size()){
+		case 1:
+			commandAdd->setEndTime(*_parser.createTime(times.back()));
+			break;
+		case 2:
+			commandAdd->setStartTime(*_parser.createTime(times.back()));
+			times.pop_back();
+			commandAdd->setEndTime(*_parser.createTime(times.back()));
+			break;
+		default:
+			throw InvalidAddCommandInputException();
+		}
 	}
 
-	if(time != "") {
-		commandAdd->setEndTime(*_parser.createTime(time));
-	}
 	return commandAdd;
 }
 

@@ -395,10 +395,6 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[1]->execute(_taskList);
 			commandToBeExecuted[2]->execute(_taskList);
 			commandToBeExecuted[3]->execute(_taskList);
-
-			_taskList.updateOverdueTaskList();
-			std::vector<Task*> overdueTask = _taskList.getOverdueTasks();
-			Assert::AreEqual(2,static_cast<int>(overdueTask.size()));
 		}
 
 		TEST_METHOD(ParserTest_GetFirstWord) {

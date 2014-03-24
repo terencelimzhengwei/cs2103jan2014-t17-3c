@@ -81,9 +81,11 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		std::string messageLog = _logic.processCommand(userCommand);
 
+		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+
 		autoComplete();
 
-		setData();
+		displayTaskList(displayType);
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);
@@ -101,11 +103,24 @@ int TimeWiseGUI::checkEmpty(QString input) {
 	}
 }
 
-void TimeWiseGUI::setData() {
+void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
+	switch(displayType){
+	case MAIN: {
+		TaskList taskList = _logic.getTaskList();
+		setMainData(taskList);
+		break;
+	}
+	case SEARCHED: {
+		vector<Task*> taskList = _logic.getTaskList().getSearchResults();
+		setSearchedData(taskList);
+		break;
+	}
+	}
+}
+
+void TimeWiseGUI::setMainData(TaskList taskList) {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
-	
-	TaskList taskList = _logic.getTaskList();
 
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
@@ -187,6 +202,91 @@ void TimeWiseGUI::setData() {
 	}
 }
 
+void TimeWiseGUI::setSearchedData(vector<Task*> taskList) {
+	//clears the contents in the table before displaying updated taskList
+	model->removeRows(0, model->rowCount());
+
+	for(int i = 0; i < taskList.size(); i++) {
+		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
+		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+		QColor rowColor(255, 0, 0, 50);
+
+		for(int j = 0; j < 7; j++) {
+			//add row for every task in taskList dynamically
+			model->setRowCount(i+1);
+
+			switch (j) {
+			case 0: {
+				std::string taskDescription = (taskList[i])->getDescription();
+
+				QString qTask = QString::fromStdString(taskDescription);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+					}
+			case 1: {
+				if(taskList[i]->getStartDate()!=NULL){
+					std::string taskStartDate = taskList[i]->getStartDate()->toString();
+					QString qTask = QString::fromStdString(taskStartDate);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
+				break;
+					}
+			case 2: {
+				if(taskList[i]->getEndDate()!=NULL){
+					std::string taskEndDate = taskList[i]->getEndDate()->toString();
+					QString qTask = QString::fromStdString(taskEndDate);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
+				break;
+					}
+			case 3: {
+				if(taskList[i]->getStartTime()!=NULL){
+					std::string taskStartTime = taskList[i]->getStartTime()->toString();
+					QString qTask = QString::fromStdString(taskStartTime);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
+				break;
+					}
+			case 4: {
+				if(taskList[i]->getEndTime()!=NULL){
+					std::string taskEndTime = taskList[i]->getEndTime()->toString();
+					QString qTask = QString::fromStdString(taskEndTime);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
+				break;
+					}
+			case 5: {
+				PRIORITY taskPriority = taskList[i]->getPriority();
+				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+					}
+			case 6: {
+				if(taskList[i]->getTaskCategory()!=""){
+					std::string taskCategory= taskList[i]->getTaskCategory();
+					QString qTask = QString::fromStdString(taskCategory);
+					QStandardItem* item = new QStandardItem(qTask);
+					model->setItem(i, j, item);
+				}
+				break;
+
+					}
+			}
+			//highlight description in red if that task is overdue
+			if(qStatus == "overdue") {
+				model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+			}
+		}
+	}
+}
+
+
 //set up tableView
 void TimeWiseGUI::setupTable() {
 	model = new QStandardItemModel (0, 5, this);
@@ -197,7 +297,7 @@ void TimeWiseGUI::setupTable() {
 	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
 	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
-	setData();
+	setMainData();
 	ui.tableView->setModel(model);
 
 	//allows long texts to be wrapped.

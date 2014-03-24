@@ -32,7 +32,8 @@ void CommandCreator::flagIndex(unsigned int id) {
 
 
 	//the below methods are responsible for creating the derived commands
-Command* CommandCreator::interpretCommand(std::string userInput) {
+Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& displayType)
+{
 	try {
 	string commandTypeString = _parser.getFirstWord(userInput);
 	CMD_TYPE commandType = _parser.determineCommandType(commandTypeString);
@@ -42,6 +43,7 @@ Command* CommandCreator::interpretCommand(std::string userInput) {
 		unsigned int parameterNum = parameters.size();
 		switch (commandType) {
 			case ADD: {
+				displayType=MAIN;
 				return createCommandAdd(parameter,parameterNum,parameters);
 			}
 			
@@ -67,6 +69,7 @@ Command* CommandCreator::interpretCommand(std::string userInput) {
 				return createCommandRedo();
 			}
 			case SEARCH: {
+				displayType=SEARCHED;
 				return createCommandSearch(parameter);
 			}
 			default: {

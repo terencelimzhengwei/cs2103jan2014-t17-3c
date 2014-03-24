@@ -9,6 +9,11 @@ Command_Clear::Command_Clear(CLEAR_TYPE clearType){
 	_clearType=clearType;
 }
 
+Command_Clear::Command_Clear(DISPLAY_TYPE displayType){
+	_type =CLEAR;
+	_displayType=displayType;
+}
+
 
 Command_Clear::~Command_Clear(void){
 	if(_lastCmdCalled == "execute"){
@@ -38,6 +43,9 @@ bool Command_Clear::execute(TaskList& tasklist){
 	case COMPLETED_TASKS:
 		clearCompletedTasks(tasklist);
 		break;
+	case SCREEN:
+		clearScreen(tasklist);
+		break;
 	default:
 		_lastCmdCalled="execute";
 		return false;
@@ -59,6 +67,13 @@ bool Command_Clear::undo(TaskList& tasklist){
 		break;
 	case COMPLETED_TASKS:
 		undoCompletedTasks(tasklist);
+		break;
+	case SCREEN:
+		if(_displayType==COMPLETE){
+			undoCompletedTasks(tasklist);
+		}else{
+			undoUncompletedTasks(tasklist);
+		}
 		break;
 	default:
 		return false;
@@ -102,4 +117,25 @@ void Command_Clear::undoUncompletedTasks(TaskList& tasklist){
 void Command_Clear::undoAll(TaskList& tasklist){
 	undoCompletedTasks(tasklist);
 	undoUncompletedTasks(tasklist);
+}
+
+void Command_Clear::clearScreen(TaskList& tasklist){
+	if(_displayType==SEARCHED){
+		std::vector<Task*> searchedTask=tasklist.getSearchResults();
+		for(int i=0;i<searchedTask.size();i++){
+			_deletedTasks.push_back(searchedTask[i]);
+		}
+		tasklist.deleteSearchedTasks();
+	}else if(_displayType==LATE){
+		std::vector<Task*> searchedTask=tasklist.getOverdueTasks();
+		for(int i=0;i<searchedTask.size();i++){
+			_deletedTasks.push_back(searchedTask[i]);
+		}
+		tasklist.deleteSearchedTasks();
+	}else if(_displayType==COMPLETE){
+		clearCompletedTasks(tasklist);
+	}else if(_displayType==MAIN){
+		clearUncompletedTasks(tasklist);
+	}
+	return;
 }

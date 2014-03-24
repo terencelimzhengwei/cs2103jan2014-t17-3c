@@ -13,5 +13,6 @@ public:
 private:
 	unsigned int _taskIndex;
 	Task* _task;
+	DISPLAY_TYPE _displayType;
 };
 

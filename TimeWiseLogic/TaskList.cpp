@@ -220,3 +220,14 @@ Task* TaskList::getCompletedTask(unsigned int index){
 int TaskList::doneSize(){
 	return _completedTaskList.size();
 }
+
+void TaskList::deleteSearchedTasks(){
+	for(int i=0;i<_taskList.size();i++){
+		for(int j=0;j<_searchedTaskList.size();j++){
+			if(_taskList[i]==_searchedTaskList[j]){
+				_taskList.erase(_taskList.begin()+i);
+				_searchedTaskList.erase(_searchedTaskList.begin()+j);
+			}
+		}
+	}
+}

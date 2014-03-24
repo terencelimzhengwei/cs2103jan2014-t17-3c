@@ -25,7 +25,11 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 }
 
 bool TimeWiseLogic::parseCommand(std::string commandLine){
-	_cmd = _creator.interpretCommand(commandLine);
+	try{
+		_cmd = _creator.interpretCommand(commandLine);
+	}catch(...){
+		return false;
+	}
 	return true;
 }
 

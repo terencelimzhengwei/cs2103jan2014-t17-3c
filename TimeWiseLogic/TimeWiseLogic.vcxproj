@@ -76,6 +76,7 @@
     <ClInclude Include="Command_Delete.h" />
     <ClInclude Include="Command_Done.h" />
     <ClInclude Include="Command_Edit.h" />
+    <ClInclude Include="Command_Filter.h" />
     <ClInclude Include="Command_Redo.h" />
     <ClInclude Include="Command_Search.h" />
     <ClInclude Include="Command_Undo.h" />
@@ -103,6 +104,7 @@
     <ClCompile Include="Command_Delete.cpp" />
     <ClCompile Include="Command_Done.cpp" />
     <ClCompile Include="Command_Edit.cpp" />
+    <ClCompile Include="Command_Filter.cpp" />
     <ClCompile Include="Command_Redo.cpp" />
     <ClCompile Include="Command_Search.cpp" />
     <ClCompile Include="Command_Undo.cpp" />

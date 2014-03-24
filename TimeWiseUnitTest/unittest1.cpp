@@ -401,7 +401,7 @@ namespace TimeWiseUnitTest
 			Parser _parser;
 			std::string expectedCase1 = "add";
 			std::string validInput1 = _parser.getFirstWord("add dinner with Mai");
-			std::string expectedCase2 = NULL;
+			std::string expectedCase2 = "";
 			std::string invalidInput2 = _parser.getFirstWord("");
 			std::string validInput3 = _parser.getFirstWord("  add do homework");
 			std::string expectedCase3 = "add";
@@ -438,41 +438,59 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase8, invalidInput8);
 		}
 
-		/*TEST_METHOD(ParserTest_SplitBySpace) {
+		TEST_METHOD(ParserTest_SplitBySpace) {
 			//vector to be converted to string for comparison
 			std:: string word = "add";
 			Parser _parser;
-			std::string input[10] = {"go", "to", "the", "zoo", "on", "21/05/2014", "at", "7pm", "!H", "#leisure"};
+
 			std::vector<string> validInput1 = _parser.splitBySpace("go to the zoo on 21/05/2014 at 7pm !H #leisure");
-			std::vector<string> expectedCase1;
-			for (int i = 0; i < 12; i ++) {
-				expectedCase1.push_back(input[i]);
-			}
-			std::vector<string> validInput2= _parser.splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
-			std::vector<string> expectedCase2;
+			std::string expectedCase1 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase1 = "";
 			for (int i = 0; i < 10; i ++) {
-				expectedCase2.push_back(input[i]);
+				convertedCase1 += validInput1[i];
+			}
+			std::vector<string> validInput2 = _parser.splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
+			std::string expectedCase2 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase2 = "";
+			for (int i = 0; i < 10; i ++) {
+				convertedCase2 += validInput2[i];
 			}
 			std::vector<string> validInput3= _parser.splitBySpace("go to the zoo          on 21/05/2014 at 7pm !H #leisure");
-			std::vector<string> expectedCase3;
+			std::string expectedCase3 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase3 = "";
 			for (int i = 0; i < 10; i ++) {
-				expectedCase3.push_back(input[i]);
+				convertedCase3 += validInput3[i];
 			}
 			std::vector<string> invalidInput4 = _parser.splitBySpace("");
-			std::vector<string> expectedCase4;
-			expectedCase4.push_back(NULL);
-			std::vector<string> invalidInput5= _parser.splitBySpace("  ");
-			std::vector<string> expectedCase5;
-			expectedCase5.push_back(NULL);
+			std::string expectedCase4 = "";
+			std::string convertedCase4 = "";
+			for (int i = 0; i < 1; i ++) {
+				convertedCase4 += invalidInput4[i];
+			}
+
+			std::vector<string> validInput5 = _parser.splitBySpace("go to the zoo on 21 May 2014 at 7pm !H #leisure");
+			std::string expectedCase5 = "go to the zoo on 21 May 2014 at 7pm !H #leisure";
+			std::string convertedCase5 = "";
+			for (int i = 0; i < 12; i ++) {
+				convertedCase3 += validInput5[i];
+			}
+
+			std::vector<string> validInput6 = _parser.splitBySpace("go to the zoo on 21 May at 7pm !H #leisure");
+			std::string expectedCase6 = "go to the zoo on 21 May at 7pm !H #leisure";
+			std::string convertedCase6 = "";
+			for (int i = 0; i < 11; i ++) {
+				convertedCase6 += validInput6[i];
+			}
 			
-			Assert::AreEqual(expectedCase1, validInput1);
-			Assert::AreEqual(expectedCase2, validInput2);
-			Assert::AreEqual(expectedCase3, validInput3);
-			Assert::AreEqual(expectedCase4, invalidInput4);
-			Assert::AreEqual(expectedCase5, invalidInput5);
-		}*/
+			Assert::AreEqual(convertedCase1, expectedCase1);
+			Assert::AreEqual(convertedCase2, expectedCase2);
+			Assert::AreEqual(convertedCase3, expectedCase3);
+			Assert::AreEqual(convertedCase4, expectedCase4);
+			Assert::AreEqual(convertedCase5, expectedCase5);
+			Assert::AreEqual(convertedCase6, expectedCase6);
+		}
 		
-		TEST_METHOD(ParserTest_ReplaceWord) {
+		TEST_METHOD (ParserTest_ReplaceWord) {
 			Parser _parser;
 			std::string validInput1 = _parser.replaceWord("!", "", "!low");
 			std::string expectedCase1 = "low";
@@ -517,6 +535,22 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase10, invalidInput10);
 		}
 
+		TEST_METHOD(ParserTest_IsPreposition) {
+			Parser _parser;
+			bool validInput1 = _parser.isPreposition("on");
+			bool expectedCase1 = true;
+			bool invalidInput2 = _parser.isPreposition("");
+			bool expectedCase2 = false;
+			bool invalidInput3 = _parser.isPreposition("10");
+			bool expectedCase3 = false;
+
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, invalidInput2);
+			Assert::AreEqual(expectedCase3,invalidInput3);
+
+
+		}
+
 		TEST_METHOD(ParserTest_IsDateFormat) {
 			Parser _parser;
 			bool validInput1 = _parser.isDateFormat("22/12/2013");
@@ -557,6 +591,10 @@ namespace TimeWiseUnitTest
 			bool expectedCase18 = false;
 			bool invalidInput19 = _parser.isDateFormat("hello");
 			bool expectedCase19 = false;
+			bool validInput20 = _parser.isDateFormat("22 March 2013");
+			bool expectedCase20 = true;
+			bool validInput21= _parser.isDateFormat("22 March");
+			bool expectedCase21 = true;
 			
 
 			Assert::AreEqual(expectedCase1, validInput1);
@@ -569,15 +607,75 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase8, validInput8);
 			Assert::AreEqual(expectedCase9, validInput9);
 			Assert::AreEqual(expectedCase10, invalidInput10);
-			Assert::AreEqual(expectedCase6, invalidInput11);
-			Assert::AreEqual(expectedCase7, invalidInput12);
-			Assert::AreEqual(expectedCase8, invalidInput13);
-			Assert::AreEqual(expectedCase9, invalidInput14);
-			Assert::AreEqual(expectedCase10, invalidInput15);
-			Assert::AreEqual(expectedCase6, invalidInput16);
-			Assert::AreEqual(expectedCase7, invalidInput17);
-			Assert::AreEqual(expectedCase8, invalidInput18);
-			Assert::AreEqual(expectedCase9, invalidInput19);
+			Assert::AreEqual(expectedCase11, invalidInput11);
+			Assert::AreEqual(expectedCase12, invalidInput12);
+			Assert::AreEqual(expectedCase13, invalidInput13);
+			Assert::AreEqual(expectedCase14, invalidInput14);
+			Assert::AreEqual(expectedCase15, invalidInput15);
+			Assert::AreEqual(expectedCase16, invalidInput16);
+			Assert::AreEqual(expectedCase17, invalidInput17);
+			Assert::AreEqual(expectedCase18, invalidInput18);
+			Assert::AreEqual(expectedCase19, invalidInput19);
+			Assert::AreEqual(expectedCase20, validInput20);
+			Assert::AreEqual(expectedCase21, validInput21);
 		}
+
+		TEST_METHOD (ParserTest_CreatDate) {
+			Parser _parser;
+			Date* validInput1 = _parser.createDate("21/03/2013");
+			int  expectedCase1[3] = {21,3,2013};
+			int  outputCase1[3] = {validInput1->getDayNumber(), validInput1->getMonth(), validInput1->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase1[i], outputCase1[i]);
+			}
+			Date* validInput2 = _parser.createDate("21/03");
+			int  expectedCase2[3] = {21,3,2013};
+			int  outputCase2[3] = {validInput2->getDayNumber(), validInput2->getMonth(), validInput2->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase2[i], outputCase2[i]);
+			}
+			Date* validInput3 = _parser.createDate("21/03/13");
+			int  expectedCase3[3] = {21,3,2013};
+			int  outputCase3[3] = {validInput3->getDayNumber(), validInput3->getMonth(), validInput3->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase3[i], outputCase3[i]);
+			}
+			Date* validInput4 = _parser.createDate("21-03-2013");
+			int  expectedCase4[3] = {21,3,2013};
+			int  outputCase4[3] = {validInput4->getDayNumber(), validInput4->getMonth(), validInput4->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase4[i], outputCase4[i]);
+			}
+			Date* validInput5 = _parser.createDate("21-03");
+			int  expectedCase5[3] = {21,3,2013};
+			int  outputCase5[3] = {validInput5->getDayNumber(), validInput5->getMonth(), validInput5->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase5[i], outputCase5[i]);
+			}
+			Date* validInput6 = _parser.createDate("21-03-13");
+			int  expectedCase6[3] = {21,3,2013};
+			int  outputCase6[3] = {validInput6->getDayNumber(), validInput6->getMonth(), validInput6->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase6[i], outputCase6[i]);
+			}
+			Date* invalidInput7 = _parser.createDate("21*03*13");
+			int  expectedCase7[3] = {NULL,NULL,NULL};
+			int  outputCase7[3] = {invalidInput7->getDayNumber(), invalidInput7->getMonth(), invalidInput7->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase7[i], outputCase7[i]);
+			}
+			Date* invalidInput8 = _parser.createDate("21/03*13");
+			int  expectedCase8[3] = {21,NULL,2013};
+			int  outputCase8[3] = {invalidInput8->getDayNumber(), invalidInput8->getMonth(), invalidInput8->getYear()};
+			for (int i = 0; i <3; i++) {
+				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
+			}
+		}
+
+		
+
+		
+		
+
 };
 }

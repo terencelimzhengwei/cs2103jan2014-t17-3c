@@ -4,9 +4,9 @@ Date::Date(){
 }
 
 Date::Date(int day, int month, int year){
-	_dayNumber=day;
-	_month=month;
-	_year=year;
+	_dayNumber = day;
+	_month = month;
+	_year = year;
 }
 
 Date::Date(Date& date){

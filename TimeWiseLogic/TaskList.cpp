@@ -70,47 +70,8 @@ void TaskList::populateSearchList(std::string& keyword,SEARCH_TYPE searchType){
 				_searchedTaskList.push_back(_taskList[i]);
 			}
 		}
-	}else if(searchType==CATEGORY){
-		for(int i=0;i<_taskList.size();i++){
-			if(_taskList[i]->hasCategory(keyword)){
-				_searchedTaskList.push_back(_taskList[i]);
-			}
-		}
 	}
 	return;
-}
-
-void TaskList::populateSearchList(Date* date,SEARCH_TYPE searchType){
-	_searchedTaskList.clear();
-
-	if(searchType==DATE){
-		for(int i=0;i<_taskList.size();i++){
-			if(_taskList[i]->hasDate(date)){
-				_searchedTaskList.push_back(_taskList[i]);
-			}
-		}
-	}
-	return;
-}
-
-void TaskList::populateSearchList(PRIORITY priority){
-	_searchedTaskList.clear();
-
-	for(int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->hasPriority(priority)){
-			_searchedTaskList.push_back(_taskList[i]);
-		}
-	}
-}
-
-void TaskList::populateSearchList(TASK_STATUS status){
-	_searchedTaskList.clear();
-
-	for(int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->hasStatus(status)){
-			_searchedTaskList.push_back(_taskList[i]);
-		}
-	}
 }
 
 std::vector<Task*> TaskList::getSearchResults(){
@@ -219,6 +180,56 @@ Task* TaskList::getCompletedTask(unsigned int index){
 
 int TaskList::doneSize(){
 	return _completedTaskList.size();
+}
+
+void TaskList::populateFilterList(std::string& keyword,SEARCH_TYPE searchType){
+	_filteredTaskList.clear();
+
+	if(searchType==CATEGORY){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]->hasCategory(keyword)){
+				_filteredTaskList.push_back(_taskList[i]);
+			}
+		}
+	}
+	return;
+}
+
+void TaskList::populateFilterList(Date* date,SEARCH_TYPE searchType){
+	_filteredTaskList.clear();
+
+	if(searchType==DATE){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]->hasDate(date)){
+				_filteredTaskList.push_back(_taskList[i]);
+			}
+		}
+	}
+	return;
+}
+
+void TaskList::populateFilterList(PRIORITY priority){
+	_filteredTaskList.clear();
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasPriority(priority)){
+			_filteredTaskList.push_back(_taskList[i]);
+		}
+	}
+}
+
+void TaskList::populateFilterList(TASK_STATUS status){
+	_filteredTaskList.clear();
+
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasStatus(status)){
+			_filteredTaskList.push_back(_taskList[i]);
+		}
+	}
+}
+
+std::vector<Task*> TaskList::getFilterResults(){
+	return _filteredTaskList;
 }
 
 void TaskList::deleteSearchedTasks(){

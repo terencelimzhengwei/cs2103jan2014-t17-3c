@@ -319,6 +319,14 @@ Command* CommandCreator::createCommandSearch(std::string parameter){
 	return commandSearch;
 }
 
+Command* CommandCreator::createCommandFilter(std::string parameter){
+	flagArg(parameter);
+	Command_Filter* commandFilter= new Command_Filter;
+	commandFilter->setKeyword(parameter);
+	return commandFilter;
+}
+
+
 std::string CommandCreator::getFeedback() {
 	std::string feedback = "";
 	for (int i = 0; i < _feedbackExceptiontoUI.size(); i++) {

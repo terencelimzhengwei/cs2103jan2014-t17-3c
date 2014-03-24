@@ -305,10 +305,17 @@ int TimeWiseGUI::numberOfOverdues() {
 void TimeWiseGUI::autoComplete() {
 	QStringList descList;
 	TaskList taskList = _logic.getTaskList();
+
 	for(int i = 0; i < taskList.undoneSize(); i++) {
-		string taskDescription = SEARCH_COMMAND + taskList.getTask(i)->getDescription();
-		QString qTask = QString::fromStdString(taskDescription);
-		descList << qTask;
+		ostringstream outstrDesc;
+		outstrDesc << SEARCH_COMMAND << " " << taskList.getTask(i)->getDescription();
+		QString qDesc = QString::fromStdString(outstrDesc.str());
+		descList << qDesc;
+
+		/*ostringstream outstrCat;
+		outstrCat << SEARCH_COMMAND << " #" << taskList.getTask(i)->getTaskCategory();
+		QString qCat = QString::fromStdString(outstrCat.str());
+		descList << qCat;*/
 	}
 	descCompleter = new QCompleter(descList, this);
 	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);

@@ -21,6 +21,10 @@ public:
 	TimeWiseGUI(QWidget *parent = 0);
 	~TimeWiseGUI();
 	QStandardItemModel *model;
+	void setupTable();
+	void setupClock();
+	void setupFont();
+	void setupHotKeys();
 	void setData();
 	int checkEmpty(QString input);
 	void autoComplete();

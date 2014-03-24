@@ -23,44 +23,7 @@ const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, done, edit,
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
-	//set up tableView
-	model = new QStandardItemModel (0, 5, this);
-	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
-	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Start Date")));
-	model->setHorizontalHeaderItem(2, new QStandardItem(QString("Due Date")));
-	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Start Time")));
-	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
-	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
-	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
-	setData();
-	ui.tableView->setModel(model);
-	
-	//allows long texts to be wrapped.
-	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-	//set column widths of table. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 240);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 70);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 70);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 70);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 70);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(5, 40);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(6, 80);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(700);
-	ui.tableView->setMaximumWidth(700);
-
-	//set up row heights of table.
-	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
-
-	//enable table to scroll to the bottom whenever a new row is inserted.
-	connect(ui.tableView->model(), SIGNAL(rowsInserted (const QModelIndex &, int, int )), ui.tableView, SLOT(scrollToBottom ()));
+	setupTable();
 
 	//set cursor to userInput lineEdit as soon as program is opened.
 	QTimer::singleShot(0, ui.userInput, SLOT(setFocus()));
@@ -68,33 +31,14 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	//remove title header of main window
 	this->setWindowFlags(Qt::CustomizeWindowHint);
 
-	//set date and time
-	QDate date = QDate::currentDate();
-	ui.label_date->setText(date.toString());
-	QTime time = QTime::currentTime();
-	ui.label_time->setText(time.toString());
+	setupClock();
 
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT( updateTime() ));
-	timer->start(1000);
+	setupFont();
 
-	//font setting
-	QFontDatabase fontDatabase; 
-	fontDatabase.addApplicationFont(":/TimeWiseGUI/CFJackStory-Regular.ttf");
-	fontDatabase.addApplicationFont(":/TimeWiseGUI/Homestead Display.ttf");
-	fontDatabase.addApplicationFont(":/TimeWiseGUI/EHSMB.TTF");
-	fontDatabase.addApplicationFont(":/TimeWiseGUI/comesinhandy.ttf");
-
-	ui.label_date->setFont(QFont("Electronic Highway Sign",19,75));
-	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
-	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
-
-	//hotkeys
-	QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
-	QShortcut *shortcut1 = new QShortcut(QKeySequence("Ctrl+Y"), this);
-	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
-	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
-
+	setupHotKeys();
+	
+	autoComplete();
+	
 	if(numberOfOverdues() > 0) {
 		setOverdueMessage(numberOfOverdues());
 	}
@@ -103,19 +47,15 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 TimeWiseGUI::~TimeWiseGUI() {
 }
 
-void TimeWiseGUI::updateTime() {
-	QDate date = QDate::currentDate();
-	ui.label_date->setText(date.toString());
-	QTime time = QTime::currentTime();
-	ui.label_time->setText(time.toString());
-	if(_logic.getTaskList().updateOverdueTaskList()){
-		setData();
-	}
-}
-
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
+		/*ostringstream outstr;
+		outstr << ADD_COMMAND << " " << "description";
+		std::string addStuff = outstr.str();
+		QString qAddStuff = QString::fromStdString(addStuff);
+		ui.userInput->setText(qAddStuff);
+		ui.userInput->cursorWordBackward (true);*/
 	} else if(ui.userInput->text() == CLEAR_COMMAND) {
 		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
@@ -150,7 +90,6 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		ui.userInput->clear();
 	}
-
 	catch(const std::invalid_argument& e) {
 		ui.label_mlog->setText(e.what());
 	}
@@ -248,6 +187,90 @@ void TimeWiseGUI::setData() {
 	}
 }
 
+//set up tableView
+void TimeWiseGUI::setupTable() {
+	model = new QStandardItemModel (0, 5, this);
+	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
+	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Start Date")));
+	model->setHorizontalHeaderItem(2, new QStandardItem(QString("Due Date")));
+	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Start Time")));
+	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
+	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
+	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
+	setData();
+	ui.tableView->setModel(model);
+
+	//allows long texts to be wrapped.
+	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+	//set column widths of table. Hardcoded and very primitive.
+	ui.tableView->setColumnWidth(0, 240);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(1, 70);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(2, 70);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(3, 70);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(4, 70);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(5, 55);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(6, 65);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
+	ui.tableView->setMinimumWidth(700);
+	ui.tableView->setMaximumWidth(700);
+
+	//set up row heights of table.
+	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
+
+	//enable table to scroll to the bottom whenever a new row is inserted.
+	connect(ui.tableView->model(), SIGNAL(rowsInserted (const QModelIndex &, int, int )), ui.tableView, SLOT(scrollToBottom ()));
+}
+
+//set date and time
+void TimeWiseGUI::setupClock() {	
+	QDate date = QDate::currentDate();
+	ui.label_date->setText(date.toString());
+	QTime time = QTime::currentTime();
+	ui.label_time->setText(time.toString());
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT( updateTime() ));
+	timer->start(1000);
+}
+
+void TimeWiseGUI::updateTime() {
+	QDate date = QDate::currentDate();
+	ui.label_date->setText(date.toString());
+	QTime time = QTime::currentTime();
+	ui.label_time->setText(time.toString());
+	if(_logic.getTaskList().updateOverdueTaskList()){
+		setData();
+	}
+}
+
+//font setting
+void TimeWiseGUI::setupFont(){
+	QFontDatabase fontDatabase; 
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/CFJackStory-Regular.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/Homestead Display.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/EHSMB.TTF");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/comesinhandy.ttf");
+
+	ui.label_date->setFont(QFont("Electronic Highway Sign",19,75));
+	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
+	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
+}
+
+//enable hotkeys
+void TimeWiseGUI::setupHotKeys() {
+	QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
+	QShortcut *shortcut1 = new QShortcut(QKeySequence("Ctrl+Y"), this);
+	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
+	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
+}
+
 void TimeWiseGUI::undo(){
 	_logic.processCommand("undo");
 	setData();
@@ -258,7 +281,6 @@ void TimeWiseGUI::redo(){
 	setData();
 }
 
-//Currently I used a uncustomizable boring QMessageBox. If necessary, can make it customizable with QDialogue (requires new class)
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 	QMessageBox overdueInfo;
 	ostringstream outstr;
@@ -284,7 +306,7 @@ void TimeWiseGUI::autoComplete() {
 	QStringList descList;
 	TaskList taskList = _logic.getTaskList();
 	for(int i = 0; i < taskList.undoneSize(); i++) {
-		string taskDescription = "search " + taskList.getTask(i)->getDescription();
+		string taskDescription = SEARCH_COMMAND + taskList.getTask(i)->getDescription();
 		QString qTask = QString::fromStdString(taskDescription);
 		descList << qTask;
 	}

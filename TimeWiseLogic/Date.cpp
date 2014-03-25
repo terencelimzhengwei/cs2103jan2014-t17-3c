@@ -36,6 +36,49 @@ void Date::setDateAsToday(){
 	_dayInString = DAY[_day];
 }
 
+void Date::setDateAsTomorrow() {
+	Date temp;
+	if(temp.getCurrentMonth() == 1 || temp.getCurrentMonth() == 3|| temp.getCurrentMonth() == 5||
+		temp.getCurrentMonth() == 7|| temp.getCurrentMonth() == 8|| temp.getCurrentMonth() == 12) {
+			if(temp.getCurrentDay() == 31) {
+				_dayNumber = 1;
+				if(temp.getCurrentMonth() == 12) {
+					_month = 1;
+					_year = temp.getCurrentYear() + 1;
+				} else {
+					_month = temp.getCurrentMonth() + 1;
+					_year = temp.getCurrentYear();
+				}	
+			} else {
+				_month = temp.getCurrentMonth() + 1;
+				_dayNumber = temp.getCurrentDay() + 1;
+				_year = temp.getCurrentYear();
+			}
+	} else if (temp.getCurrentMonth() == 2) {
+		if(temp.getCurrentDay()== 29) {
+			_dayNumber = 1;
+			_month = 3;
+			_year = temp.getCurrentYear();
+		} else {
+			_month = temp.getCurrentMonth() + 1;
+			_dayNumber = temp.getCurrentDay() + 1;
+			_year = temp.getCurrentYear();
+		}
+	} else if ( temp.getCurrentMonth() == 4 || temp.getCurrentMonth() == 6|| temp.getCurrentMonth() == 9||
+		temp.getCurrentMonth() == 10|| temp.getCurrentMonth() == 11) {
+			if(temp.getCurrentDay()== 30) {
+				_dayNumber = 1;
+				_month = temp.getCurrentMonth();
+				_year = temp.getCurrentYear();
+			} else {
+				_month = temp.getCurrentMonth() + 1;
+				_dayNumber = temp.getCurrentDay() + 1;
+				_year = temp.getCurrentYear();
+			}
+	}
+
+}
+
 TIMEDATE_STATUS Date::checkOverdue()
 {
 	_currentTime = time(0);   
@@ -149,6 +192,7 @@ int Date::getCurrentMonth(){
 
 	return thisMonth;
 }
+
 
 int Date::getCurrentDay(){
 	_currentTime = time(0);   

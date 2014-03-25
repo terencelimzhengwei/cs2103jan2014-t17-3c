@@ -30,7 +30,7 @@ public:
 	int getCurrentYear();
 	int getCurrentMonth();
 	int getCurrentDay();
-
+	void setDateAsTomorrow();
 	bool compare(Date* date);
 
 private:
@@ -42,7 +42,6 @@ private:
 	int _year;
 	int _day;
 	std::string _dayInString;
-
 	void setDateAsToday();
 	void setDate(int day, int month, int year);
 };

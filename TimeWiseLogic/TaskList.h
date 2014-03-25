@@ -13,6 +13,7 @@ public:
 	void addTask(Task&);
 	void addTaskToDoneList(Task&);
 	void addTaskToSearchedList(Task&);
+	void addTaskToOverdueList(Task&);
 	Task* setTaskAsDone(unsigned int index);
 	Task* setTaskAsUndone(unsigned int index);
 	Task* getTask(unsigned int);
@@ -43,6 +44,7 @@ public:
 	std::vector<Task*> getUncompletedTaskList();
 	void updateCompletedTaskList();
 	bool updateOverdueTaskList();
+	bool checkNewOverdue();
 	void clearCompletedTasks();
 	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------

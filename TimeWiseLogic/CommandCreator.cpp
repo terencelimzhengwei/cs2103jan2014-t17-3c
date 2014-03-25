@@ -284,6 +284,7 @@ Command* CommandCreator::createCommandUndone(std::string parameter,DISPLAY_TYPE*
 	if(_parser.isAllNumbers(parameter)) {
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
+		//implement protection
 		Command_Undone* commandUndone = new Command_Undone;
 		commandUndone->setUncompletedIndex(id);
 		commandUndone->setDisplayScreen(*type);

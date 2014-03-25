@@ -64,13 +64,11 @@ bool Task::checkOverdue()
 		return false;
 	}else{
 		if(_endDate->checkOverdue()==LATER){
-			setStatusAsOverdue();
 			return true;
 		}else if(_endDate->checkOverdue()==SAME){
 			if(_endTime==NULL){
 				return false;
 			}else if(_endTime->checkOverdueTime()){
-					setStatusAsOverdue();
 					return true;
 			}
 		}
@@ -241,6 +239,16 @@ bool Task::checkClash(Task* task){
 			if(task->getStartDate()->isLater(_endDate)==EARLIER||task->getStartDate()->isLater(_endDate)==SAME){
 				return true;
 			}
+		}
+	}
+	return false;
+}
+
+bool Task::checkNewOverdue(){
+	if(checkOverdue()){
+		if(getTaskStatus()!=OVERDUE){
+			setStatusAsOverdue();
+			return true;
 		}
 	}
 	return false;

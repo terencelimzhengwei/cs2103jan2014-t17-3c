@@ -41,6 +41,7 @@ public:
 
 	//check overdue
 	bool checkOverdue();
+	bool checkNewOverdue();
 	bool hasKeyword(std::string keyword);
 	bool hasPriority(PRIORITY priority);
 	bool hasDate(Date* date);

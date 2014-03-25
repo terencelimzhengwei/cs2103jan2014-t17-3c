@@ -9,12 +9,6 @@ Command_Clear::Command_Clear(CLEAR_TYPE clearType){
 	_clearType=clearType;
 }
 
-Command_Clear::Command_Clear(DISPLAY_TYPE displayType){
-	_type =CLEAR;
-	_displayType=displayType;
-}
-
-
 Command_Clear::~Command_Clear(void){
 	if(_lastCmdCalled == "execute"){
 		if(!_deletedTasks.empty()){
@@ -138,4 +132,8 @@ void Command_Clear::clearScreen(TaskList& tasklist){
 		clearUncompletedTasks(tasklist);
 	}
 	return;
+}
+
+void Command_Clear::setDisplayScreen(DISPLAY_TYPE displayType){
+	_displayType=displayType;
 }

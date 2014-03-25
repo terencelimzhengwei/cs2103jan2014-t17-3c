@@ -260,6 +260,7 @@ bool TaskList::deleteTaskFromSearchList(unsigned int& index){
 			_taskList.erase(_taskList.begin()+index);
 		}
 	}
+	_searchedTaskList.erase(_searchedTaskList.begin()+index);
 	return true;
 }
 

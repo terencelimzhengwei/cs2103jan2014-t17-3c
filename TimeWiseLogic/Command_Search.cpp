@@ -16,6 +16,7 @@ void Command_Search::setKeyword(std::string keyword){
 }
 
 bool Command_Search::execute(TaskList& tasklist){
+	*_currentScreen=SEARCHED;
 	tasklist.populateSearchList(_keyword,KEYWORD);
 	return true;
 }

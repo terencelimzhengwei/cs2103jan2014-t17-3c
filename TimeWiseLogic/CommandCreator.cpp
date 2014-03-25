@@ -39,28 +39,28 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	CMD_TYPE commandType = _parser.determineCommandType(commandTypeString);
 	
 		string parameter = _parser.removeFirstWord(userInput);
+		_parser.removeWhiteSpaces(parameter);
 		vector<string> parameters = _parser.splitBySpace(parameter);
 		unsigned int parameterNum = parameters.size();
 		switch (commandType) {
 			case ADD: {
-				displayType=MAIN;
 				return createCommandAdd(parameter,parameterNum,parameters,&displayType);
 			}
 			
 			case DELETE: {
-				return createCommandDelete(parameter);
+				return createCommandDelete(parameter,&displayType);
 			}
 			case EDIT: {
-				return createCommandEdit(parameters);
+				return createCommandEdit(parameters,&displayType);
 			}
 			case DONE: {
-				return createCommandDone(parameter);
+				return createCommandDone(parameter,&displayType);
 			}
 			case UNDONE: {
-				return createCommandUndone(parameter);
+				return createCommandUndone(parameter,&displayType);
 			}
 			case CLEAR: {
-				return createCommandClear(parameter);
+				return createCommandClear(parameter,&displayType);
 			}
 			case UNDO: {
 				return createCommandUndo();
@@ -69,9 +69,10 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 				return createCommandRedo();
 			}
 			case SEARCH: {
-				displayType=SEARCHED;
-				return createCommandSearch(parameter);
+				return createCommandSearch(parameter,&displayType);
 			}
+			case DISPLAY:
+				return createCommandDisplay(parameter,&displayType);
 			default: {
 				throw InvalidCommandWordException();
 				return NULL;
@@ -199,12 +200,13 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	
 
 	
-Command* CommandCreator::createCommandDelete(std::string parameter) {
+Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE* type) {
 	if(_parser.isAllNumbers(parameter)) {
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
 		Command_Delete* commandDelete = new Command_Delete;
 		commandDelete->setDeletionIndex(id);
+		commandDelete->setDisplayScreen(*type);
 		return commandDelete;
 	} else {
 		throw NotANumberException();
@@ -213,7 +215,7 @@ Command* CommandCreator::createCommandDelete(std::string parameter) {
 
 }
 
-Command* CommandCreator::createCommandEdit(vector<std::string> parameters){
+Command* CommandCreator::createCommandEdit(vector<std::string> parameters,DISPLAY_TYPE* type){
 	Command_Edit* commandEdit = new Command_Edit;
 
 	commandEdit->setIndex(_parser.toNum(parameters[0])-1);
@@ -259,16 +261,18 @@ Command* CommandCreator::createCommandEdit(vector<std::string> parameters){
 			commandEdit->setPriority(LOW);
 		}
 	}
+	commandEdit->setDisplayScreen(*type);
 	return commandEdit;
 }
 
 
-Command* CommandCreator::createCommandDone(std::string parameter){
+Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
 	if(_parser.isAllNumbers(parameter)) {
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
 		Command_Done* commandDone = new Command_Done;
 		commandDone->setCompletedIndex(id);
+		commandDone->setDisplayScreen(*type);
 		return commandDone;
 	} else {
 		throw NotANumberException();
@@ -276,12 +280,13 @@ Command* CommandCreator::createCommandDone(std::string parameter){
 	} 
 }
 
-Command* CommandCreator::createCommandUndone(std::string parameter){
+Command* CommandCreator::createCommandUndone(std::string parameter,DISPLAY_TYPE* type){
 	if(_parser.isAllNumbers(parameter)) {
 		unsigned int id = _parser.toNum(parameter) - 1;
 		flagIndex(id);
 		Command_Undone* commandUndone = new Command_Undone;
 		commandUndone->setUncompletedIndex(id);
+		commandUndone->setDisplayScreen(*type);
 	} else {
 		throw NotANumberException();
 		return NULL;
@@ -298,28 +303,33 @@ Command* CommandCreator::createCommandRedo(){
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandClear(std::string parameter){
+Command* CommandCreator::createCommandClear(std::string parameter,DISPLAY_TYPE* type){
 	Command_Clear* newCommand;
 	if(parameter=="all"){
 		newCommand=new Command_Clear(ALL);
 	}else if(parameter=="done"){
 		newCommand=new Command_Clear(COMPLETED_TASKS);
-	}else if(parameter==""||parameter=="undone"){
+	}else if(parameter=="undone"){
 		newCommand=new Command_Clear(UNCOMPLETED_TASKS);
+	}else if(parameter==""){
+		newCommand=new Command_Clear(SCREEN);
+		newCommand->setDisplayScreen(*type);
 	}else{
 		throw InvalidClearCommandInputException();
 	}
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandSearch(std::string parameter){
+Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE* type){
 	flagArg(parameter);
 	Command_Search* commandSearch = new Command_Search;
+	_parser.removeWhiteSpaces(parameter);
 	commandSearch->setKeyword(parameter);
+	commandSearch->setPreviousScreen(type);
 	return commandSearch;
 }
 
-Command* CommandCreator::createCommandFilter(std::string parameter){
+Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*){
 	flagArg(parameter);
 	Command_Filter* commandFilter= new Command_Filter;
 	commandFilter->setKeyword(parameter);
@@ -333,5 +343,23 @@ std::string CommandCreator::getFeedback() {
 		feedback += _feedbackExceptiontoUI[i] + "\n";
 	}
 	return feedback;
+}
+
+Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* displayType)
+{
+	Command_Display* newCommand= new Command_Display();
+	newCommand->setPreviousScreen(displayType);
+	if(parameter=="main"){
+		newCommand->setNextScreen(MAIN);
+	}else if(parameter=="overdue"){
+		newCommand->setNextScreen(LATE);
+	}else if(parameter=="completed"){
+		newCommand->setNextScreen(COMPLETE);
+	}else{
+		delete newCommand;
+		newCommand==NULL;
+		throw InvalidAddCommandInputException();
+	}
+	return newCommand;
 }
 

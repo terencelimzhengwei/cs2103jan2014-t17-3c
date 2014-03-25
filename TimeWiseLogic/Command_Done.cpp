@@ -35,6 +35,7 @@ bool Command_Done::execute(TaskList& tasklist){
 bool Command_Done::undo(TaskList& tasklist){
 	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
 	tasklist.setTaskAsUndone(index);
+	tasklist.addTaskToSearchedList(*_task);
 	return true;
 }
 

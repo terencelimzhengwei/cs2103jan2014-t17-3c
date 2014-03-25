@@ -11,6 +11,7 @@
 #include "Command_Filter.h"
 #include "Command_Undo.h"
 #include "Command_Redo.h"
+#include "Command_Display.h"
 #include "Exceptions.h"
 #include "Constants.h"
 class CommandCreator
@@ -29,15 +30,15 @@ public:
 	//the below methods are responsible for creating the derived commands
 	Command* interpretCommand(std::string,DISPLAY_TYPE&);
 	Command* createCommandAdd(std::string, unsigned int, vector<std::string>,DISPLAY_TYPE*);
-	Command* createCommandDelete(std::string);
-	Command* createCommandEdit(vector<std::string>);
-	Command* createCommandClear(std::string);
-	Command* createCommandDone(std::string);
-	Command* createCommandUndone(std::string);
-	Command* createCommandSearch(std::string);
-	Command* createCommandFilter(std::string);
+	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
+	Command* createCommandEdit(vector<std::string>,DISPLAY_TYPE*);
+	Command* createCommandClear(std::string,DISPLAY_TYPE*);
+	Command* createCommandDone(std::string,DISPLAY_TYPE*);
+	Command* createCommandUndone(std::string,DISPLAY_TYPE*);
+	Command* createCommandSearch(std::string,DISPLAY_TYPE*);
+	Command* createCommandFilter(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndo();
 	Command* createCommandRedo();
-
+	Command* createCommandDisplay(string parameter, DISPLAY_TYPE* displayType);
 };
 

@@ -8,6 +8,14 @@ Command_Delete::Command_Delete() {
 	_taskDeleted=NULL;
 }
 
+Command_Delete::Command_Delete(DISPLAY_TYPE displayType){
+	_type = DELETE;
+	_deletionString="";
+	_deletionIndex=DEFAULT_INDEX;
+	_taskDeleted=NULL;
+	_displayType=displayType;
+}
+
 Command_Delete::~Command_Delete(){
 	if(_lastCmdCalled=="execute"){
 		delete _taskDeleted;
@@ -27,19 +35,69 @@ void Command_Delete::setDeletionString(std::string deletionString){
 
 //only by index first
 bool Command_Delete::execute(TaskList& taskList){
-	if(_deletionIndex!=DEFAULT_INDEX){
-		_taskDeleted=taskList.getTask(_deletionIndex);
-		taskList.deleteTask(_deletionIndex);
-		_lastCmdCalled="execute";
-		return true;
-	}else if(_deletionString!=DEFAULT_EMPTY){
-		//search delete
-		return true;
+	switch(_displayType){
+	case MAIN:
+		if(_deletionIndex!=DEFAULT_INDEX){
+			_taskDeleted=taskList.getTask(_deletionIndex);
+			taskList.deleteTask(_deletionIndex);
+			_lastCmdCalled="execute";
+			return true;
+		}else if(_deletionString!=DEFAULT_EMPTY){
+			//search delete
+			return true;
+		}
+	case COMPLETE:
+		if(_deletionIndex!=DEFAULT_INDEX){
+			_taskDeleted=taskList.getCompletedTask(_deletionIndex);
+			taskList.deleteTaskFromCompletedList(_deletionIndex);
+			_lastCmdCalled="execute";
+			return true;
+		}else if(_deletionString!=DEFAULT_EMPTY){
+			//search delete
+			return true;
+		}
+	case LATE:
+		if(_deletionIndex!=DEFAULT_INDEX){
+			_taskDeleted=taskList.getOverdueTask(_deletionIndex);
+			taskList.deleteTaskFromCompletedList(_deletionIndex);
+			_lastCmdCalled="execute";
+			return true;
+		}else if(_deletionString!=DEFAULT_EMPTY){
+			//search delete
+			return true;
+		}
+	case SEARCHED:
+		if(_deletionIndex!=DEFAULT_INDEX){
+			_taskDeleted=taskList.getSearchedTask(_deletionIndex);
+			taskList.deleteTaskFromSearchList(_deletionIndex);
+			_lastCmdCalled="execute";
+			return true;
+		}else if(_deletionString!=DEFAULT_EMPTY){
+			//search delete
+			return true;
+		}
 	}
 	return false;
 }
 
 bool Command_Delete::undo(TaskList& taskList){
+	switch(_displayType){
+	case MAIN:
+		taskList.addTask(*_taskDeleted);
+		_lastCmdCalled="undo";
+	case COMPLETE:
+		taskList.addTaskToDoneList(*_taskDeleted);
+		_lastCmdCalled="undo";
+	case LATE:
+		taskList.addTask(*_taskDeleted);
+		_lastCmdCalled="undo";
+	case SEARCHED:
+		taskList.addTask(*_taskDeleted);
+		std::vector<Task*>& searchResults=taskList.getSearchResults();
+		searchResults.push_back(_taskDeleted);
+		_lastCmdCalled="undo";
+	}
+	return false;
 	taskList.addTask(*_taskDeleted);
 	_lastCmdCalled="undo";
 	return true;

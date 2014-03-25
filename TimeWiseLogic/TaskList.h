@@ -12,12 +12,20 @@ public:
 
 	void addTask(Task&);
 	void addTaskToDoneList(Task&);
+	void addTaskToSearchedList(Task&);
 	Task* setTaskAsDone(unsigned int index);
 	Task* setTaskAsUndone(unsigned int index);
 	Task* getTask(unsigned int);
+	Task* setOverdueTaskAsDone(unsigned int index);
+	Task* setSearchedTaskAsDone(unsigned int index);
 	Task* getCompletedTask(unsigned int);
+	Task* getSearchedTask(unsigned int);
+	Task* getOverdueTask(unsigned int);
 	bool deleteTask(unsigned int&);
 	bool deleteTaskFromCompletedList(unsigned int&);
+	bool deleteTaskFromOverdueList(unsigned int&);
+	bool deleteTaskFromSearchList(unsigned int&);
+
 	unsigned int getTaskIndex(Task* task);
 	unsigned int getTaskIndexInCompletedList(Task* task);
 	void clearTask();
@@ -28,7 +36,9 @@ public:
 	void populateSearchList(TASK_STATUS status);
 
 	std::vector<Task*> getSearchResults();
-	std::vector<Task*> getOverdueTasks();
+	std::vector<Task*> getOverdueTaskList();
+	std::vector<Task*> getCompletedTaskList();
+	std::vector<Task*> getUncompletedTaskList();
 	void updateCompletedTaskList();
 	bool updateOverdueTaskList();
 	void clearCompletedTasks();

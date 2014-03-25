@@ -15,6 +15,7 @@ public:
 	void setStartTime(ClockTime&);
 	void setEndTime(ClockTime&);
 	void setTaskType(TASK_TYPE);
+	void setPreviousScreen(DISPLAY_TYPE*);
 
 	//checker for fields
 	bool hasEndDate();
@@ -36,4 +37,7 @@ private:
 	ClockTime* _endTime;
 
 	Task* _addedTask;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+
 };

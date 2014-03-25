@@ -57,13 +57,6 @@ int main(){
 	commandToBeExecuted[1]->execute(_taskList);
 	commandToBeExecuted[2]->execute(_taskList);
 	commandToBeExecuted[3]->execute(_taskList);
-
-	Command_Search* search = new Command_Search();
-	search->setDate(&endDate);
-	search->execute(_taskList);
-	std::vector<Task*> searchedtask3= _taskList.getSearchResults();
-
-
 	system("pause");
 	return 0;
 }

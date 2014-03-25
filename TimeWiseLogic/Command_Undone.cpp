@@ -13,17 +13,25 @@ Command_Undone::~Command_Undone(void){
 }
 
 bool Command_Undone::execute(TaskList& tasklist){
-	_task=tasklist.getTask(_taskIndex);
-	_task->setStatusasUndone();
-	return true;
+	if(_displayType==COMPLETE){
+		Task* task = tasklist.getCompletedTask(_taskIndex);
+		tasklist.setTaskAsUndone(_taskIndex);
+		return true;
+	}else{
+		throw InvalidCommandWordException();
+	}
 }
 
 bool Command_Undone::undo(TaskList& tasklist){
 	unsigned int index = tasklist.getTaskIndex(_task);
-	tasklist.getTask(index)->setStatusAsDone();
+	tasklist.setTaskAsDone(index);
 	return true;
 }
 
 void Command_Undone::setUncompletedIndex(unsigned int index){
 	_taskIndex=index;
+}
+
+void Command_Undone::setDisplayScreen(DISPLAY_TYPE screen){
+	_displayType=screen;
 }

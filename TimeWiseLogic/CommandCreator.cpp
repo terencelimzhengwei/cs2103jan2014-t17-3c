@@ -44,7 +44,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 		switch (commandType) {
 			case ADD: {
 				displayType=MAIN;
-				return createCommandAdd(parameter,parameterNum,parameters);
+				return createCommandAdd(parameter,parameterNum,parameters,&displayType);
 			}
 			
 			case DELETE: {
@@ -96,7 +96,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 
 }
 
-Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters ) {
+Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen) {
 	std::vector<std::string> dates;
 	std::vector<std::string> times;
 	std::string category = "";
@@ -192,7 +192,7 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 			throw InvalidAddCommandInputException();
 		}
 	}
-
+	commandAdd->setPreviousScreen(screen);
 	return commandAdd;
 }
 

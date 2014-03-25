@@ -27,7 +27,7 @@ public:
 	void flagIndex(unsigned int);
 	//the below methods are responsible for creating the derived commands
 	Command* interpretCommand(std::string,DISPLAY_TYPE&);
-	Command* createCommandAdd(std::string, unsigned int, vector<std::string>);
+	Command* createCommandAdd(std::string, unsigned int, vector<std::string>,DISPLAY_TYPE*);
 	Command* createCommandDelete(std::string);
 	Command* createCommandEdit(vector<std::string>);
 	Command* createCommandClear(std::string);

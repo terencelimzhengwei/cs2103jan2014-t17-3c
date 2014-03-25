@@ -156,7 +156,7 @@ void TaskList::updateCompletedTaskList(){
 	}
 }
 
-std::vector<Task*> TaskList::getOverdueTasks(){
+std::vector<Task*> TaskList::getOverdueTaskList(){
 	return _overdueTaskList;
 }
 
@@ -230,4 +230,66 @@ void TaskList::deleteSearchedTasks(){
 			}
 		}
 	}
+}
+
+bool TaskList::deleteTaskFromOverdueList(unsigned int& index){
+	Task* task=_overdueTaskList[index];
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]==task){
+			_taskList.erase(_taskList.begin()+index);
+		}
+	}
+	return true;
+}
+
+bool TaskList::deleteTaskFromSearchList(unsigned int& index){
+	Task* task=_searchedTaskList[index];
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]==task){
+			_taskList.erase(_taskList.begin()+index);
+		}
+	}
+	return true;
+}
+
+Task* TaskList::getSearchedTask(unsigned int index){
+	return _searchedTaskList[index];
+}
+
+Task* TaskList::getOverdueTask(unsigned int index){
+	return _overdueTaskList[index];
+}
+
+std::vector<Task*> TaskList::getCompletedTaskList(){
+	return _completedTaskList;
+}
+
+std::vector<Task*> TaskList::getUncompletedTaskList(){
+	return _taskList;
+}
+
+Task* TaskList::setOverdueTaskAsDone(unsigned int index){
+	Task* task;
+	task=_overdueTaskList[index];
+	addTaskToDoneList(*task);
+	deleteTaskFromOverdueList(index);
+	return task;
+}
+
+Task* TaskList::setSearchedTaskAsDone(unsigned int index){
+	Task* task;
+	task=_searchedTaskList[index];
+	addTaskToDoneList(*task);
+	deleteTaskFromSearchList(index);
+	return task;
+}
+
+void TaskList::addTaskToSearchedList(Task& task){
+	for(int i=0;i<_searchedTaskList.size();i++){
+		if(!task.checkLater(_taskList[i])){
+			_searchedTaskList.insert(_searchedTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_searchedTaskList.push_back(&task);
 }

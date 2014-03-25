@@ -4,7 +4,8 @@
 
 class Command_Delete : public Command{
 public:
-	Command_Delete();
+	Command_Delete(void);
+	Command_Delete(DISPLAY_TYPE displayType);
 	~Command_Delete(void);
 	void setDeletionIndex(unsigned int index);
 	void setDeletionString(std::string deletionString);

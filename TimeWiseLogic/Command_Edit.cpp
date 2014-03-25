@@ -47,8 +47,18 @@ void Command_Edit::setEndDate(Date& endDate)
 }
 
 bool Command_Edit::execute(TaskList& taskList){
-
-	_taskEdited = taskList.getTask(_taskIndex);
+	switch(_displayType){
+	case MAIN:
+		_taskEdited = taskList.getTask(_taskIndex);
+	case SEARCHED:
+		_taskEdited = taskList.getSearchedTask(_taskIndex);
+	case LATE:
+		_taskEdited = taskList.getOverdueTask(_taskIndex);
+	case COMPLETE:
+		throw InvalidCommandWordException();
+	default:
+		throw InvalidCommandWordException();
+	}
 	_originalTask=*_taskEdited;
 	if(_header=="description"){
 		_taskEdited->setDescription(_taskDescription);
@@ -96,6 +106,10 @@ bool Command_Edit::undo(TaskList& taskList){
 
 void Command_Edit::setHeader(std::string header){
 	_header=header;
+}
+
+void Command_Edit::setDisplayScreen(DISPLAY_TYPE displayType){
+	_displayType=displayType;
 }
 
 

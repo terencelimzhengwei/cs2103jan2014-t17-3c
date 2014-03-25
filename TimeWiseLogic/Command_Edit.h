@@ -18,6 +18,7 @@ public:
 	void setStartTime(ClockTime& startTime);
 	void setEndTime(ClockTime& endTime);
 	void setHeader(std::string);
+	void setDisplayScreen(DISPLAY_TYPE displayType);
 
 	virtual bool execute(TaskList& tasklist);
 	virtual bool undo(TaskList& taskList);

@@ -11,6 +11,7 @@ Command_Add::Command_Add() {
 	_startDate=NULL;
 	_startTime=NULL;
 	_addedTask=NULL;
+	_currentScreen=NULL;
 }
 Command_Add::~Command_Add(void) {
 	if(_startTime!=NULL){
@@ -84,6 +85,7 @@ bool Command_Add::undo(TaskList& taskList){
 	} else {
 		unsigned int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
+		*_currentScreen=_previousScreen;
 		return true;
 	}
 }
@@ -114,6 +116,11 @@ bool Command_Add::hasEndTime(){
 		return false;
 	}
 	return true;
+}
+
+void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){	
+	_previousScreen=*screen;
+	_currentScreen=screen;
 }
 
 

@@ -296,7 +296,7 @@ void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 
 int TimeWiseGUI::numberOfOverdues() {
 	TaskList taskList = _logic.getTaskList();
-	std::vector<Task*> overdueTaskList = taskList.getOverdueTasks();
+	std::vector<Task*> overdueTaskList = taskList.getOverdueTaskList();
 	int overdueTasksCount = overdueTaskList.size(); 
 	return overdueTasksCount;
 }

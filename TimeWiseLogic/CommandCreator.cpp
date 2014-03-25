@@ -35,8 +35,15 @@ void CommandCreator::flagIndex(unsigned int id) {
 Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& displayType)
 {
 	try {
-	string commandTypeString = _parser.getFirstWord(userInput);
-	CMD_TYPE commandType = _parser.determineCommandType(commandTypeString);
+
+		string commandTypeString = _parser.getFirstWord(userInput);
+		CMD_TYPE commandType = _parser.determineCommandType(commandTypeString); 
+
+		// Assume all other commands are adding event
+		if(commandType==UNDEFINED) {
+			userInput = "add " + userInput;
+			commandType = ADD;
+		}
 	
 		string parameter = _parser.removeFirstWord(userInput);
 		_parser.removeWhiteSpaces(parameter);
@@ -104,7 +111,7 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	std::string priority = "";
 	string description = "";
 	flagArg(parameter);
-	int wordReading = parameterNum - 1;
+	//int wordReading = parameterNum - 1;
 	if(_parser.isCategory(parameters.back())){
 		category=_parser.replaceWord("#","",parameters.back());
 		parameters.pop_back();
@@ -115,19 +122,32 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	}
 
 	while(!parameters.empty()){
-		if(_parser.isTimeFormat(parameters.back())){
-			times.push_back(parameters.back());
+		if(_parser.isTimeFormat(parameters.back())) {
+			//times.push_back(parameters.back());
+			times.push_back(_parser.strval(_parser.extractTime(parameters.back(), 0)[0]));
 			parameters.pop_back();
-			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
+			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())) {
 				parameters.pop_back();
 			}
-		}else if(_parser.isDateFormat(parameters.back())){
-			dates.push_back(parameters.back());
-			parameters.pop_back();
-			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
-				parameters.pop_back();
-			}
-		}else{
+		} else if(_parser.isDateFormat(parameters.back())) {
+			/* } else if( _parser.isDateFormat(parameters.back()) ||
+				_parser.isDateFormat(parameters[parameters.size()-2] + parameters.back()) ||
+				_parser.isDateFormat(parameters[parameters.size()-3] + parameters[parameters.size()-2] + parameters.back()) ) {*/
+
+					dates.push_back(parameters.back());
+					parameters.pop_back();
+
+					/* vector<int> dateData = _parser.extractDate(parameter, parameters.size()-1);
+					for(int i=0 ; i<dateData[3] ; i++) {
+						parameters.pop_back();
+					}
+					dates.push_back(_parser.strval(dateData[2] + dateData[1]*100 + dateData[0]*1000)); */
+
+					if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
+						parameters.pop_back();
+					}
+			
+		} else {
 			while(!parameters.empty()){
 				description += parameters.front()+" ";
 				parameters.erase(parameters.begin());

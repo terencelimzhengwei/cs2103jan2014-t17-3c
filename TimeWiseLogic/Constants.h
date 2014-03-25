@@ -10,14 +10,16 @@ static const int CMD_TYPE_COUNT		    = 11;
 static const int PRIORITY_COUNT			= 3;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
-static const int MAX_PREPOSITION        = 9;
+static const int MAX_PREPOSITION        = 10;
 static const int HEADER_COUNT			= 9;
+static const int DAYS_COUNT             = 19;
+static const int TIME_COUNT             = 2;
 
 
 
-enum TASK_STATUS{UNCOMPLETED,OVERDUE,COMPLETED};
-enum TASK_TYPE{TIMED,DEADLINE,FLOATING};
-enum CMD_TYPE{ADD,DELETE,EDIT,CLEAR,DISPLAY,BLOCK,SEARCH,FILTER, UNDO,REDO,UNDONE,DONE, UNDEFINED};
+enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
+enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
+enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum SEARCH_TYPE{KEYWORD,CATEGORY,STATUS,PRI,EMPTYSLOT,DATE,DEFAULT};
@@ -29,11 +31,15 @@ static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =
 static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};
+static const std::string DAYS_IN_WEEK[DAYS_COUNT] = 
+{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", 
+"mon", "tues", "wed", "thurs", "fri", "sat", "sun", "today", "tomorrow", "2day", "tmr", "tml"};
+static const std::string TIME_INDICATOR[TIME_COUNT] = {"pm", "am"};
 
 const char TASK_SPECIFIER = '#';
 const char DATE_SEPARATOR = '-';
 
-const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before"};
+const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next"};
 
 const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;
@@ -42,7 +48,7 @@ const TASK_TYPE DEFAULT_TASK_TYPE = FLOATING;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 const std::string DEFAULT_EMPTY = "";
 
-// These string store exception messages to be displayed by TextBuddy in the CLI 
+// These string store exception messages to be displayed by TiMEWiSE! in the CLI 
 // in case of user input error.
 
 static const char* USER_INPUT_INDEX_OUT_OF_RANGE_EXCEPTION = "Error! The task index that you entered is out of range.";

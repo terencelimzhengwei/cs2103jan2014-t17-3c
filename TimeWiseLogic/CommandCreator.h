@@ -8,6 +8,7 @@
 #include "Command_Done.h"
 #include "Command_Undone.h"
 #include "Command_Search.h"
+#include "Command_Filter.h"
 #include "Command_Undo.h"
 #include "Command_Redo.h"
 #include "Exceptions.h"
@@ -34,6 +35,7 @@ public:
 	Command* createCommandDone(std::string);
 	Command* createCommandUndone(std::string);
 	Command* createCommandSearch(std::string);
+	Command* createCommandFilter(std::string);
 	Command* createCommandUndo();
 	Command* createCommandRedo();
 

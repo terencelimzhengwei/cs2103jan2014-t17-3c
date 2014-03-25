@@ -31,12 +31,14 @@ public:
 	void clearTask();
 	Task* getTaskWithKeyword(std::string& keyWord);
 	void populateSearchList(std::string& keyword,SEARCH_TYPE searchType);
-	void populateSearchList(Date* date,SEARCH_TYPE searchType);
-	void populateSearchList(PRIORITY priority);
-	void populateSearchList(TASK_STATUS status);
+	void populateFilterList(std::string& keyword,SEARCH_TYPE searchType);
+	void populateFilterList(Date* date,SEARCH_TYPE searchType);
+	void populateFilterList(PRIORITY priority);
+	void populateFilterList(TASK_STATUS status);
 
 	std::vector<Task*> getSearchResults();
 	std::vector<Task*> getOverdueTaskList();
+	std::vector<Task*> getFilterResults();
 	std::vector<Task*> getCompletedTaskList();
 	std::vector<Task*> getUncompletedTaskList();
 	void updateCompletedTaskList();
@@ -55,4 +57,5 @@ private:
 	std::vector<Task*> _overdueTaskList;
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;
+	std::vector<Task*> _filteredTaskList;
 };

@@ -319,6 +319,14 @@ Command* CommandCreator::createCommandSearch(std::string parameter){
 	return commandSearch;
 }
 
+Command* CommandCreator::createCommandFilter(std::string parameter){
+	flagArg(parameter);
+	Command_Filter* commandFilter= new Command_Filter;
+	commandFilter->setKeyword(parameter);
+	return commandFilter;
+}
+
+
 std::string CommandCreator::getFeedback() {
 	std::string feedback = "";
 	for (int i = 0; i < _feedbackExceptiontoUI.size(); i++) {
@@ -327,160 +335,3 @@ std::string CommandCreator::getFeedback() {
 	return feedback;
 }
 
-	
-/*
-std::string Parser::getFeedback() {
-	string feedback = "";
-	for ( int i = 0; i < _feedbackExceptiontoUI.size(); i++) {
-		feedback += _feedbackExceptiontoUI[i] + "\n";
-	}
-	return feedback;
-}
-
-
-
-	try {
-		string commandTypeString = getFirstWord(action);
-		CMD_TYPE commandType = determineCommandType(commandTypeString);
-	
-		string parameter = removeFirstWord(action);
-		vector<string> parameters = splitBySpace(parameter);
-		unsigned int parameterNum = parameters.size();
-
-		switch (commandType) {	
-			case ADD: {
-				try {
-					
-				
-					  
-			case DELETE:
-				try {
-					if(isAllNumbers(parameter)) {
-						Command_Delete* commandDelete = new Command_Delete;
-						unsigned int id = toNum(parameter) - 1;
-						flagIndex(id);
-						commandDelete->setDeletionIndex(id);
-						return commandDelete;
-					} else {
-						return NULL;
-					}
-				} catch (OutOfRangeException& ooe) {
-					_feedbackExceptiontoUI.push_back(ooe.what());
-				} catch (NotANumberException& nane) {
-					_feedbackExceptiontoUI.push_back(nane.what());
-				} catch (NoArgumentException& nae) {
-					_feedbackExceptiontoUI.push_back(nae.what());
-				}
-			case DONE:
-				try {
-					if(isAllNumbers(parameter)) {
-					Command_Done* commandDone = new Command_Done;
-					unsigned int id = toNum(parameter) - 1;
-					commandDone->setCompletedIndex(id);
-					} else {
-					return NULL;
-					}
-				} catch (NotANumberException& nane) {
-					_feedbackExceptiontoUI.push_back(nane.what());
-				} catch (NoArgumentException& nae) {
-					_feedbackExceptiontoUI.push_back(nae.what());
-				} catch (OutOfRangeException& oore) {
-					_feedbackExceptiontoUI.push_back(oore.what());
-				}
-
-			case UNDONE:
-				try {
-					if(isAllNumbers(parameter)) {
-					Command_Undone* commandUndone = new Command_Undone;
-					unsigned int id = toNum(parameter) - 1;
-					commandUndone->setUncompletedIndex(id);
-					} else {
-					return NULL;
-					}
-				} catch (NotANumberException& nane) {
-					_feedbackExceptiontoUI.push_back(nane.what());
-				} catch (NoArgumentException& nae) {
-					_feedbackExceptiontoUI.push_back(nae.what());
-				} catch (OutOfRangeException& oore) {
-					_feedbackExceptiontoUI.push_back(oore.what());
-				}
-			case SEARCH: 
-				try {
-					Command_Search* commandSearch = new Command_Search;
-					flagArg(parameter);
-					commandSearch->setKeyword(parameter);
-					return commandSearch;
-				} catch (NoArgumentException& nae) {
-					_feedbackExceptiontoUI.push_back(nae.what());
-				}
-
-			case CLEAR: {
-				Command_Clear* newCommand= new Command_Clear;
-				return newCommand;
-				}
-			case UNDO: {
-				Command_Undo* newCommand= new Command_Undo;
-				return newCommand;
-					   }
-			case REDO: {
-				Command_Redo* newCommand= new Command_Redo;
-				return newCommand;
-					   }
-			case EDIT: {
-				Command_Edit* commandEdit = new Command_Edit;
-
-				commandEdit->setIndex(toNum(parameters[0])-1);
-				string header = parameters[1];
-				int contentStartPoint = 2;
-				if(header=="start" || header=="due") {
-					header += parameters[2];
-					contentStartPoint = 3;
-				}
-				string content = "";
-				for(int i=0 ; (i+contentStartPoint)<parameters.size() ; i++) {
-					if(i) {
-						content += " ";
-					}
-					content += parameters[contentStartPoint+i];
-				}
-
-				commandEdit->setHeader(header);
-
-				if(header=="description") {
-					commandEdit->setDescription(content);
-				} else if(header=="startDate") {
-					int dateInt = toNum(replaceWord("/","",content));
-					commandEdit->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-				} else if(header=="startTime") {
-					int timeInt = toNum(replaceWord("/","",content));
-					commandEdit->setStartTime(ClockTime(timeInt));
-				} else if(header=="dueDate") {
-					int dateInt = toNum(replaceWord("/","",content));
-					commandEdit->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-				} else if(header=="dueTime") {
-					int timeInt = toNum(replaceWord("/","",content));
-					commandEdit->setEndTime(ClockTime(timeInt));
-				} else if(header=="category") {
-					commandEdit->setCategory(content);
-				} else if(header=="priority") {
-					content = replaceWord("!", "", content);
-					if(content=="H" || content=="high") {
-						commandEdit->setPriority(HIGH);
-					} else if(content=="M" || content=="medium") {
-						commandEdit->setPriority(MEDIUM);
-					} else if(content=="L" || content=="low") {
-						commandEdit->setPriority(LOW);
-					}
-				}
-				return commandEdit;
-				}
-			default:
-				return NULL;
-			}
-		} catch (InvalidCommandWordException& icwe) {
-		string exception = icwe.what();
-		_feedbackExceptiontoUI.push_back(exception);
-	}
-		
-}
-*/

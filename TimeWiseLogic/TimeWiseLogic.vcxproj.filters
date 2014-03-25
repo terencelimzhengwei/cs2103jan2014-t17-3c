@@ -99,6 +99,9 @@
     <ClInclude Include="Command_Filter.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
+    <ClInclude Include="Command_Display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Storage.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="Command_Filter.cpp">
       <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Display.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,11 +4,11 @@ class Command_Clear:public Command{
 public:
 	Command_Clear(void);
 	Command_Clear(CLEAR_TYPE clearType);
-	Command_Clear(DISPLAY_TYPE displayType);
 	~Command_Clear(void);
 
 	bool execute(TaskList& tasklist);
 	bool undo(TaskList& tasklist);
+	void setDisplayScreen(DISPLAY_TYPE displayType);
 private:
 	std::vector<Task*> _deletedTasks;
 	std::string _lastCmdCalled;

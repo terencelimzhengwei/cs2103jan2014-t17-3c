@@ -58,6 +58,7 @@ void Command_Add::setEndDate(Date& date){
 }
 
 bool Command_Add::execute(TaskList& tasklist){
+	*_currentScreen=MAIN;
 	_addedTask = new Task;
 	_addedTask->setDescription(_taskDescription);
 	_addedTask->setPriority(_taskPriority);

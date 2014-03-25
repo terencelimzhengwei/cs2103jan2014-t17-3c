@@ -8,14 +8,6 @@ Command_Delete::Command_Delete() {
 	_taskDeleted=NULL;
 }
 
-Command_Delete::Command_Delete(DISPLAY_TYPE displayType){
-	_type = DELETE;
-	_deletionString="";
-	_deletionIndex=DEFAULT_INDEX;
-	_taskDeleted=NULL;
-	_displayType=displayType;
-}
-
 Command_Delete::~Command_Delete(){
 	if(_lastCmdCalled=="execute"){
 		delete _taskDeleted;
@@ -101,5 +93,9 @@ bool Command_Delete::undo(TaskList& taskList){
 	taskList.addTask(*_taskDeleted);
 	_lastCmdCalled="undo";
 	return true;
+}
+
+void Command_Delete::setDisplayScreen(DISPLAY_TYPE display){
+	_displayType=display;
 }
 

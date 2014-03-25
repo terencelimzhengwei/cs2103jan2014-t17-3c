@@ -6,7 +6,6 @@ Parser::Parser(void) {
 Parser::~Parser(void) {
 }
 
-
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	commandTypeString = convertToLowerCase(commandTypeString);
 
@@ -48,13 +47,22 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
-vector<int> Parser::extractDate(string command, int start, int end) {
-	int wordReading = end;
-	vector<string> parameters = splitBySpace(removeFirstWord(command));
-	vector<string> dateComponent;
+vector<int> Parser::extractDate(string command, int pos=-1) {
+	string monthListLong[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+	string monthListShort[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+
+	bool dateFound = false;
+
+	vector<string> parameters = splitBySpace(command);
 	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
+	if(pos==-1) {
+		pos = parameters.size() - 1;
+	}
+
+	int wordReading = pos;
 
 	if(wordReading>=0) {
+		vector<string> dateComponent;
 		dateComponent = explode('/',parameters[wordReading]);
 		if(dateComponent.size() == 2 || dateComponent.size() == 3) {
 			if(isAllNumbers(dateComponent[0]) && isAllNumbers(dateComponent[1])) {
@@ -74,23 +82,116 @@ vector<int> Parser::extractDate(string command, int start, int end) {
 				}
 			}
 			output[3] = 1;
-		} else {
-			// Sun, Mon, Tue, Wed, Thur, Fri, Sat
-			// Waiting to be completed
+			dateFound = true;
+		}
+	}
+
+	if(wordReading>=1 && !dateFound) {
+		string dateCandidate = convertToLowerCase(parameters[wordReading]);
+		for(int i=0;i<12;i++) {
+			string monthInNumStr;
+			monthInNumStr.push_back(static_cast<char>((i+1)/10+'0'));
+			monthInNumStr.push_back(static_cast<char>((i+1)%10+'0'));
+			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
+			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
+		}
+		dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
+		output = extractDate(dateCandidate,0);
+		if(output[0] && output[1] && output[2]) {
+			output[3] = 2;
+			dateFound = true;
 		}
 	}
 	
-	if(wordReading>=1) {
-		dateComponent.clear();
-		dateComponent.push_back(parameters[wordReading-1]);
-		dateComponent.push_back(parameters[wordReading]);
-	}
+	if(wordReading>=2 && !dateFound) {
+		string dateCandidate = convertToLowerCase(parameters[wordReading-1]);
+		
+		for(int i=0;i<12;i++) {
+			string monthInNumStr;
+			monthInNumStr.push_back(static_cast<char>((i+1)/10+'0'));
+			monthInNumStr.push_back(static_cast<char>((i+1)%10+'0'));
+			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
+			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
+		}
 
-	if(wordReading>=2) {
-		//dateCandidate[1] = parameters[wordReading-2] + parameters[wordReading+1] + parameters[wordReading];
-	}
+		dateCandidate = parameters[wordReading-2] + "/" + dateCandidate + "/" + parameters[wordReading];
 
+		output = extractDate(dateCandidate, 0);
+		if(output[0] && output[1] && output[2]) {
+			output[3] = 3;
+			dateFound = true;
+		}
+	}
+	
+	if(!dateFound) {
+		output[3] = 0;
+	}
 	return output;
+}
+
+vector<int> Parser::extractTime(string command, int pos=-1) {
+	vector<int> timeArray;
+	vector<string> word = splitBySpace(command);
+	if(pos==-1) {
+		pos = word.size() - 1;
+	}
+	string wordChecking = word[pos];
+	int hour, min;
+
+	wordChecking = replaceWord(":","",wordChecking);
+		
+	if(wordChecking.length()>2 && stringExists("am",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
+		wordChecking = replaceWord("am","",wordChecking);
+		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
+			if(wordChecking.length()<=2) {
+				hour = toNum(wordChecking);
+				min = 0;
+			} else {
+				hour = toNum(wordChecking)/100;
+				min = toNum(wordChecking)%100;
+			}
+
+			if(hour == 12) {
+				hour = 0;
+			}
+
+			if(hour < 12 && min < 60) {
+				timeArray.push_back(hour * 100 + min);
+			}
+		}
+	} else if(wordChecking.length()>2 && stringExists("pm",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
+		wordChecking = replaceWord("pm","",wordChecking);
+		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
+			if(wordChecking.length()<=2) {
+				hour = toNum(wordChecking);
+				min = 0;
+			} else {
+				hour = toNum(wordChecking)/100;
+				min = toNum(wordChecking)%100;
+			}
+
+			if(hour == 12) {
+				hour = 0;
+			}
+
+			if(hour < 12 && min < 60) {
+				timeArray.push_back((hour+12) * 100 + min);
+			}
+		}
+	} else if(wordChecking.length()>=3 && wordChecking.length()<=4 && isAllNumbers(wordChecking)) {
+		hour = toNum(wordChecking)/100;
+		min = toNum(wordChecking)%100;
+		if(hour < 24 && min < 60) {
+			timeArray.push_back( hour * 100 + min);
+		}
+	}
+	if(timeArray.size()==1) {
+		timeArray.push_back(1);
+	} else {
+		timeArray.push_back(0);
+		timeArray.push_back(0);	// Not redundant
+	}
+	return timeArray;
 }
 
 std::string Parser::getFirstWord(std::string action) {
@@ -125,7 +226,7 @@ std::string Parser::replaceWord(std::string search, std::string replace, std::st
 	return subject;
 }
 
-string Parser::convertToLowerCase(std::string input){
+string Parser::convertToLowerCase(std::string input) {
 	string str = input;
 
 	for(unsigned int i = 0; i < str.length(); i++){
@@ -137,17 +238,6 @@ string Parser::convertToLowerCase(std::string input){
 
 	return str;
 }
-
-bool Parser::contains(std::string ch, std::string input)
-{
-	if(input.find(ch) == std::string::npos){
-		return false;
-	}
-	else{
-		return true;
-	}
-}
-
 
 bool Parser::isAllNumbers(std::string str){
 	if (str.empty()) {
@@ -176,50 +266,16 @@ bool Parser::convertIfNum(const std::string &numInStr, int &num){
 }
 
 bool Parser::isDateFormat(std::string str){
-	std::vector<int> slashIndex;            // hold the indexes of '/' found in str
-	int numOfSlash;                         // total num of '/' found
-	std::string     strBfrFirstSlash,       // str before first slash
-		strAftFirstSlash,       // str after first slash
-		strAftSecondSlash;      // str aft second slash
-	bool correctFormat = false;
-	removeSymbol(str);
-
-	for(unsigned int i = 0; i < str.size(); i++){
-		if( str[i] == '/'){
-			slashIndex.push_back(i);
-		}
+	if(extractDate(str)[3]) {
+		return true;
+	} else {
+		return false;
 	}
-	numOfSlash = slashIndex.size();
-
-	if(numOfSlash == 2){
-		strBfrFirstSlash = str.substr(0, slashIndex.at(0));
-		strAftFirstSlash = str.substr(slashIndex.at(0)+1, slashIndex.at(1)-(slashIndex.at(0)+1));
-		strAftSecondSlash = str.substr(slashIndex.at(1)+1);
-
-		if( (isAllNumbers(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
-			&& (isAllNumbers(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty()) 
-			&& (isAllNumbers(strAftSecondSlash) && (strAftSecondSlash.size() == 4 || strAftSecondSlash.size() == 2))){
-				correctFormat = true;   // if two slashes and the str before & after first slash is a num with less than 3 digits
-				// and the str aft the second slash is a num with not more than 4 and less than 2 digits
-		}
-	}
-	else if(numOfSlash == 1){
-		strBfrFirstSlash = str.substr(0, slashIndex.at(0));
-		strAftFirstSlash = str.substr(slashIndex.at(0)+1);
-
-		if( (isAllNumbers(strBfrFirstSlash) && strBfrFirstSlash.size() < 3 && !strBfrFirstSlash.empty()) 
-			&& (isAllNumbers(strAftFirstSlash) && strAftFirstSlash.size() < 3 && !strAftFirstSlash.empty())){
-				correctFormat = true; // the same with the above without checking the str aft second slash
-		}
-	}
-	// else: more than 2 slashes or no slashes present return false
-
-	return correctFormat;
 }
 
 bool Parser::containsDay(std::string str){
 	bool contains = false;
-	removeSymbol(str);
+	str = replaceWord(",","",str);
 	str = convertToLowerCase(str);
 
 	if( str== "today" || str == "tomorrow" ){
@@ -296,7 +352,7 @@ stack<std::string> Parser::splitStringBy(char delimiter, std::string input){
 }
 
 bool Parser::is24HourTimeFormat(std::string str){
-	removeSymbol(str);
+	str = replaceWord(",","",str);
 
 	if( str.size() != 4){
 		return false;
@@ -358,7 +414,7 @@ void Parser::removeWhiteSpaces(std::string& str){
 
 bool Parser::isPreposition(std::string word) {
 	bool matchFound = false;
-	removeSymbol(word);
+	word = replaceWord(",", "", word);
 	for(int i = 0; i < MAX_PREPOSITION; i++) {
 		if(word == PREPOSITION[i]){
 			matchFound = true;
@@ -369,39 +425,12 @@ bool Parser::isPreposition(std::string word) {
 	return matchFound;
 }
 
-void Parser::removeSymbol(std::string& word){
-	// to remove the preceding symbols
-	while(!word.empty()){
-		if(word[0] == ','){
-			word.erase(0,1);
-		}
-		else{
-			break;
-		}
-	}
-
-	// to remove the trailing symbols
-	while(!word.empty()){
-		if(word[word.size()-1] == ','){
-			word.erase(word.size()-1, 1);
-		}
-		else{
-			break;
-		}
-	}
-}
-
 bool Parser::isTimeFormat(string time) {
-	bool isTime = false;
-
-	time = replaceWord(":", "", time);
-	if(time.length()== 4 && isAllNumbers(time)) {
-		int timeInt = toNum(time);
-		if((timeInt%100) < 60 && (timeInt/100 < 24))
-			isTime = true;
+	if(extractTime(time)[1]) {
+		return true;
+	} else {
+		return false;
 	}
-	
-	return isTime;
 }
 
 PRIORITY Parser::getPriority(std::string input){
@@ -450,54 +479,8 @@ Date* Parser::createDate(std::string date)
 	return newDate;
 }
 
-ClockTime* Parser::createTime(std::string time)
-{
-	int timeTemp;
-	removeWhiteSpaces(time);
-	if(time.size()==4 && isAllNumbers(time)){
-		ClockTime* newTime = new ClockTime(toNum(time));
-		return newTime;
-	}else if(contains("am",time)){
-		if(contains(".",time)){
-			replaceWord(".","",time);
-			timeTemp=toNum(time);
-			if(timeTemp>=1200){
-				timeTemp=timeTemp-1200;
-			}
-			ClockTime* newTime = new ClockTime(timeTemp);
-			return newTime;
-		}else{
-			timeTemp=toNum(time);
-			if(timeTemp!=12){
-				timeTemp*=100;
-			}else{
-				timeTemp=0;
-			}
-			ClockTime* newTime = new ClockTime(timeTemp);
-			return newTime;
-		}
-	}else if(contains("pm",time)){
-		if(contains(".",time)){
-			replaceWord(".","",time);
-			timeTemp=toNum(time);
-			if(timeTemp<1200){
-				timeTemp=timeTemp+1200;
-			}
-			ClockTime* newTime = new ClockTime(timeTemp);
-			return newTime;
-		}else{
-			timeTemp=toNum(time);
-			if(timeTemp!=12){
-				timeTemp=(timeTemp*100)+1200;
-			}else{
-				timeTemp=1200;
-			}
-			ClockTime* newTime = new ClockTime(timeTemp);
-			return newTime;
-		}
-	}
-	return NULL;
-
+ClockTime* Parser::createTime(string time) {
+	return new ClockTime(extractTime(time, 0)[0]);
 }
 
 TASK_STATUS Parser::getTaskStatus(std::string input){
@@ -526,3 +509,15 @@ bool Parser::isPriority(std::string& input){
 }
 
 
+bool Parser::stringExists(string find, string input) {
+	if(input.find(find)!=string::npos) {
+		return true;
+	}
+	return false;
+}
+
+string Parser::strval(int in) {
+	ostringstream os;
+	os << in;
+	return os.str();
+}

@@ -12,19 +12,19 @@ CommandCreator::~CommandCreator(void)
 
 
 void CommandCreator::flagArg(std::string input){
-	if (input == "") {
+	if (input.length() == 0) {
 		throw NoArgumentException();
 	}
 }
 
 void CommandCreator::flagDescription(std::string input){
-	if (input == "" ) {
+	if (input.length() == 0 ) {
 		throw InvalidAddCommandInputException();
 	}
 }
 
 void CommandCreator::flagIndex(unsigned int id) {
-	if (id < 0) {
+	if (id < 0 || id == 0) {
 		throw OutOfRangeException();
 	}
 }
@@ -79,19 +79,19 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 		}
 	} catch (InvalidCommandWordException& icwe) {
-		_feedbackExceptiontoUI.push_back(icwe.what());
+		_feedbackExceptiontoUI = icwe.what();
 		throw InvalidCommandWordException();
 	} catch (NoArgumentException& nae) {
-		_feedbackExceptiontoUI.push_back(nae.what());
+		_feedbackExceptiontoUI = nae.what();
 		throw NoArgumentException();
 	} catch (InvalidAddCommandInputException& iacie) {
-		_feedbackExceptiontoUI.push_back(iacie.what());
+		_feedbackExceptiontoUI = iacie.what();
 		throw InvalidAddCommandInputException();
 	} catch (OutOfRangeException& oore) {
-		_feedbackExceptiontoUI.push_back(oore.what());
+		_feedbackExceptiontoUI = oore.what();
 		throw OutOfRangeException();
 	} catch (NotANumberException& nane) {
-		_feedbackExceptiontoUI.push_back(nane.what());
+		_feedbackExceptiontoUI = nane.what();
 		throw NotANumberException();
 	}
 
@@ -150,11 +150,11 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	}
 
 	if(priority!="") {
-		if(priority=="H" || priority=="high") {
+		if(priority=="H" || priority == PRIORITY_STRING[0]) {
 			commandAdd->setPriority(HIGH);
-		} else if(priority=="M" || priority=="medium") {
+		} else if(priority=="M" || priority == PRIORITY_STRING[1]) {
 			commandAdd->setPriority(MEDIUM);
-		} else if(priority=="L" || priority=="low") {
+		} else if(priority=="L" || priority ==PRIORITY_STRING[2]) {
 			commandAdd->setPriority(LOW);
 		}
 	}
@@ -178,21 +178,87 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 		}
 	}
 	if(!times.empty()) {
-		switch(times.size()){
-		case 1:
-			commandAdd->setEndTime(*_parser.createTime(times.back()));
-			break;
-		case 2:
-			commandAdd->setStartTime(*_parser.createTime(times.back()));
-			times.pop_back();
-			commandAdd->setEndTime(*_parser.createTime(times.back()));
-			break;
-		default:
-			delete commandAdd;
-			commandAdd=NULL;
-			throw InvalidAddCommandInputException();
+		if (dates.empty()) {
+			switch(times.size()){
+			case 1: {
+				// compare the time set by users with the current time
+				ClockTime* endTime = _parser.createTime(times.back());
+				bool timeStatus = endTime->checkOverdueTime();
+				Date toBeSet;
+				// when current time is later than time set by user, set end date 
+				// to tomorrow
+				if(timeStatus) {
+					toBeSet.setDateAsTomorrow();
+					commandAdd->setEndDate(toBeSet);
+				} else {
+					//when current time is earlier than the time set by user, 
+					//set end date to today
+					int month = toBeSet.getCurrentMonth();
+					int year = toBeSet.getCurrentYear();
+					int day = toBeSet. getCurrentDay();
+					Date today(day,month,year);
+					commandAdd->setEndDate(today);
+				}
+				commandAdd->setEndTime(*endTime);
+				break;
+		  }
+			case 2:{
+				// compare the time set by users with the current time
+				ClockTime* startTime = _parser.createTime(times.back());
+				times.pop_back();
+				ClockTime* endTime = _parser.createTime(times.back());
+				bool startStatus = startTime->checkOverdueTime();
+				bool endStatus = endTime->checkOverdueTime();
+				Date toBeSet;
+				// when end time and start time set by users are both earlier than current time, set end date 
+				// to tomorrow
+				if(startStatus && endStatus) {
+					toBeSet.setDateAsTomorrow();
+					commandAdd->setEndDate(toBeSet);
+				} else {
+					// two possibilities current time is in between start and end time
+					// or current time is earlier then start time
+					//endDate is set to today
+					int month = toBeSet.getCurrentMonth();
+					int year = toBeSet.getCurrentYear();
+					int day = toBeSet. getCurrentDay();
+					Date today(day,month,year);
+					commandAdd->setEndDate(today);
+				}
+				
+				commandAdd->setStartTime(*startTime);
+				commandAdd->setEndTime(*endTime);
+				break;
+		    }
+			default:
+				delete commandAdd;
+				commandAdd=NULL;
+				throw InvalidAddCommandInputException();
+			}
+
+		} else {
+			switch(times.size()) {
+			case 1:
+				commandAdd->setEndTime(*_parser.createTime(times.back()));
+				break;
+			case 2:
+				commandAdd->setEndTime(*_parser.createTime(times.back()));
+				times.pop_back();
+				commandAdd->setEndTime(*_parser.createTime(times.back()));
+				break;
+			default:
+				delete commandAdd;
+				commandAdd=NULL;
+				throw InvalidAddCommandInputException();
+
+			}
+			
+
 		}
-	}
+		
+   }
+
+	
 	commandAdd->setPreviousScreen(screen);
 	return commandAdd;
 }
@@ -202,8 +268,9 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	
 Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE* type) {
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter) - 1;
+		unsigned int id = _parser.toNum(parameter);
 		flagIndex(id);
+		id = id - 1;
 		Command_Delete* commandDelete = new Command_Delete;
 		commandDelete->setDeletionIndex(id);
 		commandDelete->setDisplayScreen(*type);
@@ -339,11 +406,7 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 
 
 std::string CommandCreator::getFeedback() {
-	std::string feedback = "";
-	for (int i = 0; i < _feedbackExceptiontoUI.size(); i++) {
-		feedback += _feedbackExceptiontoUI[i] + "\n";
-	}
-	return feedback;
+	return _feedbackExceptiontoUI;
 }
 
 Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* displayType)

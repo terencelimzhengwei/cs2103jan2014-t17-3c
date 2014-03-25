@@ -20,38 +20,45 @@ private:
 public:
 	Parser(void);
 	~Parser(void);
+
 	CMD_TYPE determineCommandType(std::string);
+	
+	// Parser functions
+	vector<int> extractDate(string, int);
+	vector<int> extractTime(string, int);
+	bool isDateFormat(std::string);
+	bool isTimeFormat(std::string);
+	bool isCategory(std::string&);
+	bool isPriority(std::string&);
+	bool containsDay(std::string);
+	TASK_TYPE determineTaskType(std::string trimmedInput);
+	bool is24HourTimeFormat(std::string);
+	bool isPreposition(std::string);
+	TASK_STATUS getTaskStatus(std::string);
+	PRIORITY getPriority(std::string input);
+
+	ClockTime* createTime(string time);
+	ClockTime* createTime(int time);
+
+	Date* createDate(std::string date);
+
+	// String functions
+	string strval(int);
+
 	string getFirstWord(std::string);
 	string removeFirstWord(std::string);
 	string replaceWord(std::string, std::string, std::string);
 	string convertToLowerCase(string str);
-	bool contains(std::string ch, std::string input);
+	bool stringExists(string, string);
 	bool isAllNumbers(std::string);
 	int toNum(std::string);
 	bool convertIfNum(const std::string &numInStr, int &num);
-	vector<int> extractDate(string command, int start, int end);
-	bool isDateFormat(std::string);
-	bool containsDay(std::string);
 	vector<string> splitBySpace(string input);
 	vector<string> explode(char delimiter, string input);
 	stack<string> splitStringBy(char delimiter, std::string input);
-	TASK_TYPE determineTaskType(std::string trimmedInput);
-	bool is24HourTimeFormat(std::string);
 	string getStringAfter(char, std::string);
 	string getStringBefore(char, std::string);
 	void removeWhiteSpaces(std::string&);
-	bool isCategory(std::string&);
-	bool isPriority(std::string&);
-
-	bool isPreposition(std::string);
-	void removeSymbol(std::string&);
-	bool isTimeFormat(std::string);
-
-	TASK_STATUS getTaskStatus(std::string);
-
-	PRIORITY getPriority(std::string input);
-	ClockTime* createTime(std::string time);
-	Date* createDate(std::string date);
 };
 
 #endif

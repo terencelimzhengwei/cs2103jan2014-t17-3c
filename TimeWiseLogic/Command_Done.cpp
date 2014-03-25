@@ -20,9 +20,6 @@ bool Command_Done::execute(TaskList& tasklist){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
 		return true;
-	case LATE:
-		_task=tasklist.setOverdueTaskAsDone(_taskIndex);
-		return true;
 	case SEARCHED:
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
 		return true;

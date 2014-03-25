@@ -334,9 +334,14 @@ Command* CommandCreator::createCommandEdit(vector<std::string> parameters,DISPLA
 
 
 Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
+	if(*type==COMPLETE){
+		throw InvalidCommandWordException();
+		//throw UnableToSetAsDone
+	}
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter) - 1;
+		unsigned int id = _parser.toNum(parameter);
 		flagIndex(id);
+		id--;
 		Command_Done* commandDone = new Command_Done;
 		commandDone->setCompletedIndex(id);
 		commandDone->setDisplayScreen(*type);
@@ -349,12 +354,14 @@ Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* t
 
 Command* CommandCreator::createCommandUndone(std::string parameter,DISPLAY_TYPE* type){
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter) - 1;
+		unsigned int id = _parser.toNum(parameter);
 		flagIndex(id);
+		id--;
 		//implement protection
 		Command_Undone* commandUndone = new Command_Undone;
 		commandUndone->setUncompletedIndex(id);
 		commandUndone->setDisplayScreen(*type);
+		return commandUndone;
 	} else {
 		throw NotANumberException();
 		return NULL;
@@ -415,9 +422,7 @@ Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* di
 	newCommand->setPreviousScreen(displayType);
 	if(parameter=="main"){
 		newCommand->setNextScreen(MAIN);
-	}else if(parameter=="overdue"){
-		newCommand->setNextScreen(LATE);
-	}else if(parameter=="completed"){
+	}else if(parameter=="completed"||parameter=="done"){
 		newCommand->setNextScreen(COMPLETE);
 	}else{
 		delete newCommand;

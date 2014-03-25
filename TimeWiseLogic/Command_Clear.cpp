@@ -120,12 +120,6 @@ void Command_Clear::clearScreen(TaskList& tasklist){
 			_deletedTasks.push_back(searchedTask[i]);
 		}
 		tasklist.deleteSearchedTasks();
-	}else if(_displayType==LATE){
-		std::vector<Task*> searchedTask=tasklist.getOverdueTaskList();
-		for(int i=0;i<searchedTask.size();i++){
-			_deletedTasks.push_back(searchedTask[i]);
-		}
-		tasklist.deleteSearchedTasks();
 	}else if(_displayType==COMPLETE){
 		clearCompletedTasks(tasklist);
 	}else if(_displayType==MAIN){

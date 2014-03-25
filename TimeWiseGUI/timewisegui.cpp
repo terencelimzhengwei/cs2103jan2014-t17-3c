@@ -116,12 +116,6 @@ void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 		ui.label_title->setText("Searched Tasks");
 		break;
 	}
-	case LATE:{
-		vector<Task*> taskList = _logic.getTaskList().getOverdueTaskList();
-		setData(taskList);
-		ui.label_title->setText("Overdue Tasks");
-		break;
-	}
 	case COMPLETE:
 		vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 		setData(taskList);

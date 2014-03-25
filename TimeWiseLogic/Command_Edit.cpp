@@ -52,8 +52,6 @@ bool Command_Edit::execute(TaskList& taskList){
 		_taskEdited = taskList.getTask(_taskIndex);
 	case SEARCHED:
 		_taskEdited = taskList.getSearchedTask(_taskIndex);
-	case LATE:
-		_taskEdited = taskList.getOverdueTask(_taskIndex);
 	case COMPLETE:
 		throw InvalidCommandWordException();
 	default:

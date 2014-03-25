@@ -48,16 +48,6 @@ bool Command_Delete::execute(TaskList& taskList){
 			//search delete
 			return true;
 		}
-	case LATE:
-		if(_deletionIndex!=DEFAULT_INDEX){
-			_taskDeleted=taskList.getOverdueTask(_deletionIndex);
-			taskList.deleteTaskFromCompletedList(_deletionIndex);
-			_lastCmdCalled="execute";
-			return true;
-		}else if(_deletionString!=DEFAULT_EMPTY){
-			//search delete
-			return true;
-		}
 	case SEARCHED:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted=taskList.getSearchedTask(_deletionIndex);
@@ -77,21 +67,18 @@ bool Command_Delete::undo(TaskList& taskList){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);
 		_lastCmdCalled="undo";
+		break;
 	case COMPLETE:
 		taskList.addTaskToDoneList(*_taskDeleted);
 		_lastCmdCalled="undo";
-	case LATE:
-		taskList.addTask(*_taskDeleted);
-		_lastCmdCalled="undo";
+		break;
 	case SEARCHED:
 		taskList.addTask(*_taskDeleted);
 		std::vector<Task*>& searchResults=taskList.getSearchResults();
 		searchResults.push_back(_taskDeleted);
 		_lastCmdCalled="undo";
+		break;
 	}
-	return false;
-	taskList.addTask(*_taskDeleted);
-	_lastCmdCalled="undo";
 	return true;
 }
 

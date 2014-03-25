@@ -15,6 +15,7 @@ Command_Undone::~Command_Undone(void){
 bool Command_Undone::execute(TaskList& tasklist){
 	if(_displayType==COMPLETE){
 		Task* task = tasklist.getCompletedTask(_taskIndex);
+		_task=task;
 		tasklist.setTaskAsUndone(_taskIndex);
 		return true;
 	}else{

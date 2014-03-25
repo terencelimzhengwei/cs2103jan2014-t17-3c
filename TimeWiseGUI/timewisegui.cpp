@@ -111,10 +111,22 @@ void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 		break;
 	}
 	case SEARCHED: {
-		setSearchedData();
+		vector<Task*> taskList = _logic.getTaskList().getSearchResults();
+		setData(taskList);
 		ui.label_title->setText("Searched Tasks");
 		break;
 	}
+	case LATE:{
+		vector<Task*> taskList = _logic.getTaskList().getOverdueTaskList();
+		setData(taskList);
+		ui.label_title->setText("Overdue Tasks");
+		break;
+	}
+	case COMPLETE:
+		vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
+		setData(taskList);
+		ui.label_title->setText("Completed Tasks");
+		break;
 	}
 }
 
@@ -204,11 +216,10 @@ void TimeWiseGUI::setMainData() {
 	}
 }
 
-void TimeWiseGUI::setSearchedData() {
+void TimeWiseGUI::setData(std::vector<Task*>& taskList)
+{
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
-
-	vector<Task*> taskList = _logic.getTaskList().getSearchResults();
 
 	for(int i = 0; i < taskList.size(); i++) {
 		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
@@ -349,7 +360,8 @@ void TimeWiseGUI::updateTime() {
 	ui.label_date->setText(date.toString());
 	QTime time = QTime::currentTime();
 	ui.label_time->setText(time.toString());
-	if(_logic.getTaskList().updateOverdueTaskList()){
+ 	if(_logic.getTaskList().checkNewOverdue()){
+		_logic.getTaskList().updateOverdueTaskList();
 		setMainData();
 	}
 }

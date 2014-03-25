@@ -27,7 +27,7 @@ public:
 	void setupHotKeys();
 	void displayTaskList(DISPLAY_TYPE displayType);
 	void setMainData();
-	void setSearchedData();
+	void setData(std::vector<Task*>& taskList);
 	int checkEmpty(QString input);
 	void autoComplete();
 	void setOverdueMessage(int overdueCount);

@@ -8,9 +8,7 @@ const char* OutOfRangeException::what() const throw(){
 const char* InvalidAddCommandInputException::what() const throw(){
 	return MISSING_TASK_DESCRIPTION; 
 }
-const char* InvalidCommandWordException::what() const throw(){ 
-	return INVALID_USER_INPUT_COMMAND_WORD; 
-}
+
 const char* NoArgumentException::what() const throw(){ 
 	return NO_ARGUMENT_EXCEPTION; 
 }
@@ -35,4 +33,11 @@ const char* InvalidClearCommandInputException::what() const throw(){
 }
 const char* UnableTosetAsDone::what() const throw() {
 	return TASK_ALREADY_COMPLETED;
+}
+const char* UnableToEditCompletedTasks::what() const throw() {
+	return UNABLE_TO_EDIT_COMPLETED_TASKS;
+}
+
+const char* UnableToUndoneUncompletedTasks::what() const throw() {
+	return TASK_NOT_COMPLETED_YET;
 }

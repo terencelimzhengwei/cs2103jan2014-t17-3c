@@ -19,9 +19,19 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		return _creator.getFeedback();
 	}
 	else{
+		try {
 			_manager->DoCommand(_cmd);
 			_storage.saveFile(_taskList);
 			return "SUCCESS";
+		} catch (OutOfRangeException& oore) {
+			return oore.what();
+		} catch (UnableToEditCompletedTasks& uect) {
+			return uect.what();
+		} catch (UnableTosetAsDone& usad) {
+			return usad.what();
+		} catch (UnableToUndoneUncompletedTasks&  uuuct) {
+			return uuuct.what();
+		}
 	}
 
 }

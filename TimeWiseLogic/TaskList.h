@@ -3,6 +3,7 @@
 #include <vector>
 #include "Task.h"
 #include "Clash.h"
+#include "Exceptions.h"
 
 class TaskList
 {

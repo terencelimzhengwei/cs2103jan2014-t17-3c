@@ -21,15 +21,25 @@ void TaskList::addTask(Task& task){
 }
 
 bool TaskList::deleteTask(int& index) {
-	assert(index>=0);
-	assert(index<_taskList.size());
+	//assert(index>=0);
+	//assert(index<_taskList.size());
+	if(index < _taskList.size()) {
 	_taskList.erase(_taskList.begin() + index);
 	return true;
+	} else {
+		throw OutOfRangeException();
+		return false;
+	}
 }
 
 Task* TaskList::getTask(int index){
+	if (index <_taskList.size()) {
 
 	return _taskList[index];
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
 }
 
 bool TaskList::isEmpty(){
@@ -144,26 +154,41 @@ void TaskList::addTaskToDoneList(Task& task){
 }
 
 Task* TaskList::setTaskAsDone(int index){
+	if (index < _taskList.size()) {
 	Task* task;
 	task=_taskList[index];
 	task->setStatusAsDone();
 	addTaskToDoneList(*task);
 	deleteTask(index);
 	return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
 }
 
-Task* TaskList::setTaskAsUndone(int index){
+Task* TaskList::setTaskAsUndone(int index) {
+	if(index <_completedTaskList.size()) {
 	Task* task;
 	task=_completedTaskList[index];
 	task->setStatusasUndone();
 	addTask(*task);
 	deleteTaskFromCompletedList(index);
 	return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
 }
 
 bool TaskList::deleteTaskFromCompletedList(int& index){
+	if (index <_completedTaskList.size()) {
 	_completedTaskList.erase(_completedTaskList.begin() + index);
 	return true;
+	} else {
+		throw OutOfRangeException();
+		return false;
+	}
 }
 
 int TaskList::getTaskIndexInCompletedList(Task* task){
@@ -177,7 +202,13 @@ int TaskList::getTaskIndexInCompletedList(Task* task){
 }
 
 Task* TaskList::getCompletedTask(int index){
+	if(index < _completedTaskList.size()) {
 	return _completedTaskList[index];
+	}
+	else {
+		throw OutOfRangeException();
+		return NULL;
+	}
 }
 
 int TaskList::doneSize(){
@@ -246,6 +277,7 @@ void TaskList::deleteSearchedTasks(){
 }
 
 bool TaskList::deleteTaskFromOverdueList(int& index){
+	if (index < _overdueTaskList.size()) {
 	Task* task=_overdueTaskList[index];
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]==task){
@@ -254,6 +286,10 @@ bool TaskList::deleteTaskFromOverdueList(int& index){
 	}
 	_overdueTaskList.erase(_overdueTaskList.begin()+index);
 	return true;
+	} else {
+		throw OutOfRangeException();
+		return false;
+	}
 }
 
 bool TaskList::deleteTaskFromSearchList(int& index){

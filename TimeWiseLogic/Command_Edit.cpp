@@ -26,8 +26,8 @@ bool Command_Edit::execute(TaskList& tasklist){
 		task = tasklist.getSearchedTask(_index);
 		break;
 	default:
-		throw InvalidCommandWordException();
-		//unable to edit completed tasks.
+		throw UnableToEditCompletedTasks() ;
+		
 	}
 	tasklist.setEditStatus(true);
 	task->setEditStatus(true);

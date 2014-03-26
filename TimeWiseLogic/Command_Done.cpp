@@ -24,7 +24,7 @@ bool Command_Done::execute(TaskList& tasklist){
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
 		return true;
 	default:
-		throw InvalidCommandWordException();
+		throw UnableTosetAsDone();
 		return false;
 	}
 }

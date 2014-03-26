@@ -9,33 +9,15 @@ public:
 	~Command_Edit(void);
 
 	//setter for fields
-	void setDescription(std::string);
-	void setPriority(PRIORITY);
-	void setCategory(std::string);
-	void setStartDate(Date& startDate);
-	void setIndex(unsigned int);
-	void setEndDate(Date& endDate);
-	void setStartTime(ClockTime& startTime);
-	void setEndTime(ClockTime& endTime);
-	void setHeader(std::string);
-	void setDisplayScreen(DISPLAY_TYPE displayType);
-
+	void setUserInput(std::string* input);
+	void setEditIndex(int index);
+	void setDisplayScreen(DISPLAY_TYPE type);
 	virtual bool execute(TaskList& tasklist);
 	virtual bool undo(TaskList& taskList);
 
 private:
-	std::string _taskDescription;
-	PRIORITY _taskPriority;
-	std::string _category;
-	Date* _startDate;
-	Date* _endDate;
-	ClockTime* _startTime;
-	ClockTime* _endTime;
-
-	Task* _taskEdited;
-	Task _originalTask;
-	unsigned int _taskIndex;
-	std::string _header;
-	DISPLAY_TYPE _displayType;
+	std::string* _userInput;
+	DISPLAY_TYPE _screen;
+	int _index;
 };
 

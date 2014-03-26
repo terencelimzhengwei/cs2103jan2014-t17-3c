@@ -32,7 +32,7 @@ void CommandCreator::flagIndex(unsigned int id) {
 
 
 	//the below methods are responsible for creating the derived commands
-Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& displayType)
+Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput)
 {
 	try {
 
@@ -58,7 +58,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 				return createCommandDelete(parameter,&displayType);
 			}
 			case EDIT: {
-				return createCommandEdit(parameters,&displayType);
+				return createCommandEdit(parameters,&displayType,&userInput);
 			}
 			case DONE: {
 				return createCommandDone(parameter,&displayType);
@@ -104,7 +104,8 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 
 }
 
-Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen) {
+Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen)
+{
 	std::vector<std::string> dates;
 	std::vector<std::string> times;
 	std::string category = "";
@@ -280,6 +281,7 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 
 	
 	commandAdd->setPreviousScreen(screen);
+	commandAdd->setUserInput(parameter);
 	return commandAdd;
 }
 
@@ -302,53 +304,13 @@ Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE*
 
 }
 
-Command* CommandCreator::createCommandEdit(vector<std::string> parameters,DISPLAY_TYPE* type){
+Command* CommandCreator::createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* userInput)
+{
 	Command_Edit* commandEdit = new Command_Edit;
 
-	commandEdit->setIndex(_parser.toNum(parameters[0])-1);
-	string header = parameters[1];
-	int contentStartPoint = 2;
-	if(header=="start" || header=="due") {
-		header += parameters[2];
-		contentStartPoint = 3;
-	}
-	string content = "";
-	for(int i=0 ; (i+contentStartPoint)<parameters.size() ; i++) {
-		if(i) {
-			content += " ";
-		}
-		content += parameters[contentStartPoint+i];
-	}
-
-	commandEdit->setHeader(header);
-
-	if(header=="description") {
-		commandEdit->setDescription(content);
-	} else if(header=="startdate") {
-		int dateInt = _parser.toNum(_parser.replaceWord("/","",content));
-		commandEdit->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-	} else if(header=="starttime") {
-		int timeInt = _parser.toNum(_parser.replaceWord("/","",content));
-		commandEdit->setStartTime(ClockTime(timeInt));
-	} else if(header=="duedate") {
-		int dateInt = _parser.toNum(_parser.replaceWord("/","",content));
-		commandEdit->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-	} else if(header=="duetime") {
-		int timeInt = _parser.toNum(_parser.replaceWord("/","",content));
-		commandEdit->setEndTime(ClockTime(timeInt));
-	} else if(header=="category") {
-		commandEdit->setCategory(content);
-	} else if(header=="priority") {
-		content = _parser.replaceWord("!", "", content);
-		if(content=="H" || content=="high") {
-			commandEdit->setPriority(HIGH);
-		} else if(content=="M" || content=="medium") {
-			commandEdit->setPriority(MEDIUM);
-		} else if(content=="L" || content=="low") {
-			commandEdit->setPriority(LOW);
-		}
-	}
-	commandEdit->setDisplayScreen(*type);
+	commandEdit->setEditIndex(_parser.toNum(parameters[0])-1);
+	commandEdit->setUserInput(userInput);
+	commandEdit->setDisplayScreen(*displayType);
 	return commandEdit;
 }
 

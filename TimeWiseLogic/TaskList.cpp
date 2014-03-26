@@ -2,6 +2,7 @@
 #include <iterator>
 
 TaskList::TaskList(void){
+	_editStatus=false;
 }
 
 
@@ -326,4 +327,12 @@ void TaskList::addTaskToOverdueList(Task& task){
 		}
 	} 
 	_overdueTaskList.push_back(&task);
+}
+
+void TaskList::setEditStatus(bool value){
+	_editStatus=value;
+}
+
+bool TaskList::checkEditStatus(){
+	return _editStatus;
 }

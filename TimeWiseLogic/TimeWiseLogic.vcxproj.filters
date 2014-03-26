@@ -102,6 +102,9 @@
     <ClInclude Include="Command_Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Command_AddEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Storage.cpp">
@@ -180,6 +183,9 @@
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
     <ClCompile Include="Command_Display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_AddEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,7 +27,7 @@ public:
 	virtual bool execute(TaskList&);
 	virtual bool undo(TaskList&);
 
-private:
+protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
 	PRIORITY _taskPriority;

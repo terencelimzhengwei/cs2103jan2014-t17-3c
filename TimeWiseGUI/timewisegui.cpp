@@ -390,8 +390,8 @@ void TimeWiseGUI::setupFont(){
 
 //enable hotkeys
 void TimeWiseGUI::setupHotKeys() {
-	QShortcut *shortcutUndo = new QShortcut(QKeySequence("Ctrl+Z"), this);
-	QShortcut *shortcutRedo = new QShortcut(QKeySequence("Ctrl+Y"), this);
+	QShortcut *shortcutUndo = new QShortcut(QKeySequence("F3"), this);
+	QShortcut *shortcutRedo = new QShortcut(QKeySequence("F4"), this);
 	QShortcut *shortcutMain = new QShortcut(QKeySequence("F1"), this);
 	QShortcut *shortcutDone = new QShortcut(QKeySequence("F2"), this);
 	QObject::connect(shortcutUndo, SIGNAL(activated()), this, SLOT(undo()));

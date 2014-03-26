@@ -13,6 +13,7 @@ Task::Task(void){
 	_startDate = NULL;
 	_endDate = NULL;
 	_taskIndex= DEFAULT_INDEX;
+	_editStatus=false;
 }
 
 
@@ -252,4 +253,20 @@ bool Task::checkNewOverdue(){
 		}
 	}
 	return false;
+}
+
+void Task::setUserInput(std::string input){
+	_userInput=input;
+}
+
+std::string Task::getUserInput(){
+	return _userInput;
+}
+
+void Task::setEditStatus(bool value){
+	_editStatus=value;
+}
+
+bool Task::checkEditStatus(){
+	return _editStatus;
 }

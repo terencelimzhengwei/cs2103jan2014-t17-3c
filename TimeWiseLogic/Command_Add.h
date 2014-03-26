@@ -15,6 +15,7 @@ public:
 	void setStartTime(ClockTime&);
 	void setEndTime(ClockTime&);
 	void setTaskType(TASK_TYPE);
+	void setUserInput(std::string);
 	void setPreviousScreen(DISPLAY_TYPE*);
 
 	//checker for fields
@@ -31,6 +32,7 @@ private:
 	TASK_TYPE _taskType;
 	PRIORITY _taskPriority;
 	std::string _category;
+	std::string _userInput;
 	Date* _startDate;
 	Date* _endDate;
 	ClockTime* _startTime;

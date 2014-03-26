@@ -23,6 +23,7 @@ public:
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
 	PRIORITY getPriority();
+	std::string getUserInput();
 	
 
 	//setter functions
@@ -38,6 +39,8 @@ public:
 	void setStatusasUndone();
 	void setStatusAsOverdue();
 	void setTaskType(TASK_TYPE type);
+	void setUserInput(std::string input);
+	void setEditStatus(bool value);
 
 	//check overdue
 	bool checkOverdue();
@@ -49,6 +52,7 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
+	bool checkEditStatus();
 
 protected:
 	std::string _taskDescription;
@@ -57,9 +61,11 @@ protected:
 	PRIORITY _taskPriority;
 	std::string _category;
 	unsigned long long _taskIndex;
+	std::string _userInput;
 
 	Date *_endDate;
 	Date *_startDate;
 	ClockTime *_startTime;
 	ClockTime *_endTime;
+	bool _editStatus;
 };

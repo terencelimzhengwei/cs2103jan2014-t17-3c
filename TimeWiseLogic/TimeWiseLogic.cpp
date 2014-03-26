@@ -28,7 +28,7 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 
 bool TimeWiseLogic::parseCommand(std::string commandLine){
 	try{
-		_cmd = _creator.interpretCommand(commandLine,_displayType);
+		_cmd = _creator.interpretCommand(commandLine,_displayType,_userInput);
 	}catch(...){
 		return false;
 	}
@@ -58,4 +58,8 @@ DISPLAY_TYPE TimeWiseLogic::setScreenToDisplay(Command* cmd){
 
 DISPLAY_TYPE TimeWiseLogic::getScreenToDisplay(){
 	return _displayType;
+}
+
+std::string TimeWiseLogic::getUserInput(){
+	return _userInput;
 }

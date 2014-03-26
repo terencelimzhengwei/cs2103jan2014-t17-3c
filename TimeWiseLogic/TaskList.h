@@ -53,6 +53,9 @@ public:
 	int doneSize();
 	std::vector<Clash> checkClashes(Task* task);
 	void deleteSearchedTasks();
+	void setEditStatus(bool value);
+	bool checkEditStatus();
+	std::string retrieveForMainEdit(int index);
 
 private:
 	std::vector<Task*> _taskList;
@@ -60,4 +63,5 @@ private:
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;
 	std::vector<Task*> _filteredTaskList;
+	bool _editStatus;
 };

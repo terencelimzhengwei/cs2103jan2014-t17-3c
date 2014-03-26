@@ -28,10 +28,10 @@ public:
 	void flagDescription(std::string);
 	void flagIndex(unsigned int);
 	//the below methods are responsible for creating the derived commands
-	Command* interpretCommand(std::string,DISPLAY_TYPE&);
-	Command* createCommandAdd(std::string, unsigned int, vector<std::string>,DISPLAY_TYPE*);
+	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&);
+	Command* createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
 	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
-	Command* createCommandEdit(vector<std::string>,DISPLAY_TYPE*);
+	Command* createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* _userInput);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
 	Command* createCommandDone(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndone(std::string,DISPLAY_TYPE*);

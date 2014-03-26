@@ -29,6 +29,7 @@ public:
 
 	int getTaskIndex(Task* task);
 	int getTaskIndexInCompletedList(Task* task);
+	int getTaskIndexInSearchedList(Task* task);
 	void clearTask();
 	Task* getTaskWithKeyword(std::string& keyWord);
 	void populateSearchList(std::string& keyword,SEARCH_TYPE searchType);

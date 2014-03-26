@@ -7,7 +7,7 @@
 class CommandManager
 {
 public:
-	CommandManager(TaskList& taskList):_taskList(taskList){};
+	CommandManager(TaskList& taskList):_taskList(taskList),m_nUndoLevel(10){};
 	~CommandManager(void);
 
 	bool CanUndo() const;

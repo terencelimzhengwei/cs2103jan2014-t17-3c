@@ -17,6 +17,7 @@ public:
 	TaskList getTaskList();
 	std::string processCommand(std::string commandLine);
 	DISPLAY_TYPE getScreenToDisplay();
+	void changeDisplay(DISPLAY_TYPE type);
 	std::string getUserInput();
 
 

@@ -58,7 +58,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 				return createCommandDelete(parameter,&displayType);
 			}
 			case EDIT: {
-				return createCommandEdit(parameters,&displayType,&userInput);
+				return createCommandEdit(parameters,&displayType,&commandLineInput);
 			}
 			case DONE: {
 				return createCommandDone(parameter,&displayType);
@@ -401,7 +401,7 @@ std::string CommandCreator::getFeedback() {
 Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* displayType)
 {
 	Command_Display* newCommand= new Command_Display();
-	newCommand->setPreviousScreen(displayType);
+	newCommand->setCurrentScreen(displayType);
 	if(parameter=="main"){
 		newCommand->setNextScreen(MAIN);
 	}else if(parameter=="completed"||parameter=="done"){

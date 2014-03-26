@@ -152,9 +152,6 @@
     <ClCompile Include="Command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Undone.cpp">
-      <Filter>Source Files\Command Derived</Filter>
-    </ClCompile>
     <ClCompile Include="Command_Done.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
@@ -187,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Command_AddEdit.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Undone.cpp">
+      <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

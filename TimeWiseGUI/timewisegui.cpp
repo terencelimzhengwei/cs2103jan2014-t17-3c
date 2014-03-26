@@ -8,17 +8,19 @@
 const char* ADD_COMMAND = "add";
 const char* CLEAR_COMMAND = "clear";
 const char* DELETE_COMMAND = "delete";
+const char* DISPLAY_COMMAND = "display";
 const char* DONE_COMMAND = "done";
 const char* EDIT_COMMAND = "edit";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: description start_date due_date start_time due_time !priority #category";
-const char* CLEAR_FORMAT = "clear";
+const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: ID or keywords";
+const char* DISPLAY_FORMAT = "display: main or completed";
 const char* DONE_FORMAT = "done: ID or #category";
 const char* EDIT_FORMAT = "edit: ID header contents";
-const char* SEARCH_FORMAT = "search: keywords or <status> or !priority or #category";
-const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, done, edit, search, undo, redo";
+const char* SEARCH_FORMAT = "search: keywords";
+const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, display, done, edit, search, undo, redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -54,6 +56,8 @@ void TimeWiseGUI::on_userInput_textChanged() {
 		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
 		ui.label_help->setText(DELETE_FORMAT);
+	} else if(ui.userInput->text() == DISPLAY_COMMAND) {
+		ui.label_help->setText(DISPLAY_FORMAT);
 	} else if(ui.userInput->text() == DONE_COMMAND) {
 		ui.label_help->setText(DONE_FORMAT);
 	} else if(ui.userInput->text() == EDIT_COMMAND) {
@@ -75,11 +79,21 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		std::string messageLog = _logic.processCommand(userCommand);
 
-		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+		bool isEdit = _logic.getTaskList().checkEditStatus();
 
-		autoComplete();
+		if(isEdit) {
+			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
+			ui.userInput->setText(qOrigAction);
+			ui.userInput->setCursorPosition(0);
+			setMainData();
+		}
+		else {
+			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 
-		displayTaskList(displayType);
+			autoComplete();
+
+			displayTaskList(displayType);
+		}
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);

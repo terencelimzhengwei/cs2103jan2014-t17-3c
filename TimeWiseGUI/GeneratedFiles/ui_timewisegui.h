@@ -162,7 +162,7 @@ public:
         TimeWiseGUIClass->setWindowTitle(QApplication::translate("TimeWiseGUIClass", "TimeWiseGUI", 0));
         label_date->setText(QApplication::translate("TimeWiseGUIClass", "Date", 0));
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "Time", 0));
-        label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, clear, delete, done, edit, search, undo, redo", 0));
+        label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, clear, delete, display, done, edit, search, undo, redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
         pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));

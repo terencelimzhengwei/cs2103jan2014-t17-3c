@@ -94,11 +94,11 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 			displayTaskList(displayType);
 			ui.userInput->clear();
+
 		}
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);
-
 	}
 	catch(const std::invalid_argument& e) {
 		ui.label_mlog->setText(e.what());

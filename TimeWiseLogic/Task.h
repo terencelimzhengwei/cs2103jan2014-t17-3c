@@ -6,6 +6,7 @@
 #include "Date.h"
 #include "ClockTime.h"
 #include <assert.h>
+#include "Parser.h"
 
 class Task
 {
@@ -22,9 +23,7 @@ public:
 	ClockTime* getStartTime();
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
-	PRIORITY getPriority();
-	std::string getUserInput();
-	
+	PRIORITY getPriority();	
 
 	//setter functions
 	void setIndex(unsigned long long);
@@ -39,7 +38,6 @@ public:
 	void setStatusasUndone();
 	void setStatusAsOverdue();
 	void setTaskType(TASK_TYPE type);
-	void setUserInput(std::string input);
 	void setEditStatus(bool value);
 
 	//check overdue
@@ -53,6 +51,7 @@ public:
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
 	bool checkEditStatus();
+	std::string toString();
 
 protected:
 	std::string _taskDescription;
@@ -61,11 +60,12 @@ protected:
 	PRIORITY _taskPriority;
 	std::string _category;
 	unsigned long long _taskIndex;
-	std::string _userInput;
 
 	Date *_endDate;
 	Date *_startDate;
 	ClockTime *_startTime;
 	ClockTime *_endTime;
 	bool _editStatus;
+	Parser _parser;
+
 };

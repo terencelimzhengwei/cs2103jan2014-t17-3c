@@ -143,63 +143,60 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 
 }
 
-Command* CommandCreator::createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen)
-{
-	std::vector<std::string> dates;
-	std::vector<std::string> times;
-	std::string category = "";
-	std::string priority = "";
-	string description = "";
-	//int wordReading = parameterNum - 1;
-	if(_parser.isCategory(parameters.back())){
-		category=_parser.replaceWord("#","",parameters.back());
-		parameters.pop_back();
-	}
-	if(_parser.isPriority(parameters.back())){
-		priority=_parser.replaceWord("!","",parameters.back());
-		parameters.pop_back();
-	}
+Command* CommandCreator::createCommandAdd(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
+	bool* descriptionWord = new bool[param.size()];
+	string category;
+	string priority;
+	string description;
+	vector<string> dates;
+	vector<string> times;
 
-	while(!parameters.empty()){
-		if(_parser.isTimeFormat(parameters.back())) {
-			//times.push_back(parameters.back());
-			times.push_back(_parser.strval(_parser.extractTime(parameters.back(), 0)[0]));
-			parameters.pop_back();
-			if(parameters.size()!=0 && _parser.isPreposition(parameters.back())) {
-				parameters.pop_back();
+	memset(descriptionWord, true, sizeof descriptionWord);	// Assume all words in the command are descriptions first.
+
+	for(int pos = param.size()-1 ; pos>0 ; pos--) {
+		if(_parser.isCategory(param[pos]) && category.empty()) {
+			category = _parser.replaceWord("#", "", param[pos]);
+			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
+		} else if(_parser.isPriority(param[pos]) && priority.empty()) {
+			priority = _parser.replaceWord("!", "", param[pos]);
+			descriptionWord[pos] = false;	// It is a priority, so it is not a part of description.
+		} else if(_parser.extractDate(command, pos)[3]) {
+			vector<int> dateData = _parser.extractDate(command, pos);
+			dates.push_back(_parser.strval(dateData[0] + dateData[1]*10000 + dateData[2]*1000000));
+
+			for(int i=0 ; i<dateData[3] ; i++) {
+				descriptionWord[pos - i] = false;
 			}
-		} else if(_parser.isDateFormat(parameters.back())) {
-			/* } else if( _parser.isDateFormat(parameters.back()) ||
-				_parser.isDateFormat(parameters[parameters.size()-2] + parameters.back()) ||
-				_parser.isDateFormat(parameters[parameters.size()-3] + parameters[parameters.size()-2] + parameters.back()) ) {*/
+			pos = pos - (dateData[3] - 1);
 
-					dates.push_back(parameters.back());
-					parameters.pop_back();
+			// Check preposition
+			if( (pos-1) >= 0 && _parser.isPreposition(param[pos-1]) ) {
+				descriptionWord[pos - 1] = false;
+			}
+		} else if(_parser.extractTime(command, pos)[1]) {
+			vector<int> timeData = _parser.extractTime(command, pos);
+			times.push_back(_parser.strval(_parser.extractTime(param[pos], 0)[0]));
+			descriptionWord[pos] = false;
 
-					/* vector<int> dateData = _parser.extractDate(parameter, parameters.size()-1);
-					for(int i=0 ; i<dateData[3] ; i++) {
-						parameters.pop_back();
-					}
-					dates.push_back(_parser.strval(dateData[2] + dateData[1]*100 + dateData[0]*1000)); */
-
-					if(parameters.size()!=0 && _parser.isPreposition(parameters.back())){
-						parameters.pop_back();
-					}
-			
-		} else {
-			while(!parameters.empty()){
-				description += parameters.front()+" ";
-				parameters.erase(parameters.begin());
+			// Check preposition
+			if( (pos-1) >= 0 && _parser.isPreposition(param[pos-1]) ) {
+				descriptionWord[pos - 1] = false;
 			}
 		}
-
 	}
+
+	for(unsigned int pos=0 ; pos<param.size(); pos++) {
+		if(descriptionWord[pos]) {
+			if(description.empty()) {
+				description = param[pos];
+			} else {
+				description = description + " " + param[pos];
+			}
+		}
+	}
+	//delete descriptionWord;
 
 	_parser.removeWhiteSpaces(description);
-
-	for(unsigned int i=0;i<times.size();i++){
-		times[i] = _parser.replaceWord(":","",times[i]);
-	}
 
 	Command_Add* commandAdd = new Command_Add;
 

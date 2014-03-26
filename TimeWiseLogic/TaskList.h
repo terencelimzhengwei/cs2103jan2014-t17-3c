@@ -56,6 +56,9 @@ public:
 	void setEditStatus(bool value);
 	bool checkEditStatus();
 	std::string retrieveForMainEdit(int index);
+	Task* deleteEditTask();
+	Task* deleteEditTaskFromSearch();
+
 
 private:
 	std::vector<Task*> _taskList;

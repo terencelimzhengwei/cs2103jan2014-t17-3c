@@ -142,6 +142,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 				case 6:
 					taskHeader++;
 					newTask->setCategory(details);
+					break;
 				case 7:
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
@@ -225,6 +226,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 				case 6:
 					taskHeader++;
 					newTask->setCategory(details);
+					break;
 				case 7:
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);

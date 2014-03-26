@@ -71,7 +71,8 @@ void TimeWiseGUI::on_userInput_textChanged() {
 
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
-	
+	ui.userInput->clear();
+
 	try {
 		checkEmpty(input);
 		
@@ -84,21 +85,20 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		if(isEdit) {
 			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
 			ui.userInput->setText(qOrigAction);
+			ui.userInput->selectAll();
 			ui.userInput->setCursorPosition(0);
 			setMainData();
 		}
 		else {
-			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
-
 			autoComplete();
-
+			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 			displayTaskList(displayType);
+			ui.userInput->clear();
 		}
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);
 
-		ui.userInput->clear();
 	}
 	catch(const std::invalid_argument& e) {
 		ui.label_mlog->setText(e.what());

@@ -59,24 +59,29 @@ void Command_Add::setEndDate(Date& date){
 
 bool Command_Add::execute(TaskList& tasklist){
 	*_currentScreen=MAIN;
-	_addedTask = new Task;
-	_addedTask->setDescription(_taskDescription);
-	_addedTask->setPriority(_taskPriority);
-	_addedTask->setCategory(_category);
-	if(hasEndDate()){
-		_addedTask->setEndDate(*_endDate);
+	if(_lastCmdCalled=="undo"){
+		tasklist.addTask(*_addedTask);
+	}else{
+		_addedTask = new Task;
+		_addedTask->setDescription(_taskDescription);
+		_addedTask->setPriority(_taskPriority);
+		_addedTask->setCategory(_category);
+		if(hasEndDate()){
+			_addedTask->setEndDate(*_endDate);
+		}
+		if(hasEndTime()){
+			_addedTask->setEndTime(*_endTime);
+		}
+		if(hasStartDate()){
+			_addedTask->setStartDate(*_startDate);
+		}
+		if(hasStartTime()){
+			_addedTask->setStartTime(*_startTime);
+		}
+		_addedTask->setTaskType(_taskType);
+		tasklist.addTask(*_addedTask);
 	}
-	if(hasEndTime()){
-		_addedTask->setEndTime(*_endTime);
-	}
-	if(hasStartDate()){
-		_addedTask->setStartDate(*_startDate);
-	}
-	if(hasStartTime()){
-		_addedTask->setStartTime(*_startTime);
-	}
-	_addedTask->setTaskType(_taskType);
-	tasklist.addTask(*_addedTask);
+	_lastCmdCalled=="execute";
 	return true;
 }
 
@@ -87,6 +92,7 @@ bool Command_Add::undo(TaskList& taskList){
 		int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
 		*_currentScreen=_previousScreen;
+		_lastCmdCalled="undo";
 		return true;
 	}
 }

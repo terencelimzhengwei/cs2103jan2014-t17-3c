@@ -36,6 +36,7 @@ protected:
 	Date* _endDate;
 	ClockTime* _startTime;
 	ClockTime* _endTime;
+	std::string _lastCmdCalled;
 
 	Task* _addedTask;
 	DISPLAY_TYPE* _currentScreen;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.1
+** Created by: Qt User Interface Compiler version 5.2.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -163,6 +163,7 @@ public:
         label_date->setText(QApplication::translate("TimeWiseGUIClass", "Date", 0));
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "Time", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, clear, delete, done, edit, search, undo, redo", 0));
+        userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
         pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
         pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));

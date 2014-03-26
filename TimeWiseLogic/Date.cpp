@@ -166,7 +166,7 @@ int Date::getYear(){
 	return _year;
 }
 
-std::string Date::toSaveFormat(){
+std::string Date::toFormat(){
 	std::ostringstream convert;
 	std::string slash = "/";
 	std::string dateInString;

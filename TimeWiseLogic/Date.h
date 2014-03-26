@@ -25,7 +25,7 @@ public:
 	TIMEDATE_STATUS checkOverdue();
 	TIMEDATE_STATUS isLater(Date* otherDate);
 	std::string toString();
-	std::string toSaveFormat();
+	std::string toFormat();
 
 	int getCurrentYear();
 	int getCurrentMonth();

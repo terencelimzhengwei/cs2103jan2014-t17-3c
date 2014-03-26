@@ -336,3 +336,27 @@ void TaskList::setEditStatus(bool value){
 bool TaskList::checkEditStatus(){
 	return _editStatus;
 }
+
+Task* TaskList::deleteEditTask(){
+	for(int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->checkEditStatus()){
+			Task* task = _taskList[i];
+			_taskList.erase(_taskList.begin()+i);
+			_editStatus=false;
+			return task;
+		}
+	}
+	return NULL;
+}
+
+Task* TaskList::deleteEditTaskFromSearch(){
+	for(int i=0;i<_searchedTaskList.size();i++){
+		if(_searchedTaskList[i]->checkEditStatus()){
+			Task* task = _searchedTaskList[i];
+			_searchedTaskList.erase(_searchedTaskList.begin()+i);
+			_editStatus=false;
+			return task;
+		}
+	}
+	return NULL;
+}

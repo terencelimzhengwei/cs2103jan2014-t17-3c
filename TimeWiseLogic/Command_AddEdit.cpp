@@ -7,6 +7,12 @@ Command_AddEdit::Command_AddEdit(void){
 
 
 Command_AddEdit::~Command_AddEdit(void){
+	if(_lastCmdCalled=="execute"){
+		delete _deletedTask;
+		_deletedTask=NULL;
+	}else{
+		_deletedTask=NULL;
+	}
 }
 
 bool Command_AddEdit::execute(TaskList& tasklist){

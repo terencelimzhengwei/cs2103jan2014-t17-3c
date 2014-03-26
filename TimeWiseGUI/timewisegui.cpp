@@ -50,12 +50,6 @@ TimeWiseGUI::~TimeWiseGUI() {
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
-		/*ostringstream outstr;
-		outstr << ADD_COMMAND << " " << "description";
-		std::string addStuff = outstr.str();
-		QString qAddStuff = QString::fromStdString(addStuff);
-		ui.userInput->setText(qAddStuff);
-		ui.userInput->cursorWordBackward (true);*/
 	} else if(ui.userInput->text() == CLEAR_COMMAND) {
 		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
@@ -133,7 +127,8 @@ void TimeWiseGUI::setMainData() {
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-		QColor rowColor(255, 0, 0, 50);
+		QColor rowColorOverdue(255, 0, 0, 50);
+		QColor rowColorComplete(146, 255, 192);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -199,12 +194,14 @@ void TimeWiseGUI::setMainData() {
 					model->setItem(i, j, item);
 				}
 				break;
-
 			}
 			}
 			//highlight description in red if that task is overdue
 			if(qStatus == "overdue") {
-				model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			}
+			if (qStatus == "done") {
+				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}
 	}
@@ -218,7 +215,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 	for(int i = 0; i < taskList.size(); i++) {
 		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-		QColor rowColor(255, 0, 0, 50);
+		QColor rowColorOverdue(255, 0, 0, 50);
+		QColor rowColorComplete(146, 255, 192);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -232,7 +230,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-					}
+			}
 			case 1: {
 				if(taskList[i]->getStartDate()!=NULL){
 					std::string taskStartDate = taskList[i]->getStartDate()->toString();
@@ -241,7 +239,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 					model->setItem(i, j, item);
 				}
 				break;
-					}
+			}
 			case 2: {
 				if(taskList[i]->getEndDate()!=NULL){
 					std::string taskEndDate = taskList[i]->getEndDate()->toString();
@@ -250,7 +248,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 					model->setItem(i, j, item);
 				}
 				break;
-					}
+			}
 			case 3: {
 				if(taskList[i]->getStartTime()!=NULL){
 					std::string taskStartTime = taskList[i]->getStartTime()->toString();
@@ -259,7 +257,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 					model->setItem(i, j, item);
 				}
 				break;
-					}
+			}
 			case 4: {
 				if(taskList[i]->getEndTime()!=NULL){
 					std::string taskEndTime = taskList[i]->getEndTime()->toString();
@@ -268,14 +266,14 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 					model->setItem(i, j, item);
 				}
 				break;
-					}
+			}
 			case 5: {
 				PRIORITY taskPriority = taskList[i]->getPriority();
 				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
-					}
+			}
 			case 6: {
 				if(taskList[i]->getTaskCategory()!=""){
 					std::string taskCategory= taskList[i]->getTaskCategory();
@@ -284,12 +282,14 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 					model->setItem(i, j, item);
 				}
 				break;
-
-					}
+			}
 			}
 			//highlight description in red if that task is overdue
 			if(qStatus == "overdue") {
-				model->setData(model->index(i, j), rowColor, Qt::BackgroundRole);
+				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			} 
+			if (qStatus == "done") {
+				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}
 	}
@@ -377,10 +377,14 @@ void TimeWiseGUI::setupFont(){
 
 //enable hotkeys
 void TimeWiseGUI::setupHotKeys() {
-	QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Z"), this);
-	QShortcut *shortcut1 = new QShortcut(QKeySequence("Ctrl+Y"), this);
-	QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(undo()));
-	QObject::connect(shortcut1, SIGNAL(activated()), this, SLOT(redo()));
+	QShortcut *shortcutUndo = new QShortcut(QKeySequence("Ctrl+Z"), this);
+	QShortcut *shortcutRedo = new QShortcut(QKeySequence("Ctrl+Y"), this);
+	QShortcut *shortcutMain = new QShortcut(QKeySequence("F1"), this);
+	QShortcut *shortcutDone = new QShortcut(QKeySequence("F2"), this);
+	QObject::connect(shortcutUndo, SIGNAL(activated()), this, SLOT(undo()));
+	QObject::connect(shortcutRedo, SIGNAL(activated()), this, SLOT(redo()));
+	QObject::connect(shortcutMain, SIGNAL(activated()), this, SLOT(displayMain()));
+	QObject::connect(shortcutDone, SIGNAL(activated()), this, SLOT(displayDone()));
 }
 
 void TimeWiseGUI::undo(){
@@ -392,6 +396,20 @@ void TimeWiseGUI::redo(){
 	_logic.processCommand("redo");
 	setMainData();
 }
+
+void TimeWiseGUI::displayMain(){
+	_logic.processCommand("display main");
+	setMainData();
+	ui.label_title->setText("Your Tasks");
+}
+
+void TimeWiseGUI::displayDone(){
+	_logic.processCommand("display done");
+	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
+	setData(taskList);
+	ui.label_title->setText("Completed Tasks");
+}
+
 
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 	QMessageBox overdueInfo;
@@ -423,11 +441,6 @@ void TimeWiseGUI::autoComplete() {
 		outstrDesc << SEARCH_COMMAND << " " << taskList.getTask(i)->getDescription();
 		QString qDesc = QString::fromStdString(outstrDesc.str());
 		descList << qDesc;
-
-		/*ostringstream outstrCat;
-		outstrCat << SEARCH_COMMAND << " #" << taskList.getTask(i)->getTaskCategory();
-		QString qCat = QString::fromStdString(outstrCat.str());
-		descList << qCat;*/
 	}
 	descCompleter = new QCompleter(descList, this);
 	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);

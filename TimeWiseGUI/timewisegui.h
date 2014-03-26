@@ -39,6 +39,8 @@ private slots:
 	void on_userInput_returnPressed();
 	void undo();
 	void redo();
+	void displayDone();
+	void displayMain();
 
 private:
 	Ui::TimeWiseGUIClass ui;

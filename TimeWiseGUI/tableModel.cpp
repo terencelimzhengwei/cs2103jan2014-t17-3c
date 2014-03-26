@@ -39,18 +39,30 @@ QVariant tableModel::headerData(int section, Qt::Orientation orientation, int ro
 
 	if (orientation == Qt::Horizontal) {
 		switch (section) {
-		case 0:
+		case 0: {
 			return QString("ID");
-		case 1:
+			break;
+		}
+		case 1: {
 			return QString("Description");
-		case 2:
+			break;
+		}
+		case 2: {
 			return QString("Due Date");
-		case 3:
+			break;
+		}
+		case 3: {
 			return QString("Due Time");
-		case 4:
+			break;
+		}
+		case 4: {
 			return QString("Priority");
-		case 5:
+			break;
+		}
+		case 5: {
 			return QString("Category");
+			break;
+		}
 		}
 	}
 }

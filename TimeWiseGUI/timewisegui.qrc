@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="TimeWiseGUI">
+    <file>Background new.jpg</file>
+    <file>CFJackStory-Regular.ttf</file>
+    <file>EHSMB.TTF</file>
+    <file>Timewise background2.png</file>
+    <file>Timewise background.jpg</file>
+    <file>123.jpg</file>
+    <file>Homestead-Display.ttf</file>
+    <file>comesinhandy.ttf</file>
+  </qresource>
+</RCC>

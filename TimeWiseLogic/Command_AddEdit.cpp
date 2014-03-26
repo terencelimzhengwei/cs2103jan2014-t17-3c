@@ -16,28 +16,39 @@ Command_AddEdit::~Command_AddEdit(void){
 }
 
 bool Command_AddEdit::execute(TaskList& tasklist){
-	_addedTask = new Task;
-	_addedTask->setDescription(_taskDescription);
-	_addedTask->setPriority(_taskPriority);
-	_addedTask->setCategory(_category);
-	if(hasEndDate()){
-		_addedTask->setEndDate(*_endDate);
-	}
-	if(hasEndTime()){
-		_addedTask->setEndTime(*_endTime);
-	}
-	if(hasStartDate()){
-		_addedTask->setStartDate(*_startDate);
-	}
-	if(hasStartTime()){
-		_addedTask->setStartTime(*_startTime);
-	}
-	_addedTask->setTaskType(_taskType);
-	tasklist.addTask(*_addedTask);
-	if(_previousScreen==MAIN){
-		_deletedTask=tasklist.deleteEditTask();
-	}else if(_previousScreen==SEARCHED){
-		_deletedTask=tasklist.deleteEditTaskFromSearch();
+	if(_lastCmdCalled=="undo"){
+		tasklist.addTask(*_addedTask);
+		if(_previousScreen==MAIN){
+			int index = tasklist.getTaskIndex(_deletedTask);
+			tasklist.deleteTask(index);
+		}else if(_previousScreen==SEARCHED){
+			int index = tasklist.getTaskIndexInSearchedList(_deletedTask);
+			tasklist.deleteTaskFromSearchList(index);
+		}
+	}else{
+		_addedTask = new Task;
+		_addedTask->setDescription(_taskDescription);
+		_addedTask->setPriority(_taskPriority);
+		_addedTask->setCategory(_category);
+		if(hasEndDate()){
+			_addedTask->setEndDate(*_endDate);
+		}
+		if(hasEndTime()){
+			_addedTask->setEndTime(*_endTime);
+		}
+		if(hasStartDate()){
+			_addedTask->setStartDate(*_startDate);
+		}
+		if(hasStartTime()){
+			_addedTask->setStartTime(*_startTime);
+		}
+		_addedTask->setTaskType(_taskType);
+		tasklist.addTask(*_addedTask);
+		if(_previousScreen==MAIN){
+			_deletedTask=tasklist.deleteEditTask();
+		}else if(_previousScreen==SEARCHED){
+			_deletedTask=tasklist.deleteEditTaskFromSearch();
+		}
 	}
 	_lastCmdCalled="execute";
 	return true;
@@ -49,7 +60,7 @@ bool Command_AddEdit::undo(TaskList& taskList){
 	} else {
 		int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
-		*_currentScreen=_previousScreen;
+		//*_currentScreen=_previousScreen;
 	}
 
 	switch(_previousScreen){

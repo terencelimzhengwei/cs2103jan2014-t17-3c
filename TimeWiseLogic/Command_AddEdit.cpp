@@ -48,6 +48,7 @@ bool Command_AddEdit::execute(TaskList& tasklist){
 			_deletedTask=tasklist.deleteEditTask();
 		}else if(_previousScreen==SEARCHED){
 			_deletedTask=tasklist.deleteEditTaskFromSearch();
+			tasklist.addTaskToSearchedList(*_addedTask);
 		}
 	}
 	_lastCmdCalled="execute";

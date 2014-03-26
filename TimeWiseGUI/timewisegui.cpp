@@ -86,7 +86,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
 			ui.userInput->setText(qOrigAction);
 			ui.userInput->selectAll();
-			setMainData();
+			displayTaskList(_logic.getScreenToDisplay());
 		}
 		else {
 			autoComplete();

@@ -29,7 +29,9 @@ bool Command_Edit::execute(TaskList& tasklist){
 		throw InvalidCommandWordException();
 		//unable to edit completed tasks.
 	}
-	*_userInput=task->getUserInput();
+	tasklist.setEditStatus(true);
+	task->setEditStatus(true);
+	*_userInput=task->toString();
 }
 
 bool Command_Edit::undo(TaskList& tasklist){

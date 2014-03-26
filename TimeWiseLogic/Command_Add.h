@@ -15,7 +15,6 @@ public:
 	void setStartTime(ClockTime&);
 	void setEndTime(ClockTime&);
 	void setTaskType(TASK_TYPE);
-	void setUserInput(std::string);
 	void setPreviousScreen(DISPLAY_TYPE*);
 
 	//checker for fields

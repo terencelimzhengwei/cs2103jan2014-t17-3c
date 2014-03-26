@@ -76,7 +76,6 @@ bool Command_Add::execute(TaskList& tasklist){
 		_addedTask->setStartTime(*_startTime);
 	}
 	_addedTask->setTaskType(_taskType);
-	_addedTask->setUserInput(_userInput);
 	tasklist.addTask(*_addedTask);
 	return true;
 }
@@ -124,10 +123,4 @@ void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){
 	_previousScreen=*screen;
 	_currentScreen=screen;
 }
-
-void Command_Add::setUserInput(std::string input)
-{
-	_userInput=input;
-}
-
 

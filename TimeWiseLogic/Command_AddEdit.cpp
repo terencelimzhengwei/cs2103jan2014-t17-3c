@@ -27,7 +27,6 @@ bool Command_AddEdit::execute(TaskList& tasklist){
 		_addedTask->setStartTime(*_startTime);
 	}
 	_addedTask->setTaskType(_taskType);
-	_addedTask->setUserInput(_userInput);
 	tasklist.addTask(*_addedTask);
 	if(_previousScreen==MAIN){
 		_deletedTask=tasklist.deleteEditTask();

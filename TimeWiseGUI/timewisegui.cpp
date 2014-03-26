@@ -93,12 +93,12 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 			autoComplete();
 
 			displayTaskList(displayType);
+			ui.userInput->clear();
+
 		}
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);
-
-		ui.userInput->clear();
 	}
 	catch(const std::invalid_argument& e) {
 		ui.label_mlog->setText(e.what());

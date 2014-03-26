@@ -281,7 +281,7 @@ bool TaskList::deleteTaskFromOverdueList(int& index){
 	Task* task=_overdueTaskList[index];
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]==task){
-			_taskList.erase(_taskList.begin()+index);
+			_taskList.erase(_taskList.begin()+i);
 		}
 	}
 	_overdueTaskList.erase(_overdueTaskList.begin()+index);
@@ -296,7 +296,7 @@ bool TaskList::deleteTaskFromSearchList(int& index){
 	Task* task=_searchedTaskList[index];
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]==task){
-			_taskList.erase(_taskList.begin()+index);
+			_taskList.erase(_taskList.begin()+i);
 		}
 	}
 	_searchedTaskList.erase(_searchedTaskList.begin()+index);
@@ -391,8 +391,13 @@ Task* TaskList::deleteEditTaskFromSearch(){
 		if(_searchedTaskList[i]->checkEditStatus()){
 			Task* task = _searchedTaskList[i];
 			_searchedTaskList.erase(_searchedTaskList.begin()+i);
-			_editStatus=false;
-			return task;
+			for(int j=0;j<_taskList.size();j++){
+				if(_taskList[j]==task){
+					_taskList.erase(_taskList.begin()+j);
+					_editStatus=false;
+					return task;
+				}
+			}
 		}
 	}
 	return NULL;

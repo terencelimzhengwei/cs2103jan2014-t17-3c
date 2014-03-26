@@ -116,11 +116,13 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
 			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
 		}
-		dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
-		output = extractDate(dateCandidate,0);
-		if(output[0] && output[1] && output[2]) {
-			output[3] = 2;
-			dateFound = true;
+		if(isAllNumbers(dateCandidate)) {
+			dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
+			output = extractDate(dateCandidate,0);
+			if(output[0] && output[1] && output[2]) {
+				output[3] = 2;
+				dateFound = true;
+			}
 		}
 	}
 	
@@ -134,13 +136,15 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
 			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
 		}
+		
+		if(isAllNumbers(dateCandidate)) {
+			dateCandidate = parameters[wordReading-2] + "/" + dateCandidate + "/" + parameters[wordReading];
 
-		dateCandidate = parameters[wordReading-2] + "/" + dateCandidate + "/" + parameters[wordReading];
-
-		output = extractDate(dateCandidate, 0);
-		if(output[0] && output[1] && output[2]) {
-			output[3] = 3;
-			dateFound = true;
+			output = extractDate(dateCandidate, 0);
+			if(output[0] && output[1] && output[2]) {
+				output[3] = 3;
+				dateFound = true;
+			}
 		}
 	}
 	

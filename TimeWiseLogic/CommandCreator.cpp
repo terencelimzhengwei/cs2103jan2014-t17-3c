@@ -175,7 +175,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			}
 		} else if(_parser.extractTime(command, pos)[1]) {
 			vector<int> timeData = _parser.extractTime(command, pos);
-			times.push_back(_parser.strval(_parser.extractTime(param[pos], 0)[0]));
+			times.push_back(_parser.strval(timeData[0]));
 			descriptionWord[pos] = false;
 
 			// Check preposition

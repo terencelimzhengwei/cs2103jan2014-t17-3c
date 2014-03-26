@@ -10,9 +10,8 @@ Command_Display::~Command_Display(void)
 {
 }
 
-void Command_Display::setPreviousScreen(DISPLAY_TYPE* screen){
+void Command_Display::setCurrentScreen(DISPLAY_TYPE* screen){
 	_currentScreen=screen;
-	_previousScreen=*screen;
 }
 
 void Command_Display::setNextScreen(DISPLAY_TYPE screen){
@@ -25,6 +24,5 @@ bool Command_Display::execute(TaskList&){
 }
 
 bool Command_Display::undo(TaskList&){
-	*_currentScreen=_previousScreen;
-	return true;
+	return false;
 }

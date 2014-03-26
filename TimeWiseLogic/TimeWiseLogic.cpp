@@ -63,3 +63,7 @@ DISPLAY_TYPE TimeWiseLogic::getScreenToDisplay(){
 std::string TimeWiseLogic::getUserInput(){
 	return _userInput;
 }
+
+void TimeWiseLogic::changeDisplay(DISPLAY_TYPE type){
+	_displayType=type;
+}

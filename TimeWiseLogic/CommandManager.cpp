@@ -155,7 +155,7 @@ bool CommandManager::undoable(Command* pCommand){
 		return true;
 	}else if(pCommand->getType() == SEARCH){
 		return true;
-	}else if(pCommand->getType() == DISPLAY){
+	}else if(pCommand->getType() == ADDEDIT){
 		return true;
 	}
 	return false;

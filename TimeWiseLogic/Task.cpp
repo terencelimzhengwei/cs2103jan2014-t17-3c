@@ -255,18 +255,65 @@ bool Task::checkNewOverdue(){
 	return false;
 }
 
-void Task::setUserInput(std::string input){
-	_userInput=input;
-}
-
-std::string Task::getUserInput(){
-	return _userInput;
-}
-
 void Task::setEditStatus(bool value){
 	_editStatus=value;
 }
 
 bool Task::checkEditStatus(){
 	return _editStatus;
+}
+
+std::string Task::toString(){
+	std::string description = _taskDescription;
+	std::string startDate="";
+	std::string endDate="";
+	std::string endTime="";
+	std::string startTime="";
+	std::string priority="";
+	std::string category="";
+
+	if(_startDate!=NULL){
+		startDate=_startDate->toString();
+	}
+	if(_endDate!=NULL){
+		endDate=_endDate->toString();
+	}
+	if(_startTime!=NULL){
+		startTime=_startTime->toString();
+	}
+	if(_endTime!=NULL){
+		endTime=_endTime->toString();
+	}
+	priority=PRIORITY_STRING[_taskPriority];
+	category=_category;
+	
+	std::string command = description;
+	if(startDate!=""&&endDate!=""){
+		description+=" on ";
+		description+=startDate;
+		description+=" to ";
+		description+=endDate;
+	}else if(endDate!=""){
+		description+=" on ";
+		description+=endDate;
+	}
+
+	if(startTime!=""&&endTime!=""){
+		description+=" from ";
+		description+=startTime;
+		description+=" to ";
+		description+=endTime;
+	}else if(endTime!=""){
+		description+=" at ";
+		description+=endTime;
+	}
+
+	if(priority!=""){
+		description+=" !"+priority;
+	}
+	if(category!=""){
+		description+=" #"+category;
+	}
+
+	return description;
 }

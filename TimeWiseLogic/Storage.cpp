@@ -146,7 +146,8 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 				case 7:
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
-					if(status==DONE){
+					newTask->setStatusAsDone();
+					/*if(status==DONE){
 						newTask->setStatusAsDone();
 						break;
 					}else if(status==UNCOMPLETED){
@@ -157,7 +158,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 						break;
 					}else{
 						break;
-					}
+					}*/
 				}
 
 				getline(input, userInput);

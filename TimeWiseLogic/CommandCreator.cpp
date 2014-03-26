@@ -11,22 +11,24 @@ CommandCreator::~CommandCreator(void)
 }
 
 
-void CommandCreator::flagArg(std::string input){
+bool CommandCreator::hasArg(std::string input){
 	if (input.length() == 0) {
-		throw NoArgumentException();
+		return false;
 	}
+	return true;
 }
 
-void CommandCreator::flagDescription(std::string input){
+/*void CommandCreator::flagDescription(std::string input){
 	if (input.length() == 0 ) {
 		throw InvalidAddCommandInputException();
 	}
-}
+}*/
 
-void CommandCreator::flagIndex(unsigned int id) {
+bool CommandCreator::isValidIndex(int id) {
 	if (id < 0 || id == 0) {
-		throw OutOfRangeException();
+		return false;
 	}
+	return true;
 }
 
 
@@ -51,24 +53,52 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 		string parameter = _parser.removeFirstWord(userInput);
 		_parser.removeWhiteSpaces(parameter);
 		vector<string> parameters = _parser.splitBySpace(parameter);
-		unsigned int parameterNum = parameters.size();
+		int parameterNum = parameters.size();
 		switch (commandType) {
 			case ADD: {
-				return createCommandAdd(parameter,parameterNum,parameters,&displayType);
+				if(hasArg(parameter)) {
+						return createCommandAdd(parameter,parameterNum,parameters,&displayType);
+			    } else {
+						  throw NoArgumentException();
+						  return NULL;
+				}
 			}
 			case ADDEDIT:
 				return createCommandAddEdit(parameter,parameterNum,parameters,&displayType);
 			case DELETE: {
-				return createCommandDelete(parameter,&displayType);
+				if(hasArg(parameter)) {
+					return createCommandDelete(parameter,&displayType);
+				} else {
+					throw NoArgumentException();
+					return NULL;
+				}
+				
 			}
 			case EDIT: {
-				return createCommandEdit(parameters,&displayType,&commandLineInput);
+				if (hasArg(parameter)) {
+					return createCommandEdit(parameters,&displayType,&commandLineInput);
+				} else {
+					throw NoArgumentException();
+					return NULL;
+				}
+				
 			}
 			case DONE: {
-				return createCommandDone(parameter,&displayType);
+				if(hasArg(parameter)) {
+					return createCommandDone(parameter,&displayType);
+				} else {
+					throw NoArgumentException();
+					return NULL;
+				}
+			
 			}
 			case UNDONE: {
-				return createCommandUndone(parameter,&displayType);
+				if(hasArg(parameter)) {
+					return createCommandDone(parameter,&displayType);
+				} else {
+					throw NoArgumentException();
+					return NULL;
+				}
 			}
 			case CLEAR: {
 				return createCommandClear(parameter,&displayType);
@@ -80,18 +110,20 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 				return createCommandRedo();
 			}
 			case SEARCH: {
-				return createCommandSearch(parameter,&displayType);
+				if (hasArg(parameter)) {
+					return createCommandSearch(parameter,&displayType);
+				} else {
+					throw NoArgumentException();
+					return NULL;
+				}
+				
 			}
 			case DISPLAY:
 				return createCommandDisplay(parameter,&displayType);
 			default: {
-				throw InvalidCommandWordException();
 				return NULL;
 			}
 		}
-	} catch (InvalidCommandWordException& icwe) {
-		_feedbackExceptiontoUI = icwe.what();
-		throw InvalidCommandWordException();
 	} catch (NoArgumentException& nae) {
 		_feedbackExceptiontoUI = nae.what();
 		throw NoArgumentException();
@@ -104,18 +136,20 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (NotANumberException& nane) {
 		_feedbackExceptiontoUI = nane.what();
 		throw NotANumberException();
+	} catch (InvalidHeaderException& ihe) {
+		_feedbackExceptiontoUI = ihe.what();
+		throw InvalidHeaderException();
 	}
 
 }
 
-Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen)
+Command* CommandCreator::createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen)
 {
 	std::vector<std::string> dates;
 	std::vector<std::string> times;
 	std::string category = "";
 	std::string priority = "";
 	string description = "";
-	flagArg(parameter);
 	//int wordReading = parameterNum - 1;
 	if(_parser.isCategory(parameters.back())){
 		category=_parser.replaceWord("#","",parameters.back());
@@ -161,10 +195,9 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 
 	}
 
-	flagDescription(description);
 	_parser.removeWhiteSpaces(description);
 
-	for(int i=0;i<times.size();i++){
+	for(unsigned int i=0;i<times.size();i++){
 		times[i] = _parser.replaceWord(":","",times[i]);
 	}
 
@@ -293,13 +326,17 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 	
 Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE* type) {
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter);
-		flagIndex(id);
+		int id = _parser.toNum(parameter);
+		if(isValidIndex(id)){
 		id = id - 1;
 		Command_Delete* commandDelete = new Command_Delete;
 		commandDelete->setDeletionIndex(id);
 		commandDelete->setDisplayScreen(*type);
 		return commandDelete;
+		} else {
+			throw OutOfRangeException();
+			return NULL;
+		}
 	} else {
 		throw NotANumberException();
 		return NULL;
@@ -309,29 +346,42 @@ Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE*
 
 Command* CommandCreator::createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* userInput)
 {
-	Command_Edit* commandEdit = new Command_Edit;
-
-	commandEdit->setEditIndex(_parser.toNum(parameters[0])-1);
-	commandEdit->setUserInput(userInput);
-	commandEdit->setDisplayScreen(*displayType);
-	return commandEdit;
+	
+	int id = _parser.toNum(parameters[0]);
+	if (isValidIndex(id)) {
+		Command_Edit* commandEdit = new Command_Edit;
+		commandEdit->setEditIndex(id -1 );
+		commandEdit->setUserInput(userInput);
+		commandEdit->setDisplayScreen(*displayType);
+		return commandEdit;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
 }
 
 
 Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
 	if(*type==COMPLETE){
-		throw InvalidCommandWordException();
-		//throw UnableToSetAsDone
+		
+		throw UnableTosetAsDone();
+		return NULL;
+
 	}
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter);
-		flagIndex(id);
+		int id = _parser.toNum(parameter);
+		if(isValidIndex(id)) {
 		id--;
 		Command_Done* commandDone = new Command_Done;
 		commandDone->setCompletedIndex(id);
 		commandDone->setDisplayScreen(*type);
 		return commandDone;
 	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+	}
+	else {
 		throw NotANumberException();
 		return NULL;
 	} 
@@ -339,14 +389,18 @@ Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* t
 
 Command* CommandCreator::createCommandUndone(std::string parameter,DISPLAY_TYPE* type){
 	if(_parser.isAllNumbers(parameter)) {
-		unsigned int id = _parser.toNum(parameter);
-		flagIndex(id);
+		int id = _parser.toNum(parameter);
+		if (isValidIndex(id)) {
 		id--;
 		//implement protection
 		Command_Undone* commandUndone = new Command_Undone;
 		commandUndone->setUncompletedIndex(id);
 		commandUndone->setDisplayScreen(*type);
 		return commandUndone;
+		} else {
+			throw OutOfRangeException();
+			return NULL;
+		}
 	} else {
 		throw NotANumberException();
 		return NULL;
@@ -381,7 +435,6 @@ Command* CommandCreator::createCommandClear(std::string parameter,DISPLAY_TYPE* 
 }
 
 Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE* type){
-	flagArg(parameter);
 	Command_Search* commandSearch = new Command_Search;
 	_parser.removeWhiteSpaces(parameter);
 	commandSearch->setKeyword(parameter);
@@ -390,7 +443,6 @@ Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE*
 }
 
 Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*){
-	flagArg(parameter);
 	Command_Filter* commandFilter= new Command_Filter;
 	commandFilter->setKeyword(parameter);
 	return commandFilter;
@@ -411,19 +463,18 @@ Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* di
 		newCommand->setNextScreen(COMPLETE);
 	}else{
 		delete newCommand;
-		newCommand==NULL;
+		newCommand=NULL;
 		throw InvalidAddCommandInputException();
 	}
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandAddEdit(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen){
+Command* CommandCreator::createCommandAddEdit(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen){
 	std::vector<std::string> dates;
 	std::vector<std::string> times;
 	std::string category = "";
 	std::string priority = "";
 	string description = "";
-	flagArg(parameter);
 	//int wordReading = parameterNum - 1;
 	if(_parser.isCategory(parameters.back())){
 		category=_parser.replaceWord("#","",parameters.back());
@@ -469,10 +520,9 @@ Command* CommandCreator::createCommandAddEdit(std::string parameter, unsigned in
 
 	}
 
-	flagDescription(description);
 	_parser.removeWhiteSpaces(description);
 
-	for(int i=0;i<times.size();i++){
+	for(unsigned int i=0;i<times.size();i++){
 		times[i] = _parser.replaceWord(":","",times[i]);
 	}
 

@@ -22,6 +22,7 @@ public:
 	~Parser(void);
 
 	CMD_TYPE determineCommandType(std::string);
+	HEADER determineHeaderType(std::string);
 	
 	// Parser functions
 	vector<int> extractDate(string, int);

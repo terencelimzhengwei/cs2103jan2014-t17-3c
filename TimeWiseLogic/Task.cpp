@@ -39,7 +39,7 @@ Task::~Task(void){
 std::string Task::getDescription(){
 	return _taskDescription;
 }
-unsigned long long Task::getIndex(){
+int Task::getIndex(){
 	return _taskIndex;
 }
 
@@ -119,7 +119,7 @@ void Task::setCategory(std::string category){
 	_category = category;
 }
 
-void Task::setIndex(unsigned long long index){ 
+void Task::setIndex(int index){ 
 	assert(index>=0);
 	_taskIndex = index;
 }

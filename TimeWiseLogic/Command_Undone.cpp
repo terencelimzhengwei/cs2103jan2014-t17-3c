@@ -24,12 +24,12 @@ bool Command_Undone::execute(TaskList& tasklist){
 }
 
 bool Command_Undone::undo(TaskList& tasklist){
-	unsigned int index = tasklist.getTaskIndex(_task);
+	int index = tasklist.getTaskIndex(_task);
 	tasklist.setTaskAsDone(index);
 	return true;
 }
 
-void Command_Undone::setUncompletedIndex(unsigned int index){
+void Command_Undone::setUncompletedIndex(int index){
 	_taskIndex=index;
 }
 

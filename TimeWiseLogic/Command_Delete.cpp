@@ -17,7 +17,7 @@ Command_Delete::~Command_Delete(){
 	}
 }
 
-void Command_Delete::setDeletionIndex(unsigned int index){
+void Command_Delete::setDeletionIndex(int index){
 	_deletionIndex = index;
 }
 
@@ -29,15 +29,15 @@ void Command_Delete::setDeletionString(std::string deletionString){
 bool Command_Delete::execute(TaskList& taskList){
 	switch(_displayType){
 	case MAIN:
-		if(_deletionIndex!=DEFAULT_INDEX){
+		if(_deletionIndex!=DEFAULT_INDEX ){
 			_taskDeleted=taskList.getTask(_deletionIndex);
 			taskList.deleteTask(_deletionIndex);
 			_lastCmdCalled="execute";
 			return true;
-		}else if(_deletionString!=DEFAULT_EMPTY){
+		}/*else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete
 			return true;
-		}
+		}*/
 	case COMPLETE:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted=taskList.getCompletedTask(_deletionIndex);

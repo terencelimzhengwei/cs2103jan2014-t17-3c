@@ -11,7 +11,7 @@ Command_Done::Command_Done(void){
 Command_Done::~Command_Done(void){
 }
 
-void Command_Done::setCompletedIndex(unsigned int index){
+void Command_Done::setCompletedIndex(int index){
 	_taskIndex=index;
 }
 

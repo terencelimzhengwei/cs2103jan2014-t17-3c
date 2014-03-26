@@ -8,11 +8,11 @@ public:
 	~Command_Undone(void);
 	bool execute(TaskList& tasklist);
 	bool undo(TaskList& tasklist);
-	void setUncompletedIndex(unsigned int index);
+	void setUncompletedIndex(int index);
 	void setDisplayScreen(DISPLAY_TYPE screen);
 
 private:
-	unsigned int _taskIndex;
+	int _taskIndex;
 	Task* _task;
 	DISPLAY_TYPE _displayType;
 };

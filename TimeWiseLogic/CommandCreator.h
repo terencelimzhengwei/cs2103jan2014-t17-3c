@@ -25,13 +25,14 @@ public:
 	~CommandCreator(void);
 	std::string getFeedback();
 	//flag functions
-	void flagArg(std::string);
-	void flagDescription(std::string);
-	void flagIndex(unsigned int);
+	bool hasArg(std::string);
+	//void hasDescription(std::string);
+	bool isValidIndex(int);
 	//the below methods are responsible for creating the derived commands
+
 	Command* interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist);
-	Command* createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
-	Command* createCommandAddEdit(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
+	Command* createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
+	Command* createCommandAddEdit(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
 	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
 	Command* createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* _userInput);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);

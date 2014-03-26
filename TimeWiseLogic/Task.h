@@ -15,7 +15,7 @@ public:
 	~Task(void);
 	
 	//getter functions
-	unsigned long long getIndex();
+	int getIndex();
 	std::string getDescription();
 	Date* getEndDate();
 	Date* getStartDate();
@@ -26,7 +26,7 @@ public:
 	PRIORITY getPriority();	
 
 	//setter functions
-	void setIndex(unsigned long long);
+	void setIndex(int);
 	void setDescription(std::string desc);
 	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);
@@ -59,7 +59,7 @@ protected:
 	TASK_STATUS _taskStatus;
 	PRIORITY _taskPriority;
 	std::string _category;
-	unsigned long long _taskIndex;
+	int _taskIndex;
 
 	Date *_endDate;
 	Date *_startDate;

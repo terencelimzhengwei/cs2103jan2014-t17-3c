@@ -33,4 +33,6 @@ const char* InvalidDateTimeFormatException::what() const throw(){
 const char* InvalidClearCommandInputException::what() const throw(){
 	return INVALID_USER_INPUT_COMMAND_CLEAR;
 }
-
+const char* UnableTosetAsDone::what() const throw() {
+	return TASK_ALREADY_COMPLETED;
+}

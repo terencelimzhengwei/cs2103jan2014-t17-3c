@@ -47,6 +47,27 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
+HEADER Parser::determineHeaderType(std::string header) {
+	if(header == HEADER_STRING[0]) {
+		return DESCRIPTION;
+	} else if(header == HEADER_STRING[1]) {
+		return START_DATE;
+	} else if(header == HEADER_STRING[2]) {
+		return START_TIME;
+	} else if(header == HEADER_STRING[3]) {
+		return DUE_DATE;
+	} else if(header == HEADER_STRING[4]) {
+		return DUE_TIME;
+	} else if(header == HEADER_STRING[5]) {
+		return CATEGORY_HEADER;
+	} else if(header == HEADER_STRING[6]) {
+		return PRIORITY_HEADER;
+	} else {
+		return UNDEFINED_HEADER;
+	}
+
+}
+
 vector<int> Parser::extractDate(string command, int pos=-1) {
 	string monthListLong[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 	string monthListShort[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};

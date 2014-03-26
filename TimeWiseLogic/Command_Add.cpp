@@ -84,7 +84,7 @@ bool Command_Add::undo(TaskList& taskList){
 	if (taskList.isEmpty()){
 		return false;
 	} else {
-		unsigned int index = taskList.getTaskIndex(_addedTask);
+		int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
 		*_currentScreen=_previousScreen;
 		return true;

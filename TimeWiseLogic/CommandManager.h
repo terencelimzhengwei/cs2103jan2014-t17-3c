@@ -34,7 +34,7 @@ private:
 	TaskList& _taskList;
 	std::list<Command*>	undoList;
 	std::list<Command*>	redoList;
-	int m_nUndoLevel;
+	unsigned int m_nUndoLevel;
 	int m_nCleanCount;
 };
 

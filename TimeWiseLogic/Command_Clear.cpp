@@ -12,7 +12,7 @@ Command_Clear::Command_Clear(CLEAR_TYPE clearType){
 Command_Clear::~Command_Clear(void){
 	if(_lastCmdCalled == "execute"){
 		if(!_deletedTasks.empty()){
-			for(int i=0;i<_deletedTasks.size();i++){
+			for(unsigned int i=0;i<_deletedTasks.size();i++){
 				delete _deletedTasks[i];
 				_deletedTasks[i]=NULL;
 			}
@@ -97,13 +97,13 @@ void Command_Clear::clearAll(TaskList& tasklist){
 }
 
 void Command_Clear::undoCompletedTasks(TaskList& tasklist){
-	for(int i=0;i<_deletedTasks.size();i++){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
 		tasklist.addTaskToDoneList(*_deletedTasks[i]);
 	}
 }
 
 void Command_Clear::undoUncompletedTasks(TaskList& tasklist){
-	for(int i=0;i<_deletedTasks.size();i++){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
 		tasklist.addTask(*_deletedTasks[i]);
 	}
 }
@@ -116,7 +116,7 @@ void Command_Clear::undoAll(TaskList& tasklist){
 void Command_Clear::clearScreen(TaskList& tasklist){
 	if(_displayType==SEARCHED){
 		std::vector<Task*> searchedTask=tasklist.getSearchResults();
-		for(int i=0;i<searchedTask.size();i++){
+		for(unsigned int i=0;i<searchedTask.size();i++){
 			_deletedTasks.push_back(searchedTask[i]);
 		}
 		tasklist.deleteSearchedTasks();

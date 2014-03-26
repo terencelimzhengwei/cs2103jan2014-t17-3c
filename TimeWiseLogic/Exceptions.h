@@ -60,4 +60,9 @@ class InvalidClearCommandInputException: public std::exception {
 public:
 	virtual const char* what() const throw();
 };
+class UnableTosetAsDone: public std:: exception {
+public:
+	virtual const char* what() const throw();
+};
+
 #endif

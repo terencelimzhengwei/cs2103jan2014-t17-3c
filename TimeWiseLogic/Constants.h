@@ -7,11 +7,11 @@
 #include <ctime>
 
 static const int CMD_TYPE_COUNT		    = 11;
-static const int PRIORITY_COUNT			= 3;
+static const int PRIORITY_COUNT			= 6;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
 static const int MAX_PREPOSITION        = 10;
-static const int HEADER_COUNT			= 9;
+static const int HEADER_COUNT			= 8;
 static const int DAYS_COUNT             = 19;
 static const int TIME_COUNT             = 2;
 
@@ -25,12 +25,14 @@ enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum SEARCH_TYPE{KEYWORD,CATEGORY,STATUS,PRI,EMPTYSLOT,DATE,DEFAULT};
 enum CLEAR_TYPE{ALL,UNCOMPLETED_TASKS,COMPLETED_TASKS,SCREEN};
 enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE};
+enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, PRIORITY_HEADER, UNDEFINED_HEADER};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
 { "add","delete","edit","clear","display", "done", "undone","undo", "redo","search","filter"};
-static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low"};
+static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low", "H", "M", "L"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};
+static const std::string HEADER_STRING[HEADER_COUNT] = {"description", "startDate", "startTime","dueDate", "dueTime", "category", "priority"};
 static const std::string DAYS_IN_WEEK[DAYS_COUNT] = 
 {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", 
 "mon", "tues", "wed", "thurs", "fri", "sat", "sun", "today", "tomorrow", "2day", "tmr", "tml"};
@@ -60,5 +62,5 @@ static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter
 static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
 static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
 static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid parameters for Clear. Only accepts ALL,DONE,UNDONE";
-
+static const char* TASK_ALREADY_COMPLETED = "This task has already been done";
 #endif // !_CONSTANTS_H

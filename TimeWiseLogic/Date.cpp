@@ -50,7 +50,7 @@ void Date::setDateAsTomorrow() {
 					_year = temp.getCurrentYear();
 				}	
 			} else {
-				_month = temp.getCurrentMonth() + 1;
+				_month = temp.getCurrentMonth();
 				_dayNumber = temp.getCurrentDay() + 1;
 				_year = temp.getCurrentYear();
 			}
@@ -60,7 +60,7 @@ void Date::setDateAsTomorrow() {
 			_month = 3;
 			_year = temp.getCurrentYear();
 		} else {
-			_month = temp.getCurrentMonth() + 1;
+			_month = temp.getCurrentMonth();
 			_dayNumber = temp.getCurrentDay() + 1;
 			_year = temp.getCurrentYear();
 		}
@@ -68,10 +68,10 @@ void Date::setDateAsTomorrow() {
 		temp.getCurrentMonth() == 10|| temp.getCurrentMonth() == 11) {
 			if(temp.getCurrentDay()== 30) {
 				_dayNumber = 1;
-				_month = temp.getCurrentMonth();
+				_month = temp.getCurrentMonth() + 1;
 				_year = temp.getCurrentYear();
 			} else {
-				_month = temp.getCurrentMonth() + 1;
+				_month = temp.getCurrentMonth();
 				_dayNumber = temp.getCurrentDay() + 1;
 				_year = temp.getCurrentYear();
 			}

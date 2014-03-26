@@ -15,7 +15,6 @@ public:
 	~ClockTime(void);
 	void setTimeNow(int time);
 	std::string toString();
-	std::string toSaveFormat();
 	int getTime();
 	bool checkOverdueTime();
 	TIMEDATE_STATUS isLater(ClockTime* otherTime);

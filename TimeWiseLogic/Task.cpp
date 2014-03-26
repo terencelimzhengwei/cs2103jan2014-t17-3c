@@ -273,10 +273,10 @@ std::string Task::toString(){
 	std::string category="";
 
 	if(_startDate!=NULL){
-		startDate=_startDate->toString();
+		startDate=_startDate->toFormat();
 	}
 	if(_endDate!=NULL){
-		endDate=_endDate->toString();
+		endDate=_endDate->toFormat();
 	}
 	if(_startTime!=NULL){
 		startTime=_startTime->toString();

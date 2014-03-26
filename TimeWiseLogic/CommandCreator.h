@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include "Command.h"
 #include "Command_Add.h"
+#include "Command_AddEdit.h"
 #include "Command_Delete.h"
 #include "Command_Edit.h"
 #include "Command_Clear.h"
@@ -28,8 +29,9 @@ public:
 	void flagDescription(std::string);
 	void flagIndex(unsigned int);
 	//the below methods are responsible for creating the derived commands
-	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&);
+	Command* interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist);
 	Command* createCommandAdd(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
+	Command* createCommandAddEdit(std::string parameter, unsigned int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
 	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
 	Command* createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* _userInput);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);

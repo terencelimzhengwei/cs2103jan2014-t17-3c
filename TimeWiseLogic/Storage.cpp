@@ -27,12 +27,12 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks){
 		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n";
 		writeFile << "Start_Date: ";
 		if(listOfTasks.getTask(i)->getStartDate()!=NULL){
-			writeFile<< listOfTasks.getTask(i)->getStartDate()->toSaveFormat();
+			writeFile<< listOfTasks.getTask(i)->getStartDate()->toFormat();
 		}
 
 		writeFile <<"\n"<< "End_Date: ";
 		if(listOfTasks.getTask(i)->getEndDate()!=NULL){
-			writeFile<< listOfTasks.getTask(i)->getEndDate()->toSaveFormat();
+			writeFile<< listOfTasks.getTask(i)->getEndDate()->toFormat();
 		}
 		writeFile <<"\n"<< "Start_Time: ";
 		if(listOfTasks.getTask(i)->getStartTime()!=NULL){
@@ -59,12 +59,12 @@ void Storage::saveDoneTasks(TaskList& listOfTasks){
 		writeFile << "Description: " << listOfTasks.getCompletedTask(i)->getDescription() << "\n";
 		writeFile << "Start_Date: ";
 		if(listOfTasks.getCompletedTask(i)->getStartDate()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getStartDate()->toSaveFormat();
+			writeFile<< listOfTasks.getCompletedTask(i)->getStartDate()->toFormat();
 		}
 
 		writeFile <<"\n"<< "End_Date: ";
 		if(listOfTasks.getCompletedTask(i)->getEndDate()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getEndDate()->toSaveFormat();
+			writeFile<< listOfTasks.getCompletedTask(i)->getEndDate()->toFormat();
 		}
 		writeFile <<"\n"<< "Start_Time: ";
 		if(listOfTasks.getCompletedTask(i)->getStartTime()!=NULL){

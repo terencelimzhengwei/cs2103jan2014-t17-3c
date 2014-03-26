@@ -86,7 +86,6 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
 			ui.userInput->setText(qOrigAction);
 			ui.userInput->selectAll();
-			ui.userInput->setCursorPosition(0);
 			setMainData();
 		}
 		else {

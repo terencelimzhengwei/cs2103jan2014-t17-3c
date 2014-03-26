@@ -50,12 +50,15 @@ void CommandManager::DoCommand(Command* pCommand)
 		ClearRedoList();
 		// Execute the command and add it to undo list if succeeded
 		if (pCommand->execute(_taskList)){
-		if(undoable(pCommand)){
-			AddUndo(pCommand);
-		}else{
-			delete pCommand;
-			pCommand=NULL;
-		}
+			if(pCommand->getType()==ADDEDIT){
+				_taskList.setEditStatus(false);
+			}
+			if(undoable(pCommand)){
+				AddUndo(pCommand);
+			}else{
+				delete pCommand;
+				pCommand=NULL;
+			}
 	}
 	}
 }

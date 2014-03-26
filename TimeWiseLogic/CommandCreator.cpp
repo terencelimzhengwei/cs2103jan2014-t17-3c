@@ -281,7 +281,6 @@ Command* CommandCreator::createCommandAdd(std::string parameter, unsigned int pa
 
 	
 	commandAdd->setPreviousScreen(screen);
-	commandAdd->setUserInput(parameter);
 	return commandAdd;
 }
 

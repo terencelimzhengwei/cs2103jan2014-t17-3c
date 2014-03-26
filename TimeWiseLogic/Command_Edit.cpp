@@ -50,8 +50,10 @@ bool Command_Edit::execute(TaskList& taskList){
 	switch(_displayType){
 	case MAIN:
 		_taskEdited = taskList.getTask(_taskIndex);
+		break;
 	case SEARCHED:
 		_taskEdited = taskList.getSearchedTask(_taskIndex);
+		break;
 	case COMPLETE:
 		throw InvalidCommandWordException();
 	default:
@@ -61,10 +63,10 @@ bool Command_Edit::execute(TaskList& taskList){
 	if(_header=="description"){
 		_taskEdited->setDescription(_taskDescription);
 		return true;
-	}else if(_header=="start date"){
+	}else if(_header=="startdate"){
 		_taskEdited->setStartDate(*_startDate);
 		return true;
-	}else if(_header=="end date"){
+	}else if(_header=="duedate"){
 		_taskEdited->setEndDate(*_endDate);
 		return true;
 	}else if(_header=="priority"){
@@ -73,10 +75,10 @@ bool Command_Edit::execute(TaskList& taskList){
 	}else if(_header=="category"){
 		_taskEdited->setCategory(_category);
 		return true;
-	}else if(_header=="start time"){
+	}else if(_header=="starttime"){
 		_taskEdited->setStartTime(*_startTime);
 		return true;
-	}else if(_header=="end time"){
+	}else if(_header=="duetime"){
 		_taskEdited->setEndTime(*_endTime);
 		return true;
 	}
@@ -86,17 +88,17 @@ bool Command_Edit::execute(TaskList& taskList){
 bool Command_Edit::undo(TaskList& taskList){
 	if(_header=="description"){
 		_taskEdited->setDescription(_originalTask.getDescription());
-	}else if(_header=="start date"){
+	}else if(_header=="startdate"){
 		_taskEdited->setStartDate(*_originalTask.getStartDate());
-	}else if(_header=="end date"){
+	}else if(_header=="duedate"){
 		_taskEdited->setEndDate(*_originalTask.getEndDate());
 	}else if(_header=="priority"){
 		_taskEdited->setPriority(_originalTask.getPriority());
 	}else if(_header=="category"){
 		_taskEdited->setCategory(_originalTask.getTaskCategory());
-	}else if(_header=="start time"){
+	}else if(_header=="starttime"){
 		_taskEdited->setStartTime(*_originalTask.getStartTime());
-	}else if(_header=="end time"){
+	}else if(_header=="duetime"){
 		_taskEdited->setEndTime(*_originalTask.getEndTime());
 	}
 	return true;

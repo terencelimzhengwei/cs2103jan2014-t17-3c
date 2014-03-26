@@ -356,7 +356,9 @@ void TimeWiseGUI::updateTime() {
 	ui.label_time->setText(time.toString());
  	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();
-		setMainData();
+		if(_logic.getScreenToDisplay()==MAIN){
+			setMainData();
+		}
 	}
 }
 

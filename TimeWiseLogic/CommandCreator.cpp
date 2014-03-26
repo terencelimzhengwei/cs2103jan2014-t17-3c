@@ -324,16 +324,16 @@ Command* CommandCreator::createCommandEdit(vector<std::string> parameters,DISPLA
 
 	if(header=="description") {
 		commandEdit->setDescription(content);
-	} else if(header=="startDate") {
+	} else if(header=="startdate") {
 		int dateInt = _parser.toNum(_parser.replaceWord("/","",content));
 		commandEdit->setStartDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-	} else if(header=="startTime") {
+	} else if(header=="starttime") {
 		int timeInt = _parser.toNum(_parser.replaceWord("/","",content));
 		commandEdit->setStartTime(ClockTime(timeInt));
-	} else if(header=="dueDate") {
+	} else if(header=="duedate") {
 		int dateInt = _parser.toNum(_parser.replaceWord("/","",content));
 		commandEdit->setEndDate(Date((dateInt/1000000),(dateInt/10000)%100,dateInt%10000));
-	} else if(header=="dueTime") {
+	} else if(header=="duetime") {
 		int timeInt = _parser.toNum(_parser.replaceWord("/","",content));
 		commandEdit->setEndTime(ClockTime(timeInt));
 	} else if(header=="category") {

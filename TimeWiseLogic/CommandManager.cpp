@@ -47,7 +47,9 @@ void CommandManager::DoCommand(Command* pCommand)
 		Redo();
 	}else{
 		// Clear redo list
-		ClearRedoList();
+		if(pCommand->getType()!=DISPLAY){
+			ClearRedoList();
+		}
 		// Execute the command and add it to undo list if succeeded
 		if (pCommand->execute(_taskList)){
 			if(pCommand->getType()==ADDEDIT){

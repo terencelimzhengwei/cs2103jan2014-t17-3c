@@ -397,3 +397,13 @@ Task* TaskList::deleteEditTaskFromSearch(){
 	}
 	return NULL;
 }
+
+int TaskList::getTaskIndexInSearchedList(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<_searchedTaskList.size();i++){
+		if(task==_searchedTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}

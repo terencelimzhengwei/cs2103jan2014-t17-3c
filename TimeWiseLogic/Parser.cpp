@@ -473,9 +473,40 @@ PRIORITY Parser::getPriority(std::string input){
 	}
 }
 
-Date* Parser::createDate(string date) {
+/*Date* Parser::createDate(string date) {
 	int dateInt = toNum(date);
 	return new Date(dateInt/1000000, (dateInt/10000)%100, dateInt%10000);
+}*/
+
+Date* Parser::createDate(std::string date)
+{
+	Date* _date = new Date;
+	std::string dateString = date;
+	std::vector<std::string> dateVector;
+	std::string temp;
+	std::string day="",month="",year="";
+	int _day,_month,_year;
+	unsigned int index= 0, index1= 0;
+	index = dateString.find_first_of("/");
+	day = dateString.substr(0,index);
+	temp = dateString.substr(index+1);
+	if(temp.find_first_of("/")!=std::string::npos){
+		index1 = temp.find_first_of("/");
+		month = temp.substr(0,index1);
+		year = temp.substr(index1+1);
+		_year = toNum(year);
+	}else{
+		month = temp.substr(index+1);
+		_year = _date->getCurrentYear();
+	}
+
+	_day = toNum(day);
+	_month = toNum(month);
+	if(_year<100){
+		_year=_year + 2000;
+	}
+	Date* newDate = new Date(_day,_month,_year);
+	return newDate;
 }
 
 ClockTime* Parser::createTime(string time) {

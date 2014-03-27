@@ -4,12 +4,30 @@ Date::Date(){
 }
 
 Date::Date(int day, int month, int year){
+	if(month<=0||month>12||year<=0||day<=0){
+		throw InvalidDateTimeFormatException();
+	}else{
+		int leapYear =isLeapYear();
+		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month]){
+			throw InvalidDateTimeFormatException();
+			//LeapYear invalid exception
+		}
+	}
 	_dayNumber = day;
 	_month = month;
 	_year = year;
 }
 
 Date::Date(Date& date){
+	if(date._month<=0||date._month>12||date._year<=0||date._year<=0){
+		throw InvalidDateTimeFormatException();
+	}else{
+		int leapYear =isLeapYear();
+		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][date._month]){
+			throw InvalidDateTimeFormatException();
+			//LeapYear invalid exception
+		}
+	}
 	_dayNumber = date._dayNumber;
 	_month = date._month;
 	_year =date._year;
@@ -21,6 +39,15 @@ Date::~Date(){
 }
 
 void Date::setDate(int day, int month, int year){
+	if(month<=0||month>12||year<=0||day<=0){
+		throw InvalidDateTimeFormatException();
+	}else{
+		int leapYear =isLeapYear();
+		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month]){
+			throw InvalidDateTimeFormatException();
+			//LeapYear invalid exception
+		}
+	}
 	_dayNumber=day;
 	_month=month;
 	_year=year;
@@ -214,4 +241,19 @@ bool Date::compare(Date* date){
 		return true;
 	}
  	return false;
+}
+
+int Date::isLeapYear(){
+	int yearType = NOT_LEAP_YEAR;
+
+	if ( _year % 400 == 0){
+		yearType = LEAP_YEAR;
+	}
+	else if( _year % 100 == 0){
+		yearType = NOT_LEAP_YEAR;
+	}
+	else if ( _year % 4 == 0){
+		yearType = LEAP_YEAR;
+	}
+	return yearType;
 }

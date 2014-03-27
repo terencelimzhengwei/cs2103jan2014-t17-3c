@@ -9,24 +9,33 @@ namespace TimeWiseUnitTest
 	{
 	public:
 		TEST_METHOD(CommandAddTest) {
+			//equivalence partition: floating task, timed task, deadline task
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
 			ClockTime startTime(1200);
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			DISPLAY_TYPE displayScreen = MAIN;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setPreviousScreen(&displayScreen);
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
 			commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
+			commandToBeExecuted[1]->setPreviousScreen(&displayScreen);
+
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
+			commandToBeExecuted[2]->setPriority(HIGH);
+			commandToBeExecuted[2]->setCategory("test");
+			commandToBeExecuted[2]->setPreviousScreen(&displayScreen);
+
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
@@ -34,6 +43,10 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
+			commandToBeExecuted[3]->setPriority(HIGH);
+			commandToBeExecuted[3]->setCategory("test");
+			commandToBeExecuted[3]->setPreviousScreen(&displayScreen);
+
 			
 			commandToBeExecuted[0]->execute(_taskList);
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
@@ -308,21 +321,63 @@ namespace TimeWiseUnitTest
 
 		}
 		TEST_METHOD(ClockTimeTest) {
-			ClockTime* newTime = new ClockTime(1200);
-			ClockTime* otherTime = new ClockTime(1230);
-			Assert::AreEqual(1200, newTime->getTime());
-			Assert::AreEqual("1200",newTime->toString().c_str());
-			//Assert::IsTrue(newTime->checkOverdueTime());
-			Assert::AreEqual(static_cast<int>(EARLIER),static_cast<int>(newTime->isLater(otherTime)));
+			//equivalence partition: set time as negative, set time as positive and below 2359, set time above 2359
+			//Boundary Value analysis: set time as -1, set time as 0000, set time as 2400,set time as 2359, set time as 2360
+			ClockTime* newTime = new ClockTime(2359);
+			ClockTime* otherTime = new ClockTime(0000);
+			Assert::AreEqual(2359, newTime->getTime());
+			Assert::AreEqual("2359",newTime->toString().c_str());
+			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newTime->isLater(otherTime)));
+			try{
+				newTime->setTimeNow(-1);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newTime->setTimeNow(2360);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newTime->setTimeNow(2400);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			delete newTime;
+			delete otherTime;
 		}
 		TEST_METHOD(DateTest) {
-			Date* newDate = new Date(12,2,2014);
-			Date* otherDate = new Date(15,2,2014);
-			Assert::AreEqual(12,newDate->getDayNumber());
-			Assert::AreEqual(2,newDate->getMonth());
+			//equivalence partition: negative day month year, positive day month year=> leapYear, nonleapYEar=>validDayMonthYear InvalidDayMonthYear
+			//Boundary Value analysis: set day month year as negative or zero, set month above 12, set day above valid day
+			Date* newDate = new Date(31,12,2014);
+			Date* otherDate = new Date(1,1,2014);
+			Assert::AreEqual(31,newDate->getDayNumber());
+			Assert::AreEqual(12,newDate->getMonth());
 			Assert::AreEqual(2014,newDate->getYear());
-			Assert::AreEqual(static_cast<int>(EARLIER),static_cast<int>(newDate->isLater(otherDate)));
-			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->checkOverdue()));
+			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->isLater(otherDate)));
+			try{
+				newDate->setDate(0,0,0);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newDate->setDate(31,2,2014);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newDate->setDate(31,13,2014);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			newDate->setDate(28,2,2014);
+			try{
+				newDate->setDate(29,2,2016);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			delete newDate;
+			delete otherDate;
 		}
 
 		TEST_METHOD(updateOverdueTaskTest) {

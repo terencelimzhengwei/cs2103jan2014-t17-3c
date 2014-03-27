@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <ctime>
 #include <sstream>
+#include <exception>
+#include "Exceptions.h"
 #include "Constants.h"
 
 class ClockTime

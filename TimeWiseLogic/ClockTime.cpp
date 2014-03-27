@@ -5,11 +5,19 @@ ClockTime::ClockTime(){
 }
 
 ClockTime::ClockTime(int time){
+	if(time/100<0||time/100>23||time%100>59||time%100<0||time<0){
+		delete this;
+		throw InvalidDateTimeFormatException();
+	}
 	_time=time;
 
 }
 
 ClockTime::ClockTime(ClockTime& time){
+	if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()>59||time.getTime()<0||time.getTime()<0){
+		delete this;
+		throw InvalidDateTimeFormatException();
+	}
 	_time= time._time;
 }
 
@@ -20,6 +28,9 @@ ClockTime::~ClockTime(void){
 
 
 void ClockTime::setTimeNow(int time){
+	if(time<0||time/100<0||time/100>23||time%100>59||time%100<0){
+		throw InvalidDateTimeFormatException();
+	}
 	_time=time;
 }
 

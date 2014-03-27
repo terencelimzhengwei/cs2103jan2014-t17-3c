@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <sstream>
+#include "Exceptions.h"
 #include "Calendar.h"
 #include "Constants.h"
 //#include "Parser.h"
@@ -26,12 +27,15 @@ public:
 	TIMEDATE_STATUS isLater(Date* otherDate);
 	std::string toString();
 	std::string toFormat();
+	int isLeapYear();
 
 	int getCurrentYear();
 	int getCurrentMonth();
 	int getCurrentDay();
 	void setDateAsTomorrow();
 	bool compare(Date* date);
+	void setDate(int day, int month, int year);
+
 
 private:
 	time_t _currentTime;
@@ -43,6 +47,5 @@ private:
 	int _day;
 	std::string _dayInString;
 	void setDateAsToday();
-	void setDate(int day, int month, int year);
 };
 #endif

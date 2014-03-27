@@ -53,8 +53,7 @@ bool Command_Clear::execute(TaskList& tasklist){
 bool Command_Clear::undo(TaskList& tasklist){
 	switch(_clearType){
 	case ALL:
-		undoCompletedTasks(tasklist);
-		undoUncompletedTasks(tasklist);
+		undoAll(tasklist);
 		break;
 	case UNCOMPLETED_TASKS:
 		undoUncompletedTasks(tasklist);
@@ -109,8 +108,13 @@ void Command_Clear::undoUncompletedTasks(TaskList& tasklist){
 }
 
 void Command_Clear::undoAll(TaskList& tasklist){
-	undoCompletedTasks(tasklist);
-	undoUncompletedTasks(tasklist);
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		if(_deletedTasks[i]->getTaskStatus()==OVERDUE||_deletedTasks[i]->getTaskStatus()==UNCOMPLETED){
+			tasklist.addTask(*_deletedTasks[i]);
+		}else{
+			tasklist.addTaskToDoneList(*_deletedTasks[i]);
+		}
+	}
 }
 
 void Command_Clear::clearScreen(TaskList& tasklist){

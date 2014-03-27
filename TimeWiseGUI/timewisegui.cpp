@@ -18,7 +18,7 @@ const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: ID or keywords";
 const char* DISPLAY_FORMAT = "display: main or completed";
 const char* DONE_FORMAT = "done: ID or #category";
-const char* EDIT_FORMAT = "edit: ID header contents";
+const char* EDIT_FORMAT = "edit: ID";
 const char* SEARCH_FORMAT = "search: keywords";
 const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, display, done, edit, search, undo, redo";
 

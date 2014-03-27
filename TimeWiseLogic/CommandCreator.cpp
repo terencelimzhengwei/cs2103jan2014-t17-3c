@@ -94,7 +94,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 			case UNDONE: {
 				if(hasArg(parameter)) {
-					return createCommandDone(parameter,&displayType);
+					return createCommandUndone(parameter,&displayType);
 				} else {
 					throw NoArgumentException();
 					return NULL;
@@ -162,7 +162,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			descriptionWord[pos] = false;	// It is a priority, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
 			vector<int> dateData = _parser.extractDate(command, pos);
-			dates.push_back(_parser.strval(dateData[0]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[2]));
+			dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
 
 			for(int i=0 ; i<dateData[3] ; i++) {
 				descriptionWord[pos - i] = false;
@@ -297,7 +297,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 				commandAdd->setEndTime(*_parser.createTime(times.back()));
 				break;
 			case 2:
-				commandAdd->setEndTime(*_parser.createTime(times.back()));
+				commandAdd->setStartTime(*_parser.createTime(times.back()));
 				times.pop_back();
 				commandAdd->setEndTime(*_parser.createTime(times.back()));
 				break;

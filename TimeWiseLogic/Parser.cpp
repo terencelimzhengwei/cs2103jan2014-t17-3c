@@ -459,16 +459,16 @@ bool Parser::isTimeFormat(string time) {
 }
 
 PRIORITY Parser::getPriority(std::string input){
-	std::string characterlist;
-	characterlist=input.substr(1);
+	std::string characterlist=input;
 	if(characterlist=="h"||characterlist=="high"){
 		return HIGH;
-	}else if(characterlist=="m"||characterlist=="medium"){
+	}else if(characterlist=="m"||characterlist=="medium"||characterlist=="med"){
 		return MEDIUM;
 	}else if(characterlist=="l"||characterlist=="low"){
 		return LOW;
 	}else{
-		//exceptions
+		//Invalid Priority Exception
+		throw InvalidAddCommandInputException();
 		return LOW;
 	}
 }

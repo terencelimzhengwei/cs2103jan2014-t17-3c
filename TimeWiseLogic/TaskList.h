@@ -33,11 +33,10 @@ public:
 	int getTaskIndexInSearchedList(Task* task);
 	void clearTask();
 	Task* getTaskWithKeyword(std::string& keyWord);
-	void populateSearchList(std::string& keyword,SEARCH_TYPE searchType);
-	void populateFilterList(std::string& keyword,SEARCH_TYPE searchType);
-	void populateFilterList(Date* date,SEARCH_TYPE searchType);
+	void populateSearchList(std::string& keyword);
+	void populateFilterList(std::string& category);
+	void populateFilterList(Date* date);
 	void populateFilterList(PRIORITY priority);
-	void populateFilterList(TASK_STATUS status);
 
 	std::vector<Task*> getSearchResults();
 	std::vector<Task*> getOverdueTaskList();

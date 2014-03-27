@@ -2,8 +2,7 @@
 
 Command_Filter::Command_Filter(void){
 	_type=FILTER;
-	_keyword=DEFAULT_EMPTY;
-	_searchType=DEFAULT;
+	_filterType=CATEGORY;
 	_priority=DEFAULTPRI;
 	_category=DEFAULT_EMPTY;
 	_date=NULL;
@@ -13,18 +12,14 @@ Command_Filter::Command_Filter(void){
 Command_Filter::~Command_Filter(void){
 }
 
-void Command_Filter::setKeyword(std::string keyword){
-	_searchType=KEYWORD;
-	_keyword=keyword;
-}
-
 bool Command_Filter::execute(TaskList& tasklist){
-	switch(_searchType){
+	*_currentScreen=FILTERED;
+	switch(_filterType){
 	case CATEGORY:
-		tasklist.populateFilterList(_category,CATEGORY);
+		tasklist.populateFilterList(_category);
 		return true;
 	case DATE:
-		tasklist.populateFilterList(_date,DATE);
+		tasklist.populateFilterList(_date);
 		return true;
 	case PRI:
 		tasklist.populateFilterList(_priority);
@@ -35,23 +30,29 @@ bool Command_Filter::execute(TaskList& tasklist){
 }
 
 bool Command_Filter::undo(TaskList& tasklist){
-	return false;
+	*_currentScreen=_previousScreen;
+	return true;
 }
 
 void Command_Filter::setCategory(std::string category){
-	_searchType=CATEGORY;
+	_filterType=CATEGORY;
 
 	_category=category;
 }
 
 void Command_Filter::setPriority(PRIORITY priority){
-	_searchType=PRI;
+	_filterType=PRI;
 
 	_priority=priority;
 }
 
 void Command_Filter::setDate(Date* date){
-	_searchType=DATE;
+	_filterType=DATE;
 
-	_date=date;
+	_date=new Date(*date);
+}
+
+void Command_Filter::setPreviousScreen(DISPLAY_TYPE* screen){
+	_previousScreen=*screen;
+	_currentScreen=screen;
 }

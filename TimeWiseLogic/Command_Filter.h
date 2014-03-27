@@ -8,17 +8,19 @@ public:
 
 	bool execute(TaskList& tasklist);
 	bool undo(TaskList& tasklist);
-	void setKeyword(std::string keyword);
 	void setCategory(std::string category);
 	void setPriority(PRIORITY priority);
 	void setDate(Date* date);
+	void setPreviousScreen(DISPLAY_TYPE* screen);
 
 private:
-	std::string _keyword;
-	SEARCH_TYPE _searchType;
+	FILTER_TYPE _filterType;
 	std::string _category;
 	PRIORITY _priority;
 	Date* _date;
+	
+	DISPLAY_TYPE _previousScreen;
+	DISPLAY_TYPE* _currentScreen;
 
 };
 

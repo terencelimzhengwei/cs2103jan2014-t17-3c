@@ -14,7 +14,7 @@ ClockTime::ClockTime(int time){
 }
 
 ClockTime::ClockTime(ClockTime& time){
-	if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()>59||time.getTime()<0||time.getTime()<0){
+	if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()%100>59||time.getTime()%100<0){
 		delete this;
 		throw InvalidDateTimeFormatException();
 	}

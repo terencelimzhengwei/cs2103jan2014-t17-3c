@@ -162,7 +162,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			descriptionWord[pos] = false;	// It is a priority, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
 			vector<int> dateData = _parser.extractDate(command, pos);
-			dates.push_back(_parser.strval(dateData[0] + dateData[1]*10000 + dateData[2]*1000000));
+			dates.push_back(_parser.strval(dateData[0]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[2]));
 
 			for(int i=0 ; i<dateData[3] ; i++) {
 				descriptionWord[pos - i] = false;

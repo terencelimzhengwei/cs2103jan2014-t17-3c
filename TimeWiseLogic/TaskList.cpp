@@ -73,14 +73,12 @@ Task* TaskList::getTaskWithKeyword(std::string& keyWord){
 	return NULL;
 }
 
-void TaskList::populateSearchList(std::string& keyword,SEARCH_TYPE searchType){
+void TaskList::populateSearchList(std::string& keyword)
+{
 	_searchedTaskList.clear();
-
-	if(searchType == KEYWORD){
-		for(unsigned int i=0;i<_taskList.size();i++){
-			if(_taskList[i]->hasKeyword(keyword)){
-				_searchedTaskList.push_back(_taskList[i]);
-			}
+	for(unsigned int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasKeyword(keyword)){
+			_searchedTaskList.push_back(_taskList[i]);
 		}
 	}
 	return;
@@ -215,27 +213,22 @@ int TaskList::doneSize(){
 	return _completedTaskList.size();
 }
 
-void TaskList::populateFilterList(std::string& keyword,SEARCH_TYPE searchType){
+void TaskList::populateFilterList(std::string& category){
 	_filteredTaskList.clear();
-
-	if(searchType==CATEGORY){
-		for(unsigned int i=0;i<_taskList.size();i++){
-			if(_taskList[i]->hasCategory(keyword)){
-				_filteredTaskList.push_back(_taskList[i]);
-			}
+	for(unsigned int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasCategory(category)){
+			_filteredTaskList.push_back(_taskList[i]);
 		}
 	}
 	return;
 }
 
-void TaskList::populateFilterList(Date* date,SEARCH_TYPE searchType){
+void TaskList::populateFilterList(Date* date){
 	_filteredTaskList.clear();
 
-	if(searchType==DATE){
-		for(unsigned int i=0;i<_taskList.size();i++){
-			if(_taskList[i]->hasDate(date)){
-				_filteredTaskList.push_back(_taskList[i]);
-			}
+	for(unsigned int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->hasDate(date)){
+			_filteredTaskList.push_back(_taskList[i]);
 		}
 	}
 	return;
@@ -251,26 +244,16 @@ void TaskList::populateFilterList(PRIORITY priority){
 	}
 }
 
-void TaskList::populateFilterList(TASK_STATUS status){
-	_filteredTaskList.clear();
-
-	for(unsigned int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->hasStatus(status)){
-			_filteredTaskList.push_back(_taskList[i]);
-		}
-	}
-}
-
 std::vector<Task*> TaskList::getFilterResults(){
 	return _filteredTaskList;
 }
 
 void TaskList::deleteSearchedTasks(){
-	for(unsigned int i=0;i<_taskList.size();i++){
-		for(unsigned int j=0;j<_searchedTaskList.size();j++){
-			if(_taskList[i]==_searchedTaskList[j]){
+	while(!_searchedTaskList.empty()){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]==_searchedTaskList.back()){
 				_taskList.erase(_taskList.begin()+i);
-				_searchedTaskList.erase(_searchedTaskList.begin()+j);
+				_searchedTaskList.pop_back();
 			}
 		}
 	}

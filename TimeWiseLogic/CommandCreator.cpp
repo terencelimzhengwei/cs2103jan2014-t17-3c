@@ -92,6 +92,14 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 				}
 			
 			}
+			case FILTER: {
+				if(hasArg(parameter)){
+ 					return createCommandFilter(parameter,&displayType);
+				}else{
+					throw NoArgumentException();
+					return NULL;
+				}
+						 }
 			case UNDONE: {
 				if(hasArg(parameter)) {
 					return createCommandUndone(parameter,&displayType);
@@ -144,7 +152,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 }
 
 Command* CommandCreator::createCommandAdd(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
-	bool* descriptionWord = new bool[param.size()];
+	bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
 	string category;
 	string priority;
 	string description;
@@ -205,13 +213,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 	}
 
 	if(priority!="") {
-		if(priority=="H" || priority == PRIORITY_STRING[0]) {
-			commandAdd->setPriority(HIGH);
-		} else if(priority=="M" || priority == PRIORITY_STRING[1]) {
-			commandAdd->setPriority(MEDIUM);
-		} else if(priority=="L" || priority ==PRIORITY_STRING[2]) {
-			commandAdd->setPriority(LOW);
-		}
+		commandAdd->setPriority(_parser.getPriority(priority));
 	}
 
 	commandAdd->setDescription(description);
@@ -439,10 +441,35 @@ Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE*
 	return commandSearch;
 }
 
-Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*){
-	Command_Filter* commandFilter= new Command_Filter;
-	commandFilter->setKeyword(parameter);
-	return commandFilter;
+Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE* screen){
+	Command_Filter* commandFilter= new Command_Filter();
+	commandFilter->setPreviousScreen(screen);
+	if(parameter[0]=='#'){
+		commandFilter->setCategory(parameter.substr(1));
+		return commandFilter;
+	}
+	if(_parser.isPriority(parameter)){
+		commandFilter->setPriority(_parser.getPriority(parameter.substr(1)));
+		return commandFilter;
+	}else{
+		throw InvalidAddCommandInputException();
+		//Invalid Priority Instead
+	}
+	
+	if(_parser.isDateFormat(parameter)){
+		vector<int> dateData = _parser.extractDate(parameter, -1);
+		std::string dateString = _parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]);
+		Date* date=_parser.createDate(dateString);
+		commandFilter->setDate(date);
+		delete date;
+		date=NULL;
+		return commandFilter;
+
+	}else{
+		throw InvalidAddCommandInputException();
+		//Invalid Filter parameter();
+	}
+	return NULL;
 }
 
 

@@ -181,16 +181,19 @@ bool Task::hasPriority(PRIORITY priority){
 }
 
 bool Task::hasDate(Date* date){
-	if(_endDate==NULL && date == NULL){
-		return true;
-	}else if(_endDate==NULL){
+	 if(_endDate==NULL||date==NULL){
 		return false;
-	}
-
-	if (_endDate->compare(date)){
-		return true;
-	}
-	return false;
+	 }
+	 if(_startDate==NULL){
+		 if(_endDate->compare(date)){
+			 return true;
+		 }
+	 }else{
+		 if(date->isLater(_startDate)==SAME||date->isLater(_startDate)==LATER
+			 && date->isLater(_endDate)==SAME||date->isLater(_endDate)==EARLIER)
+			 return true;
+	 }
+	 return false;
 }
 
 bool Task::hasCategory(std::string category){

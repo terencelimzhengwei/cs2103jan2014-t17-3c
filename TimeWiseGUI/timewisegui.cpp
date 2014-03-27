@@ -123,11 +123,18 @@ void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 		ui.label_title->setText("Searched Tasks");
 		break;
 	}
-	case COMPLETE:
+	case COMPLETE:{
 		vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 		setData(taskList);
 		ui.label_title->setText("Completed Tasks");
 		break;
+	}
+	case FILTERED:{
+		vector<Task*> taskList = _logic.getTaskList().getFilterResults();
+		setData(taskList);
+		ui.label_title->setText("Filtered Tasks");
+		break;
+	}
 	}
 }
 

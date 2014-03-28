@@ -259,6 +259,17 @@ void TaskList::deleteSearchedTasks(){
 	}
 }
 
+void TaskList::deleteFilteredTasks(){
+	while(!_filteredTaskList.empty()){
+		for(int i=0;i<_taskList.size();i++){
+			if(_taskList[i]==_filteredTaskList.back()){
+				_taskList.erase(_taskList.begin()+i);
+				_filteredTaskList.pop_back();
+			}
+		}
+	}
+}
+
 bool TaskList::deleteTaskFromOverdueList(int& index){
 	if (index < _overdueTaskList.size()) {
 	Task* task=_overdueTaskList[index];
@@ -322,12 +333,22 @@ Task* TaskList::setSearchedTaskAsDone(int index){
 
 void TaskList::addTaskToSearchedList(Task& task){
 	for(unsigned int i=0;i<_searchedTaskList.size();i++){
-		if(!task.checkLater(_taskList[i])){
+		if(!task.checkLater(_searchedTaskList[i])){
 			_searchedTaskList.insert(_searchedTaskList.begin()+i,&task);
 			return;
 		}
 	} 
 	_searchedTaskList.push_back(&task);
+}
+
+void TaskList::addTaskToFilteredList(Task& task){
+	for(unsigned int i=0;i<_filteredTaskList.size();i++){
+		if(!task.checkLater(_filteredTaskList[i])){
+			_filteredTaskList.insert(_filteredTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_filteredTaskList.push_back(&task);
 }
 
 bool TaskList::checkNewOverdue(){
@@ -394,4 +415,14 @@ int TaskList::getTaskIndexInSearchedList(Task* task){
 		}
 	}
 	return DEFAULT_INDEX;
+}
+
+void TaskList::clearSearchedTasks()
+{
+	_searchedTaskList.clear();
+}
+
+void TaskList::clearFilteredTasks()
+{
+	_filteredTaskList.clear();
 }

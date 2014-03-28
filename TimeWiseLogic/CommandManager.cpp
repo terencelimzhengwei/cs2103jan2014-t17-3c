@@ -160,6 +160,8 @@ bool CommandManager::undoable(Command* pCommand){
 		return true;
 	}else if(pCommand->getType() == ADDEDIT){
 		return true;
+	}else if(pCommand->getType() == FILTER){
+		return true;
 	}
 	return false;
 }

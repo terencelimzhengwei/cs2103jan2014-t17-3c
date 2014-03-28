@@ -417,20 +417,26 @@ Command* CommandCreator::createCommandRedo(){
 }
 
 Command* CommandCreator::createCommandClear(std::string parameter,DISPLAY_TYPE* type){
-	Command_Clear* newCommand;
 	if(parameter=="all"){
-		newCommand=new Command_Clear(ALL);
-	}else if(parameter=="done"){
-		newCommand=new Command_Clear(COMPLETED_TASKS);
-	}else if(parameter=="undone"){
-		newCommand=new Command_Clear(UNCOMPLETED_TASKS);
-	}else if(parameter==""){
-		newCommand=new Command_Clear(SCREEN);
+		Command_Clear* newCommand=new Command_Clear(ALL);
 		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	}else if(parameter=="done"){
+		Command_Clear* newCommand=new Command_Clear(COMPLETED_TASKS);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	}else if(parameter=="undone"){
+		Command_Clear* newCommand=new Command_Clear(UNCOMPLETED_TASKS);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	}else if(parameter==""){
+		Command_Clear* newCommand=new Command_Clear(SCREEN);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
 	}else{
 		throw InvalidClearCommandInputException();
 	}
-	return newCommand;
+	return NULL;
 }
 
 Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE* type){
@@ -451,11 +457,7 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 	if(_parser.isPriority(parameter)){
 		commandFilter->setPriority(_parser.getPriority(parameter.substr(1)));
 		return commandFilter;
-	}else{
-		throw InvalidAddCommandInputException();
-		//Invalid Priority Instead
 	}
-	
 	if(_parser.isDateFormat(parameter)){
 		vector<int> dateData = _parser.extractDate(parameter, -1);
 		std::string dateString = _parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]);

@@ -59,8 +59,10 @@ public:
 	std::string retrieveForMainEdit(int index);
 	Task* deleteEditTask();
 	Task* deleteEditTaskFromSearch();
-
-
+	void deleteFilteredTasks();
+	void clearSearchedTasks();
+	void clearFilteredTasks();
+	void addTaskToFilteredList(Task& task);
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;

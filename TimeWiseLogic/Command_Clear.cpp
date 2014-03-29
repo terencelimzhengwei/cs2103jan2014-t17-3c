@@ -78,7 +78,7 @@ bool Command_Clear::undo(TaskList& tasklist){
 void Command_Clear::clearCompletedTasks(TaskList& tasklist){
 	if(_lastCmdCalled!="undo"){
 		for(int i=0;i<tasklist.doneSize();i++){
-			_deletedUndoneTasks.push_back(tasklist.getCompletedTask(i));
+			_deletedDoneTasks.push_back(tasklist.getCompletedTask(i));
 		}
 	}
 	tasklist.clearCompletedTasks();
@@ -107,7 +107,7 @@ void Command_Clear::clearAll(TaskList& tasklist){
 
 void Command_Clear::undoCompletedTasks(TaskList& tasklist){
 	for(unsigned int i=0;i<_deletedDoneTasks.size();i++){
-		tasklist.addTaskToDoneList(*_deletedUndoneTasks[i]);
+		tasklist.addTaskToDoneList(*_deletedDoneTasks[i]);
 	}
 }
 

@@ -11,6 +11,7 @@ const char* DELETE_COMMAND = "delete";
 const char* DISPLAY_COMMAND = "display";
 const char* DONE_COMMAND = "done";
 const char* EDIT_COMMAND = "edit";
+const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: description start_date due_date start_time due_time !priority #category";
@@ -19,11 +20,14 @@ const char* DELETE_FORMAT = "delete: ID or keywords";
 const char* DISPLAY_FORMAT = "display: main or completed";
 const char* DONE_FORMAT = "done: ID or #category";
 const char* EDIT_FORMAT = "edit: ID";
+const char* FILTER_FORMAT = "filter: dates or !priority or #category";
 const char* SEARCH_FORMAT = "search: keywords";
 const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, display, done, edit, search, undo, redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
+
+	ui.userInput->installEventFilter(this);
 
 	setupTable();
 
@@ -38,7 +42,7 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	setupFont();
 
 	setupHotKeys();
-	
+
 	autoComplete();
 	
 	if(numberOfOverdues() > 0) {
@@ -48,6 +52,24 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 
 TimeWiseGUI::~TimeWiseGUI() {
 }
+
+bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
+	if (obj == ui.userInput) {
+		if (event->type() == QEvent::KeyPress) {
+			QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+			if (keyEvent->key() == Qt::Key_Up) {
+				previous_line();
+				return true;
+			} else if(keyEvent->key() == Qt::Key_Down) {
+				next_line();
+				return true;
+			}
+		}
+		return false;
+	}
+	return QMainWindow::eventFilter(obj, event);
+}
+
 
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
@@ -62,6 +84,8 @@ void TimeWiseGUI::on_userInput_textChanged() {
 		ui.label_help->setText(DONE_FORMAT);
 	} else if(ui.userInput->text() == EDIT_COMMAND) {
 		ui.label_help->setText(EDIT_FORMAT);
+	} else if(ui.userInput->text() == FILTER_COMMAND) {
+		ui.label_help->setText(FILTER_FORMAT);
 	} else if(ui.userInput->text() == SEARCH_COMMAND) {
 		ui.label_help->setText(SEARCH_FORMAT);
 	} else if(ui.userInput->text() == "") {
@@ -71,7 +95,12 @@ void TimeWiseGUI::on_userInput_textChanged() {
 
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
-	ui.userInput->clear();
+
+	//Stores user inputs into a QStringList for retrieval later when key up or down is pressed
+	lines << ui.userInput->text();
+	current_line = lines.size();
+	ui.userInput->setText("");
+	emit lineExecuted(lines.back());
 
 	try {
 		checkEmpty(input);
@@ -465,4 +494,43 @@ void TimeWiseGUI::autoComplete() {
 	descCompleter = new QCompleter(descList, this);
 	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
 	ui.userInput->setCompleter(descCompleter);
+}
+
+void TimeWiseGUI::wheelEvent(QWheelEvent *ev ) {
+	if ( ev->delta() > 0 ) {
+		previous_line();
+	} else {
+		next_line();
+	}
+}
+
+void TimeWiseGUI::previous_line() {
+	if ( lines.empty() )
+		return;
+
+	if ( !ui.userInput->text().isEmpty() 
+		&& ( current_line >= lines.size() || ui.userInput->text() != lines[current_line] ) )
+		unfinished = ui.userInput->text();
+
+	if ( current_line > 0 )
+		current_line--;
+
+	ui.userInput->setText(lines[current_line]);
+}
+
+
+void TimeWiseGUI::next_line() {
+	if ( lines.empty() ) {
+		return;
+	}
+
+	current_line++;
+
+	if ( current_line >= lines.size() ) {
+		ui.userInput->setText(unfinished);
+		unfinished = "";
+		current_line = lines.size();
+	} else {
+		ui.userInput->setText(lines[current_line]);
+	}
 }

@@ -35,10 +35,10 @@ public:
     QVBoxLayout *verticalLayout;
     QLabel *label_help;
     QLineEdit *userInput;
-    QLabel *label_mlog;
     QPushButton *pushButton_minimize;
     QPushButton *pushButton_close;
     QLabel *label_title;
+    QLabel *label_mlog;
 
     void setupUi(QMainWindow *TimeWiseGUIClass)
     {
@@ -50,12 +50,12 @@ public:
         TimeWiseGUIClass->setMinimumSize(QSize(815, 458));
         TimeWiseGUIClass->setMaximumSize(QSize(815, 458));
         TimeWiseGUIClass->setAutoFillBackground(false);
-        TimeWiseGUIClass->setStyleSheet(QStringLiteral("#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Background new.jpg);}"));
+        TimeWiseGUIClass->setStyleSheet(QStringLiteral("#TimeWiseGUIClass{image: url(:/TimeWiseGUI/TimeWise background 3.png);}"));
         centralWidget = new QWidget(TimeWiseGUIClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tableView = new QTableView(centralWidget);
         tableView->setObjectName(QStringLiteral("tableView"));
-        tableView->setGeometry(QRect(50, 111, 701, 191));
+        tableView->setGeometry(QRect(50, 101, 701, 231));
         QFont font;
         font.setFamily(QStringLiteral("Leelawadee"));
         font.setPointSize(10);
@@ -101,7 +101,7 @@ public:
 "font: 75 14pt \"Electronic Highway Sign\";"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(70, 360, 471, 70));
+        layoutWidget->setGeometry(QRect(70, 370, 471, 51));
         verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -117,12 +117,6 @@ public:
         userInput->setObjectName(QStringLiteral("userInput"));
 
         verticalLayout->addWidget(userInput);
-
-        label_mlog = new QLabel(layoutWidget);
-        label_mlog->setObjectName(QStringLiteral("label_mlog"));
-        label_mlog->setStyleSheet(QStringLiteral("font: 75 10pt \"Leelawadee\";"));
-
-        verticalLayout->addWidget(label_mlog);
 
         pushButton_minimize = new QPushButton(centralWidget);
         pushButton_minimize->setObjectName(QStringLiteral("pushButton_minimize"));
@@ -141,6 +135,10 @@ public:
         label_title->setGeometry(QRect(60, 40, 201, 31));
         label_title->setStyleSheet(QLatin1String("font: 75 26pt \"CF Jack Story\";\n"
 "color: rgb(0, 85, 255);"));
+        label_mlog = new QLabel(centralWidget);
+        label_mlog->setObjectName(QStringLiteral("label_mlog"));
+        label_mlog->setGeometry(QRect(70, 430, 469, 18));
+        label_mlog->setStyleSheet(QStringLiteral("font: 75 10pt \"Leelawadee\";"));
         TimeWiseGUIClass->setCentralWidget(centralWidget);
         pushButton_close->raise();
         tableView->raise();
@@ -149,6 +147,7 @@ public:
         layoutWidget->raise();
         pushButton_minimize->raise();
         label_title->raise();
+        label_mlog->raise();
 
         retranslateUi(TimeWiseGUIClass);
         QObject::connect(pushButton_close, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(close()));
@@ -164,10 +163,10 @@ public:
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "Time", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, clear, delete, display, done, edit, search, undo, redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
-        label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
         pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
         pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
+        label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "Welcome to TIMEWiSE!", 0));
     } // retranslateUi
 
 };

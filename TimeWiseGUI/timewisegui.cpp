@@ -109,7 +109,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		std::string messageLog = _logic.processCommand(userCommand);
 
-		bool isEdit = _logic.getTaskList().checkEditStatus();
+		/*bool isEdit = _logic.getTaskList().checkEditStatus();
 
 		if(isEdit) {
 			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
@@ -117,13 +117,10 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 			ui.userInput->selectAll();
 			displayTaskList(_logic.getScreenToDisplay());
 		}
-		else {
-			autoComplete();
-			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
-			displayTaskList(displayType);
-			ui.userInput->clear();
-
-		}
+		else {*/
+		autoComplete();
+		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+		displayTaskList(displayType);
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);

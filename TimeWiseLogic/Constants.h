@@ -55,7 +55,7 @@ const std::string DEFAULT_EMPTY = "";
 
 static const char* USER_INPUT_INDEX_OUT_OF_RANGE_EXCEPTION = "Error! The task index that you entered is out of range.";
 static const char* MISSING_TASK_DESCRIPTION = "Error! You have not entered any task description";
-//static const char* INVALID_USER_INPUT_COMMAND_WORD = "Error! Invalid command!";
+static const char* INVALID_USER_INPUT_COMMAND_WORD = "Error! Invalid command!";
 static const char* NO_ARGUMENT_EXCEPTION = "Error! No input detected";
 static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number";
 static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter is invalid";

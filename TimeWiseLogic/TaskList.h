@@ -59,6 +59,7 @@ public:
 	std::string retrieveForMainEdit(int index);
 	Task* deleteEditTask();
 	Task* deleteEditTaskFromSearch();
+	Task* deleteEditTaskFromComplete();
 
 
 private:

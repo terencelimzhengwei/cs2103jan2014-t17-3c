@@ -24,6 +24,9 @@ bool Command_AddEdit::execute(TaskList& tasklist){
 		}else if(_previousScreen==SEARCHED){
 			int index = tasklist.getTaskIndexInSearchedList(_deletedTask);
 			tasklist.deleteTaskFromSearchList(index);
+		}else if (_previousScreen == COMPLETE) {
+			int index = tasklist.getTaskIndexInCompletedList(_deletedTask);
+			tasklist.deleteTaskFromCompletedList(index);
 		}
 	}else{
 		_addedTask = new Task;
@@ -43,12 +46,17 @@ bool Command_AddEdit::execute(TaskList& tasklist){
 			_addedTask->setStartTime(*_startTime);
 		}
 		_addedTask->setTaskType(_taskType);
-		tasklist.addTask(*_addedTask);
+		//tasklist.addTask(*_addedTask);
 		if(_previousScreen==MAIN){
+			tasklist.addTask(*_addedTask);
 			_deletedTask=tasklist.deleteEditTask();
 		}else if(_previousScreen==SEARCHED){
+			tasklist.addTask(*_addedTask);
 			_deletedTask=tasklist.deleteEditTaskFromSearch();
 			tasklist.addTaskToSearchedList(*_addedTask);
+		} else if (_previousScreen == COMPLETE) {
+			_deletedTask=tasklist.deleteEditTaskFromComplete();
+			tasklist.addTaskToDoneList(*_addedTask);
 		}
 	}
 	_lastCmdCalled="execute";

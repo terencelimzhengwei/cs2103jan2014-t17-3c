@@ -25,9 +25,11 @@ bool Command_Edit::execute(TaskList& tasklist){
 	case SEARCHED:
 		task = tasklist.getSearchedTask(_index);
 		break;
+	case COMPLETE:
+		task = tasklist.getCompletedTask(_index);
+		break;	
 	default:
-		throw UnableToEditCompletedTasks() ;
-		
+		return false;
 	}
 	tasklist.setEditStatus(true);
 	task->setEditStatus(true);

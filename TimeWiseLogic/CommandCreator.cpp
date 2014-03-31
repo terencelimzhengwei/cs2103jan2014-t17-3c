@@ -42,13 +42,13 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 		CMD_TYPE commandType = _parser.determineCommandType(commandTypeString); 
 
 		// Assume all other commands are adding event
-		if(tasklist.checkEditStatus()){
+		/*if(tasklist.checkEditStatus()){
 			userInput="add " + userInput;
 			commandType = ADDEDIT;
 		}else if(commandType==UNDEFINED) {
 			userInput = "add " + userInput;
 			commandType = ADD;
-		}
+		}*/
 	
 		string parameter = _parser.removeFirstWord(userInput);
 		_parser.removeWhiteSpaces(parameter);
@@ -128,11 +128,15 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 			case DISPLAY:
 				return createCommandDisplay(parameter,&displayType);
-			default: {
+			case UNDEFINED: {
+				throw InvalidCommandWordException();
 				return NULL;
 			}
 		}
-	} catch (NoArgumentException& nae) {
+	} catch (InvalidCommandWordException& icwe) {
+		_feedbackExceptiontoUI = icwe.what();
+		throw InvalidCommandWordException();
+	}catch (NoArgumentException& nae) {
 		_feedbackExceptiontoUI = nae.what();
 		throw NoArgumentException();
 	} catch (InvalidAddCommandInputException& iacie) {
@@ -203,6 +207,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 		}
 	}
 	//delete descriptionWord;
+	if (hasArg(description)) {
 
 	_parser.removeWhiteSpaces(description);
 
@@ -318,6 +323,11 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 	
 	commandAdd->setPreviousScreen(screen);
 	return commandAdd;
+	} else {
+		throw InvalidAddCommandInputException();
+		return NULL;
+		}
+
 }
 
 	

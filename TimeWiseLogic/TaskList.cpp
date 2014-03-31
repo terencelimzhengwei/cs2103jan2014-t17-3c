@@ -385,6 +385,17 @@ Task* TaskList::deleteEditTaskFromSearch(){
 	}
 	return NULL;
 }
+Task* TaskList::deleteEditTaskFromComplete() {
+	for(unsigned int i=0;i<_completedTaskList.size();i++){
+		if(_completedTaskList[i]->checkEditStatus()){
+			Task* task = _completedTaskList[i];
+			_completedTaskList.erase(_completedTaskList.begin()+i);
+			_editStatus=false;
+			return task;
+		}
+	}
+	return NULL;
+}
 
 int TaskList::getTaskIndexInSearchedList(Task* task){
 	assert(task!=NULL);

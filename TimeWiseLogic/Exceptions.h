@@ -32,12 +32,12 @@ class NotANumberException : public std::exception {
 public: 
 	virtual const char* what() const throw(); 
 };
-/* This class throws an invalid user input command exception when the command word input by the 
+ //This class throws an invalid user input command exception when the command word input by the 
 // user is not a command recognised by TiMEWiSE!.
 class InvalidCommandWordException : public std::exception { 
 public: 
 	virtual const char* what() const throw(); 
-};*/
+};
 // This class throws an invalid user input add command when no description was added.
 class InvalidAddCommandInputException: public std::exception {
 public:

@@ -1,7 +1,9 @@
 #include "Exceptions.h"
 
 // This file stores the various exception classes that are required for TextBuddy.
-
+const char* InvalidCommandWordException::what() const throw(){
+	return INVALID_USER_INPUT_COMMAND_WORD; 
+}
 const char* OutOfRangeException::what() const throw(){
 	return USER_INPUT_INDEX_OUT_OF_RANGE_EXCEPTION; 
 }

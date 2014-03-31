@@ -24,12 +24,20 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 			_storage.saveFile(_taskList);
 			return "SUCCESS";
 		} catch (OutOfRangeException& oore) {
+			delete _cmd;
+			_cmd = NULL;
 			return oore.what();
 		} catch (UnableToEditCompletedTasks& uect) {
+			delete _cmd;
+			_cmd = NULL;
 			return uect.what();
 		} catch (UnableTosetAsDone& usad) {
+			delete _cmd;
+			_cmd = NULL;
 			return usad.what();
 		} catch (UnableToUndoneUncompletedTasks&  uuuct) {
+			delete _cmd;
+			_cmd = NULL;
 			return uuuct.what();
 		}
 	}

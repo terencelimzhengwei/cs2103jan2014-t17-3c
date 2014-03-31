@@ -8,12 +8,12 @@ public:
 	bool execute(TaskList& tasklist);
 	bool undo(TaskList& tasklist);
 	void setCompletedIndex(int index);
-	void setDisplayScreen(DISPLAY_TYPE& screen);
+	void setDisplayScreen(DISPLAY_TYPE screen);
 
 private:
 	int _taskIndex;
 	Task* _task;
-	DISPLAY_TYPE* _displayType;
+	DISPLAY_TYPE _displayType;
 	std::string _lastCmdCalled;
 
 };

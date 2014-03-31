@@ -5,6 +5,7 @@ Command_Done::Command_Done(void){
 	_type=DONE;
 	_taskIndex=DEFAULT_INDEX;
 	_task=NULL;
+	_displayType = COMPLETE;
 }
 
 
@@ -16,7 +17,7 @@ void Command_Done::setCompletedIndex(int index){
 }
 
 bool Command_Done::execute(TaskList& tasklist){
-	switch(*_displayType){
+	switch(_displayType){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
 		_lastCmdCalled="execute";
@@ -25,15 +26,18 @@ bool Command_Done::execute(TaskList& tasklist){
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
 		_lastCmdCalled="execute";
 		return true;
+	case COMPLETE:
+		throw UnableTosetAsDone();
+		return false;
 	default:
 		if(_lastCmdCalled=="undo"){
 			_task=tasklist.setTaskAsDone(_taskIndex);
 			_lastCmdCalled="execute";
 			break;
 		}
-		throw UnableTosetAsDone();
 		return false;
 	}
+
 }
 
 bool Command_Done::undo(TaskList& tasklist){
@@ -44,6 +48,6 @@ bool Command_Done::undo(TaskList& tasklist){
 	return true;
 }
 
-void Command_Done::setDisplayScreen(DISPLAY_TYPE& screen){
-	_displayType=&screen;
+void Command_Done::setDisplayScreen(DISPLAY_TYPE screen){
+	_displayType = screen;
 }

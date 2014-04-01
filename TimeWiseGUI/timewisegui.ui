@@ -35,16 +35,16 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/Background new.jpg);}</string>
+   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/TimeWise background 3.png);}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>111</y>
+      <y>101</y>
       <width>701</width>
-      <height>191</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="font">
@@ -213,9 +213,9 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>360</y>
+      <y>370</y>
       <width>471</width>
-      <height>70</height>
+      <height>51</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -233,16 +233,6 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
       <widget class="QLineEdit" name="userInput">
        <property name="placeholderText">
         <string>+Add Task</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_mlog">
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Welcome to TIMEWiSE!</string>
        </property>
       </widget>
      </item>
@@ -301,6 +291,22 @@ color: rgb(0, 85, 255);</string>
      <string>Your Tasks</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_mlog">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>430</y>
+      <width>469</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Welcome to TIMEWiSE!</string>
+    </property>
+   </widget>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
    <zorder>label_date</zorder>
@@ -308,6 +314,7 @@ color: rgb(0, 85, 255);</string>
    <zorder>layoutWidget</zorder>
    <zorder>pushButton_minimize</zorder>
    <zorder>label_title</zorder>
+   <zorder>label_mlog</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

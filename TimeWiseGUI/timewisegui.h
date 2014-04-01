@@ -9,6 +9,8 @@
 #include <QString>
 #include <QCompleter>
 #include <QMessageBox>
+#include <QLineEdit>
+#include <QKeyEvent>
 #include <string>
 #include <stdexcept>
 #include "ui_timewisegui.h"
@@ -25,13 +27,25 @@ public:
 	void setupClock();
 	void setupFont();
 	void setupHotKeys();
+	
+	//These are the functions that sets the data from Logic into the table set up
 	void displayTaskList(DISPLAY_TYPE displayType);
 	void setMainData();
 	void setData(std::vector<Task*>& taskList);
-	int checkEmpty(QString input);
-	void autoComplete();
+
+	//These are the functions that pop up a box to inform user of the number of overdue tasks.
 	void setOverdueMessage(int overdueCount);
 	int numberOfOverdues();
+
+	//These are the functions that allow lineEdit to retrieve previous user actions
+	bool eventFilter(QObject* obj, QEvent *event);
+	void wheelEvent(QWheelEvent *);
+	void previous_line();
+	void next_line();
+
+	//other functions
+	int checkEmpty(QString input);
+	void autoComplete();
 
 private slots:
 	void updateTime();
@@ -42,10 +56,18 @@ private slots:
 	void displayDone();
 	void displayMain();
 
+signals:
+    void lineExecuted(QString);
+
 private:
 	Ui::TimeWiseGUIClass ui;
 	TimeWiseLogic _logic;
 	QCompleter *descCompleter;
+
+	//these are for the history retrieval used in line Edit
+	int current_line;
+	QStringList lines;
+	QString unfinished;
 };
 
 #endif // TIMEWISEGUI_H

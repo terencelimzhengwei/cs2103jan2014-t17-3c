@@ -60,7 +60,10 @@ public:
 	Task* deleteEditTask();
 	Task* deleteEditTaskFromSearch();
 	Task* deleteEditTaskFromComplete();
-
+	void deleteFilteredTasks();
+	void clearSearchedTasks();
+	void clearFilteredTasks();
+	void addTaskToFilteredList(Task& task);
 
 private:
 	std::vector<Task*> _taskList;

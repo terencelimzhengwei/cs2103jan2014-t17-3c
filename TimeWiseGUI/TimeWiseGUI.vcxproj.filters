@@ -59,6 +59,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_tableModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="timewisefeedback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_timewisefeedback.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_timewisefeedback.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="timewisegui.h">
@@ -73,9 +82,18 @@
     <CustomBuild Include="tableModel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="timewisefeedback.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="timewisefeedback.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_timewisegui.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_timewisefeedback.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

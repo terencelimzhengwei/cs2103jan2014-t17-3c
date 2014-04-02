@@ -93,9 +93,6 @@
     <ClInclude Include="CommandCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Clash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Command_Filter.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
@@ -162,9 +159,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandCreator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Clash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Command_Filter.cpp">

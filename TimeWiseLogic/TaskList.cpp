@@ -10,7 +10,16 @@ TaskList::~TaskList(void){
 }
 
 void TaskList::addTask(Task& task){
+	_clashedTask.clear();
 	for(unsigned int i=0;i<_taskList.size();i++){
+		if(_taskList[i]->checkClash(&task)){
+			if(!task.isClash()){
+				task.setClash(true);
+				_clashedTask.push_back(&task);
+			}
+			_taskList[i]->setClash(true);
+			_clashedTask.push_back(_taskList[i]);
+		}
 		if(!task.checkLater(_taskList[i])){
 			_taskList.insert(_taskList.begin()+i,&task);
 			return;
@@ -25,6 +34,7 @@ bool TaskList::deleteTask(unsigned int& index)
 	//assert(index<_taskList.size());
 	if(index < _taskList.size()) {
 		_taskList.erase(_taskList.begin() + index);
+		updateClashStatus();
 		return true;
 	} else {
 		throw OutOfRangeException();
@@ -128,17 +138,6 @@ void TaskList::updateCompletedTaskList(){
 
 std::vector<Task*> TaskList::getOverdueTaskList(){
 	return _overdueTaskList;
-}
-
-std::vector<Clash> TaskList::checkClashes(Task* task){
-	std::vector<Clash> clashList;
-	for(unsigned int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->checkClash(task)){
-			Clash clashes(_taskList[i],task);
-			clashList.push_back(clashes);
-		}
-	}
-	return clashList;
 }
 
 void TaskList::addTaskToDoneList(Task& task){
@@ -279,11 +278,14 @@ bool TaskList::deleteTaskFromOverdueList(unsigned int& index)
 {
 	if (index < _overdueTaskList.size()) {
 		Task* task=_overdueTaskList[index];
+		unsigned int deletionIndex;
 		for(unsigned int i=0;i<_taskList.size();i++){
 			if(_taskList[i]==task){
-				_taskList.erase(_taskList.begin()+i);
+				deletionIndex=i;
+				break;
 			}
 		}
+		deleteTask(deletionIndex);
 		_overdueTaskList.erase(_overdueTaskList.begin()+index);
 		return true;
 	} else {
@@ -295,11 +297,14 @@ bool TaskList::deleteTaskFromOverdueList(unsigned int& index)
 bool TaskList::deleteTaskFromSearchList(unsigned int& index)
 {
 	Task* task=_searchedTaskList[index];
+	unsigned int deletionIndex;
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]==task){
-			_taskList.erase(_taskList.begin()+i);
+			deletionIndex=i;
+			break;
 		}
 	}
+	deleteTask(deletionIndex);
 	_searchedTaskList.erase(_searchedTaskList.begin()+index);
 	return true;
 }
@@ -403,23 +408,30 @@ void TaskList::clearFilteredTasks()
 {
 	_filteredTaskList.clear();
 }
-
-bool TaskList::updateClashes(){
-	bool clashes = false;
-	resetClash();
-
-	for(unsigned int i=0;i<_taskList.size()-1;i++){
-		for(unsigned int j=i+1;j<_taskList.size();j++){
-			if(_taskList[i]->checkClash(_taskList[j])){
-				clashes = true;
-			}
-		}
-	}
-	return clashes;
-}
-
 void TaskList::resetClash(){
 	for(unsigned int i=0;i<_taskList.size();i++){
 		_taskList[i]->resetClash();
 	}
+}
+
+void TaskList::updateClashStatus()
+{
+	if(_taskList.empty()){
+		return;
+	}
+	for(unsigned int i=0;i<_taskList.size()-1;i++){
+		for(unsigned int j=i+1;j<_taskList.size();j++){
+			if(!_taskList[i]->checkClash(_taskList[j])){
+				if(_taskList[i]->isClash()==true){
+					_taskList[i]->setClash(false);
+				}else if(_taskList[j]->isClash()==true){
+					_taskList[i]->setClash(false);
+				}
+			}
+		}
+	}
+}
+
+std::vector<Task*> TaskList::getClashedTask(){
+	return _clashedTask;
 }

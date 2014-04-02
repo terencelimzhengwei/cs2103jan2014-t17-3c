@@ -66,7 +66,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Calendar.h" />
-    <ClInclude Include="Clash.h" />
     <ClInclude Include="ClockTime.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandManager.h" />
@@ -95,7 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Calendar.cpp" />
-    <ClCompile Include="Clash.cpp" />
     <ClCompile Include="ClockTime.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandManager.cpp" />

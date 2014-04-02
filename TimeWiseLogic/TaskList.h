@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "Task.h"
-#include "Clash.h"
 #include "Exceptions.h"
 
 class TaskList
@@ -52,8 +51,7 @@ public:
 	bool isEmpty();
 	int undoneSize();
 	int doneSize();
-	std::vector<Clash> checkClashes(Task* task);
-	bool updateClashes();
+	void updateClashStatus();
 	void resetClash();
 	void deleteSearchedTasks();
 	Task* deleteEditTask();
@@ -63,10 +61,12 @@ public:
 	void clearFilteredTasks();
 	void addTaskToFilteredList(Task& task);
 	Task* getFilteredTask(int index);
+	std::vector<Task*> getClashedTask();
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;
 	std::vector<Task*> _filteredTaskList;
+	std::vector<Task*> _clashedTask;
 };

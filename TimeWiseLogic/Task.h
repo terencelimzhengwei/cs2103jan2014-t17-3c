@@ -48,7 +48,9 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
+	void setClash(bool clash);
 	std::string toString();
+	bool isClash();
 	void resetClash();
 protected:
 	std::string _taskDescription;
@@ -58,6 +60,7 @@ protected:
 	std::string _category;
 	int _taskIndex;
 	bool _clashStatus;
+	bool _blockStatus;
 
 	Date *_endDate;
 	Date *_startDate;

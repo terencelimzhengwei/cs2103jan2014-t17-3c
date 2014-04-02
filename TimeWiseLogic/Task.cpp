@@ -13,6 +13,8 @@ Task::Task(void){
 	_startDate = NULL;
 	_endDate = NULL;
 	_taskIndex= DEFAULT_INDEX;
+	_clashStatus=false;
+	_blockStatus=false;
 }
 
 
@@ -227,31 +229,23 @@ bool Task::checkClash(Task* task){
 		return false;
 	}else if(_startDate==NULL && task->getStartDate()==NULL){
 		if(_endDate->isLater(task->getEndDate())==SAME){
-			_clashStatus=true;
-			task->_clashStatus=true;
 			return true;
 		}
 	}else if(_startDate==NULL){
 		if(_endDate->isLater(task->getEndDate())==EARLIER||_endDate->isLater(task->getEndDate())==SAME){
 			if(_endDate->isLater(task->getStartDate())==LATER||_endDate->isLater(task->getStartDate())==SAME){
-				_clashStatus=true;
-				task->_clashStatus=true;
 				return true;
 			}
 		}
 	}else if(task->getStartDate()==NULL){
 		if(task->getEndDate()->isLater(_endDate)==EARLIER||task->getEndDate()->isLater(_endDate)==SAME){
 			if(task->getEndDate()->isLater(_startDate)==LATER||task->getEndDate()->isLater(_startDate)==SAME){
-				_clashStatus=true;
-				task->_clashStatus=true;
 				return true;
 			}
 		}
 	}else{
 		if(_startDate->isLater(task->getEndDate())==EARLIER||_startDate->isLater(task->getEndDate())==SAME){
 			if(task->getStartDate()->isLater(_endDate)==EARLIER||task->getStartDate()->isLater(_endDate)==SAME){
-				_clashStatus=true;
-				task->_clashStatus=true;
 				return true;
 			}
 		}
@@ -331,4 +325,12 @@ std::string Task::toString(){
 
 void Task::resetClash(){
 	_clashStatus=false;
+}
+
+bool Task::isClash(){
+	return _clashStatus;
+}
+
+void Task::setClash(bool clash){
+	_clashStatus=clash;
 }

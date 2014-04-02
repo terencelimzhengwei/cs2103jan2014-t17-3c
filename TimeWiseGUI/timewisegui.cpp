@@ -115,10 +115,9 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		QString outputMessage = QString::fromStdString(messageLog);
 		showFeedback(outputMessage);
-		//ui.label_mlog->setText(outputMessage);
 	}
 	catch(const std::invalid_argument& e) {
-		ui.label_mlog->setText(e.what());
+		showFeedback(e.what());
 	}
 }
 
@@ -167,6 +166,7 @@ void TimeWiseGUI::setMainData() {
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
+		QColor rowColorClash(254, 255, 185);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -234,6 +234,12 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			}
+			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
+			/*if(qStatus == "overdue" && checkClash) {
+				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			} else if (!checkClash) {
+				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
+			}*/
 			//highlight description in red if that task is overdue
 			if(qStatus == "overdue") {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
@@ -255,6 +261,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
+		QColor rowColorClash(254, 255, 185);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -322,7 +329,13 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			}
-			//highlight description in red if that task is overdue
+			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
+			/*bool checkClash = taskList[i]->isClash();
+			if(qStatus == "overdue" && checkClash) {
+				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			} else if (!checkClash) {
+				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
+			}*/
 			if(qStatus == "overdue") {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
 			} 
@@ -448,7 +461,6 @@ void TimeWiseGUI::displayDone(){
 	ui.label_title->setText("Completed Tasks");
 }
 
-
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 	QMessageBox overdueInfo;
 	ostringstream outstr;
@@ -505,6 +517,7 @@ void TimeWiseGUI::previous_line() {
 		current_line--;
 
 	ui.userInput->setText(lines[current_line]);
+	ui.userInput->selectAll();
 }
 
 
@@ -521,6 +534,7 @@ void TimeWiseGUI::next_line() {
 		current_line = lines.size();
 	} else {
 		ui.userInput->setText(lines[current_line]);
+		ui.userInput->selectAll();
 	}
 }
 

@@ -20,9 +20,10 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 	}
 	else{
 		try {
-			_manager->DoCommand(_cmd);
+			std::string feedback;
+			_manager->DoCommand(_cmd, feedback);
 			_storage.saveFile(_taskList);
-			return "SUCCESS";
+			return feedback;
 		} catch (OutOfRangeException& oore) {
 			delete _cmd;
 			_cmd = NULL;

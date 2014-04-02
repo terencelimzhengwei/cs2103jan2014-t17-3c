@@ -18,7 +18,7 @@ void Command_Display::setNextScreen(DISPLAY_TYPE screen){
 	_nextScreen=screen;
 }
 
-bool Command_Display::execute(TaskList&){
+bool Command_Display::execute(TaskList&, std::string&){
 	*_currentScreen=_nextScreen;
 	return true;
 }

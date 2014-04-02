@@ -58,7 +58,7 @@ void Command_Add::setEndDate(Date& date)
 	_endDate=new Date(date);
 }
 
-bool Command_Add::execute(TaskList& tasklist){
+bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 	*_currentScreen=MAIN;
 	if(_lastCmdCalled=="undo"){
 		tasklist.addTask(*_addedTask);
@@ -83,6 +83,7 @@ bool Command_Add::execute(TaskList& tasklist){
 		tasklist.addTask(*_addedTask);
 	}
 	_lastCmdCalled=="execute";
+	feedback = "Task added! " +_addedTask->toString();
 	return true;
 }
 

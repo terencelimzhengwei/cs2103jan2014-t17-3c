@@ -11,8 +11,9 @@ Command_Redo::~Command_Redo(void)
 {
 }
 
-bool Command_Redo::execute(TaskList& tasklist)
+bool Command_Redo::execute(TaskList& tasklist, std::string& feedback)
 {
+	feedback = "Success";
 	return true;
 }
 

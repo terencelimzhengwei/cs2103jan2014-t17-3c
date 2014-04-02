@@ -52,7 +52,7 @@ void Command_Edit::setEndTime(ClockTime* endTime)
 	_editedEndTime=endTime;
 }
 
-bool Command_Edit::execute(TaskList& tasklist){
+bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	switch(_displayScreen){
 	case MAIN:
 		_editedTask=tasklist.getTask(_editIndex);
@@ -69,6 +69,7 @@ bool Command_Edit::execute(TaskList& tasklist){
 	default:
 		return false;
 	}
+	feedback = "Task: '" + _editedTask->toString() + "' has been modifed to: '";
 	_originalDescription=_editedTask->getDescription();
 	_originalCategory=_editedTask->getTaskCategory();
 	_originalEndDate=_editedTask->getEndDate();
@@ -115,6 +116,8 @@ bool Command_Edit::execute(TaskList& tasklist){
 			}
 		}
 	}
+	feedback = feedback + _editedTask->toString() +"'.";
+	
 	return true;
 }
 

@@ -33,6 +33,7 @@ int main(){
 	ClockTime endTime(1600);
 	Date startDate(10,3,2014);
 	Date endDate(12,3,2014);
+	std::string feedback;
 	commandToBeExecuted.push_back(new Command_Add);
 	commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -53,10 +54,10 @@ int main(){
 	commandToBeExecuted[3]->setEndDate(endDate);
 	commandToBeExecuted[3]->setEndTime(endTime);
 
-	commandToBeExecuted[0]->execute(_taskList);
-	commandToBeExecuted[1]->execute(_taskList);
-	commandToBeExecuted[2]->execute(_taskList);
-	commandToBeExecuted[3]->execute(_taskList);
+	commandToBeExecuted[0]->execute(_taskList,feedback);
+	commandToBeExecuted[1]->execute(_taskList,feedback);
+	commandToBeExecuted[2]->execute(_taskList,feedback);
+	commandToBeExecuted[3]->execute(_taskList,feedback);
 	system("pause");
 	return 0;
 }

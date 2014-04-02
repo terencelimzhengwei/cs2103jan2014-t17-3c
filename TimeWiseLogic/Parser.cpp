@@ -98,7 +98,8 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 				if(dateComponent[0].length()<=2 && dateComponent[1].length()<=2) {
 					output[2] = toNum(dateComponent[0]);
 					output[1] = toNum(dateComponent[1]);
-					
+
+					dateFunction.setDateAsToday();
 					if(dateComponent.size() == 3) {
 						output[0] = toNum(dateComponent[2]);
 						if(dateComponent[2].length()==2) {

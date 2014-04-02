@@ -46,7 +46,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Jian Xiang\Desktop\cs2103jan2014-t17-3c\TimeWiseLogic;D:\TiMEWiSE\TimeWiseLogic;C:\Users\Hue Mai Tran\Desktop\cs2103jan2014-t17-3c\TimeWiseLogic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Jian Xiang\Desktop\cs2103jan2014-t17-3c\TimeWiseLogic;D:\Photoshop\TiMEWiSE\TimeWiseLogic;C:\Users\Hue Mai Tran\Desktop\cs2103jan2014-t17-3c\TimeWiseLogic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

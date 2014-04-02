@@ -53,7 +53,8 @@ void Command_Add::setTaskType(TASK_TYPE taskType) {
 	_taskType = taskType;
 }
 
-void Command_Add::setEndDate(Date& date){
+void Command_Add::setEndDate(Date& date)
+{
 	_endDate=new Date(date);
 }
 
@@ -67,16 +68,16 @@ bool Command_Add::execute(TaskList& tasklist){
 		_addedTask->setPriority(_taskPriority);
 		_addedTask->setCategory(_category);
 		if(hasEndDate()){
-			_addedTask->setEndDate(*_endDate);
+			_addedTask->setEndDate(_endDate);
 		}
 		if(hasEndTime()){
-			_addedTask->setEndTime(*_endTime);
+			_addedTask->setEndTime(_endTime);
 		}
 		if(hasStartDate()){
-			_addedTask->setStartDate(*_startDate);
+			_addedTask->setStartDate(_startDate);
 		}
 		if(hasStartTime()){
-			_addedTask->setStartTime(*_startTime);
+			_addedTask->setStartTime(_startTime);
 		}
 		_addedTask->setTaskType(_taskType);
 		tasklist.addTask(*_addedTask);
@@ -89,7 +90,7 @@ bool Command_Add::undo(TaskList& taskList){
 	if (taskList.isEmpty()){
 		return false;
 	} else {
-		int index = taskList.getTaskIndex(_addedTask);
+		unsigned int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
 		*_currentScreen=_previousScreen;
 		_lastCmdCalled="undo";

@@ -52,16 +52,13 @@ void CommandManager::DoCommand(Command* pCommand)
 		}
 		// Execute the command and add it to undo list if succeeded
 		if (pCommand->execute(_taskList)){
-			if(pCommand->getType()==ADDEDIT){
-				_taskList.setEditStatus(false);
-			}
 			if(undoable(pCommand)){
 				AddUndo(pCommand);
 			}else{
 				delete pCommand;
 				pCommand=NULL;
 			}
-	}
+		}
 	}
 }
 
@@ -158,9 +155,11 @@ bool CommandManager::undoable(Command* pCommand){
 		return true;
 	}else if(pCommand->getType() == SEARCH){
 		return true;
-	}else if(pCommand->getType() == ADDEDIT){
-		return true;
 	}else if(pCommand->getType() == FILTER){
+		return true;
+	}else if(pCommand->getType() == UNDO){
+		return true;
+	}else if(pCommand->getType() == EDIT){
 		return true;
 	}
 	return false;

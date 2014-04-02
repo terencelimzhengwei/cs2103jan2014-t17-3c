@@ -13,7 +13,7 @@ class Task
 public:
 	Task(void);
 	~Task(void);
-	
+
 	//getter functions
 	int getIndex();
 	std::string getDescription();
@@ -30,16 +30,14 @@ public:
 	void setDescription(std::string desc);
 	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);
-	void setEndDate(Date& endDate);
-	void setStartDate(Date& startDate);
-	void setStartTime(ClockTime& startTime);
-	void setEndTime(ClockTime& endTime);
+	void setEndDate(Date* endDate);
+	void setStartDate(Date* startDate);
+	void setStartTime(ClockTime* startTime);
+	void setEndTime(ClockTime* endTime);
 	void setStatusAsDone();
 	void setStatusasUndone();
 	void setStatusAsOverdue();
 	void setTaskType(TASK_TYPE type);
-	void setEditStatus(bool value);
-
 	//check overdue
 	bool checkOverdue();
 	bool checkNewOverdue();
@@ -50,9 +48,8 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
-	bool checkEditStatus();
 	std::string toString();
-
+	void resetClash();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
@@ -60,12 +57,11 @@ protected:
 	PRIORITY _taskPriority;
 	std::string _category;
 	int _taskIndex;
+	bool _clashStatus;
 
 	Date *_endDate;
 	Date *_startDate;
 	ClockTime *_startTime;
 	ClockTime *_endTime;
-	bool _editStatus;
 	Parser _parser;
-
 };

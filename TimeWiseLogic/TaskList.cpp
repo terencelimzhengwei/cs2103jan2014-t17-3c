@@ -2,7 +2,6 @@
 #include <iterator>
 
 TaskList::TaskList(void){
-	_editStatus=false;
 }
 
 
@@ -20,22 +19,24 @@ void TaskList::addTask(Task& task){
 	_taskList.push_back(&task);
 }
 
-bool TaskList::deleteTask(int& index) {
+bool TaskList::deleteTask(unsigned int& index)
+{
 	//assert(index>=0);
 	//assert(index<_taskList.size());
 	if(index < _taskList.size()) {
-	_taskList.erase(_taskList.begin() + index);
-	return true;
+		_taskList.erase(_taskList.begin() + index);
+		return true;
 	} else {
 		throw OutOfRangeException();
 		return false;
 	}
 }
 
-Task* TaskList::getTask(int index){
+Task* TaskList::getTask(unsigned int index)
+{
 	if (index <_taskList.size()) {
 
-	return _taskList[index];
+		return _taskList[index];
 	} else {
 		throw OutOfRangeException();
 		return NULL;
@@ -151,38 +152,41 @@ void TaskList::addTaskToDoneList(Task& task){
 
 }
 
-Task* TaskList::setTaskAsDone(int index){
+Task* TaskList::setTaskAsDone(unsigned int index)
+{
 	if (index < _taskList.size()) {
-	Task* task;
-	task=_taskList[index];
-	task->setStatusAsDone();
-	addTaskToDoneList(*task);
-	deleteTask(index);
-	return task;
+		Task* task;
+		task=_taskList[index];
+		task->setStatusAsDone();
+		addTaskToDoneList(*task);
+		deleteTask(index);
+		return task;
 	} else {
 		throw OutOfRangeException();
 		return NULL;
 	}
 }
 
-Task* TaskList::setTaskAsUndone(int index) {
+Task* TaskList::setTaskAsUndone(unsigned int index)
+{
 	if(index <_completedTaskList.size()) {
-	Task* task;
-	task=_completedTaskList[index];
-	task->setStatusasUndone();
-	addTask(*task);
-	deleteTaskFromCompletedList(index);
-	return task;
+		Task* task;
+		task=_completedTaskList[index];
+		task->setStatusasUndone();
+		addTask(*task);
+		deleteTaskFromCompletedList(index);
+		return task;
 	} else {
 		throw OutOfRangeException();
 		return NULL;
 	}
 }
 
-bool TaskList::deleteTaskFromCompletedList(int& index){
+bool TaskList::deleteTaskFromCompletedList(unsigned int& index)
+{
 	if (index <_completedTaskList.size()) {
-	_completedTaskList.erase(_completedTaskList.begin() + index);
-	return true;
+		_completedTaskList.erase(_completedTaskList.begin() + index);
+		return true;
 	} else {
 		throw OutOfRangeException();
 		return false;
@@ -199,9 +203,10 @@ int TaskList::getTaskIndexInCompletedList(Task* task){
 	return DEFAULT_INDEX;
 }
 
-Task* TaskList::getCompletedTask(int index){
+Task* TaskList::getCompletedTask(unsigned int index)
+{
 	if(index < _completedTaskList.size()) {
-	return _completedTaskList[index];
+		return _completedTaskList[index];
 	}
 	else {
 		throw OutOfRangeException();
@@ -250,7 +255,7 @@ std::vector<Task*> TaskList::getFilterResults(){
 
 void TaskList::deleteSearchedTasks(){
 	while(!_searchedTaskList.empty()){
-		for(int i=0;i<_taskList.size();i++){
+		for(unsigned int i=0;i<_taskList.size();i++){
 			if(_taskList[i]==_searchedTaskList.back()){
 				_taskList.erase(_taskList.begin()+i);
 				_searchedTaskList.pop_back();
@@ -259,23 +264,36 @@ void TaskList::deleteSearchedTasks(){
 	}
 }
 
-bool TaskList::deleteTaskFromOverdueList(int& index){
-	if (index < _overdueTaskList.size()) {
-	Task* task=_overdueTaskList[index];
-	for(unsigned int i=0;i<_taskList.size();i++){
-		if(_taskList[i]==task){
-			_taskList.erase(_taskList.begin()+i);
+void TaskList::deleteFilteredTasks(){
+	while(!_filteredTaskList.empty()){
+		for(unsigned int i=0;i<_taskList.size();i++){
+			if(_taskList[i]==_filteredTaskList.back()){
+				_taskList.erase(_taskList.begin()+i);
+				_filteredTaskList.pop_back();
+			}
 		}
 	}
-	_overdueTaskList.erase(_overdueTaskList.begin()+index);
-	return true;
+}
+
+bool TaskList::deleteTaskFromOverdueList(unsigned int& index)
+{
+	if (index < _overdueTaskList.size()) {
+		Task* task=_overdueTaskList[index];
+		for(unsigned int i=0;i<_taskList.size();i++){
+			if(_taskList[i]==task){
+				_taskList.erase(_taskList.begin()+i);
+			}
+		}
+		_overdueTaskList.erase(_overdueTaskList.begin()+index);
+		return true;
 	} else {
 		throw OutOfRangeException();
 		return false;
 	}
 }
 
-bool TaskList::deleteTaskFromSearchList(int& index){
+bool TaskList::deleteTaskFromSearchList(unsigned int& index)
+{
 	Task* task=_searchedTaskList[index];
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]==task){
@@ -290,6 +308,10 @@ Task* TaskList::getSearchedTask(int index){
 	return _searchedTaskList[index];
 }
 
+Task* TaskList::getFilteredTask(int index){
+	return _filteredTaskList[index];
+}
+
 Task* TaskList::getOverdueTask(int index){
 	return _overdueTaskList[index];
 }
@@ -302,7 +324,8 @@ std::vector<Task*> TaskList::getUncompletedTaskList(){
 	return _taskList;
 }
 
-Task* TaskList::setOverdueTaskAsDone(int index){
+Task* TaskList::setOverdueTaskAsDone(unsigned int index)
+{
 	Task* task;
 	task=_overdueTaskList[index];
 	task->setStatusAsDone();
@@ -311,7 +334,8 @@ Task* TaskList::setOverdueTaskAsDone(int index){
 	return task;
 }
 
-Task* TaskList::setSearchedTaskAsDone(int index){
+Task* TaskList::setSearchedTaskAsDone(unsigned int index)
+{
 	Task* task;
 	task=_searchedTaskList[index];
 	task->setStatusAsDone();
@@ -328,6 +352,16 @@ void TaskList::addTaskToSearchedList(Task& task){
 		}
 	} 
 	_searchedTaskList.push_back(&task);
+}
+
+void TaskList::addTaskToFilteredList(Task& task){
+	for(unsigned int i=0;i<_filteredTaskList.size();i++){
+		if(!task.checkLater(_filteredTaskList[i])){
+			_filteredTaskList.insert(_filteredTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_filteredTaskList.push_back(&task);
 }
 
 bool TaskList::checkNewOverdue(){
@@ -349,53 +383,6 @@ void TaskList::addTaskToOverdueList(Task& task){
 	_overdueTaskList.push_back(&task);
 }
 
-void TaskList::setEditStatus(bool value){
-	_editStatus=value;
-}
-
-bool TaskList::checkEditStatus(){
-	return _editStatus;
-}
-
-Task* TaskList::deleteEditTask(){
-	for(unsigned int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->checkEditStatus()){
-			Task* task = _taskList[i];
-			_taskList.erase(_taskList.begin()+i);
-			_editStatus=false;
-			return task;
-		}
-	}
-	return NULL;
-}
-
-Task* TaskList::deleteEditTaskFromSearch(){
-	for(unsigned int i=0;i<_searchedTaskList.size();i++){
-		if(_searchedTaskList[i]->checkEditStatus()){
-			Task* task = _searchedTaskList[i];
-			_searchedTaskList.erase(_searchedTaskList.begin()+i);
-			for(int j=0;j<_taskList.size();j++){
-				if(_taskList[j]==task){
-					_taskList.erase(_taskList.begin()+j);
-					_editStatus=false;
-					return task;
-				}
-			}
-		}
-	}
-	return NULL;
-}
-Task* TaskList::deleteEditTaskFromComplete() {
-	for(unsigned int i=0;i<_completedTaskList.size();i++){
-		if(_completedTaskList[i]->checkEditStatus()){
-			Task* task = _completedTaskList[i];
-			_completedTaskList.erase(_completedTaskList.begin()+i);
-			_editStatus=false;
-			return task;
-		}
-	}
-	return NULL;
-}
 
 int TaskList::getTaskIndexInSearchedList(Task* task){
 	assert(task!=NULL);
@@ -406,29 +393,33 @@ int TaskList::getTaskIndexInSearchedList(Task* task){
 	}
 	return DEFAULT_INDEX;
 }
-void TaskList::deleteFilteredTasks(){
-		while(!_filteredTaskList.empty()){
-			for(int i=0;i<_taskList.size();i++){
-				if(_taskList[i]==_filteredTaskList.back()){
-				_taskList.erase(_taskList.begin()+i);
-				_filteredTaskList.pop_back();
+
+void TaskList::clearSearchedTasks()
+{
+	_searchedTaskList.clear();
+}
+
+void TaskList::clearFilteredTasks()
+{
+	_filteredTaskList.clear();
+}
+
+bool TaskList::updateClashes(){
+	bool clashes = false;
+	resetClash();
+
+	for(unsigned int i=0;i<_taskList.size()-1;i++){
+		for(unsigned int j=i+1;j<_taskList.size();j++){
+			if(_taskList[i]->checkClash(_taskList[j])){
+				clashes = true;
 			}
 		}
 	}
+	return clashes;
 }
-void TaskList::addTaskToFilteredList(Task& task){
-		for(unsigned int i=0;i<_filteredTaskList.size();i++){
-			if(!task.checkLater(_filteredTaskList[i])){
-				_filteredTaskList.insert(_filteredTaskList.begin()+i,&task);
-				return;
-			}
-		}
-		_filteredTaskList.push_back(&task);
+
+void TaskList::resetClash(){
+	for(unsigned int i=0;i<_taskList.size();i++){
+		_taskList[i]->resetClash();
 	}
-void TaskList::clearSearchedTasks(){
-		_searchedTaskList.clear();
-}
-	
-void TaskList::clearFilteredTasks()	{
-		_filteredTaskList.clear();
 }

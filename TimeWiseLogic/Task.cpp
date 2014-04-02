@@ -13,7 +13,6 @@ Task::Task(void){
 	_startDate = NULL;
 	_endDate = NULL;
 	_taskIndex= DEFAULT_INDEX;
-	_editStatus=false;
 }
 
 
@@ -70,7 +69,7 @@ bool Task::checkOverdue()
 			if(_endTime==NULL){
 				return false;
 			}else if(_endTime->checkOverdueTime()){
-					return true;
+				return true;
 			}
 		}
 	}
@@ -104,11 +103,13 @@ std::string Task::getTaskCategory(){
 	return _category;
 }
 
-void Task::setStartTime(ClockTime& startTime){
-	_startTime = &startTime;
+void Task::setStartTime(ClockTime* startTime)
+{
+	_startTime = startTime;
 }
-void Task::setEndTime(ClockTime& endTime){
-	_endTime = &endTime;
+void Task::setEndTime(ClockTime* endTime)
+{
+	_endTime = endTime;
 }
 
 void Task::setPriority(PRIORITY taskPriority){
@@ -123,11 +124,13 @@ void Task::setIndex(int index){
 	assert(index>=0);
 	_taskIndex = index;
 }
-void Task::setEndDate(Date& endDate) {
-	_endDate = &endDate;
+void Task::setEndDate(Date* endDate)
+{
+	_endDate = endDate;
 }
-void Task::setStartDate(Date& startDate) {
-	_startDate = &startDate;
+void Task::setStartDate(Date* startDate)
+{
+	_startDate = startDate;
 }
 
 bool Task::hasKeyword(std::string keyword){
@@ -181,19 +184,19 @@ bool Task::hasPriority(PRIORITY priority){
 }
 
 bool Task::hasDate(Date* date){
-	 if(_endDate==NULL||date==NULL){
+	if(_endDate==NULL||date==NULL){
 		return false;
-	 }
-	 if(_startDate==NULL){
-		 if(_endDate->compare(date)){
-			 return true;
-		 }
-	 }else{
-		 if(date->isLater(_startDate)==SAME||date->isLater(_startDate)==LATER
-			 && date->isLater(_endDate)==SAME||date->isLater(_endDate)==EARLIER)
-			 return true;
-	 }
-	 return false;
+	}
+	if(_startDate==NULL){
+		if(_endDate->compare(date)){
+			return true;
+		}
+	}else{
+		if(date->isLater(_startDate)==SAME||date->isLater(_startDate)==LATER
+			&& date->isLater(_endDate)==SAME||date->isLater(_endDate)==EARLIER)
+			return true;
+	}
+	return false;
 }
 
 bool Task::hasCategory(std::string category){
@@ -224,23 +227,31 @@ bool Task::checkClash(Task* task){
 		return false;
 	}else if(_startDate==NULL && task->getStartDate()==NULL){
 		if(_endDate->isLater(task->getEndDate())==SAME){
+			_clashStatus=true;
+			task->_clashStatus=true;
 			return true;
 		}
 	}else if(_startDate==NULL){
 		if(_endDate->isLater(task->getEndDate())==EARLIER||_endDate->isLater(task->getEndDate())==SAME){
 			if(_endDate->isLater(task->getStartDate())==LATER||_endDate->isLater(task->getStartDate())==SAME){
+				_clashStatus=true;
+				task->_clashStatus=true;
 				return true;
 			}
 		}
 	}else if(task->getStartDate()==NULL){
 		if(task->getEndDate()->isLater(_endDate)==EARLIER||task->getEndDate()->isLater(_endDate)==SAME){
 			if(task->getEndDate()->isLater(_startDate)==LATER||task->getEndDate()->isLater(_startDate)==SAME){
+				_clashStatus=true;
+				task->_clashStatus=true;
 				return true;
 			}
 		}
 	}else{
 		if(_startDate->isLater(task->getEndDate())==EARLIER||_startDate->isLater(task->getEndDate())==SAME){
 			if(task->getStartDate()->isLater(_endDate)==EARLIER||task->getStartDate()->isLater(_endDate)==SAME){
+				_clashStatus=true;
+				task->_clashStatus=true;
 				return true;
 			}
 		}
@@ -254,16 +265,13 @@ bool Task::checkNewOverdue(){
 			setStatusAsOverdue();
 			return true;
 		}
+	}else{
+		if(getTaskStatus()==OVERDUE){
+			setStatusasUndone();
+			return true;
+		}
 	}
 	return false;
-}
-
-void Task::setEditStatus(bool value){
-	_editStatus=value;
-}
-
-bool Task::checkEditStatus(){
-	return _editStatus;
 }
 
 std::string Task::toString(){
@@ -289,7 +297,7 @@ std::string Task::toString(){
 	}
 	priority=PRIORITY_STRING[_taskPriority];
 	category=_category;
-	
+
 	std::string command = description;
 	if(startDate!=""&&endDate!=""){
 		description+=" on ";
@@ -319,4 +327,8 @@ std::string Task::toString(){
 	}
 
 	return description;
+}
+
+void Task::resetClash(){
+	_clashStatus=false;
 }

@@ -2,13 +2,12 @@
 #include "Parser.h"
 #include "Command.h"
 #include "Command_Add.h"
-#include "Command_AddEdit.h"
 #include "Command_Delete.h"
-#include "Command_Edit.h"
 #include "Command_Clear.h"
 #include "Command_Done.h"
 #include "Command_Undone.h"
 #include "Command_Search.h"
+#include "Command_Edit.h"
 #include "Command_Filter.h"
 #include "Command_Undo.h"
 #include "Command_Redo.h"
@@ -32,9 +31,8 @@ public:
 
 	Command* interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist);
 	Command* createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
-	Command* createCommandAddEdit(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
 	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
-	Command* createCommandEdit(vector<std::string> parameters ,DISPLAY_TYPE* displayType, std::string* _userInput);
+	Command* createCommandEdit(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
 	Command* createCommandDone(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndone(std::string,DISPLAY_TYPE*);

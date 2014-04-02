@@ -112,28 +112,28 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartDate(*_parser.createDate(details));
+						newTask->setStartDate(_parser.createDate(details));
 					}break;
 				case 2:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndDate(*_parser.createDate(details));
+						newTask->setEndDate(_parser.createDate(details));
 					}break;
 				case 3:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartTime(*_parser.createTime(details));
+						newTask->setStartTime(_parser.createTime(details));
 					}break;
 				case 4:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndTime(*_parser.createTime(details));
+						newTask->setEndTime(_parser.createTime(details));
 					}break;
 				case 5:
 					taskHeader++;
@@ -197,28 +197,28 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartDate(*_parser.createDate(details));
+						newTask->setStartDate(_parser.createDate(details));
 					}break;
 				case 2:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndDate(*_parser.createDate(details));
+						newTask->setEndDate(_parser.createDate(details));
 					}break;
 				case 3:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartTime(*_parser.createTime(details));
+						newTask->setStartTime(_parser.createTime(details));
 					}break;
 				case 4:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndTime(*_parser.createTime(details));
+						newTask->setEndTime(_parser.createTime(details));
 					}break;
 				case 5:
 					taskHeader++;

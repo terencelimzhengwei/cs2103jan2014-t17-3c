@@ -10,7 +10,7 @@ public:
 	void setDescription(std::string);
 	void setPriority(PRIORITY);
 	void setCategory(std::string);
-	void setEndDate(Date&);
+	void setEndDate(Date& date);
 	void setStartDate(Date&);
 	void setStartTime(ClockTime&);
 	void setEndTime(ClockTime&);

@@ -39,7 +39,7 @@ Command* CommandManager::getLastRedoCommand() const
 	return redoList.back();
 }
 
-void CommandManager::DoCommand(Command* pCommand)
+void CommandManager::DoCommand(Command* pCommand, std::string& feedback)
 {
 	if(pCommand->getType()==UNDO){
 		Undo();
@@ -51,7 +51,7 @@ void CommandManager::DoCommand(Command* pCommand)
 			ClearRedoList();
 		}
 		// Execute the command and add it to undo list if succeeded
-		if (pCommand->execute(_taskList)){
+		if (pCommand->execute(_taskList,feedback)){
 			if(undoable(pCommand)){
 				AddUndo(pCommand);
 			}else{
@@ -80,12 +80,13 @@ void CommandManager::Undo()
 
 void CommandManager::Redo()
 {
+	std::string feedback;
 	if (CanRedo())
 	{
 		m_nCleanCount++;
 		Command* pCommand = redoList.back();
 		redoList.pop_back();
-		if (pCommand->execute(_taskList)){
+		if (pCommand->execute(_taskList,feedback)){
 			AddUndo(pCommand);
 		}else{
 			delete pCommand;

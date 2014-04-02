@@ -5,7 +5,7 @@ public:
 	Command_Done(void);
 	~Command_Done(void);
 
-	bool execute(TaskList& tasklist);
+	bool execute(TaskList& tasklist, std::string& feedback);
 	bool undo(TaskList& tasklist);
 	void setCompletedIndex(int index);
 	void setDisplayScreen(DISPLAY_TYPE screen);

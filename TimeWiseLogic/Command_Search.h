@@ -6,7 +6,7 @@ public:
 	Command_Search(void);
 	~Command_Search(void);
 
-	bool execute(TaskList& tasklist);
+	bool execute(TaskList& tasklist, std::string& feedback);
 	bool undo(TaskList& tasklist);
 	void setKeyword(std::string keyword);
 	void setPreviousScreen(DISPLAY_TYPE* screen);

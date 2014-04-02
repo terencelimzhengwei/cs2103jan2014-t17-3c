@@ -10,7 +10,7 @@ public:
 	void setDeletionString(std::string deletionString);
 	void setDisplayScreen(DISPLAY_TYPE display);
 
-	virtual bool execute(TaskList& tasklist);
+	virtual bool execute(TaskList& tasklist, std::string& feedback);
 	virtual bool undo(TaskList& taskList);
 
 private:

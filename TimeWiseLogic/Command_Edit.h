@@ -15,7 +15,7 @@ public:
 	void setEndTime(ClockTime* endTime);
 	void setDisplayScreen(DISPLAY_TYPE screen);
 
-	bool execute(TaskList& tasklist);
+	bool execute(TaskList& tasklist, std::string& feedback);
 	bool undo(TaskList& tasklist);
 private:
 	int _editIndex;

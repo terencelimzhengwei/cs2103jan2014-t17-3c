@@ -26,13 +26,14 @@ void Command_Delete::setDeletionString(std::string deletionString){
 }
 
 //only by index first
-bool Command_Delete::execute(TaskList& taskList){
+bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
 		if(_deletionIndex!=DEFAULT_INDEX ){
 			_taskDeleted=taskList.getTask(_deletionIndex);
 			taskList.deleteTask(_deletionIndex);
 			_lastCmdCalled="execute";
+			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your uncompleted list";
 			return true;
 		}/*else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete
@@ -43,6 +44,7 @@ bool Command_Delete::execute(TaskList& taskList){
 			_taskDeleted=taskList.getCompletedTask(_deletionIndex);
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
 			_lastCmdCalled="execute";
+			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your completed list";
 			return true;
 		}else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete
@@ -53,6 +55,7 @@ bool Command_Delete::execute(TaskList& taskList){
 			_taskDeleted=taskList.getSearchedTask(_deletionIndex);
 			taskList.deleteTaskFromSearchList(_deletionIndex);
 			_lastCmdCalled="execute";
+			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your searched list";
 			return true;
 		}else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete

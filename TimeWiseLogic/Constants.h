@@ -10,7 +10,7 @@ static const int CMD_TYPE_COUNT		    = 11;
 static const int PRIORITY_COUNT			= 6;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
-static const int MAX_PREPOSITION        = 10;
+static const int MAX_PREPOSITION        = 11;
 static const int HEADER_COUNT			= 8;
 static const int DAYS_COUNT             = 19;
 static const int TIME_COUNT             = 2;
@@ -19,7 +19,7 @@ static const int TIME_COUNT             = 2;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
-enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE,ADDEDIT, UNDEFINED};
+enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum FILTER_TYPE{CATEGORY,PRI,DATE};
@@ -41,7 +41,7 @@ static const std::string TIME_INDICATOR[TIME_COUNT] = {"pm", "am"};
 const char TASK_SPECIFIER = '#';
 const char DATE_SEPARATOR = '-';
 
-const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next"};
+const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in"};
 
 const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;

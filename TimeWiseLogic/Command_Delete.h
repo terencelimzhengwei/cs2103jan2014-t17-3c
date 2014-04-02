@@ -15,7 +15,7 @@ public:
 
 private:
 	Task* _taskDeleted;
-	int _deletionIndex;
+	unsigned int _deletionIndex;
 	std::string _deletionString;
 	std::string _lastCmdCalled;
 	DISPLAY_TYPE _displayType;

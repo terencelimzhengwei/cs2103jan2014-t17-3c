@@ -35,7 +35,7 @@ public:
 	void setDateAsTomorrow();
 	bool compare(Date* date);
 	void setDate(int day, int month, int year);
-
+	void setDateAsToday();
 
 private:
 	time_t _currentTime;
@@ -46,6 +46,5 @@ private:
 	int _year;
 	int _day;
 	std::string _dayInString;
-	void setDateAsToday();
 };
 #endif

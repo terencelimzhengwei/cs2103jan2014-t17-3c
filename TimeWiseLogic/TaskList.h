@@ -15,18 +15,18 @@ public:
 	void addTaskToDoneList(Task&);
 	void addTaskToSearchedList(Task&);
 	void addTaskToOverdueList(Task&);
-	Task* setTaskAsDone(int);
-	Task* setTaskAsUndone(int);
-	Task* getTask(int);
-	Task* setOverdueTaskAsDone(int index);
-	Task* setSearchedTaskAsDone(int index);
-	Task* getCompletedTask(int);
+	Task* setTaskAsDone(unsigned int index);
+	Task* setTaskAsUndone(unsigned int index);
+	Task* getTask(unsigned int index);
+	Task* setOverdueTaskAsDone(unsigned int index);
+	Task* setSearchedTaskAsDone(unsigned int index);
+	Task* getCompletedTask(unsigned int index);
 	Task* getSearchedTask(int);
 	Task* getOverdueTask(int);
-	bool deleteTask(int&);
-	bool deleteTaskFromCompletedList(int&);
-	bool deleteTaskFromOverdueList(int&);
-	bool deleteTaskFromSearchList(int&);
+	bool deleteTask(unsigned int& index);
+	bool deleteTaskFromCompletedList(unsigned int& index);
+	bool deleteTaskFromOverdueList(unsigned int&);
+	bool deleteTaskFromSearchList(unsigned int& index);
 
 	int getTaskIndex(Task* task);
 	int getTaskIndexInCompletedList(Task* task);
@@ -53,23 +53,20 @@ public:
 	int undoneSize();
 	int doneSize();
 	std::vector<Clash> checkClashes(Task* task);
+	bool updateClashes();
+	void resetClash();
 	void deleteSearchedTasks();
-	void setEditStatus(bool value);
-	bool checkEditStatus();
-	std::string retrieveForMainEdit(int index);
 	Task* deleteEditTask();
 	Task* deleteEditTaskFromSearch();
-	Task* deleteEditTaskFromComplete();
 	void deleteFilteredTasks();
 	void clearSearchedTasks();
 	void clearFilteredTasks();
 	void addTaskToFilteredList(Task& task);
-
+	Task* getFilteredTask(int index);
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;
 	std::vector<Task*> _filteredTaskList;
-	bool _editStatus;
 };

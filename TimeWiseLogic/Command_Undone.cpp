@@ -12,11 +12,12 @@ Command_Undone::~Command_Undone(void){
 	_task=NULL;
 }
 
-bool Command_Undone::execute(TaskList& tasklist){
+bool Command_Undone::execute(TaskList& tasklist, std::string& feedback){
 	if(_displayType== COMPLETE){
 		Task* task = tasklist.getCompletedTask(_taskIndex);
 		_task=task;
 		tasklist.setTaskAsUndone(_taskIndex);
+		feedback = "Task: '" + _task->toString() + "' has been marked as uncompleted";
 		return true;
 	}else{
 		throw UnableToUndoneUncompletedTasks();

@@ -25,19 +25,23 @@ Command_Clear::~Command_Clear(void){
 	}
 }
 
-bool Command_Clear::execute(TaskList& tasklist){
+bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 	switch(_clearType){
 	case ALL:
 		clearAll(tasklist);
+		feedback = "All tasks are removed from your schedule!";
 		break;
 	case UNCOMPLETED_TASKS:
 		clearUncompletedTasks(tasklist);
+		feedback = "All uncompleted tasks are removed from your schedule!";
 		break;
 	case COMPLETED_TASKS:
 		clearCompletedTasks(tasklist);
+		feedback = "All completed tasks are removed from your schedule!";
 		break;
 	case SCREEN:
 		clearScreen(tasklist);
+		feedback = "All tasks are cleared from the list";
 		break;
 	default:
 		_lastCmdCalled="execute";

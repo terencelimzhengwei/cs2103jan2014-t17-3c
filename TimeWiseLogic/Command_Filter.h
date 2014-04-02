@@ -6,7 +6,7 @@ public:
 	Command_Filter(void);
 	~Command_Filter(void);
 
-	bool execute(TaskList& tasklist);
+	bool execute(TaskList& tasklist, std::string& feedback);
 	bool undo(TaskList& tasklist);
 	void setCategory(std::string category);
 	void setPriority(PRIORITY priority);

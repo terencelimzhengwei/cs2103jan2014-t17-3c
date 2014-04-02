@@ -8,7 +8,7 @@ namespace TimeWiseUnitTest
 	TEST_CLASS(UnitTest1)
 	{
 	public:
-		TEST_METHOD(CommandAddTest) {
+		/*TEST_METHOD(CommandAddTest) {
 			//equivalence partition: floating task, timed task, deadline task
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
@@ -202,7 +202,7 @@ namespace TimeWiseUnitTest
 
 		}
 
-		TEST_METHOD(CommandDoneUndoneTest) {
+		/*TEST_METHOD(CommandDoneUndoneTest) {
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
 			ClockTime startTime(1200);
@@ -293,7 +293,7 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[0]->execute(_taskList);
 			commandToBeExecuted[1]->execute(_taskList);
 			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[3]->execute(_taskList);*/
 
 		/*	Command_Search* search = new Command_Search();
 			search->setKeyword("task");
@@ -317,7 +317,7 @@ namespace TimeWiseUnitTest
 			std::vector<Task*> searchedtask3= _taskList.getSearchResults();
 			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
 			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
-			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());*/
+			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
 
 		}
 		TEST_METHOD(ClockTimeTest) {
@@ -418,15 +418,41 @@ namespace TimeWiseUnitTest
 		}
 
 		TEST_METHOD(checkClashTest) {
-			TimeWiseLogic _logic;
-			std::string input = "add this 12/3 to 13/3";
-			std::string input1 = "add that 12/3 to 13/3";
-			_logic.processCommand(input);
-			_logic.processCommand(input1);
-			Assert::AreEqual(2,static_cast<int>(_logic.getTaskList().getClashedTask().size()));
-		}
+			TaskList _taskList;
+			std::vector<Command_Add*> commandToBeExecuted;
+			ClockTime startTime(1200);
+			ClockTime endTime(1600);
+			Date startDate(10,3,2014);
+			Date endDate(12,3,2014);
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[2]->setEndDate(endDate);
+			commandToBeExecuted[2]->setEndTime(endTime);
 
-		TEST_METHOD(ParserTest_GetFirstWord) {
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
+			commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setCategory("test");
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setEndDate(endDate);
+			commandToBeExecuted[2]->setEndTime(endTime);
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setStartDate(startDate);
+			commandToBeExecuted[3]->setStartTime(startTime);
+			commandToBeExecuted[3]->setEndDate(endDate);
+			commandToBeExecuted[3]->setEndTime(endTime);
+
+			commandToBeExecuted[0]->execute(_taskList);
+			commandToBeExecuted[1]->execute(_taskList);
+			commandToBeExecuted[2]->execute(_taskList);
+			commandToBeExecuted[3]->execute(_taskList);
+		}*/
+
+		/*TEST_METHOD(ParserTest_GetFirstWord) {
 			Parser _parser;
 			std::string expectedCase1 = "add";
 			std::string validInput1 = _parser.getFirstWord("add dinner with Mai");
@@ -578,9 +604,9 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase3,invalidInput3);
 
 
-		}
+		}*/
 
-		TEST_METHOD(ParserTest_IsDateFormat) {
+		/*TEST_METHOD(ParserTest_IsDateFormat) {
 			Parser _parser;
 			bool validInput1 = _parser.isDateFormat("22/12/2013");
 			bool expectedCase1 = true;
@@ -649,7 +675,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase21, validInput21);
 		}
 
-		TEST_METHOD (ParserTest_CreatDate) {
+		/*TEST_METHOD (ParserTest_CreatDate) {
 			Parser _parser;
 			Date* validInput1 = _parser.createDate("21/03/2013");
 			int  expectedCase1[3] = {21,3,2013};
@@ -699,12 +725,7 @@ namespace TimeWiseUnitTest
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
 			}
-		}
-
-		
-
-		
-		
-
+		}*/
+;
 };
-}
+

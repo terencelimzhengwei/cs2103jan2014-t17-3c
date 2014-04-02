@@ -23,7 +23,7 @@ public:
 	bool hasStartTime();
 	bool hasEndTime();
 
-	virtual bool execute(TaskList&);
+	virtual bool execute(TaskList&,std::string&);
 	virtual bool undo(TaskList&);
 
 protected:

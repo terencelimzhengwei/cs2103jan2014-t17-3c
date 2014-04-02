@@ -52,6 +52,7 @@ void Date::setDate(int day, int month, int year){
 	_month=month;
 	_year=year;
 }
+
 void Date::setDateAsToday(){
 	_currentTime = time(0);   
 	localtime_s(&_timeNow,&_currentTime);
@@ -64,7 +65,7 @@ void Date::setDateAsToday(){
 }
 
 void Date::setDateAsTomorrow() {
-	if(getCurrentMonth() == 1 || getCurrentMonth() == 3|| getCurrentMonth() == 5||
+	/* if(getCurrentMonth() == 1 || getCurrentMonth() == 3|| getCurrentMonth() == 5||
 		getCurrentMonth() == 7|| getCurrentMonth() == 8|| getCurrentMonth() == 12) {
 			if(getCurrentDay() == 31) {
 				_dayNumber = 1;
@@ -101,8 +102,10 @@ void Date::setDateAsTomorrow() {
 				_dayNumber = getCurrentDay() + 1;
 				_year = getCurrentYear();
 			}
-	}
-
+	} */
+	// Added by Antony.
+	setDateAsToday();
+	(*this)++;
 }
 
 TIMEDATE_STATUS Date::checkOverdue()
@@ -255,4 +258,48 @@ int Date::isLeapYear(){
 		yearType = LEAP_YEAR;
 	}
 	return yearType;
+}
+
+Date Date::operator++(int) {
+	Date original(*this);
+	if(getMonth() == 1 || getMonth() == 3|| getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 12) {
+		if(getDayNumber() == 31) {
+			_dayNumber = 1;
+			if(getMonth() == 12) {
+				_month = 1;
+				_year = getYear() + 1;
+			} else {
+				_month = getMonth() + 1;
+				_year = getYear();
+			}	
+		} else {
+			_month = getMonth();
+			_dayNumber = getDayNumber() + 1;
+			_year = getYear();
+		}
+	} else if (getMonth() == 2) {
+		if(getDayNumber()== 29) {
+			_dayNumber = 1;
+			_month = 3;
+			_year = getYear();
+		} else {
+			_month = getMonth();
+			_dayNumber = getDayNumber() + 1;
+			_year = getYear();
+		}
+	} else if (getMonth() == 4 || getMonth() == 6|| getMonth() == 9 || getMonth() == 10 || getMonth() == 11) {
+		if(getDayNumber()== 30) {
+			_dayNumber = 1;
+			_month = getMonth() + 1;
+			_year = getYear();
+		} else {
+			_month = getMonth();
+			_dayNumber = getDayNumber() + 1;
+			_year = getYear();
+		}
+	}
+
+	_day = (_day + 1) % 7;
+	_dayInString = DAY[_day];
+	return original;
 }

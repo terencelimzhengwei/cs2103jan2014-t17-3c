@@ -419,13 +419,14 @@ void TaskList::updateClashStatus()
 	if(_taskList.empty()){
 		return;
 	}
-	for(unsigned int i=0;i<_taskList.size()-1;i++){
+
+	for(unsigned int i=0;i<_taskList.size();i++){
 		for(unsigned int j=i+1;j<_taskList.size();j++){
 			if(!_taskList[i]->checkClash(_taskList[j])){
 				if(_taskList[i]->isClash()==true){
 					_taskList[i]->setClash(false);
 				}else if(_taskList[j]->isClash()==true){
-					_taskList[i]->setClash(false);
+					_taskList[j]->setClash(false);
 				}
 			}
 		}

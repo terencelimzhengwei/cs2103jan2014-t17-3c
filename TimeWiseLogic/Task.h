@@ -48,6 +48,7 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
+	bool checkClashTime(Task* task);
 	void setClash(bool clash);
 	std::string toString();
 	bool isClash();

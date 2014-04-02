@@ -16,7 +16,7 @@ void Command_Done::setCompletedIndex(int index){
 	_taskIndex=index;
 }
 
-bool Command_Done::execute(TaskList& tasklist){
+bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
@@ -37,7 +37,7 @@ bool Command_Done::execute(TaskList& tasklist){
 		}
 		return false;
 	}
-
+	feedback = "Task: '" + _task->toString() + "' has been marked as completed";
 }
 
 bool Command_Done::undo(TaskList& tasklist){

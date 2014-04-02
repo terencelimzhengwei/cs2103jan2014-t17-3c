@@ -17,7 +17,7 @@ public:
 	bool IsDirty() const;
 	Command* getLastUndoCommand() const;
 	Command* getLastRedoCommand() const;
-	void DoCommand(Command* pCommand);
+	void DoCommand(Command* pCommand, std::string& feedback);
 	void Undo();
 	void Redo();
 	void Clear();

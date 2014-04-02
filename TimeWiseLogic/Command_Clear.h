@@ -6,7 +6,7 @@ public:
 	Command_Clear(CLEAR_TYPE clearType);
 	~Command_Clear(void);
 
-	bool execute(TaskList& tasklist);
+	bool execute(TaskList& tasklist, std::string& feedback);
 	bool undo(TaskList& tasklist);
 	void setDisplayScreen(DISPLAY_TYPE displayType);
 private:

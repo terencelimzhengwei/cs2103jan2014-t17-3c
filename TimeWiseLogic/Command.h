@@ -17,7 +17,7 @@ class Command
 public:
 	Command(void);
 	virtual ~Command(void);
-	virtual bool execute(TaskList& tasklist)=0;
+	virtual bool execute(TaskList& tasklist, std::string& feedback)=0;
 	virtual bool undo(TaskList& tasklist)=0;
 	CMD_TYPE getType();
 protected:

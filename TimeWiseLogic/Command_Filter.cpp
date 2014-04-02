@@ -12,21 +12,25 @@ Command_Filter::Command_Filter(void){
 Command_Filter::~Command_Filter(void){
 }
 
-bool Command_Filter::execute(TaskList& tasklist){
+bool Command_Filter::execute(TaskList& tasklist, std::string& feedback){
 	*_currentScreen=FILTERED;
 	switch(_filterType){
 	case CATEGORY:
 		tasklist.populateFilterList(_category);
+		feedback = "Tasks displayed belong to " + _category + "category.";
 		return true;
 	case DATE:
 		tasklist.populateFilterList(_date);
+		feedback = "Tasks displayed are scheduled on the same date: " + _date->toString() + ".";
 		return true;
 	case PRI:
 		tasklist.populateFilterList(_priority);
+		feedback = "Tasks displayed have the same level of emergency";
 		return true;
 	default:
 		return false;
 	}
+	
 }
 
 bool Command_Filter::undo(TaskList& tasklist){

@@ -235,16 +235,14 @@ void TimeWiseGUI::setMainData() {
 			}
 			}
 			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
-			/*if(qStatus == "overdue" && checkClash) {
+			bool checkClash = taskList.getTask(i)->isClash();
+			if(qStatus == "overdue" && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (!checkClash) {
+			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
-			}*/
-			//highlight description in red if that task is overdue
-			if(qStatus == "overdue") {
+			} else if(qStatus == "overdue") {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			}
-			if (qStatus == "done") {
+			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}
@@ -330,16 +328,14 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			}
 			}
 			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
-			/*bool checkClash = taskList[i]->isClash();
+			bool checkClash = taskList[i]->isClash();
 			if(qStatus == "overdue" && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (!checkClash) {
+			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
-			}*/
-			if(qStatus == "overdue") {
+			} else if(qStatus == "overdue") {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} 
-			if (qStatus == "done") {
+			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}

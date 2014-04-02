@@ -109,21 +109,13 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 		std::string messageLog = _logic.processCommand(userCommand);
 
-		/*bool isEdit = _logic.getTaskList().checkEditStatus();
-
-		if(isEdit) {
-			QString qOrigAction = QString::fromStdString(_logic.getUserInput());
-			ui.userInput->setText(qOrigAction);
-			ui.userInput->selectAll();
-			displayTaskList(_logic.getScreenToDisplay());
-		}
-		else {*/
 		autoComplete();
 		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 		displayTaskList(displayType);
 
 		QString outputMessage = QString::fromStdString(messageLog);
-		ui.label_mlog->setText(outputMessage);
+		showFeedback(outputMessage);
+		//ui.label_mlog->setText(outputMessage);
 	}
 	catch(const std::invalid_argument& e) {
 		ui.label_mlog->setText(e.what());
@@ -493,13 +485,13 @@ void TimeWiseGUI::autoComplete() {
 	ui.userInput->setCompleter(descCompleter);
 }
 
-void TimeWiseGUI::wheelEvent(QWheelEvent *ev ) {
+/*void TimeWiseGUI::wheelEvent(QWheelEvent *ev ) {
 	if ( ev->delta() > 0 ) {
 		previous_line();
 	} else {
 		next_line();
 	}
-}
+}*/
 
 void TimeWiseGUI::previous_line() {
 	if ( lines.empty() )
@@ -530,4 +522,10 @@ void TimeWiseGUI::next_line() {
 	} else {
 		ui.userInput->setText(lines[current_line]);
 	}
+}
+
+void TimeWiseGUI::showFeedback(QString outputMessage) {
+	feedback = new TimeWiseFeedback();
+	feedback->show();
+	feedback->setData(outputMessage);
 }

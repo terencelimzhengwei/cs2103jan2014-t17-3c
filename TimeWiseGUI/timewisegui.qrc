@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="TimeWiseGUI">
+    <file>feedbackground.png</file>
     <file>TimeWise background 3.png</file>
     <file>Background new.jpg</file>
     <file>CFJackStory-Regular.ttf</file>

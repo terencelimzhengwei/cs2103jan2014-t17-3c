@@ -291,22 +291,6 @@ color: rgb(0, 85, 255);</string>
      <string>Your Tasks</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_mlog">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>430</y>
-      <width>469</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Welcome to TIMEWiSE!</string>
-    </property>
-   </widget>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
    <zorder>label_date</zorder>
@@ -314,7 +298,6 @@ color: rgb(0, 85, 255);</string>
    <zorder>layoutWidget</zorder>
    <zorder>pushButton_minimize</zorder>
    <zorder>label_title</zorder>
-   <zorder>label_mlog</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

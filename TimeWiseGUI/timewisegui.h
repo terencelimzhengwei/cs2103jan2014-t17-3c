@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include "ui_timewisegui.h"
 #include "TimeWiseLogic.h"
+#include "timewisefeedback.h"
 
 class TimeWiseGUI : public QMainWindow {
 	Q_OBJECT
@@ -39,13 +40,14 @@ public:
 
 	//These are the functions that allow lineEdit to retrieve previous user actions
 	bool eventFilter(QObject* obj, QEvent *event);
-	void wheelEvent(QWheelEvent *);
+	//void wheelEvent(QWheelEvent *);
 	void previous_line();
 	void next_line();
 
 	//other functions
 	int checkEmpty(QString input);
 	void autoComplete();
+	void showFeedback(QString outputMessage);
 
 private slots:
 	void updateTime();
@@ -63,6 +65,7 @@ private:
 	Ui::TimeWiseGUIClass ui;
 	TimeWiseLogic _logic;
 	QCompleter *descCompleter;
+	TimeWiseFeedback *feedback;
 
 	//these are for the history retrieval used in line Edit
 	int current_line;

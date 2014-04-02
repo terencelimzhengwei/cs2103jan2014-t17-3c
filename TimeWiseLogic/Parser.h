@@ -12,11 +12,10 @@
 #include "Calendar.h"
 using namespace std;
 
-//To be done by Antony.
-
 class Parser
 {
 private:
+	Date dateFunction;
 public:
 	Parser(void);
 	~Parser(void);

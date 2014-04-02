@@ -72,6 +72,14 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 	string monthListLong[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 	string monthListShort[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
+	int dayInNameNum = 3;
+	string dayInName[] = {"today", "tomorrow", "tmr"};
+	int dayInNameOffset[] = {0, 1, 1};
+	int monthDayNum[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	int weekdayNum = 7;
+
+
 	bool dateFound = false;
 
 	vector<string> parameters = splitBySpace(command);
@@ -88,22 +96,46 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 		if(dateComponent.size() == 2 || dateComponent.size() == 3) {
 			if(isAllNumbers(dateComponent[0]) && isAllNumbers(dateComponent[1])) {
 				if(dateComponent[0].length()<=2 && dateComponent[1].length()<=2) {
-						output[2] = toNum(dateComponent[0]);
-						output[1] = toNum(dateComponent[1]);
-						if(dateComponent.size() == 3) {
-							output[0] = toNum(dateComponent[2]);
-							if(dateComponent[2].length()==2) {
-							// !! Need to change the code to get the current century
-								output[0] += 2000;
-							}
-						} else {
-							// !! Need to change the code to get the current year
-							output[0] = 2014;
+					output[2] = toNum(dateComponent[0]);
+					output[1] = toNum(dateComponent[1]);
+					
+					if(dateComponent.size() == 3) {
+						output[0] = toNum(dateComponent[2]);
+						if(dateComponent[2].length()==2) {
+							output[0] += dateFunction.getCurrentYear()/100;	
 						}
+					} else {
+						output[0] += dateFunction.getCurrentYear();
+					}
 				}
 			}
 			output[3] = 1;
 			dateFound = true;
+		} else if(dateComponent.size() == 1) {
+			for(int i=0 ; i<dayInNameNum && !dateFound ; i++) {
+				if(convertToLowerCase(dateComponent[0]) == dayInName[i]) {
+					if(dayInNameOffset[i]==0) {
+						dateFunction.setDateAsToday();
+					} else {
+						dateFunction.setDateAsTomorrow();
+					}
+					output[0] = dateFunction.getYear();
+					output[1] = dateFunction.getMonth();
+					output[2] = dateFunction.getDayNumber();
+					output[3] = 1;
+					dateFound = true;
+				}
+			}
+			for(int i=0 ; i<7 && !dateFound; i++) {
+				if(convertToLowerCase(dateComponent[0])==convertToLowerCase(DAY[i]) || convertToLowerCase(dateComponent[0])==convertToLowerCase(DAY_ABBR[i])) {
+					for(dateFunction.setDateAsToday() ; dateFunction.getDayOfTheWeek()!=DAY[i] ; dateFunction++);
+					output[0] = dateFunction.getYear();
+					output[1] = dateFunction.getMonth();
+					output[2] = dateFunction.getDayNumber();
+					output[3] = 1;
+					dateFound = true;
+				}
+			}
 		}
 	}
 
@@ -148,7 +180,12 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 		}
 	}
 	
-	if(!dateFound) {
+	if(dateFound) {
+		dateFunction.setDate(1, 1, output[0]);
+		if(output[1]>12 || dateFunction.isLeapYear()==NOT_LEAP_YEAR && output[1]==2 && output[2]==29 || output[2]>monthDayNum[output[1]]) {
+			output[3] = 0;
+		}
+	} else {
 		output[3] = 0;
 	}
 	return output;

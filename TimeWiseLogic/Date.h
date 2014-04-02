@@ -32,10 +32,12 @@ public:
 	int getCurrentYear();
 	int getCurrentMonth();
 	int getCurrentDay();
+	void setDateAsToday();
 	void setDateAsTomorrow();
 	bool compare(Date* date);
 	void setDate(int day, int month, int year);
-	void setDateAsToday();
+
+	Date operator++(int);
 
 private:
 	time_t _currentTime;

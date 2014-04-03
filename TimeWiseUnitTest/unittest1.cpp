@@ -725,6 +725,97 @@ namespace TimeWiseUnitTest
 				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
 			}
 		}
+		
+		TEST_METHOD(ParserTest_ExtractDate) {
+			Parser parser;
+			vector<int> dateData;
+
+			dateData = parser.extractDate("15/3", 0);
+			Assert::AreEqual(1,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15/3/2014", 0);
+			Assert::AreEqual(1,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 mar", 1);
+			Assert::AreEqual(2,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 Mar", 1);
+			Assert::AreEqual(2,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 MAR", 1);
+			Assert::AreEqual(2,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 mar 2014", 2);
+			Assert::AreEqual(3,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 Mar 2014", 2);
+			Assert::AreEqual(3,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+
+			dateData = parser.extractDate("15 MAR 2014", 2);
+			Assert::AreEqual(3,dateData[3]);
+			Assert::AreEqual(2014,dateData[0]);
+			Assert::AreEqual(3,dateData[1]);
+			Assert::AreEqual(15,dateData[2]);
+		}
+
+		TEST_METHOD(ParserTest_ExtractTime) {
+			Parser parser;
+			vector<int> timeData;
+
+			timeData = parser.extractTime("15:30", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1530, timeData[0]);
+
+			timeData = parser.extractTime("330pm", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1530, timeData[0]);
+
+			timeData = parser.extractTime("15:00", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1500, timeData[0]);
+
+			timeData = parser.extractTime("3pm", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1500, timeData[0]);
+
+			timeData = parser.extractTime("00:30", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(30, timeData[0]);
+
+			timeData = parser.extractTime("1230am", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(30, timeData[0]);
+
+			timeData = parser.extractTime("12:30", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1230, timeData[0]);
+
+			timeData = parser.extractTime("1230pm", 0);
+			Assert::AreEqual(1, timeData[1]);
+			Assert::AreEqual(1230, timeData[0]);
+		}
+
 
 		TEST_METHOD(System_Test1) {
 			// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QFontDatabase>
 #include "ui_timewisefeedback.h"
 
 class TimeWiseFeedback : public QWidget

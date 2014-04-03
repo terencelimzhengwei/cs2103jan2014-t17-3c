@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisefeedback.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -30,16 +30,17 @@ public:
     {
         if (TimeWiseFeedback->objectName().isEmpty())
             TimeWiseFeedback->setObjectName(QStringLiteral("TimeWiseFeedback"));
-        TimeWiseFeedback->resize(331, 333);
-        TimeWiseFeedback->setMinimumSize(QSize(331, 333));
-        TimeWiseFeedback->setMaximumSize(QSize(331, 333));
-        TimeWiseFeedback->setStyleSheet(QStringLiteral("#TimeWiseFeedback{image: url(:/TimeWiseGUI/feedbackground.png);}"));
+        TimeWiseFeedback->resize(250, 216);
+        TimeWiseFeedback->setMinimumSize(QSize(250, 216));
+        TimeWiseFeedback->setMaximumSize(QSize(250, 216));
+        TimeWiseFeedback->setStyleSheet(QStringLiteral("#TimeWiseFeedback{image: url(:/TimeWiseGUI/feedbackground2.png);}"));
         userFeedback = new QLabel(TimeWiseFeedback);
         userFeedback->setObjectName(QStringLiteral("userFeedback"));
-        userFeedback->setGeometry(QRect(70, 60, 191, 171));
+        userFeedback->setGeometry(QRect(40, 20, 171, 151));
+        userFeedback->setWordWrap(true);
         pushButton_ok = new QPushButton(TimeWiseFeedback);
         pushButton_ok->setObjectName(QStringLiteral("pushButton_ok"));
-        pushButton_ok->setGeometry(QRect(130, 280, 75, 23));
+        pushButton_ok->setGeometry(QRect(90, 180, 75, 23));
         pushButton_ok->setDefault(true);
 
         retranslateUi(TimeWiseFeedback);

@@ -336,8 +336,12 @@ void Task::setClash(bool clash){
 }
 
 bool Task::checkClashTime(Task* task){
-	if(_endTime==NULL||task->getEndTime()==NULL){
+	if(_endTime==NULL && task->getEndTime()==NULL){
 		return true;
+	}
+
+	if(_endTime==NULL||task->getEndTime()==NULL){
+		return false;
 	}else if(_startTime==NULL && task->getStartTime()==NULL){
 		if(_endTime->isLater(task->getEndTime())==SAME){
 			return true;

@@ -33,12 +33,6 @@
     <ClInclude Include="TaskList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OverdueTaskList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CompletedTaskList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>

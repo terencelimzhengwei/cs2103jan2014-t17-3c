@@ -122,6 +122,8 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 			case DISPLAY:
 				return createCommandDisplay(parameter,&displayType);
+			case BLOCK:
+				return createCommandBlock(parameter,&displayType);
 			default: {
 				return NULL;
 			}
@@ -586,4 +588,55 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;
+}
+
+Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* screen){
+	std::vector<std::string> components;
+	std::vector<std::string> times;
+	std::vector<std::string> dates;
+	std::string part;
+	std::string category;
+	Date* startDate=NULL;
+	Date* endDate=NULL;
+	ClockTime* startTime=NULL;
+	ClockTime* endTime=NULL;
+	Command_Block* newCommand= new Command_Block;
+	components=_parser.explode('\\',parameter);
+	//std::vector<std::string> tokens;
+	//tokens=_parser.splitBySpace(components.top);
+	std::string description = components.front();
+	components.erase(components.begin());
+
+	for(int i=0 ; i<components.size() ; i++) {
+		vector<string> token = _parser.explode(' ', components[i]);
+		int temp; // storing the word number used for the date/time
+		for(int j = token.size()-1 ; j ; j--) {
+			if(temp = _parser.extractDate(components[i], j)[3]) {
+				vector<int> dateData = _parser.extractDate(components[i], j);
+				dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
+				j = j - (temp-1);
+			} else if(temp = _parser.extractTime(components[i], j)[1]) {
+				vector<int> timeData = _parser.extractTime(components[i], j);
+				times.push_back(_parser.strval(timeData[0]));			
+				j = j - (temp-1);
+			}
+			
+		}
+		if(dates.size()==1){
+			endDate=_parser.createDate(dates[0]);
+		}else if(dates.size()==2){
+			endDate=_parser.createDate(dates[1]);
+			startDate=_parser.createDate(dates[0]);
+		}else{
+			//throw exception
+		}
+		if(times.size()==1){
+			endTime=_parser.createTime(times[0]);
+		}else if(times.size()==2){
+			endTime=_parser.createTime(times[1]);
+			startTime=_parser.createTime(times[0]);
+		}
+		newCommand->addSchedule(startDate,endDate,startTime,endTime);
+	}
+	return newCommand;
 }

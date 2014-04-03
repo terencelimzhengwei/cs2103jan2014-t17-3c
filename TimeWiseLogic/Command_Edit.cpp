@@ -78,14 +78,12 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	_originalStartTime=_editedTask->getStartTime();
 	if(_editedDescription!=DEFAULT_EMPTY){
 		_editedTask->setDescription(_editedDescription);
+	}else if(_editedCategory!=DEFAULT_EMPTY){
+		_editedTask->setCategory(_editedCategory);
 	}else{
 		if(noDateAndTime()){
 			resetTimeAndDate();
 		}
-	}
-
-	if(_editedCategory!=DEFAULT_EMPTY){
-		_editedTask->setCategory(_editedCategory);
 	}
 	if(!noDateAndTime()){
 		if(!noDate()){

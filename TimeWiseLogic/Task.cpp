@@ -126,8 +126,7 @@ void Task::setIndex(int index){
 	assert(index>=0);
 	_taskIndex = index;
 }
-void Task::setEndDate(Date* endDate)
-{
+void Task::setEndDate(Date* endDate){
 	_endDate = endDate;
 }
 void Task::setStartDate(Date* startDate)
@@ -366,4 +365,8 @@ bool Task::checkClashTime(Task* task){
 		}
 	}
 	return false;
+}
+
+void Task::setBlockStatus(bool status){
+	_blockStatus=true;
 }

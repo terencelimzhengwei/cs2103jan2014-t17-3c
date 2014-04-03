@@ -53,6 +53,7 @@ public:
 	std::string toString();
 	bool isClash();
 	void resetClash();
+	void setBlockStatus(bool status);
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;

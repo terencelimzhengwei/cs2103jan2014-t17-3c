@@ -74,4 +74,11 @@ public:
 	virtual const char* what() const throw();
 };
 
+// this exception is thrown when the users enter:
+//1. A start date that is later than a due date
+//2. A start time that is later than a due time (on the same day)
+class InvalidStartEndDateTime: public std::exception {
+public:
+	virtual const char* what() const throw();
+};
 #endif

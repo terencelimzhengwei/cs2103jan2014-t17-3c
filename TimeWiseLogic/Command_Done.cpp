@@ -20,10 +20,12 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
+		feedback = "Task: '" + _task->toString() + "' has been marked as completed";
 		_lastCmdCalled="execute";
 		return true;
 	case SEARCHED:
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
+		feedback = "Task: '" + _task->toString() + "' has been marked as completed";
 		_lastCmdCalled="execute";
 		return true;
 	case COMPLETE:
@@ -37,7 +39,7 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 		}
 		return false;
 	}
-	feedback = "Task: '" + _task->toString() + "' has been marked as completed";
+
 }
 
 bool Command_Done::undo(TaskList& tasklist){

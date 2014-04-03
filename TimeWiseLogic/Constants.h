@@ -65,4 +65,5 @@ static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid parameters
 static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
 static const char* UNABLE_TO_EDIT_COMPLETED_TASKS = "This task has been completed. Please type 'undone' in order to edit it";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
+static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 #endif // !_CONSTANTS_H

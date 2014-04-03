@@ -8,7 +8,7 @@ namespace TimeWiseUnitTest
 	TEST_CLASS(UnitTest1)
 	{
 	public:
-		/*TEST_METHOD(CommandAddTest) {
+		TEST_METHOD(CommandAddTest) {
 			//equivalence partition: floating task, timed task, deadline task
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
@@ -16,6 +16,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			DISPLAY_TYPE displayScreen = MAIN;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
@@ -48,20 +49,20 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setPreviousScreen(&displayScreen);
 
 			
-			commandToBeExecuted[0]->execute(_taskList);
+			commandToBeExecuted[0]->execute(_taskList,feedback);
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 
-			commandToBeExecuted[1]->execute(_taskList);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
 			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(0)->getPriority()));
 			Assert::AreEqual("test",_taskList.getTask(0)->getTaskCategory().c_str());
 
-			commandToBeExecuted[2]->execute(_taskList);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
 			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
 			Assert::AreEqual("1600",_taskList.getTask(2)->getEndTime()->toString().c_str());
 			Assert::AreEqual("12 Mar 14",_taskList.getTask(2)->getEndDate()->toString().c_str());
 
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[3]->execute(_taskList,feedback);
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(3)->getDescription().c_str());
 			Assert::AreEqual("1600",_taskList.getTask(3)->getEndTime()->toString().c_str());
 			Assert::AreEqual("12 Mar 14",_taskList.getTask(3)->getEndDate()->toString().c_str());
@@ -77,6 +78,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -97,26 +99,26 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
 
 			Command_Delete* commandToBeDeleted = new Command_Delete;
 			commandToBeDeleted->setDeletionIndex(0);
-			commandToBeDeleted->execute(_taskList);
+			commandToBeDeleted->execute(_taskList, feedback);
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(1);
-			commandToBeDeleted->execute(_taskList);
+			commandToBeDeleted->execute(_taskList, feedback);
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(1);
-			commandToBeDeleted->execute(_taskList);
+			commandToBeDeleted->execute(_taskList, feedback);
 			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
 			commandToBeDeleted->setDeletionIndex(0);
-			commandToBeDeleted->execute(_taskList);
+			commandToBeDeleted->execute(_taskList, feedback);
 			Assert::AreEqual(0,_taskList.undoneSize());
 		}
 
@@ -127,6 +129,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -148,7 +151,7 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndTime(endTime);
 
 			Command_Clear* clear = new Command_Clear;
-			clear->execute(_taskList);
+			clear->execute(_taskList, feedback);
 			Assert::AreEqual(0,_taskList.undoneSize());
 
 		}
@@ -160,6 +163,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -180,35 +184,34 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
 
-		/*	Command_Edit* edit = new Command_Edit;
+		    Command_Edit* edit = new Command_Edit;
 			edit->setIndex(0);
-			edit->setHeader("description");
+			//edit->setHeader("description");
 			edit->setDescription("new description");
-			edit->execute(_taskList);
+			edit->execute(_taskList, feedback);
 			Assert::AreEqual("new description",_taskList.getTask(0)->getDescription().c_str());
 			Command_Edit* edit1 = new Command_Edit;
 			edit1->setIndex(2);
-			edit1->setHeader("end time");
+			//edit1->setHeader("end time");
 			ClockTime* time = new ClockTime(2359);
-			edit1->setEndTime(*time);
-			edit1->execute(_taskList);
-			Assert::AreEqual("2359",(_taskList.getTask(2)->getEndTime()->toString()).c_str());*/
-
-
+			edit1->setEndTime(time);
+			edit1->execute(_taskList, feedback);
+			Assert::AreEqual("2359",(_taskList.getTask(2)->getEndTime()->toString()).c_str());
 		}
 
-		/*TEST_METHOD(CommandDoneUndoneTest) {
+		    TEST_METHOD(CommandDoneUndoneTest) {
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
 			ClockTime startTime(1200);
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -229,37 +232,37 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
 
 			Command_Done* newDone= new Command_Done;
 			newDone->setCompletedIndex(0);
-			newDone->execute(_taskList);
+			newDone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(COMPLETED),static_cast<int>(_taskList.getTask(0)->getTaskStatus()));
 			newDone->setCompletedIndex(1);
-			newDone->execute(_taskList);
+			newDone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(COMPLETED),static_cast<int>(_taskList.getTask(1)->getTaskStatus()));
 			newDone->setCompletedIndex(2);
-			newDone->execute(_taskList);
+			newDone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(COMPLETED),static_cast<int>(_taskList.getTask(2)->getTaskStatus()));
 			newDone->setCompletedIndex(3);
-			newDone->execute(_taskList);
+			newDone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(COMPLETED),static_cast<int>(_taskList.getTask(3)->getTaskStatus()));
 
 			Command_Undone* newUndone= new Command_Undone;
 			newUndone->setUncompletedIndex(0);
-			newUndone->execute(_taskList);
+			newUndone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(UNCOMPLETED),static_cast<int>(_taskList.getTask(0)->getTaskStatus()));
 			newUndone->setUncompletedIndex(1);
-			newUndone->execute(_taskList);
+			newUndone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(UNCOMPLETED),static_cast<int>(_taskList.getTask(1)->getTaskStatus()));
 			newUndone->setUncompletedIndex(2);
-			newUndone->execute(_taskList);
+			newUndone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(UNCOMPLETED),static_cast<int>(_taskList.getTask(2)->getTaskStatus()));
 			newUndone->setUncompletedIndex(3);
-			newUndone->execute(_taskList);
+			newUndone->execute(_taskList, feedback);
 			Assert::AreEqual(static_cast<int>(UNCOMPLETED),static_cast<int>(_taskList.getTask(3)->getTaskStatus()));
 		}
 
@@ -270,6 +273,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -290,24 +294,24 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);*/
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
 
-		/*	Command_Search* search = new Command_Search();
+			Command_Search* search = new Command_Search();
 			search->setKeyword("task");
-			search->execute(_taskList);
+			search->execute(_taskList, feedback);
 			std::vector<Task*> searchedtask= _taskList.getSearchResults();
 			Assert::AreEqual(_taskList.getTask(0)->getDescription().c_str(),searchedtask[0]->getDescription().c_str());
 			Assert::AreEqual(_taskList.getTask(1)->getDescription().c_str(),searchedtask[1]->getDescription().c_str());
 			Assert::AreEqual(_taskList.getTask(2)->getDescription().c_str(),searchedtask[2]->getDescription().c_str());
 			Assert::AreEqual(_taskList.getTask(3)->getDescription().c_str(),searchedtask[3]->getDescription().c_str());
 			search->setKeyword("check timed task without priority and cat");
-			search->execute(_taskList);
+			search->execute(_taskList, feedback);
 			std::vector<Task*> searchedtask1= _taskList.getSearchResults();
 			Assert::AreEqual("check timed task without priority and cat",searchedtask1[0]->getDescription().c_str());
-			search->setCategory("test");
+			/*search->setCategory("test");
 			search->execute(_taskList);
 			std::vector<Task*> searchedtask2= _taskList.getSearchResults();
 			Assert::AreEqual(1,static_cast<int>(searchedtask2.size()));
@@ -317,7 +321,7 @@ namespace TimeWiseUnitTest
 			std::vector<Task*> searchedtask3= _taskList.getSearchResults();
 			Assert::AreEqual(2,static_cast<int>(searchedtask3.size()));
 			Assert::AreEqual(endDate.toString(),(searchedtask3[0]->getEndDate()->toString()));
-			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());
+			Assert::AreEqual(endDate.toString(),searchedtask3[1]->getEndDate()->toString());*/
 
 		}
 		TEST_METHOD(ClockTimeTest) {
@@ -387,6 +391,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 
@@ -407,10 +412,10 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
 
 			_taskList.updateOverdueTaskList();
 			std::vector<Task*> overdueTask = _taskList.getOverdueTaskList();
@@ -424,6 +429,7 @@ namespace TimeWiseUnitTest
 			ClockTime endTime(1600);
 			Date startDate(10,3,2014);
 			Date endDate(12,3,2014);
+			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
@@ -446,13 +452,13 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
 
-			commandToBeExecuted[0]->execute(_taskList);
-			commandToBeExecuted[1]->execute(_taskList);
-			commandToBeExecuted[2]->execute(_taskList);
-			commandToBeExecuted[3]->execute(_taskList);
-		}*/
+			commandToBeExecuted[0]->execute(_taskList, feedback);
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			commandToBeExecuted[3]->execute(_taskList, feedback);
+		}
 
-		/*TEST_METHOD(ParserTest_GetFirstWord) {
+		TEST_METHOD(ParserTest_GetFirstWord) {
 			Parser _parser;
 			std::string expectedCase1 = "add";
 			std::string validInput1 = _parser.getFirstWord("add dinner with Mai");
@@ -604,9 +610,9 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase3,invalidInput3);
 
 
-		}*/
+		}
 
-		/*TEST_METHOD(ParserTest_IsDateFormat) {
+	    TEST_METHOD(ParserTest_IsDateFormat) {
 			Parser _parser;
 			bool validInput1 = _parser.isDateFormat("22/12/2013");
 			bool expectedCase1 = true;
@@ -675,7 +681,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase21, validInput21);
 		}
 
-		/*TEST_METHOD (ParserTest_CreatDate) {
+		TEST_METHOD (ParserTest_CreatDate) {
 			Parser _parser;
 			Date* validInput1 = _parser.createDate("21/03/2013");
 			int  expectedCase1[3] = {21,3,2013};
@@ -725,7 +731,155 @@ namespace TimeWiseUnitTest
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
 			}
-		}*/
-;
-};
+		}
 
+		TEST_METHOD(System_Test1) {
+			// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users
+			TimeWiseLogic _logic;
+			std::string feedback1 = _logic.processCommand("add do laudry");
+			std::string expected1 = "Task added! 'do laudry !low' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback1,expected1);
+			std::string feedback2 = _logic.processCommand("add do laudry from 9 am to 10 am");
+			std::string expected2 = "Task added! 'do laudry on 2/4/2014 from 0900 to 1000 !low' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback2,expected2);
+			std::string feedback3 = _logic.processCommand("add do laudry by 21/05");
+			std::string expected3 = "Task added! 'do laudry on 21/5/2014 !low' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback3,expected3);
+			std::string feedback4 = _logic.processCommand("add do laudry tomorrow at 9pm");
+			std::string expected4 = "Task added! 'do laudry on 3/4/2014 at 2100 !low' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback4,expected4);
+			std::string feedback5 = _logic.processCommand("add do laudry from 21/4 to 22/4");
+			std::string expected5 = "Task added! 'do laudry on 21/4/2014 to 22/4/2014 !low' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback5,expected5);
+			std::string feedback6 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
+			std::string expected6 = "Task added! 'do laudry on 21/4/2014 to 22/4/2014  from 2100 to 2100' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback6,expected6);
+			std::string feedback7 = _logic.processCommand("add do laudry !high #household");
+			std::string expected7 = "Task added! 'do laudry !high #househole' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback7,expected7);
+			std::string feedback8 = _logic.processCommand("do laudry !high #household");
+			std::string expected8 = "Task added! 'do laudry !high #househole' has been successfully added to your schedule'.";
+			Assert::AreEqual(feedback8,expected8);
+			std::string feedback9 = _logic.processCommand("add");
+			std::string expected9 = "Error! No input detected";
+			Assert::AreEqual(feedback9,expected9);
+			std::string feedback10 = _logic.processCommand("");
+			std::string expected10 = "cannot enter empty input!";
+			Assert::AreEqual(feedback10,expected10);
+		}
+
+		TEST_METHOD(System_Test2) {
+			TimeWiseLogic _logic;
+			//Test for command delete and the feedback that the system return to user
+			std::string cmd1 = _logic.processCommand("add do laudry");
+			std::string cmd2 = _logic.processCommand("add do laudry from 9 am to 10 am");
+			std::string cmd3 = _logic.processCommand("add do laudry by 21/05");
+			std::string cmd4 = _logic.processCommand("add do laudry tomorrow at 9pm");
+			std::string cmd5 = _logic.processCommand("add do laudry from 21/4 to 22/4");
+			std::string cmd6 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
+			std::string cmd7 = _logic.processCommand("add do laudry !high #household");
+			std::string cmd8 = _logic.processCommand("delete 3");
+			std::string expected8 = "Task :'do laudry on 21/5/2014 !low' has successfully been removed from your schedule.";
+			Assert::AreEqual(cmd8,expected8);
+			std::string cmd9 = _logic.processCommand("delete");
+			std::string expected9 = "Error! No input detected";
+			Assert::AreEqual(cmd9,expected9);
+			std::string cmd10 = _logic.processCommand("delete 12");
+			std::string expected10 = "Error! The task index that you entered is out of range";
+			Assert::AreEqual(cmd10,expected10);
+			std::string cmd11 = _logic.processCommand("delete -3");
+			std::string expected12 = "Error! The task index that you entered is not a number";
+			Assert::AreEqual(cmd9,expected9);
+			int _size = _logic.getTaskList().undoneSize();
+			int expectedSize = 7;
+			Assert::AreEqual(_size, expectedSize);
+
+		}
+		TEST_METHOD(System_Test3) {
+			//test for command done/undone and the feedback that the system is going to return
+			TimeWiseLogic _logic;
+			std::string cmd1 = _logic.processCommand("add do laudry");
+			std::string cmd2 = _logic.processCommand("add do laudry from 9 am to 10 am");
+			std::string cmd3 = _logic.processCommand("add do laudry by 21/05");
+			std::string cmd4 = _logic.processCommand("add do laudry tomorrow at 9pm");
+			std::string cmd5 = _logic.processCommand("add do laudry from 21/4 to 22/4");
+			std::string cmd6 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
+			std::string cmd7 = _logic.processCommand("add do laudry !high #household");
+			std::string cmd8 = _logic.processCommand("done 5");
+			std::string expected8 = "Task :'do laudry on 21/4/2014 to 22/4/2014 !low' has been successfully marked as completed.";
+			Assert::AreEqual(cmd8, expected8);
+			int _undoneSize = _logic.getTaskList().undoneSize();
+			int expectedUndoneSize = 7;
+			Assert::AreEqual(_undoneSize, expectedUndoneSize);
+			int _doneSize = _logic.getTaskList().doneSize();
+			int expectedDoneSize = 1;
+			Assert::AreEqual(_doneSize, expectedDoneSize);
+			std::string cmd9 = _logic.processCommand("done");
+			std::string expected9 = "Error! No input detected";
+			Assert::AreEqual(cmd9,expected9);
+			std::string cmd10 = _logic.processCommand("done 12");
+			std::string expected10 = "Error! The task index that you entered is out of range";
+			Assert::AreEqual(cmd10,expected10);
+			std::string cmd11 = _logic.processCommand("done -3");
+			std::string expected11 = "Error! The task index that you entered is not a number";
+			Assert::AreEqual(cmd11,expected11);
+			_logic.changeDisplay(COMPLETE);
+			std::string cmd12 = _logic.processCommand("undone 1");
+			std::string expected12 = "Task: 'do laudry on 21/4/2014 to 22/4/2014 !low' has been successfully marked as uncompleted.";
+			Assert::AreEqual(cmd12,expected12);
+
+		}
+		TEST_METHOD(System_Test4) {
+			TimeWiseLogic _logic;
+		    //test for command clear and the feedback that the system is going to return to user
+			std::string cmd1 = _logic.processCommand("add do laudry");
+			std::string cmd2 = _logic.processCommand("add do laudry from 9 am to 10 am");
+			std::string cmd3 = _logic.processCommand("add do laudry by 21/05");
+			std::string cmd4 = _logic.processCommand("add do laudry tomorrow at 9pm");
+			std::string cmd5 = _logic.processCommand("add do laudry from 21/4 to 22/4");
+			std::string cmd6 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
+			std::string cmd7 = _logic.processCommand("add do laudry !high #household");
+			std::string cmd8 = _logic.processCommand("done 5");
+			std::string cmd9 = _logic.processCommand("done 6");
+			
+			_logic.changeDisplay(MAIN);
+			int _undoneSize1 = _logic.getTaskList().undoneSize();
+			int expectedUndoneSize1 = 5;
+			Assert::AreEqual(_undoneSize1,expectedUndoneSize1);
+			std::string cmd10 = _logic.processCommand("clear undone");
+			std::string expected10 = "All uncompleted tasks are removed from your schedule!";
+			Assert::AreEqual(cmd10,expected10);
+			int _undoneSize2 = _logic.getTaskList().undoneSize();
+			int expectedUndoneSize2 = 0;
+			Assert::AreEqual(_undoneSize2,expectedUndoneSize2);
+
+			_logic.changeDisplay(COMPLETE);
+			int _doneSize1 = _logic.getTaskList().doneSize();
+			int expectedDoneSize1 = 2;
+			Assert::AreEqual(_doneSize1, expectedDoneSize1);
+			std::string cmd11 = _logic.processCommand("clear done");
+			std::string expected11 = "All completed tasks are removed from your schedule!";
+			Assert::AreEqual(cmd11,expected11);
+			int _doneSize2 = _logic.getTaskList().doneSize();
+			int expectedDoneSize2 = 0;
+			Assert::AreEqual(_doneSize2, expectedDoneSize2);
+			std::string cmd12 = _logic.processCommand("add do laudry");
+			std::string cmd13 = _logic.processCommand("add do laudry from 9 am to 10 am");
+			std::string cmd14 = _logic.processCommand("add do laudry by 21/05");
+			std::string cmd15 = _logic.processCommand("add do laudry tomorrow at 9pm");
+			std::string cmd16 = _logic.processCommand("add do laudry from 21/4 to 22/4");
+			std::string cmd17 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
+			std::string cmd18 = _logic.processCommand("add do laudry !high #household");
+			std::string cmd19 = _logic.processCommand("done 5");
+			std::string cmd20 = _logic.processCommand("done 6");
+			std::string cmd21 = _logic.processCommand("clear all");
+			std::string expected21 = "All tasks are removed from your schedule!";
+			Assert::AreEqual(cmd21, expected21);
+			int overallSize = _logic.getTaskList().doneSize() + _logic.getTaskList().undoneSize();
+			Assert::AreEqual(0, overallSize);
+			
+
+		}
+
+};
+}

@@ -62,6 +62,7 @@ public:
 	void addTaskToFilteredList(Task& task);
 	Task* getFilteredTask(int index);
 	std::vector<Task*> getClashedTask();
+	void shiftTask(Task* task);
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;

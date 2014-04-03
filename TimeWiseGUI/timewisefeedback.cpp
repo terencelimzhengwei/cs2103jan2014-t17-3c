@@ -3,6 +3,12 @@
 TimeWiseFeedback::TimeWiseFeedback(QWidget *parent) : QWidget(parent) {
 	ui.setupUi(this);
 	this->setWindowFlags(Qt::CustomizeWindowHint);
+	this->setWindowFlags(Qt::FramelessWindowHint);
+
+	QFontDatabase fontDatabase; 
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/DK Crayon Crumble.ttf");
+	ui.userFeedback->setFont(QFont("DK Crayon Crumble",13));
+
 	ui.pushButton_ok->setFocus();
 }
 

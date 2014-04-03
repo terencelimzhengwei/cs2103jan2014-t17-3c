@@ -425,9 +425,13 @@ void TaskList::updateClashStatus()
 			if(!_taskList[i]->checkClash(_taskList[j])){
 				if(_taskList[i]->isClash()==true){
 					_taskList[i]->setClash(false);
-				}else if(_taskList[j]->isClash()==true){
+				}
+				if(_taskList[j]->isClash()==true){
 					_taskList[j]->setClash(false);
 				}
+			}else{
+				_taskList[i]->setClash(true);
+				_taskList[j]->setClash(true);
 			}
 		}
 	}

@@ -117,7 +117,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 		}
 	}
 	feedback = feedback + _editedTask->toString() +"'.";
-	
+	tasklist.updateClashStatus();
 	return true;
 }
 
@@ -136,6 +136,7 @@ bool Command_Edit::undo(TaskList& tasklist){
 	_editedTask->setEndTime(_originalEndTime);
 	_editedTask->setStartDate(_originalStartDate);
 	_editedTask->setStartTime(_originalStartTime);
+	tasklist.updateClashStatus();
 	return true;
 }
 

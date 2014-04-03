@@ -440,3 +440,9 @@ void TaskList::updateClashStatus()
 std::vector<Task*> TaskList::getClashedTask(){
 	return _clashedTask;
 }
+
+void TaskList::shiftTask(Task* task){
+	unsigned int index = getTaskIndex(task);
+	deleteTask(index);
+	addTask(*task);
+}

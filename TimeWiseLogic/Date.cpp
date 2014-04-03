@@ -65,45 +65,6 @@ void Date::setDateAsToday(){
 }
 
 void Date::setDateAsTomorrow() {
-	/* if(getCurrentMonth() == 1 || getCurrentMonth() == 3|| getCurrentMonth() == 5||
-		getCurrentMonth() == 7|| getCurrentMonth() == 8|| getCurrentMonth() == 12) {
-			if(getCurrentDay() == 31) {
-				_dayNumber = 1;
-				if(getCurrentMonth() == 12) {
-					_month = 1;
-					_year = getCurrentYear() + 1;
-				} else {
-					_month = getCurrentMonth() + 1;
-					_year = getCurrentYear();
-				}	
-			} else {
-				_month = getCurrentMonth();
-				_dayNumber = getCurrentDay() + 1;
-				_year = getCurrentYear();
-			}
-	} else if (getCurrentMonth() == 2) {
-		if(getCurrentDay()== 29) {
-			_dayNumber = 1;
-			_month = 3;
-			_year = getCurrentYear();
-		} else {
-			_month = getCurrentMonth();
-			_dayNumber = getCurrentDay() + 1;
-			_year = getCurrentYear();
-		}
-	} else if (getCurrentMonth() == 4 || getCurrentMonth() == 6|| getCurrentMonth() == 9||
-		getCurrentMonth() == 10|| getCurrentMonth() == 11) {
-			if(getCurrentDay()== 30) {
-				_dayNumber = 1;
-				_month = getCurrentMonth() + 1;
-				_year = getCurrentYear();
-			} else {
-				_month = getCurrentMonth();
-				_dayNumber = getCurrentDay() + 1;
-				_year = getCurrentYear();
-			}
-	} */
-	// Added by Antony.
 	setDateAsToday();
 	(*this)++;
 }

@@ -10,7 +10,7 @@ static const int CMD_TYPE_COUNT		    = 12;
 static const int PRIORITY_COUNT			= 6;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
-static const int MAX_PREPOSITION        = 11;
+static const int MAX_PREPOSITION        = 12;
 static const int HEADER_COUNT			= 8;
 static const int DAYS_COUNT             = 19;
 static const int TIME_COUNT             = 2;
@@ -41,7 +41,7 @@ static const std::string TIME_INDICATOR[TIME_COUNT] = {"pm", "am"};
 const char TASK_SPECIFIER = '#';
 const char DATE_SEPARATOR = '-';
 
-const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in"};
+const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in", "due"};
 
 const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;

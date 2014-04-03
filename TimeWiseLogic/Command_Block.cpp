@@ -52,12 +52,12 @@ bool Command_Block::execute(TaskList& taskList,std::string& feedback){
 			_addedTask->setBlockStatus(true);
 			_addedTaskList.push_back(_addedTask);
 			taskList.addTask(*_addedTask);
-			feedback = "Task added! " +_addedTask->toString();
+			//feedback = "Task added! " +_addedTask->toString();
 
 		}
-		_lastCmdCalled=="execute";
-		return true;
 	}
+	_lastCmdCalled=="execute";
+	return true;
 }
 
 bool Command_Block::undo(TaskList& taskList){

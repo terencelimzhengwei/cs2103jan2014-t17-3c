@@ -25,23 +25,24 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 		return DISPLAY;
 	}
 	else if(commandTypeString == CMD_TYPE_STRING[5]) {
-		return DONE;
+		return BLOCK;
 	}
 	else if(commandTypeString == CMD_TYPE_STRING[6]) {
-		return UNDONE;
+		return DONE;
 	}
 	else if(commandTypeString == CMD_TYPE_STRING[7]) {
-		return UNDO;
+		return UNDONE;
 	}
 	else if(commandTypeString == CMD_TYPE_STRING[8]) {
-		return REDO;
+		return UNDO;
 	}
 	else if(commandTypeString == CMD_TYPE_STRING[9]) {
+		return REDO;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[10]) {
 		return SEARCH;
 	} 
-	else if(commandTypeString == CMD_TYPE_STRING[10]) {
-		return FILTER;
-	}else if(commandTypeString == CMD_TYPE_STRING[10]) {
+	else if(commandTypeString == CMD_TYPE_STRING[11]) {
 		return FILTER;
 	}
 	else {

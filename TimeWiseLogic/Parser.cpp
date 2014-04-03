@@ -82,8 +82,10 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 
 	int weekdayNum = 7;
 
-
 	bool dateFound = false;
+
+	command = replaceWord(",", "", command);
+	command = replaceWord(".", "", command);
 
 	vector<string> parameters = splitBySpace(command);
 	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
@@ -112,9 +114,9 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 						output[0] += dateFunction.getCurrentYear();
 					}
 				}
+				output[3] = 1;
+				dateFound = true;
 			}
-			output[3] = 1;
-			dateFound = true;
 		} else if(dateComponent.size() == 1) {
 			for(int i=0 ; i<dayInNameNum && !dateFound ; i++) {
 				if(convertToLowerCase(dateComponent[0]) == dayInName[i]) {
@@ -197,6 +199,10 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 
 vector<int> Parser::extractTime(string command, int pos=-1) {
 	vector<int> timeArray;
+	bool colonExist = false;
+
+	command = replaceWord(",", "", command);
+	command = replaceWord(".", "", command);
 	vector<string> word = splitBySpace(command);
 	if(pos==-1) {
 		pos = word.size() - 1;
@@ -204,6 +210,9 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 	string wordChecking = word[pos];
 	int hour, min;
 
+	if(wordChecking != replaceWord(":","",wordChecking)) {
+		colonExist = true;
+	}
 	wordChecking = replaceWord(":","",wordChecking);
 		
 	if(wordChecking.length()>2 && stringExists("am",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
@@ -244,7 +253,7 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 				timeArray.push_back((hour+12) * 100 + min);
 			}
 		}
-	} else if(wordChecking.length()>=3 && wordChecking.length()<=4 && isAllNumbers(wordChecking)) {
+	} else if((colonExist && wordChecking.length()==3 || wordChecking.length()==4) && isAllNumbers(wordChecking)) {
 		hour = toNum(wordChecking)/100;
 		min = toNum(wordChecking)%100;
 		if(hour < 24 && min < 60) {
@@ -260,14 +269,14 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 	return timeArray;
 }
 
-std::string Parser::getFirstWord(std::string action) {
-	unsigned int tStart = 0;
-	unsigned int tEnd = 0;
+string Parser::getFirstWord(string action) {
+	vector<string> wordArray = explode(' ', trim(action));
 
-	tEnd = action.find_first_of(" ");
-
-	std::string userCommand = action.substr(tStart, tEnd - tStart);
-	return userCommand;
+	if(wordArray.size()>0) {
+		return wordArray[0];
+	} else {
+		return "";
+	}
 }
 
 std::string Parser::removeFirstWord(std::string action) {
@@ -278,7 +287,7 @@ std::string Parser::removeFirstWord(std::string action) {
 	std::ostringstream oss;
 	oss << iss.rdbuf();
 
-	return oss.str();
+	return trim(oss.str());
 }
 
 std::string Parser::replaceWord(std::string search, std::string replace, std::string subject) {
@@ -323,16 +332,8 @@ int Parser::toNum(std::string str) {
 	return stoi(str);
 }
 
-bool Parser::convertIfNum(const std::string &numInStr, int &num){
-	if( isAllNumbers(numInStr) ){
-		num = toNum(numInStr);
-		return true;
-	}
-	return false;
-}
-
-bool Parser::isDateFormat(std::string str){
-	if(extractDate(str)[3]) {
+bool Parser::isDateFormat(string str) {
+	if(extractDate(str, explode(' ', str).size()-1)[3]) {
 		return true;
 	} else {
 		return false;
@@ -366,6 +367,7 @@ vector<std::string> Parser::splitBySpace(std::string input) {
 	return tokens;
 }
 
+// This function is going to replace "splitBySpace()".
 vector<string> Parser::explode(char delimiter, string input) {
 	removeWhiteSpaces(input);
 	vector<string> splittedStr;
@@ -387,33 +389,6 @@ vector<string> Parser::explode(char delimiter, string input) {
 			splittedStr.push_back(str);
 		}
 	}
-	return splittedStr;
-}
-
-stack<std::string> Parser::splitStringBy(char delimiter, std::string input){
-	removeWhiteSpaces(input);
-	stack<std::string> splittedStr;
-	std::string str;
-	int pos;
-
-	while(!input.empty()){
-		pos = input.find(delimiter);
-
-		if(pos == std::string::npos){
-			str = input;
-			input.clear();
-		}
-		else{
-			str = input.substr(0, pos);
-			input.erase(0, pos+1);
-		}
-		removeWhiteSpaces(str);
-
-		if(!str.empty()){
-			splittedStr.push(str);
-		}
-	}
-
 	return splittedStr;
 }
 
@@ -476,6 +451,28 @@ void Parser::removeWhiteSpaces(std::string& str){
 			break;
 		}
 	}
+}
+
+// This function is going to replace "removeWhiteSpaces()";
+string Parser::trim(string str) {
+	// Removing the preceding white space
+	while(!str.empty()) {
+		if(str[0] == ' ') {
+			str.erase(0,1);
+		} else {
+			break;
+		}
+	}
+
+	// Removing the trailing white space
+	while(!str.empty()) {
+		if(str[str.length()-1] == ' ') {
+			str.erase(str.length()-1, 1);
+		} else {
+			break;
+		}
+	}
+	return str;
 }
 
 bool Parser::isPreposition(std::string word) {

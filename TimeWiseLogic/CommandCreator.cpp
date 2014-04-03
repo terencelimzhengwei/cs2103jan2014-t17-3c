@@ -605,12 +605,13 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 	//std::vector<std::string> tokens;
 	//tokens=_parser.splitBySpace(components.top);
 	std::string description = components.front();
+	newCommand->setDescription(description);
 	components.erase(components.begin());
 
 	for(int i=0 ; i<components.size() ; i++) {
 		vector<string> token = _parser.explode(' ', components[i]);
 		int temp; // storing the word number used for the date/time
-		for(int j = token.size()-1 ; j ; j--) {
+		for(int j = token.size()-1 ; j>=0 ; j--) {
 			if(temp = _parser.extractDate(components[i], j)[3]) {
 				vector<int> dateData = _parser.extractDate(components[i], j);
 				dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
@@ -638,5 +639,6 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 		}
 		newCommand->addSchedule(startDate,endDate,startTime,endTime);
 	}
+	newCommand->setPreviousScreen(screen);
 	return newCommand;
 }

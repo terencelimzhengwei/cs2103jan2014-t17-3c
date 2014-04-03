@@ -43,3 +43,7 @@ const char* UnableToEditCompletedTasks::what() const throw() {
 const char* UnableToUndoneUncompletedTasks::what() const throw() {
 	return TASK_NOT_COMPLETED_YET;
 }
+
+const char* InvalidStartEndDateTime::what() const throw() {
+	return START_DATE_TIME_LATER_THAN_END_DATE_TIME;
+}

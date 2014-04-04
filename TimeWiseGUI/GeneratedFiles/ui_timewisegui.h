@@ -35,6 +35,7 @@ public:
     QLabel *label_title;
     QLabel *label_help;
     QLineEdit *userInput;
+    QLabel *label_mlog;
 
     void setupUi(QMainWindow *TimeWiseGUIClass)
     {
@@ -97,16 +98,20 @@ public:
 "font: 75 14pt \"Electronic Highway Sign\";"));
         pushButton_minimize = new QPushButton(centralWidget);
         pushButton_minimize->setObjectName(QStringLiteral("pushButton_minimize"));
-        pushButton_minimize->setGeometry(QRect(560, 0, 21, 20));
+        pushButton_minimize->setGeometry(QRect(540, 20, 20, 20));
+        pushButton_minimize->setMinimumSize(QSize(20, 20));
+        pushButton_minimize->setMaximumSize(QSize(20, 20));
         pushButton_minimize->setStyleSheet(QLatin1String("font: 75 6pt \"Impact\";\n"
-"background-color: transparent\n"
-"rgb(255, 0, 0)"));
+"background-color: rgb(233, 255, 120);\n"
+"border-radius: 7px;"));
         pushButton_close = new QPushButton(centralWidget);
         pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
-        pushButton_close->setGeometry(QRect(580, 0, 21, 20));
+        pushButton_close->setGeometry(QRect(558, 20, 20, 20));
+        pushButton_close->setMinimumSize(QSize(20, 20));
+        pushButton_close->setMaximumSize(QSize(20, 20));
         pushButton_close->setStyleSheet(QLatin1String("font: 75 11pt \"MS Shell Dlg 2\";\n"
-"background-color: transparent\n"
-"rgb(255, 0, 0)"));
+"background-color: rgb(255, 65, 52);\n"
+"border-radius: 7px;"));
         label_title = new QLabel(centralWidget);
         label_title->setObjectName(QStringLiteral("label_title"));
         label_title->setGeometry(QRect(40, 50, 201, 31));
@@ -120,7 +125,14 @@ public:
         userInput = new QLineEdit(centralWidget);
         userInput->setObjectName(QStringLiteral("userInput"));
         userInput->setGeometry(QRect(60, 560, 471, 20));
+        label_mlog = new QLabel(centralWidget);
+        label_mlog->setObjectName(QStringLiteral("label_mlog"));
+        label_mlog->setGeometry(QRect(50, 600, 291, 71));
+        label_mlog->setStyleSheet(QLatin1String("font: 75 13pt \"DK Crayon Crumble\";\n"
+"color: rgb(0, 85, 255);"));
+        label_mlog->setWordWrap(true);
         TimeWiseGUIClass->setCentralWidget(centralWidget);
+        userInput->raise();
         pushButton_close->raise();
         tableView->raise();
         label_date->raise();
@@ -128,6 +140,7 @@ public:
         pushButton_minimize->raise();
         label_title->raise();
         label_help->raise();
+        label_mlog->raise();
 
         retranslateUi(TimeWiseGUIClass);
         QObject::connect(pushButton_close, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(close()));
@@ -146,6 +159,7 @@ public:
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
+        label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "                 WELCOME TO...", 0));
     } // retranslateUi
 
 };

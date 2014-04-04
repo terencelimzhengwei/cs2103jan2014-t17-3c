@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QKeyEvent>
+#include <QRect>
+#include <QRegion>
 #include <string>
 #include <stdexcept>
 #include "ui_timewisegui.h"
@@ -47,7 +49,7 @@ public:
 	//other functions
 	int checkEmpty(QString input);
 	void autoComplete();
-	void showFeedback(QString outputMessage);
+	//void showFeedback(QString outputMessage);
 
 private slots:
 	void updateTime();

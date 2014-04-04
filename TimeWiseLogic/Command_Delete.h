@@ -2,16 +2,20 @@
 #include "Command.h"
 #include <stack>
 
+//************************************************************
+// This class is responsible for deleting an individual task
+// specified by its index
+//************************************************************
 class Command_Delete : public Command{
 public:
 	Command_Delete(void);
 	~Command_Delete(void);
-	void setDeletionIndex(int index);
-	void setDeletionString(std::string deletionString);
+	void setDeletionIndex(int);
+	void setDeletionString(std::string);
 	void setDisplayScreen(DISPLAY_TYPE display);
 
-	virtual bool execute(TaskList& tasklist, std::string& feedback);
-	virtual bool undo(TaskList& taskList);
+	virtual bool execute(TaskList&, std::string&);
+	virtual bool undo(TaskList&);
 
 private:
 	Task* _taskDeleted;

@@ -6,7 +6,7 @@ class Command_Redo :
 public:
 	Command_Redo(void);
 	~Command_Redo(void);
-	virtual bool execute(TaskList& tasklist, std::string& feedback);
-	virtual bool undo(TaskList& taskList);
+	virtual bool execute(TaskList&, std::string&);
+	virtual bool undo(TaskList&);
 };
 

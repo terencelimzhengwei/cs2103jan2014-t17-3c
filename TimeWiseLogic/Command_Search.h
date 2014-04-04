@@ -1,15 +1,16 @@
 #pragma once
 #include "command.h"
+
 class Command_Search :public Command
 {
 public:
 	Command_Search(void);
 	~Command_Search(void);
 
-	bool execute(TaskList& tasklist, std::string& feedback);
-	bool undo(TaskList& tasklist);
-	void setKeyword(std::string keyword);
-	void setPreviousScreen(DISPLAY_TYPE* screen);
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&);
+	void setKeyword(std::string);
+	void setPreviousScreen(DISPLAY_TYPE*);
 
 private:
 	std::string _keyword;

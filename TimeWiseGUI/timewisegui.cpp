@@ -16,7 +16,7 @@ const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
-const char* BLOCK_FORMAT = "block: <description>/<date 1><time 1>/<date 2><time 2>...<#category>";
+const char* BLOCK_FORMAT = "block: <description> \\ <date 1><time 1> \\ <date 2><time 2>...<#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
 const char* DISPLAY_FORMAT = "display: main or completed";
@@ -118,10 +118,11 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		displayTaskList(displayType);
 
 		QString outputMessage = QString::fromStdString(messageLog);
-		showFeedback(outputMessage);
+		ui.label_mlog->setText(outputMessage);
+		//showFeedback(outputMessage);
 	}
 	catch(const std::invalid_argument& e) {
-		showFeedback(e.what());
+		ui.label_mlog->setText(e.what());
 	}
 }
 
@@ -171,6 +172,7 @@ void TimeWiseGUI::setMainData() {
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
 		QColor rowColorClash(254, 255, 185);
+		QColor cellColorBlock(170, 237, 255);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -186,10 +188,10 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			case 1: {
-				PRIORITY taskPriority = taskList.getTask(i)->getPriority();
+				/*PRIORITY taskPriority = taskList.getTask(i)->getPriority();
 				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
 				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				model->setItem(i, j, item);*/
 				break;
 			}
 			case 2: {
@@ -242,6 +244,8 @@ void TimeWiseGUI::setMainData() {
 			bool checkClash = taskList.getTask(i)->isClash();
 			if(qStatus == "overdue" && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			} else if (qStatus == "done" && checkClash) {
+				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
 			} else if(qStatus == "overdue") {
@@ -249,6 +253,7 @@ void TimeWiseGUI::setMainData() {
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
+			model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
 		}
 	}
 }
@@ -264,6 +269,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
 		QColor rowColorClash(254, 255, 185);
+		QColor cellColorBlock(170, 237, 255);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -279,10 +285,10 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			case 1: {
-				PRIORITY taskPriority = taskList[i]->getPriority();
+				/*PRIORITY taskPriority = taskList[i]->getPriority();
 				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
 				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				model->setItem(i, j, item);*/
 				break;
 			}
 			case 2: {			
@@ -335,6 +341,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			bool checkClash = taskList[i]->isClash();
 			if(qStatus == "overdue" && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+			} else if (qStatus == "done" && checkClash) {
+				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
 			} else if(qStatus == "overdue") {
@@ -342,6 +350,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
+			model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
 		}
 	}
 }
@@ -481,17 +490,22 @@ int TimeWiseGUI::numberOfOverdues() {
 	return overdueTasksCount;
 }
 
-//"auto-complete" for search functions
+//"auto-complete"
 void TimeWiseGUI::autoComplete() {
 	QStringList descList;
 	TaskList taskList = _logic.getTaskList();
 
+	//for search function
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		ostringstream outstrDesc;
 		outstrDesc << SEARCH_COMMAND << " " << taskList.getTask(i)->getDescription();
 		QString qDesc = QString::fromStdString(outstrDesc.str());
 		descList << qDesc;
 	}
+
+	//for display function
+	descList << "display completed" << "display main";
+
 	descCompleter = new QCompleter(descList, this);
 	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
 	ui.userInput->setCompleter(descCompleter);
@@ -538,8 +552,8 @@ void TimeWiseGUI::next_line() {
 	}
 }
 
-void TimeWiseGUI::showFeedback(QString outputMessage) {
+/*void TimeWiseGUI::showFeedback(QString outputMessage) {
 	feedback = new TimeWiseFeedback();
 	feedback->show();
 	feedback->setData(outputMessage);
-}
+}*/

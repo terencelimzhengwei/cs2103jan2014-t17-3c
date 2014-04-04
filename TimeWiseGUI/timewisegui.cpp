@@ -6,6 +6,7 @@
 #include <QShortcut>
 
 const char* ADD_COMMAND = "add";
+const char* BLOCK_COMMAND = "block";
 const char* CLEAR_COMMAND = "clear";
 const char* DELETE_COMMAND = "delete";
 const char* DISPLAY_COMMAND = "display";
@@ -14,15 +15,16 @@ const char* EDIT_COMMAND = "edit";
 const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
-const char* ADD_FORMAT = "add: description start_date due_date start_time due_time !priority #category";
+const char* ADD_FORMAT = "add: <description><start date><due date><start time><due time><#category>";
+const char* BLOCK_FORMAT = "block: <description>/<date 1><time 1>/<date 2><time 2>...<#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
-const char* DELETE_FORMAT = "delete: ID or keywords";
+const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
 const char* DISPLAY_FORMAT = "display: main or completed";
-const char* DONE_FORMAT = "done: ID or #category";
-const char* EDIT_FORMAT = "edit: ID";
-const char* FILTER_FORMAT = "filter: dates or !priority or #category";
-const char* SEARCH_FORMAT = "search: keywords";
-const char* DEFAULT_DISPLAY = "List of Commands: add, clear, delete, display, done, edit, search, undo, redo";
+const char* DONE_FORMAT = "done: <ID> or <#category>";
+const char* EDIT_FORMAT = "edit: <ID> <contents>";
+const char* FILTER_FORMAT = "filter: <dates> or <#category>";
+const char* SEARCH_FORMAT = "search: <keywords>";
+const char* DEFAULT_DISPLAY = "List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -74,6 +76,8 @@ bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
+	} else if(ui.userInput->text() == BLOCK_COMMAND) {
+		ui.label_help->setText(BLOCK_FORMAT);
 	} else if(ui.userInput->text() == CLEAR_COMMAND) {
 		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
@@ -182,6 +186,13 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			case 1: {
+				PRIORITY taskPriority = taskList.getTask(i)->getPriority();
+				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 2: {
 				if(taskList.getTask(i)->getStartDate()!=NULL){
 					std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
 					QString qTask = QString::fromStdString(taskStartDate);
@@ -190,7 +201,7 @@ void TimeWiseGUI::setMainData() {
 				}
 				break;
 			}
-			case 2: {
+			case 3: {
 				if(taskList.getTask(i)->getEndDate()!=NULL){
 					std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
 					QString qTask = QString::fromStdString(taskEndDate);
@@ -199,7 +210,7 @@ void TimeWiseGUI::setMainData() {
 				}
 				break;
 			}
-			case 3: {
+			case 4: {
 				if(taskList.getTask(i)->getStartTime()!=NULL){
 					std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
 					QString qTask = QString::fromStdString(taskStartTime);
@@ -208,20 +219,13 @@ void TimeWiseGUI::setMainData() {
 				}
 				break;
 			}
-			case 4: {
+			case 5: {
 				if(taskList.getTask(i)->getEndTime()!=NULL){
 					std::string taskEndTime = taskList.getTask(i)->getEndTime()->toString();
 					QString qTask = QString::fromStdString(taskEndTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
-				break;
-			}
-			case 5: {
-				PRIORITY taskPriority = taskList.getTask(i)->getPriority();
-				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
 				break;
 			}
 			case 6: {
@@ -275,6 +279,13 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			case 1: {
+				PRIORITY taskPriority = taskList[i]->getPriority();
+				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
+				QStandardItem* item = new QStandardItem(qTask);
+				model->setItem(i, j, item);
+				break;
+			}
+			case 2: {			
 				if(taskList[i]->getStartDate()!=NULL){
 					std::string taskStartDate = taskList[i]->getStartDate()->toString();
 					QString qTask = QString::fromStdString(taskStartDate);
@@ -283,7 +294,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				}
 				break;
 			}
-			case 2: {
+			case 3: {
 				if(taskList[i]->getEndDate()!=NULL){
 					std::string taskEndDate = taskList[i]->getEndDate()->toString();
 					QString qTask = QString::fromStdString(taskEndDate);
@@ -292,7 +303,7 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				}
 				break;
 			}
-			case 3: {
+			case 4: {
 				if(taskList[i]->getStartTime()!=NULL){
 					std::string taskStartTime = taskList[i]->getStartTime()->toString();
 					QString qTask = QString::fromStdString(taskStartTime);
@@ -301,20 +312,13 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				}
 				break;
 			}
-			case 4: {
+			case 5: {
 				if(taskList[i]->getEndTime()!=NULL){
 					std::string taskEndTime = taskList[i]->getEndTime()->toString();
 					QString qTask = QString::fromStdString(taskEndTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
-				break;
-			}
-			case 5: {
-				PRIORITY taskPriority = taskList[i]->getPriority();
-				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
 				break;
 			}
 			case 6: {
@@ -347,11 +351,11 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 void TimeWiseGUI::setupTable() {
 	model = new QStandardItemModel (0, 5, this);
 	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
-	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Start Date")));
-	model->setHorizontalHeaderItem(2, new QStandardItem(QString("Due Date")));
-	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Start Time")));
-	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Due Time")));
-	model->setHorizontalHeaderItem(5, new QStandardItem(QString("Pri")));
+	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Blk")));
+	model->setHorizontalHeaderItem(2, new QStandardItem(QString("S. Date")));
+	model->setHorizontalHeaderItem(3, new QStandardItem(QString("D. Date")));
+	model->setHorizontalHeaderItem(4, new QStandardItem(QString("S. Time")));
+	model->setHorizontalHeaderItem(5, new QStandardItem(QString("D. Time")));
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
 	setMainData();
 	ui.tableView->setModel(model);
@@ -360,22 +364,22 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 	//set column widths of table. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 240);
+	ui.tableView->setColumnWidth(0, 190);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 70);
+	ui.tableView->setColumnWidth(1, 25);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 70);
+	ui.tableView->setColumnWidth(2, 60);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 70);
+	ui.tableView->setColumnWidth(3, 60);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 70);
+	ui.tableView->setColumnWidth(4, 45);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(5, 55);
+	ui.tableView->setColumnWidth(5, 45);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(6, 65);
+	ui.tableView->setColumnWidth(6, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(700);
-	ui.tableView->setMaximumWidth(700);
+	ui.tableView->setMinimumWidth(532);
+	ui.tableView->setMaximumWidth(532);
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);

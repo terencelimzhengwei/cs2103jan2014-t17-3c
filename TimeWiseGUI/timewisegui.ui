@@ -12,20 +12,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
-    <height>458</height>
+    <width>600</width>
+    <height>708</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>815</width>
-    <height>458</height>
+    <width>600</width>
+    <height>708</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>815</width>
-    <height>458</height>
+    <width>600</width>
+    <height>708</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,29 +35,29 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/TimeWise background 3.png);}</string>
+   <string notr="true">#TimeWiseGUIClass{image: url(:/TimeWiseGUI/new_TimeWise background.png);}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>101</y>
-      <width>701</width>
-      <height>231</height>
+      <x>30</x>
+      <y>120</y>
+      <width>531</width>
+      <height>391</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Leelawadee</family>
-      <pointsize>10</pointsize>
+      <pointsize>9</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
+     <string notr="true">font: 75 9pt &quot;Leelawadee&quot;;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -78,9 +78,9 @@
    <widget class="QLabel" name="label_date">
     <property name="geometry">
      <rect>
-      <x>511</x>
-      <y>31</y>
-      <width>241</width>
+      <x>330</x>
+      <y>40</y>
+      <width>211</width>
       <height>31</height>
      </rect>
     </property>
@@ -178,7 +178,7 @@
     <property name="font">
      <font>
       <family>Electronic Highway Sign</family>
-      <pointsize>19</pointsize>
+      <pointsize>18</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -186,7 +186,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
-font: 75 19pt &quot;Electronic Highway Sign&quot;;</string>
+font: 75 18pt &quot;Electronic Highway Sign&quot;;</string>
     </property>
     <property name="text">
      <string>Date</string>
@@ -195,8 +195,8 @@ font: 75 19pt &quot;Electronic Highway Sign&quot;;</string>
    <widget class="QLabel" name="label_time">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>60</y>
+      <x>330</x>
+      <y>70</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -209,39 +209,10 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
      <string>Time</string>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>370</y>
-      <width>471</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label_help">
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
-       </property>
-       <property name="text">
-        <string>List of Commands: add, clear, delete, display, done, edit, search, undo, redo</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="userInput">
-       <property name="placeholderText">
-        <string>+Add Task</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="pushButton_minimize">
     <property name="geometry">
      <rect>
-      <x>770</x>
+      <x>560</x>
       <y>0</y>
       <width>21</width>
       <height>20</height>
@@ -259,7 +230,7 @@ rgb(255, 0, 0)</string>
    <widget class="QPushButton" name="pushButton_close">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>580</x>
       <y>0</y>
       <width>21</width>
       <height>20</height>
@@ -277,8 +248,8 @@ rgb(255, 0, 0)</string>
    <widget class="QLabel" name="label_title">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>40</y>
+      <x>50</x>
+      <y>50</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -291,6 +262,38 @@ color: rgb(0, 85, 255);</string>
      <string>Your Tasks</string>
     </property>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>530</y>
+      <width>501</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_help">
+       <property name="styleSheet">
+        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="userInput">
+       <property name="placeholderText">
+        <string>+Add Task</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
    <zorder>label_date</zorder>
@@ -298,6 +301,7 @@ color: rgb(0, 85, 255);</string>
    <zorder>layoutWidget</zorder>
    <zorder>pushButton_minimize</zorder>
    <zorder>label_title</zorder>
+   <zorder>label_help</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

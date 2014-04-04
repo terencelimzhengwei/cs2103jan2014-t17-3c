@@ -15,7 +15,7 @@ const char* EDIT_COMMAND = "edit";
 const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
-const char* ADD_FORMAT = "add: <description><start date><due date><start time><due time><#category>";
+const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
 const char* BLOCK_FORMAT = "block: <description>/<date 1><time 1>/<date 2><time 2>...<#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
@@ -24,7 +24,7 @@ const char* DONE_FORMAT = "done: <ID> or <#category>";
 const char* EDIT_FORMAT = "edit: <ID> <contents>";
 const char* FILTER_FORMAT = "filter: <dates> or <#category>";
 const char* SEARCH_FORMAT = "search: <keywords>";
-const char* DEFAULT_DISPLAY = "List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo";
+const char* DEFAULT_DISPLAY = "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -368,13 +368,13 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(1, 25);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 60);
+	ui.tableView->setColumnWidth(2, 57);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 60);
+	ui.tableView->setColumnWidth(3, 57);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 45);
+	ui.tableView->setColumnWidth(4, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(5, 45);
+	ui.tableView->setColumnWidth(5, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(6, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
@@ -420,10 +420,10 @@ void TimeWiseGUI::setupFont(){
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/Homestead Display.ttf");
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/EHSMB.TTF");
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/comesinhandy.ttf");
+	fontDatabase.addApplicationFont(":/TimeWiseGUI/New Cicle Semi.ttf");
 
 	ui.label_date->setFont(QFont("Electronic Highway Sign",19,75));
 	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
-	ui.tableView->horizontalHeader()->setFont(QFont("CF Jack Story",11,75));
 }
 
 //enable hotkeys

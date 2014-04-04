@@ -19,7 +19,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableView>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -34,8 +33,6 @@ public:
     QPushButton *pushButton_minimize;
     QPushButton *pushButton_close;
     QLabel *label_title;
-    QWidget *widget;
-    QVBoxLayout *verticalLayout;
     QLabel *label_help;
     QLineEdit *userInput;
 
@@ -54,15 +51,15 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tableView = new QTableView(centralWidget);
         tableView->setObjectName(QStringLiteral("tableView"));
-        tableView->setGeometry(QRect(30, 120, 531, 391));
+        tableView->setGeometry(QRect(30, 120, 531, 401));
         QFont font;
-        font.setFamily(QStringLiteral("Leelawadee"));
-        font.setPointSize(9);
+        font.setFamily(QStringLiteral("New Cicle"));
+        font.setPointSize(10);
         font.setBold(false);
         font.setItalic(false);
         font.setWeight(9);
         tableView->setFont(font);
-        tableView->setStyleSheet(QStringLiteral("font: 75 9pt \"Leelawadee\";"));
+        tableView->setStyleSheet(QStringLiteral("font: 75 10pt \"New Cicle\";"));
         tableView->setFrameShape(QFrame::StyledPanel);
         tableView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         tableView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
@@ -112,29 +109,17 @@ public:
 "rgb(255, 0, 0)"));
         label_title = new QLabel(centralWidget);
         label_title->setObjectName(QStringLiteral("label_title"));
-        label_title->setGeometry(QRect(50, 50, 201, 31));
+        label_title->setGeometry(QRect(40, 50, 201, 31));
         label_title->setStyleSheet(QLatin1String("font: 75 26pt \"CF Jack Story\";\n"
 "color: rgb(0, 85, 255);"));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(50, 530, 501, 61));
-        verticalLayout = new QVBoxLayout(widget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label_help = new QLabel(widget);
+        label_help = new QLabel(centralWidget);
         label_help->setObjectName(QStringLiteral("label_help"));
-        label_help->setStyleSheet(QStringLiteral("font: 75 10pt \"Leelawadee\";"));
+        label_help->setGeometry(QRect(61, 541, 489, 16));
+        label_help->setStyleSheet(QStringLiteral("font: 75 10pt \"New Cicle\";"));
         label_help->setWordWrap(true);
-
-        verticalLayout->addWidget(label_help);
-
-        userInput = new QLineEdit(widget);
+        userInput = new QLineEdit(centralWidget);
         userInput->setObjectName(QStringLiteral("userInput"));
-
-        verticalLayout->addWidget(userInput);
-
+        userInput->setGeometry(QRect(60, 560, 471, 20));
         TimeWiseGUIClass->setCentralWidget(centralWidget);
         pushButton_close->raise();
         tableView->raise();
@@ -159,7 +144,7 @@ public:
         pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
         pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
-        label_help->setText(QApplication::translate("TimeWiseGUIClass", "List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo", 0));
+        label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
     } // retranslateUi
 

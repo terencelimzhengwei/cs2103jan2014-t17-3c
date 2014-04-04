@@ -44,20 +44,20 @@
       <x>30</x>
       <y>120</y>
       <width>531</width>
-      <height>391</height>
+      <height>401</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Leelawadee</family>
-      <pointsize>9</pointsize>
+      <family>New Cicle</family>
+      <pointsize>10</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 9pt &quot;Leelawadee&quot;;</string>
+     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -248,7 +248,7 @@ rgb(255, 0, 0)</string>
    <widget class="QLabel" name="label_title">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>40</x>
       <y>50</y>
       <width>201</width>
       <height>31</height>
@@ -262,37 +262,37 @@ color: rgb(0, 85, 255);</string>
      <string>Your Tasks</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLabel" name="label_help">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>530</y>
-      <width>501</width>
-      <height>61</height>
+      <x>61</x>
+      <y>541</y>
+      <width>489</width>
+      <height>16</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label_help">
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
-       </property>
-       <property name="text">
-        <string>List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="userInput">
-       <property name="placeholderText">
-        <string>+Add Task</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="styleSheet">
+     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
+    </property>
+    <property name="text">
+     <string>You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="userInput">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>560</y>
+      <width>471</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>+Add Task</string>
+    </property>
    </widget>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>

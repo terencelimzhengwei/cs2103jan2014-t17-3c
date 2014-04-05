@@ -17,8 +17,8 @@ class Parser
 private:
 	Date dateFunction;
 public:
-	Parser(void);
-	~Parser(void);
+	Parser();
+	~Parser();
 
 	CMD_TYPE determineCommandType(std::string);
 	HEADER determineHeaderType(std::string);
@@ -32,7 +32,6 @@ public:
 	bool isPriority(std::string&);
 	bool containsDay(std::string);
 	TASK_TYPE determineTaskType(std::string trimmedInput);
-	bool is24HourTimeFormat(std::string);
 	bool isPreposition(std::string);
 	TASK_STATUS getTaskStatus(std::string);
 	PRIORITY getPriority(std::string input);
@@ -43,21 +42,22 @@ public:
 	Date* createDate(std::string date);
 
 	// String functions
-	string strval(int);
-
-	string getFirstWord(std::string);
-	string removeFirstWord(std::string);
-	string replaceWord(std::string, std::string, std::string);
 	string convertToLowerCase(string str);
-	bool stringExists(string, string);
-	bool isAllNumbers(std::string);
-	int toNum(std::string);
-	vector<string> splitBySpace(string input);
 	vector<string> explode(char delimiter, string input);
-	string getStringAfter(char, std::string);
-	string getStringBefore(char, std::string);
-	void removeWhiteSpaces(std::string&);
+	bool isAllNumbers(std::string);
+	string replaceWord(std::string, std::string, std::string);
+	bool stringExists(string, string);
+	string strval(int);
+	int toNum(string);
 	string trim(string);
+
+	// String shortcut functions
+	string getFirstWord(string);
+	string removeFirstWord(string);
+
+	// Deprecated string functions
+	void removeWhiteSpaces(string&);
+	vector<string> splitBySpace(string input);
 };
 
 #endif

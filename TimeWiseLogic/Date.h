@@ -19,24 +19,27 @@ public:
 	Date(int day, int month, int year);
 	~Date(void);
 
-	int getDayNumber();
-	std::string getDayOfTheWeek();
+	int getDay();
 	int getMonth();
 	int getYear();
-	TIMEDATE_STATUS checkOverdue();
-	TIMEDATE_STATUS isLater(Date* otherDate);
-	std::string toString();
-	std::string toFormat();
-	int isLeapYear();
-	int isLeapYear(int);
+	int getWeekDay();
+	string getDayOfTheWeek();
+	void setDate(int day, int month, int year);
 
+	void setDateAsToday();
+	void setDateAsTomorrow();
+
+	TIMEDATE_STATUS checkOverdue();
+	bool compare(Date* date);
+	TIMEDATE_STATUS isLater(Date* otherDate);
+	int leapYear();
+	std::string toFormat();
+	std::string toString();
+	
+	int isLeapYear(int);
 	int getCurrentYear();
 	int getCurrentMonth();
 	int getCurrentDay();
-	void setDateAsToday();
-	void setDateAsTomorrow();
-	bool compare(Date* date);
-	void setDate(int day, int month, int year);
 
 	Date& operator++();
 	Date operator++(int);

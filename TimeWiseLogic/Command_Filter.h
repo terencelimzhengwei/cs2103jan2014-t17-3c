@@ -1,17 +1,21 @@
 #pragma once
 #include "command.h"
+//********************************************************************************
+// This class is responsible for filtering out tasks which are scheduled on the 
+// same dates (due dates or end dates) or belong to the same category
+//********************************************************************************
 class Command_Filter :public Command
 {
 public:
 	Command_Filter(void);
 	~Command_Filter(void);
 
-	bool execute(TaskList& tasklist, std::string& feedback);
-	bool undo(TaskList& tasklist);
-	void setCategory(std::string category);
-	void setPriority(PRIORITY priority);
-	void setDate(Date* date);
-	void setPreviousScreen(DISPLAY_TYPE* screen);
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&);
+	void setCategory(std::string);
+	void setPriority(PRIORITY);
+	void setDate(Date*);
+	void setPreviousScreen(DISPLAY_TYPE*);
 
 private:
 	FILTER_TYPE _filterType;

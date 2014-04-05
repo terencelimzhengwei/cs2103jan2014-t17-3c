@@ -192,8 +192,8 @@ bool Task::hasDate(Date* date){
 			return true;
 		}
 	}else{
-		if(date->isLater(_startDate)==SAME||date->isLater(_startDate)==LATER
-			&& date->isLater(_endDate)==SAME||date->isLater(_endDate)==EARLIER)
+		if((date->isLater(_startDate)==SAME||date->isLater(_startDate)==LATER)
+			&& (date->isLater(_endDate)==SAME||date->isLater(_endDate)==EARLIER))
 			return true;
 	}
 	return false;

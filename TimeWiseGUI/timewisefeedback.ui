@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TimeWiseFeedback</class>
+ <widget class="QWidget" name="TimeWiseFeedback">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>250</width>
+    <height>216</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>250</width>
+    <height>216</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>250</width>
+    <height>216</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>TimeWiseFeedback</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#TimeWiseFeedback{image: url(:/TimeWiseGUI/feedbackground2.png);}</string>
+  </property>
+  <widget class="QLabel" name="userFeedback">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>171</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_ok">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>180</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+   <property name="default">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="timewisegui.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton_ok</sender>
+   <signal>clicked()</signal>
+   <receiver>TimeWiseFeedback</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -13,29 +13,25 @@
 using namespace std;
 
 class Parser {
-private:
-	Date dateFunction;
 public:
 	Parser();
 	~Parser();
 
-	CMD_TYPE determineCommandType(std::string);
+	static CMD_TYPE determineCommandType(std::string);
 	
 	// Parser functions
-	vector<int> extractDate(string, int);
-	vector<int> extractTime(string, int);
-	bool isDateFormat(std::string);
-	bool isTimeFormat(std::string);
-	bool isCategory(std::string&);
-	bool containsDay(std::string);
-	TASK_TYPE determineTaskType(std::string trimmedInput);
-	bool isPreposition(std::string);
-	TASK_STATUS getTaskStatus(std::string);
+	static vector<int> extractDate(string, int);
+	static vector<int> extractTime(string, int);
+	static bool isDateFormat(std::string);
+	static bool isTimeFormat(std::string);
+	static bool isCategory(std::string&);
+	static bool isPreposition(std::string);
+	static TASK_STATUS getTaskStatus(std::string);
 
-	ClockTime* createTime(string time);
-	ClockTime* createTime(int time);
+	static ClockTime* createTime(string time);
+	static ClockTime* createTime(int time);
 
-	Date* createDate(std::string date);
+	static Date* createDate(std::string date);
 
 	// String functions
 	static vector<string> explode(char delimiter, string input);
@@ -48,14 +44,15 @@ public:
 	static string trim(string);
 
 	// String shortcut functions
-	string getFirstWord(string);
-	string removeFirstWord(string);
+	static string getFirstWord(string);
+	static string removeFirstWord(string);
 
 	// Deprecated string functions
-	void removeWhiteSpaces(string&);
-	vector<string> splitBySpace(string input);
+	static void removeWhiteSpaces(string&);
+	static vector<string> splitBySpace(string input);
 
 	// Unused functions
+	// bool containsDay(std::string);
 	// HEADER determineHeaderType(std::string);
 };
 

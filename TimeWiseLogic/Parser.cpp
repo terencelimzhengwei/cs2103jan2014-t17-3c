@@ -54,6 +54,8 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 }
 
 vector<int> Parser::extractDate(string command, int pos) {
+	Date dateFunction;
+
 	bool dateFound = false;
 
 	command = replaceWord(",", "", command);
@@ -248,26 +250,6 @@ bool Parser::isDateFormat(string str) {
 	} else {
 		return false;
 	}
-}
-
-bool Parser::containsDay(std::string str){
-	bool contains = false;
-	str = replaceWord(",","",str);
-	str = strToLower(str);
-
-	if( str== "today" || str == "tomorrow" ){
-		contains = true;
-	}
-	else{   
-		for(int i = 0; i<7; i++){
-			if(str == DAY[i]||str==DAY_ABBR[i]){
-				contains = true;
-				break;
-			}
-		}
-	}
-
-	return contains;
 }
 
 
@@ -482,7 +464,29 @@ vector<string> Parser::splitBySpace(string input) {
 }
 
 // Unused function
-/* HEADER Parser::determineHeaderType(std::string header) {
+/*
+
+bool Parser::containsDay(std::string str){
+	bool contains = false;
+	str = replaceWord(",","",str);
+	str = strToLower(str);
+
+	if( str== "today" || str == "tomorrow" ){
+		contains = true;
+	}
+	else{   
+		for(int i = 0; i<7; i++){
+			if(str == DAY[i]||str==DAY_ABBR[i]){
+				contains = true;
+				break;
+			}
+		}
+	}
+
+	return contains;
+}
+
+HEADER Parser::determineHeaderType(std::string header) {
 	if(header == HEADER_STRING[0]) {
 		return DESCRIPTION;
 	} else if(header == HEADER_STRING[1]) {
@@ -499,4 +503,6 @@ vector<string> Parser::splitBySpace(string input) {
 		return UNDEFINED_HEADER;
 	}
 
-}*/
+}
+
+*/

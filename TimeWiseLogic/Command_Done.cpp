@@ -21,17 +21,17 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
 		feedback = DONE_SUCCESS;
-		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+		_lastCmdCalled = EXECUTE;
 		return true;
 	case SEARCHED:
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
 		feedback = DONE_SUCCESS;
-		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+		_lastCmdCalled = EXECUTE;
 		return true;
 	case FILTERED:
 		_task=tasklist.setFilteredTaskAsDone(_taskIndex);
 		feedback = DONE_SUCCESS;
-		_lastCmdCalled="execute";
+		_lastCmdCalled = EXECUTE;
 		return true;
 	case COMPLETE:
 		throw UnableTosetAsDone();
@@ -39,7 +39,7 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	default:
 		if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
 			_task = tasklist.setTaskAsDone(_taskIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+			_lastCmdCalled = EXECUTE;
 	}
 
 }

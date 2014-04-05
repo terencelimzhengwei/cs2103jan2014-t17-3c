@@ -43,11 +43,11 @@ bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 		clearScreen(tasklist,feedback);
 		break;
 	default:
-		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+		_lastCmdCalled = EXECUTE;
 		return false;
 	}
 
-	_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+	_lastCmdCalled = EXECUTE;
 	return true;
 }
 

@@ -21,7 +21,7 @@ static const int SEARCH_COUNT           = 2;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
-enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED, EXECUTE};
+enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum FILTER_TYPE{CATEGORY,PRI,DATE};
@@ -30,7 +30,7 @@ enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED};
 enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, PRIORITY_HEADER, UNDEFINED_HEADER};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
-{ "add","delete","edit","clear","display","block", "done", "undone","undo", "redo","search","filter", "execute"};
+{ "add","delete","edit","clear","display","block", "search", "filter", "undo", "redo",  "undone", "done"};
 static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low", "H", "M", "L"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};
@@ -98,4 +98,5 @@ const std::string UNDO_CLEAR_SEARCHED_SUCCESS = "All searched tasks are added ba
 const std::string UNDO_CLEAR_FILTERED_SUCCESS = "All filtered tasks are added back to the list.";
 const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original state!";
 const std::string NO_COMMAND_LINE = "Please key in your command...";
+const std::string EXECUTE = "execute";
 #endif // !_CONSTANTS_H

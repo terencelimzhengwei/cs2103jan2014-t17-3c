@@ -21,18 +21,18 @@ namespace TimeWiseUnitTest
 			std::string feedback;
 			DISPLAY_TYPE displayScreen = MAIN;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without category");
 			commandToBeExecuted[0]->setPreviousScreen(&displayScreen);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
+			commandToBeExecuted[1]->setDescription("check for floating task with category");
 			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 			commandToBeExecuted[1]->setPreviousScreen(&displayScreen);
 
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check for deadline task without category");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 			// commandToBeExecuted[2]->setPriority(HIGH);
@@ -41,7 +41,7 @@ namespace TimeWiseUnitTest
 
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check for timed task without category");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -52,25 +52,25 @@ namespace TimeWiseUnitTest
 
 			
 			commandToBeExecuted[0]->execute(_taskList,feedback);
-			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("check for floating task without category",_taskList.getTask(0)->getDescription().c_str());
 
 			commandToBeExecuted[1]->execute(_taskList, feedback);
-			Assert::AreEqual("check floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
-			Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(0)->getPriority()));
+			Assert::AreEqual("check for floating task with category",_taskList.getTask(0)->getDescription().c_str());
+			//Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(0)->getPriority()));
 			Assert::AreEqual("test",_taskList.getTask(0)->getTaskCategory().c_str());
 
 			commandToBeExecuted[2]->execute(_taskList, feedback);
-			Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
+			Assert::AreEqual("check for deadline task without category",_taskList.getTask(2)->getDescription().c_str());
 			Assert::AreEqual("1600",_taskList.getTask(2)->getEndTime()->toString().c_str());
 			Assert::AreEqual("12 Mar 14",_taskList.getTask(2)->getEndDate()->toString().c_str());
 
 			commandToBeExecuted[3]->execute(_taskList,feedback);
-			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(3)->getDescription().c_str());
+			Assert::AreEqual("check for timed task without category",_taskList.getTask(3)->getDescription().c_str());
 			Assert::AreEqual("1600",_taskList.getTask(3)->getEndTime()->toString().c_str());
 			Assert::AreEqual("12 Mar 14",_taskList.getTask(3)->getEndDate()->toString().c_str());
 			Assert::AreEqual("1200",_taskList.getTask(3)->getStartTime()->toString().c_str());
 			Assert::AreEqual("10 Mar 14",_taskList.getTask(3)->getStartDate()->toString().c_str());
-
+			
 		}
 
 		TEST_METHOD(CommandDeleteTest) {
@@ -83,21 +83,21 @@ namespace TimeWiseUnitTest
 			std::string feedback;
 			DISPLAY_TYPE displayScreen = MAIN;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 			commandToBeExecuted[0]->setPreviousScreen(&displayScreen);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);

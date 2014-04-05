@@ -67,6 +67,7 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 	//the task will added back to tasklist.
 	if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
 		tasklist.addTask(*_addedTask);
+		tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	} else {
 		_addedTask = new Task;
 		_addedTask->setDescription(_taskDescription);

@@ -487,3 +487,7 @@ unsigned int TaskList::getLastTaskIndex(){
 void TaskList::setLastTaskIndex(unsigned int index){
 	_lastTaskIndex=index;
 }
+
+void TaskList::resetLastTaskIndex(){
+	_lastTaskIndex=DEFAULT_INDEX;
+}

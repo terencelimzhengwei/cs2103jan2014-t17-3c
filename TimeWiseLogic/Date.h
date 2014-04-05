@@ -28,6 +28,7 @@ public:
 	std::string toString();
 	std::string toFormat();
 	int isLeapYear();
+	int isLeapYear(int);
 
 	int getCurrentYear();
 	int getCurrentMonth();
@@ -37,7 +38,15 @@ public:
 	bool compare(Date* date);
 	void setDate(int day, int month, int year);
 
+	Date& operator++();
 	Date operator++(int);
+	Date& operator--();
+	Date operator--(int);
+	bool operator==(Date);
+	bool operator>(Date);
+	bool operator<(Date);
+	bool operator>=(Date);
+	bool operator<=(Date);
 
 private:
 	time_t _currentTime;
@@ -47,6 +56,5 @@ private:
 	int _month;
 	int _year;
 	int _day;
-	std::string _dayInString;
 };
 #endif

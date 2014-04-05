@@ -1,16 +1,27 @@
 #include "Date.h"
 
-Date::Date(){
+Date::Date() {
+	this->setDateAsToday();
 }
 
-Date::Date(int day, int month, int year){
-	if(month<=0||month>12||year<=0||day<=0){
+Date::Date(int day, int month, int year) {
+	this->setDate(day, month, year);
+}
+
+Date::Date(Date& date) {
+	this->setDate(date._dayNumber, date._month, date._year);
+}
+
+Date::~Date() {
+}
+
+void Date::setDate(int day, int month, int year) {
+	if(month<1 || month>NUM_OF_MONTHS || year<1 || day<1) {
 		throw InvalidDateTimeFormatException();
-	}else{
-		int leapYear =isLeapYear();
-		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month]){
+	} else {
+		int leapYear = isLeapYear(year);
+		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month-1]) {
 			throw InvalidDateTimeFormatException();
-			//LeapYear invalid exception
 		}
 	}
 	_dayNumber = day;
@@ -18,42 +29,7 @@ Date::Date(int day, int month, int year){
 	_year = year;
 }
 
-Date::Date(Date& date){
-	if(date._month<=0||date._month>12||date._year<=0||date._year<=0){
-		throw InvalidDateTimeFormatException();
-	}else{
-		int leapYear =isLeapYear();
-		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][date._month]){
-			throw InvalidDateTimeFormatException();
-			//LeapYear invalid exception
-		}
-	}
-	_dayNumber = date._dayNumber;
-	_month = date._month;
-	_year =date._year;
-	_day = date._day;
-	_dayInString = date._dayInString;
-}
-
-Date::~Date(){
-}
-
-void Date::setDate(int day, int month, int year){
-	if(month<=0||month>12||year<=0||day<=0){
-		throw InvalidDateTimeFormatException();
-	}else{
-		int leapYear =isLeapYear();
-		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month]){
-			throw InvalidDateTimeFormatException();
-			//LeapYear invalid exception
-		}
-	}
-	_dayNumber=day;
-	_month=month;
-	_year=year;
-}
-
-void Date::setDateAsToday(){
+void Date::setDateAsToday() {
 	_currentTime = time(0);   
 	localtime_s(&_timeNow,&_currentTime);
 
@@ -61,7 +37,6 @@ void Date::setDateAsToday(){
 	_month = _timeNow.tm_mon + 1;
 	_year = _timeNow.tm_year + 1900;
 	_day = _timeNow.tm_wday;
-	_dayInString = DAY[_day];
 }
 
 void Date::setDateAsTomorrow() {
@@ -69,8 +44,7 @@ void Date::setDateAsTomorrow() {
 	(*this)++;
 }
 
-TIMEDATE_STATUS Date::checkOverdue()
-{
+TIMEDATE_STATUS Date::checkOverdue() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -78,33 +52,32 @@ TIMEDATE_STATUS Date::checkOverdue()
 	int thisMonth = _timeNow.tm_mon + 1;
 	int todayDate = _timeNow.tm_mday;
 
-	if(_year>thisYear){
+	if(_year>thisYear) {
 		return EARLIER;
-	}else if(_year<thisYear){
+	} else if(_year<thisYear) {
 		return LATER;
-	}else{
-		if(_month>thisMonth){
+	} else {
+		if(_month>thisMonth) {
 			return EARLIER;
-		}else if(_month<thisMonth){
+		} else if(_month<thisMonth) {
 			return LATER;
-		}else{
-			if(_dayNumber>todayDate){
+		} else {
+			if(_dayNumber>todayDate) {
 				return EARLIER;
-			}else if(_dayNumber<todayDate){
+			} else if(_dayNumber<todayDate) {
 				return LATER;
-			}else{
+			} else {
 				return SAME;
 			}
 		}
 	}
-
 }
 
-std::string Date::getDayOfTheWeek(){
-	return _dayInString;
+std::string Date::getDayOfTheWeek() {
+	return DAY[_day];
 }
 
-std::string Date::toString(){
+std::string Date::toString() {
 	std::ostringstream convert;
 	std::string space = " ";
 	convert<<_year;
@@ -118,26 +91,25 @@ std::string Date::toString(){
 	return dateInString;
 }
 
-TIMEDATE_STATUS Date::isLater(Date* otherDate)
-{
-	if(otherDate==NULL){
+TIMEDATE_STATUS Date::isLater(Date* otherDate) {
+	if(otherDate==NULL) {
 		return LATER;
 	}
-	if(_year>otherDate->_year){
+	if(_year>otherDate->_year) {
 		return LATER;
-	}else if(_year<otherDate->_year){
+	} else if(_year<otherDate->_year) {
 		return EARLIER;
-	}else{
-		if(_month>otherDate->_month){
+	} else {
+		if(_month>otherDate->_month) {
 			return LATER;
-		}else if(_month<otherDate->_month){
+		} else if(_month<otherDate->_month) {
 			return EARLIER;
-		}else{
-			if(_dayNumber>otherDate->_dayNumber){
+		} else {
+			if(_dayNumber>otherDate->_dayNumber) {
 				return LATER;
-			}else if(_dayNumber<otherDate->_dayNumber){
+			} else if(_dayNumber<otherDate->_dayNumber) {
 				return EARLIER;
-			}else{
+			} else {
 				return SAME;
 			}
 		}
@@ -165,7 +137,7 @@ std::string Date::toFormat(){
 	return dateInString;
 }
 
-int Date::getCurrentYear(){
+int Date::getCurrentYear() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -174,7 +146,7 @@ int Date::getCurrentYear(){
 	return thisYear;
 }
 
-int Date::getCurrentMonth(){
+int Date::getCurrentMonth() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -184,7 +156,7 @@ int Date::getCurrentMonth(){
 }
 
 
-int Date::getCurrentDay(){
+int Date::getCurrentDay() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -193,7 +165,7 @@ int Date::getCurrentDay(){
 	return thisDay;
 }
 
-bool Date::compare(Date* date){
+bool Date::compare(Date* date) {
 	if(date==NULL){
 		return false;
 	}
@@ -206,61 +178,104 @@ bool Date::compare(Date* date){
 	return false;
 }
 
-int Date::isLeapYear(){
+int Date::isLeapYear() {
+	return isLeapYear(_year);
+}
+
+int Date::isLeapYear(int year) {
 	int yearType = NOT_LEAP_YEAR;
 
-	if ( _year % 400 == 0){
+	if(year % 400 == 0) {
 		yearType = LEAP_YEAR;
-	}
-	else if( _year % 100 == 0){
+	} else if(year % 100 == 0) {
 		yearType = NOT_LEAP_YEAR;
-	}
-	else if ( _year % 4 == 0){
+	} else if(year % 4 == 0) {
 		yearType = LEAP_YEAR;
 	}
 	return yearType;
 }
 
+Date& Date::operator++() {
+	if(_dayNumber == MAX_DAYS_IN_MONTH[isLeapYear()][_month-1]) {
+		_dayNumber = 1;
+		if(_month == 12) {
+			_month = 1;
+			_year += 1;
+		} else {
+			_month += 1;
+		}
+	} else {
+		_dayNumber += 1;
+	}
+	_day = (_day + 1) % 7;
+	return *this;
+}
+
 Date Date::operator++(int) {
 	Date original(*this);
-	if(getMonth() == 1 || getMonth() == 3|| getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 12) {
-		if(getDayNumber() == 31) {
-			_dayNumber = 1;
-			if(getMonth() == 12) {
-				_month = 1;
-				_year = getYear() + 1;
-			} else {
-				_month = getMonth() + 1;
-				_year = getYear();
-			}	
+	++(*this);
+	return original;
+}
+
+Date& Date::operator--() {
+	_dayNumber -= 1;
+	if(_dayNumber == 0) {
+		if(_month > 1) {
+			_month -= 1;
+			_dayNumber = MAX_DAYS_IN_MONTH[isLeapYear()][_month-1];
 		} else {
-			_month = getMonth();
-			_dayNumber = getDayNumber() + 1;
-			_year = getYear();
-		}
-	} else if (getMonth() == 2) {
-		if(getDayNumber()== 29) {
-			_dayNumber = 1;
-			_month = 3;
-			_year = getYear();
-		} else {
-			_month = getMonth();
-			_dayNumber = getDayNumber() + 1;
-			_year = getYear();
-		}
-	} else if (getMonth() == 4 || getMonth() == 6|| getMonth() == 9 || getMonth() == 10 || getMonth() == 11) {
-		if(getDayNumber()== 30) {
-			_dayNumber = 1;
-			_month = getMonth() + 1;
-			_year = getYear();
-		} else {
-			_month = getMonth();
-			_dayNumber = getDayNumber() + 1;
-			_year = getYear();
+			_year -= 1;
+			_month = NUM_OF_MONTHS;
+			_dayNumber = MAX_DAYS_IN_MONTH[isLeapYear()][11];
 		}
 	}
+	return *this;
+}
 
-	_day = (_day + 1) % 7;
-	_dayInString = DAY[_day];
+Date Date::operator--(int) {
+	Date original(*this);
+	--(*this);
 	return original;
+}
+
+bool Date::operator==(Date b) {
+	bool same = false;
+
+	if( this->_year == b._year && this->_month == b._month && this->_dayNumber == b._dayNumber) {
+		same = true;
+	}
+
+	return same;
+}
+
+bool Date::operator>(Date b) {
+	bool larger = false;
+
+	if( this->_year > b._year ||
+		this->_year == b._year && this->_month > b._month || 
+		this->_year == b._year && this->_month == b._month && this->_dayNumber > b._dayNumber) {
+			larger = true;
+	}
+
+	return larger;
+}
+
+bool Date::operator<(Date b) {
+	bool smaller = false;
+
+	if( this->_year < b._year ||
+		this->_year == b._year && this->_month < b._month || 
+		this->_year == b._year && this->_month == b._month && this->_dayNumber < b._dayNumber) {
+			smaller = true;
+	}
+
+	return smaller;
+}
+
+bool Date::operator>=(Date b) {
+	return ( *this > b || *this == b );
+}
+
+bool Date::operator<=(Date b) {
+	return ( *this < b || *this == b );
 }

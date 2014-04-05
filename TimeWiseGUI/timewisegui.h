@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 #include <QDateTime>
 #include <QTimer>
+#include <QFont>
 #include <QFontDatabase>
 #include <QString>
 #include <QCompleter>
@@ -47,7 +48,6 @@ public:
 	void next_line();
 
 	//other functions
-	int checkEmpty(QString input);
 	void autoComplete();
 	//void showFeedback(QString outputMessage);
 

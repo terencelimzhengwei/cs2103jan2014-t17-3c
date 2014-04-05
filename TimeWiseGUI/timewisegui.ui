@@ -328,11 +328,11 @@ color: rgb(0, 85, 255);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 13pt &quot;DK Crayon Crumble&quot;;
+     <string notr="true">font: 13pt &quot;CF Jack Story&quot;;
 color: rgb(0, 85, 255);</string>
     </property>
     <property name="text">
-     <string>                 WELCOME TO...</string>
+     <string>                      WELCOME TO...</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

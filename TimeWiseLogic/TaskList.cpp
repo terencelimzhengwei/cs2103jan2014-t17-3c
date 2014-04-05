@@ -13,19 +13,19 @@ void TaskList::addTask(Task& task){
 	_clashedTask.clear();
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]->checkClash(&task)){
-			if(!task.isClash()){
-				task.setClash(true);
+			if(_clashedTask.empty()){
 				_clashedTask.push_back(&task);
 			}
-			_taskList[i]->setClash(true);
 			_clashedTask.push_back(_taskList[i]);
 		}
 		if(!task.checkLater(_taskList[i])){
 			_taskList.insert(_taskList.begin()+i,&task);
+			updateClashStatus();
 			return;
 		}
 	}  
 	_taskList.push_back(&task);
+	updateClashStatus();
 }
 
 bool TaskList::deleteTask(unsigned int& index)
@@ -459,17 +459,10 @@ void TaskList::updateClashStatus()
 	if(_taskList.empty()){
 		return;
 	}
-
+	resetClash();
 	for(unsigned int i=0;i<_taskList.size();i++){
 		for(unsigned int j=i+1;j<_taskList.size();j++){
-			if(!_taskList[i]->checkClash(_taskList[j])){
-				if(_taskList[i]->isClash()==true){
-					_taskList[i]->setClash(false);
-				}
-				if(_taskList[j]->isClash()==true){
-					_taskList[j]->setClash(false);
-				}
-			}else{
+			if(_taskList[i]->checkClash(_taskList[j])){
 				_taskList[i]->setClash(true);
 				_taskList[j]->setClash(true);
 			}

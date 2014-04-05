@@ -18,11 +18,6 @@ bool CommandCreator::hasArg(std::string input){
 	return true;
 }
 
-/*void CommandCreator::flagDescription(std::string input){
-	if (input.length() == 0 ) {
-		throw InvalidAddCommandInputException();
-	}
-}*/
 
 bool CommandCreator::isValidIndex(int id) {
 	if (id < 0 || id == 0) {
@@ -42,7 +37,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 		CMD_TYPE commandType = _parser.determineCommandType(commandTypeString); 
 
 		// Assume all other commands are adding event
-		if(commandType==UNDEFINED) {
+		if(commandType == UNDEFINED) {
 			userInput = "add " + userInput;
 			commandType = ADD;
 		}
@@ -143,6 +138,9 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (InvalidHeaderException& ihe) {
 		_feedbackExceptiontoUI = ihe.what();
 		throw InvalidHeaderException();
+	} catch (InvalidDateTimeFormatException& idtfe) {
+		_feedbackExceptiontoUI = idtfe.what();
+		throw InvalidDateTimeFormatException();
 	}
 
 }
@@ -161,18 +159,19 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			category = _parser.replaceWord("#", "", param[pos]);
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
-			vector<int> dateData = _parser.extractDate(command, pos);
-			dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
+				vector<int> dateData = _parser.extractDate(command, pos);
+				dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
 
-			for(int i=0 ; i<dateData[3] ; i++) {
-				descriptionWord[pos - i] = false;
-			}
-			pos = pos - (dateData[3] - 1);
+				for(int i=0 ; i<dateData[3] ; i++) {
+					descriptionWord[pos - i] = false;
+				}
+				pos = pos - (dateData[3] - 1);
 
-			// Check preposition
-			if( (pos-1) >= 0 && _parser.isPreposition(param[pos-1]) ) {
-				descriptionWord[pos - 1] = false;
-			}
+				// Check preposition
+				if( (pos-1) >= 0 && _parser.isPreposition(param[pos-1]) ) {
+					descriptionWord[pos - 1] = false;
+				}
+			
 		} else if(_parser.extractTime(command, pos)[1]) {
 			vector<int> timeData = _parser.extractTime(command, pos);
 			times.push_back(_parser.strval(timeData[0]));
@@ -197,7 +196,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 	//delete descriptionWord;
 
 	_parser.removeWhiteSpaces(description);
-
+	if (hasArg(description)) {
 	Command_Add* commandAdd = new Command_Add;
 
 	if(category!="") {
@@ -293,7 +292,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 				break;
 			default:
 				delete commandAdd;
-				commandAdd=NULL;
+				commandAdd = NULL;
 				throw InvalidAddCommandInputException();
 
 			}
@@ -303,9 +302,12 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 		
    }
 
-	
 	commandAdd->setPreviousScreen(screen);
 	return commandAdd;
+} else {
+	throw InvalidAddCommandInputException();
+	return NULL;
+}
 }
 
 	

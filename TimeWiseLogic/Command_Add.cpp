@@ -65,7 +65,7 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 	*_currentScreen = MAIN;
 	//Check whether the previous command was deleting a task and the user tries to undo this, 
 	//the task will added back to tasklist.
-	if(_lastCmdCalled == CMD_TYPE_STRING[8]){
+	if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
 		tasklist.addTask(*_addedTask);
 	} else {
 		_addedTask = new Task;
@@ -75,7 +75,7 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 		_addedTask->setTaskType(_taskType);
 		tasklist.addTask(*_addedTask);
 	}
-	_lastCmdCalled == CMD_TYPE_STRING[12];
+	_lastCmdCalled == CMD_TYPE_STRING[EXECUTE];
 	feedback = ADD_SUCCESS;
         tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	return true;

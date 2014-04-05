@@ -21,7 +21,7 @@ static const int SEARCH_COUNT           = 2;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
-enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE,UNDEFINED};
+enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED, EXECUTE};
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum FILTER_TYPE{CATEGORY,PRI,DATE};
@@ -68,7 +68,6 @@ static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
 static const char* UNABLE_TO_EDIT_COMPLETED_TASKS = "This task has been completed. Please type 'undone' in order to edit it";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
-
 //Feedback strings
  
 const std::string ADD_SUCCESS = " Task is successfully added";
@@ -98,4 +97,5 @@ const std::string UNDO_CLEAR_ALL_SUCCESS = "All tasks are added back to the list
 const std::string UNDO_CLEAR_SEARCHED_SUCCESS = "All searched tasks are added back to the list.";
 const std::string UNDO_CLEAR_FILTERED_SUCCESS = "All filtered tasks are added back to the list.";
 const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original state!";
+const std::string NO_COMMAND_LINE = "Please key in your command...";
 #endif // !_CONSTANTS_H

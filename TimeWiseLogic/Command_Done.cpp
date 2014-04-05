@@ -21,39 +21,36 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
 		feedback = DONE_SUCCESS;
-		_lastCmdCalled = CMD_TYPE_STRING[13];//CMD_TYPE_STRING[13] = "execute"
+		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
 		return true;
 	case SEARCHED:
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
 		feedback = DONE_SUCCESS;
-		_lastCmdCalled = CMD_TYPE_STRING[13];
+		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
 		return true;
 	case FILTERED:
 		_task=tasklist.setFilteredTaskAsDone(_taskIndex);
-		feedback = "Task: '" + _task->toString() + "' has been marked as completed";
+		feedback = DONE_SUCCESS;
 		_lastCmdCalled="execute";
 		return true;
 	case COMPLETE:
 		throw UnableTosetAsDone();
 		return false;
 	default:
-		//CMD_TYPE_STRING[8] = "undo";
-		if(_lastCmdCalled == CMD_TYPE_STRING[8]){
-			_task=tasklist.setTaskAsDone(_taskIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[13];
-			break;
-		}
-		return false;
+		if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
+			_task = tasklist.setTaskAsDone(_taskIndex);
+			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
 	}
 
+}
 }
 
 bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
 	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
 	tasklist.setTaskAsUndone(index);
-	if(_displayType==SEARCHED){
+	if(_displayType == SEARCHED){
 		tasklist.addTaskToSearchedList(*_task);
-	}else if(_displayType==FILTERED){
+	}else if(_displayType == FILTERED){
 		tasklist.addTaskToFilteredList(*_task);
 	}
         _lastCmdCalled = CMD_TYPE_STRING[8];

@@ -9,40 +9,40 @@ Parser::~Parser(void) {
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	commandTypeString = convertToLowerCase(commandTypeString);
 
-	if(commandTypeString == CMD_TYPE_STRING[0]) {
+	if(commandTypeString == CMD_TYPE_STRING[ADD]) {
 		return ADD;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[1]) {
+	else if(commandTypeString == CMD_TYPE_STRING[DELETE]) {
 		return DELETE;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[2]) {
+	else if(commandTypeString == CMD_TYPE_STRING[EDIT]) {
 		return EDIT;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[3]) {
+	else if(commandTypeString == CMD_TYPE_STRING[CLEAR]) {
 		return CLEAR;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[4]) {
+	else if(commandTypeString == CMD_TYPE_STRING[DISPLAY]) {
 		return DISPLAY;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[5]) {
+	else if(commandTypeString == CMD_TYPE_STRING[BLOCK]) {
 		return BLOCK;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[6]) {
+	else if(commandTypeString == CMD_TYPE_STRING[DONE]) {
 		return DONE;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[7]) {
+	else if(commandTypeString == CMD_TYPE_STRING[UNDONE]) {
 		return UNDONE;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[8]) {
+	else if(commandTypeString == CMD_TYPE_STRING[UNDO]) {
 		return UNDO;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[9]) {
+	else if(commandTypeString == CMD_TYPE_STRING[REDO]) {
 		return REDO;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[10]) {
+	else if(commandTypeString == CMD_TYPE_STRING[SEARCH]) {
 		return SEARCH;
 	} 
-	else if(commandTypeString == CMD_TYPE_STRING[11]) {
+	else if(commandTypeString == CMD_TYPE_STRING[FILTER]) {
 		return FILTER;
 	}
 	else {
@@ -191,6 +191,7 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 		}
 	} else {
 		output[3] = 0;
+	
 	}
 	return output;
 }

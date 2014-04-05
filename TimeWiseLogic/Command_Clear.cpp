@@ -43,11 +43,11 @@ bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 		clearScreen(tasklist,feedback);
 		break;
 	default:
-		_lastCmdCalled = CMD_TYPE_STRING[12];
+		_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
 		return false;
 	}
 
-	_lastCmdCalled = CMD_TYPE_STRING[12];
+	_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
 	return true;
 }
 
@@ -78,7 +78,7 @@ bool Command_Clear::undo(TaskList& tasklist, std::string& feedback){
 }
 
 void Command_Clear::clearCompletedTasks(TaskList& tasklist){
-	if(_lastCmdCalled != CMD_TYPE_STRING[8]){
+	if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
 		for(int i = 0; i < tasklist.doneSize(); i++){
 			_deletedDoneTasks.push_back(tasklist.getCompletedTask(i));
 		} 
@@ -159,7 +159,7 @@ void Command_Clear::clearScreen(TaskList& tasklist,std::string& feedback) {
 		clearUncompletedTasks(tasklist);
 		feedback = CLEAR_UNCOMPLETED_SUCCESS;
 	}else if(_displayScreen == FILTERED){
-		if(_lastCmdCalled != CMD_TYPE_STRING[8]){
+		if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
 			saveFilteredTasks(tasklist);
 		}
 		tasklist.deleteFilteredTasks();

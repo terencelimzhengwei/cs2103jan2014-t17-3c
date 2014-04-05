@@ -368,7 +368,7 @@ bool Task::checkClashTime(Task* task){
 
 void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime){
 	if(eDate->isLater(sDate)==EARLIER){
-		throw InvalidDateTimeFormatException();
+		throw InvalidStartEndDateTime();
 	}else if(eDate->isLater(sDate)==SAME){
 		sDate=NULL;
 	}else if(sDate==NULL &&eDate==NULL){

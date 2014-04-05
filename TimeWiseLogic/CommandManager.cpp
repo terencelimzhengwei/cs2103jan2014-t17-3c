@@ -90,7 +90,7 @@ void CommandManager::Redo()
 			AddUndo(pCommand);
 		}else{
 			delete pCommand;
-			pCommand=NULL;
+			pCommand = NULL;
 		}
 	}
 }

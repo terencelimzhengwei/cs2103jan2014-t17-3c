@@ -69,6 +69,7 @@ public:
 	Task* setFilteredTaskAsDone(unsigned int index);
 	unsigned int getLastTaskIndex();
 	void setLastTaskIndex(unsigned int index);
+	void resetLastTaskIndex();
 private:
 	std::vector<Task*> _taskList;
 	std::vector<Task*> _overdueTaskList;
@@ -76,5 +77,5 @@ private:
 	std::vector<Task*> _searchedTaskList;
 	std::vector<Task*> _filteredTaskList;
 	std::vector<Task*> _clashedTask;
-	unsigned int _lastTaskIndex;
+	int _lastTaskIndex;
 };

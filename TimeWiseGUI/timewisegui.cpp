@@ -16,7 +16,7 @@ const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
-const char* BLOCK_FORMAT = "block: <description> \\ <date 1><time 1> \\ <date 2><time 2>...<#category>";
+const char* BLOCK_FORMAT = "block: <description>\\<date 1><time 1>\\<date 2><time 2>...<#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
 const char* DISPLAY_FORMAT = "display: main or completed";
@@ -46,7 +46,7 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	setupHotKeys();
 
 	autoComplete();
-	
+
 	if(numberOfOverdues() > 0) {
 		setOverdueMessage(numberOfOverdues());
 	}
@@ -165,6 +165,7 @@ void TimeWiseGUI::setMainData() {
 		QFont font;
 		if(i == latestTaskIndex) {
 			font.setWeight(99);
+			font.setPointSize(9);
 		} else {
 			font.setBold(false);
 		}
@@ -182,10 +183,6 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			case 1: {
-				/*PRIORITY taskPriority = taskList.getTask(i)->getPriority();
-				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);*/
 				break;
 			}
 			case 2: {
@@ -248,10 +245,10 @@ void TimeWiseGUI::setMainData() {
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
-			/*bool isBlocked = taskList.getTask(i)->getBlockedStatus();
+			bool isBlocked = taskList.getTask(i)->getBlockedStatus();
 			if(isBlocked) {
 				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
-			}*/
+			}
 		}
 	}
 	ui.tableView->scrollTo(model->index(latestTaskIndex,0));
@@ -284,10 +281,6 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			case 1: {
-				/*PRIORITY taskPriority = taskList[i]->getPriority();
-				QString qTask = QString::fromStdString(PRIORITY_STRING[taskPriority]);
-				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);*/
 				break;
 			}
 			case 2: {			
@@ -349,9 +342,9 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
-			/*if(taskList[i]->getBlockedStatus()) {
+			if(taskList[i]->getBlockedStatus()) {
 				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
-			}*/
+			}
 		}
 	}
 }
@@ -374,13 +367,13 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 	//set column widths of table. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 190);
+	ui.tableView->setColumnWidth(0, 180);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 25);
+	ui.tableView->setColumnWidth(1, 23);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 57);
+	ui.tableView->setColumnWidth(2, 66);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 57);
+	ui.tableView->setColumnWidth(3, 66);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(4, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
@@ -388,8 +381,8 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(6, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(532);
-	ui.tableView->setMaximumWidth(532);
+	ui.tableView->setMinimumWidth(535);
+	ui.tableView->setMaximumWidth(535);
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
@@ -412,7 +405,8 @@ void TimeWiseGUI::updateTime() {
 	ui.label_date->setText(date.toString());
 	QTime time = QTime::currentTime();
 	ui.label_time->setText(time.toString());
- 	if(_logic.getTaskList().checkNewOverdue()){
+
+	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();
 		if(_logic.getScreenToDisplay()==MAIN){
 			setMainData();

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -125,6 +125,7 @@ public:
         userInput = new QLineEdit(centralWidget);
         userInput->setObjectName(QStringLiteral("userInput"));
         userInput->setGeometry(QRect(60, 560, 471, 20));
+        userInput->setStyleSheet(QStringLiteral("border-radius: 9px"));
         label_mlog = new QLabel(centralWidget);
         label_mlog->setObjectName(QStringLiteral("label_mlog"));
         label_mlog->setGeometry(QRect(50, 600, 291, 71));

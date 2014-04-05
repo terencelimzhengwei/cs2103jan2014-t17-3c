@@ -314,6 +314,9 @@ color: rgb(0, 85, 255);</string>
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 9px</string>
+    </property>
     <property name="placeholderText">
      <string>+Add Task</string>
     </property>

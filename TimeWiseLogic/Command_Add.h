@@ -7,7 +7,6 @@ public:
 	~Command_Add(void);
 
 	void setDescription(std::string);
-	void setPriority(PRIORITY);
 	void setCategory(std::string);
 	void setEndDate(Date&);
 	void setStartDate(Date&);
@@ -22,7 +21,6 @@ public:
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
-	PRIORITY _taskPriority;
 	std::string _category;
 	std::string _userInput;
 	std::string _lastCmdCalled;

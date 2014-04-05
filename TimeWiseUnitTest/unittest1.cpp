@@ -26,7 +26,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 			commandToBeExecuted[1]->setPreviousScreen(&displayScreen);
 
@@ -35,7 +35,7 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
-			commandToBeExecuted[2]->setPriority(HIGH);
+			// commandToBeExecuted[2]->setPriority(HIGH);
 			commandToBeExecuted[2]->setCategory("test");
 			commandToBeExecuted[2]->setPreviousScreen(&displayScreen);
 
@@ -46,7 +46,7 @@ namespace TimeWiseUnitTest
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
-			commandToBeExecuted[3]->setPriority(HIGH);
+			// commandToBeExecuted[3]->setPriority(HIGH);
 			commandToBeExecuted[3]->setCategory("test");
 			commandToBeExecuted[3]->setPreviousScreen(&displayScreen);
 
@@ -88,7 +88,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -139,7 +139,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -173,7 +173,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -221,7 +221,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -283,7 +283,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -401,7 +401,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -441,7 +441,7 @@ namespace TimeWiseUnitTest
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			commandToBeExecuted[1]->setPriority(HIGH);
+			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);

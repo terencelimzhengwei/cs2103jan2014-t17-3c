@@ -150,7 +150,6 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 Command* CommandCreator::createCommandAdd(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
 	bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
 	string category;
-	string priority;
 	string description;
 	vector<string> dates;
 	vector<string> times;
@@ -161,9 +160,6 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 		if(_parser.isCategory(param[pos]) && category.empty()) {
 			category = _parser.replaceWord("#", "", param[pos]);
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
-		} else if(_parser.isPriority(param[pos]) && priority.empty()) {
-			priority = _parser.replaceWord("!", "", param[pos]);
-			descriptionWord[pos] = false;	// It is a priority, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
 			vector<int> dateData = _parser.extractDate(command, pos);
 			dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
@@ -206,10 +202,6 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 
 	if(category!="") {
 		commandAdd->setCategory(category);
-	}
-
-	if(priority!="") {
-		commandAdd->setPriority(_parser.getPriority(priority));
 	}
 
 	commandAdd->setDescription(description);
@@ -432,10 +424,6 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 	commandFilter->setPreviousScreen(screen);
 	if(parameter[0]=='#'){
 		commandFilter->setCategory(parameter.substr(1));
-		return commandFilter;
-	}
-	if(_parser.isPriority(parameter)){
-		commandFilter->setPriority(_parser.getPriority(parameter.substr(1)));
 		return commandFilter;
 	}
 	if(_parser.isDateFormat(parameter)){

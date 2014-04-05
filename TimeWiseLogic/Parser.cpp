@@ -63,8 +63,6 @@ HEADER Parser::determineHeaderType(std::string header) {
 		return DUE_TIME;
 	} else if(header == HEADER_STRING[5]) {
 		return CATEGORY_HEADER;
-	} else if(header == HEADER_STRING[6]) {
-		return PRIORITY_HEADER;
 	} else {
 		return UNDEFINED_HEADER;
 	}
@@ -319,21 +317,6 @@ bool Parser::isTimeFormat(string time) {
 	}
 }
 
-PRIORITY Parser::getPriority(std::string input){
-	std::string characterlist=input;
-	if(characterlist=="h"||characterlist=="high"){
-		return HIGH;
-	}else if(characterlist=="m"||characterlist=="medium"||characterlist=="med"){
-		return MEDIUM;
-	}else if(characterlist=="l"||characterlist=="low"){
-		return LOW;
-	}else{
-		//Invalid Priority Exception
-		throw InvalidAddCommandInputException();
-		return LOW;
-	}
-}
-
 Date* Parser::createDate(std::string date) {
 	Date* _date = new Date;
 	std::string dateString = date;
@@ -386,16 +369,6 @@ bool Parser::isCategory(std::string& input){
 	}
 	return false;
 }
-
-bool Parser::isPriority(std::string& input){
-	if(input[0]=='!'){
-		return true;
-	}
-	return false;
-}
-
-
-
 
 // String functions
 string Parser::convertToLowerCase(string input) {

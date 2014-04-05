@@ -9,8 +9,7 @@
 //***************************************************************************************
 Command_Add::Command_Add() {
 	_type = ADD;	
-	_taskDescription=DEFAULT_EMPTY;
-	_taskPriority = DEFAULT_PRIORITY;
+	_taskDescription = DEFAULT_EMPTY;
 	_taskType = DEFAULT_TASK_TYPE;
 	_category = DEFAULT_EMPTY;
 	_endDate = NULL;
@@ -40,9 +39,6 @@ Command_Add::~Command_Add(void) {
 //setter for fields
 void Command_Add:: setDescription(std::string description){
 	_taskDescription = description;
-}
-void Command_Add::setPriority(PRIORITY taskPriority) {
-	_taskPriority = taskPriority;
 }
 void Command_Add::setCategory(std::string category) {
 	_category = category;
@@ -74,7 +70,6 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 	} else {
 		_addedTask = new Task;
 		_addedTask->setDescription(_taskDescription);
-		_addedTask->setPriority(_taskPriority);
 		_addedTask->setCategory(_category);
 		_addedTask->setSchedule(_startDate,_endDate,_startTime,_endTime);
 		_addedTask->setTaskType(_taskType);

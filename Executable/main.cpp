@@ -39,7 +39,7 @@ int main(){
 
 	commandToBeExecuted.push_back(new Command_Add);
 	commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-	commandToBeExecuted[1]->setPriority(HIGH);
+//	commandToBeExecuted[1]->setPriority(HIGH);
 	commandToBeExecuted[1]->setCategory("test");
 
 	commandToBeExecuted.push_back(new Command_Add);

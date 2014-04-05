@@ -29,12 +29,10 @@ public:
 	bool isDateFormat(std::string);
 	bool isTimeFormat(std::string);
 	bool isCategory(std::string&);
-	bool isPriority(std::string&);
 	bool containsDay(std::string);
 	TASK_TYPE determineTaskType(std::string trimmedInput);
 	bool isPreposition(std::string);
 	TASK_STATUS getTaskStatus(std::string);
-	PRIORITY getPriority(std::string input);
 
 	ClockTime* createTime(string time);
 	ClockTime* createTime(int time);

@@ -38,6 +38,7 @@ const string MONTH_ABBR[] = {
 	"Dec"
 };
 
+const int DAY_PER_WEEK = 7;
 const string DAY[] = {
 	"Sunday",
 	"Monday",

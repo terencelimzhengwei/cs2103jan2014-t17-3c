@@ -41,6 +41,8 @@ public:
 	int getCurrentMonth();
 	int getCurrentDay();
 
+	Date operator+(int);
+	Date operator-(int);
 	Date& operator++();
 	Date operator++(int);
 	Date& operator--();
@@ -50,6 +52,8 @@ public:
 	bool operator<(Date);
 	bool operator>=(Date);
 	bool operator<=(Date);
+	Date operator+=(int);
+	Date operator-=(int);
 
 private:
 	time_t _currentTime;

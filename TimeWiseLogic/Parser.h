@@ -12,8 +12,7 @@
 #include "Calendar.h"
 using namespace std;
 
-class Parser
-{
+class Parser {
 private:
 	Date dateFunction;
 public:
@@ -21,7 +20,6 @@ public:
 	~Parser();
 
 	CMD_TYPE determineCommandType(std::string);
-	HEADER determineHeaderType(std::string);
 	
 	// Parser functions
 	vector<int> extractDate(string, int);
@@ -40,14 +38,14 @@ public:
 	Date* createDate(std::string date);
 
 	// String functions
-	string convertToLowerCase(string str);
-	vector<string> explode(char delimiter, string input);
-	bool isAllNumbers(std::string);
-	string replaceWord(std::string, std::string, std::string);
-	bool stringExists(string, string);
-	string strval(int);
-	int toNum(string);
-	string trim(string);
+	static vector<string> explode(char delimiter, string input);
+	static bool isAllNumbers(std::string);
+	static string replaceWord(std::string, std::string, std::string);
+	static bool stringExists(string, string);
+	static string strToLower(string str);
+	static string strVal(int);
+	static int toNum(string);
+	static string trim(string);
 
 	// String shortcut functions
 	string getFirstWord(string);
@@ -56,6 +54,9 @@ public:
 	// Deprecated string functions
 	void removeWhiteSpaces(string&);
 	vector<string> splitBySpace(string input);
+
+	// Unused functions
+	// HEADER determineHeaderType(std::string);
 };
 
 #endif

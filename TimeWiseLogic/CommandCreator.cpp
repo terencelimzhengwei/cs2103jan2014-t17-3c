@@ -160,7 +160,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
 				vector<int> dateData = _parser.extractDate(command, pos);
-				dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
+				dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
 
 				for(int i=0 ; i<dateData[3] ; i++) {
 					descriptionWord[pos - i] = false;
@@ -174,7 +174,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			
 		} else if(_parser.extractTime(command, pos)[1]) {
 			vector<int> timeData = _parser.extractTime(command, pos);
-			times.push_back(_parser.strval(timeData[0]));
+			times.push_back(Parser::strVal(timeData[0]));
 			descriptionWord[pos] = false;
 
 			// Check preposition
@@ -430,7 +430,7 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 	}
 	if(_parser.isDateFormat(parameter)){
 		vector<int> dateData = _parser.extractDate(parameter, -1);
-		std::string dateString = _parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]);
+		std::string dateString = Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]);
 		Date* date=_parser.createDate(dateString);
 		commandFilter->setDate(date);
 		delete date;
@@ -482,7 +482,7 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
 		} else if(_parser.extractDate(command, pos)[3]) {
 			vector<int> dateData = _parser.extractDate(command, pos);
-			dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
+			dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
 
 			for(int i=0 ; i<dateData[3] ; i++) {
 				descriptionWord[pos - i] = false;
@@ -495,7 +495,7 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 			}
 		} else if(_parser.extractTime(command, pos)[1]) {
 			vector<int> timeData = _parser.extractTime(command, pos);
-			times.push_back(_parser.strval(timeData[0]));
+			times.push_back(Parser::strVal(timeData[0]));
 			descriptionWord[pos] = false;
 
 			// Check preposition
@@ -604,11 +604,11 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 		for(int j = token.size()-1 ; j>=0 ; j--) {
 			if(temp = _parser.extractDate(components[i], j)[3]) {
 				vector<int> dateData = _parser.extractDate(components[i], j);
-				dates.push_back(_parser.strval(dateData[2]) + "/" + _parser.strval(dateData[1]) + "/" + _parser.strval(dateData[0]));
+				dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
 				j = j - (temp-1);
 			} else if(temp = _parser.extractTime(components[i], j)[1]) {
 				vector<int> timeData = _parser.extractTime(components[i], j);
-				times.push_back(_parser.strval(timeData[0]));			
+				times.push_back(Parser::strVal(timeData[0]));			
 				j = j - (temp-1);
 			} else if(_parser.isCategory(token[j])){
 				std::string cat=_parser.replaceWord("#","",token[j]);

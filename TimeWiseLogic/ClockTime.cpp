@@ -7,22 +7,10 @@ ClockTime::ClockTime() {
 }
 
 ClockTime::ClockTime(int time) {
-	/* if(time/100<0 || time/100>23 || time%100>59 || time%100<0 || time<0) {
-		delete this;
-		throw InvalidDateTimeFormatException();
-	}
-	_time = time; */
-	
 	this->setTime(time);
 }
 
 ClockTime::ClockTime(ClockTime& src) {
-	/* if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()%100>59||time.getTime()%100<0){
-		delete this;
-		throw InvalidDateTimeFormatException();
-	}
-	_time= time._time; */
-	
 	this->setTime(src._time);
 }
 
@@ -96,4 +84,25 @@ TIMEDATE_STATUS ClockTime::isLater(ClockTime* otherTime) {
 
 int ClockTime::getTime() {
 	return _time;
+}
+
+// Opertaors
+bool ClockTime::operator==(ClockTime b) {
+	return this->_time == b._time;
+}
+
+bool ClockTime::operator>(ClockTime b) {
+	return this->_time > b._time;
+}
+
+bool ClockTime::operator<(ClockTime b) {
+	return this->_time < b._time;
+}
+
+bool ClockTime::operator>=(ClockTime b) {
+	return this->_time >= b._time;
+}
+
+bool ClockTime::operator<=(ClockTime b) {
+	return this->_time <= b._time;
 }

@@ -196,6 +196,26 @@ int Date::isLeapYear(int year) {
 }
 
 // Operators
+Date Date::operator+(int num) {
+	if(num<0) {
+		return (*this) - (-num);
+	}
+	for(int i=0 ; i<num ; i++) {
+		(*this)++;
+	}
+	return *this;
+}
+
+Date Date::operator-(int num) {
+	if(num<0) {
+		return (*this) + (-num);
+	}
+	for(int i=0 ; i<(-num) ; i++) {
+		(*this)--;
+	}
+	return *this;
+}
+
 Date& Date::operator++() {
 	if(_dayNumber == MAX_DAYS_IN_MONTH[this->leapYear()][_month-1]) {
 		_dayNumber = 1;
@@ -229,6 +249,10 @@ Date& Date::operator--() {
 			_month = NUM_OF_MONTHS;
 			_dayNumber = MAX_DAYS_IN_MONTH[this->leapYear()][11];
 		}
+	}
+	_day = _day - 1;
+	while(_day < 0) {
+		_day += 7;
 	}
 	return *this;
 }
@@ -279,4 +303,14 @@ bool Date::operator>=(Date b) {
 
 bool Date::operator<=(Date b) {
 	return ( *this < b || *this == b );
+}
+
+Date Date::operator+=(int num) {
+	*this = *this + num;
+	return *this;
+}
+
+Date Date::operator-=(int num) {
+	*this = *this - num;
+	return *this;
 }

@@ -1,5 +1,8 @@
 #include "Parser.h"
 
+const string DAY_SHORT_HAND[] = {"yesterday", "ytd", "today", "tomorrow", "tmr"};
+const int DAY_SHORT_HAND_OFFSET[] = {-1, -1, 0, 1, 1};
+
 Parser::Parser(void) {
 }
 
@@ -7,7 +10,7 @@ Parser::~Parser(void) {
 }
 
 CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
-	commandTypeString = convertToLowerCase(commandTypeString);
+	commandTypeString = strToLower(commandTypeString);
 
 	if(commandTypeString == CMD_TYPE_STRING[ADD]) {
 		return ADD;
@@ -50,36 +53,7 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
-HEADER Parser::determineHeaderType(std::string header) {
-	if(header == HEADER_STRING[0]) {
-		return DESCRIPTION;
-	} else if(header == HEADER_STRING[1]) {
-		return START_DATE;
-	} else if(header == HEADER_STRING[2]) {
-		return START_TIME;
-	} else if(header == HEADER_STRING[3]) {
-		return DUE_DATE;
-	} else if(header == HEADER_STRING[4]) {
-		return DUE_TIME;
-	} else if(header == HEADER_STRING[5]) {
-		return CATEGORY_HEADER;
-	} else {
-		return UNDEFINED_HEADER;
-	}
-
-}
-
-vector<int> Parser::extractDate(string command, int pos=-1) {
-	string monthListLong[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
-	string monthListShort[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
-
-	int dayInNameNum = 3;
-	string dayInName[] = {"today", "tomorrow", "tmr"};
-	int dayInNameOffset[] = {0, 1, 1};
-	int monthDayNum[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	int weekdayNum = 7;
-
+vector<int> Parser::extractDate(string command, int pos) {
 	bool dateFound = false;
 
 	command = replaceWord(",", "", command);
@@ -116,13 +90,11 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 				dateFound = true;
 			}
 		} else if(dateComponent.size() == 1) {
-			for(int i=0 ; i<dayInNameNum && !dateFound ; i++) {
-				if(convertToLowerCase(dateComponent[0]) == dayInName[i]) {
-					if(dayInNameOffset[i]==0) {
-						dateFunction.setDateAsToday();
-					} else {
-						dateFunction.setDateAsTomorrow();
-					}
+			int dayShortHandNum = sizeof(DAY_SHORT_HAND_OFFSET) / sizeof(DAY_SHORT_HAND_OFFSET[0]);
+			for(int i=0 ; i<dayShortHandNum && !dateFound ; i++) {
+				if(strToLower(dateComponent[0]) == strToLower(DAY_SHORT_HAND[i])) {
+					dateFunction.setDateAsToday();
+					dateFunction += DAY_SHORT_HAND_OFFSET[i];
 					output[0] = dateFunction.getYear();
 					output[1] = dateFunction.getMonth();
 					output[2] = dateFunction.getDay();
@@ -130,8 +102,8 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 					dateFound = true;
 				}
 			}
-			for(int i=0 ; i<7 && !dateFound; i++) {
-				if(convertToLowerCase(dateComponent[0])==convertToLowerCase(DAY[i]) || convertToLowerCase(dateComponent[0])==convertToLowerCase(DAY_ABBR[i])) {
+			for(int i=0 ; i<DAY_PER_WEEK && !dateFound; i++) {
+				if(strToLower(dateComponent[0])==strToLower(DAY[i]) || strToLower(dateComponent[0])==strToLower(DAY_ABBR[i])) {
 					for(dateFunction.setDateAsToday() ; dateFunction.getDayOfTheWeek()!=DAY[i] ; dateFunction++);
 					output[0] = dateFunction.getYear();
 					output[1] = dateFunction.getMonth();
@@ -144,13 +116,11 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 	}
 
 	if(wordReading>=1 && !dateFound) {
-		string dateCandidate = convertToLowerCase(parameters[wordReading]);
+		string dateCandidate = strToLower(parameters[wordReading]);
 		for(int i=0;i<12;i++) {
-			string monthInNumStr;
-			monthInNumStr.push_back(static_cast<char>((i+1)/10+'0'));
-			monthInNumStr.push_back(static_cast<char>((i+1)%10+'0'));
-			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
-			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
+			string monthInNumStr = strVal(i+1);
+			dateCandidate = replaceWord(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
+			dateCandidate = replaceWord(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
 		}
 		if(isAllNumbers(parameters[wordReading-1]) && isAllNumbers(dateCandidate)) {
 			dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
@@ -163,14 +133,12 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 	}
 	
 	if(wordReading>=2 && !dateFound) {
-		string dateCandidate = convertToLowerCase(parameters[wordReading-1]);
+		string dateCandidate = strToLower(parameters[wordReading-1]);
 		
 		for(int i=0;i<12;i++) {
-			string monthInNumStr;
-			monthInNumStr.push_back(static_cast<char>((i+1)/10+'0'));
-			monthInNumStr.push_back(static_cast<char>((i+1)%10+'0'));
-			dateCandidate = replaceWord(convertToLowerCase(monthListLong[i]), monthInNumStr, dateCandidate);
-			dateCandidate = replaceWord(convertToLowerCase(monthListShort[i]), monthInNumStr, dateCandidate);
+			string monthInNumStr = strVal(i+1);
+			dateCandidate = replaceWord(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
+			dateCandidate = replaceWord(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
 		}
 		
 		if(isAllNumbers(parameters[wordReading-2]) && isAllNumbers(dateCandidate) && isAllNumbers(parameters[wordReading])) {
@@ -185,9 +153,9 @@ vector<int> Parser::extractDate(string command, int pos=-1) {
 	}
 	
 	if(dateFound) {
-		dateFunction.setDate(1, 1, output[0]);
-		if(output[1]>12 || dateFunction.leapYear()==NOT_LEAP_YEAR && output[1]==2 && output[2]==29 || output[2]>monthDayNum[output[1]]) {
+		if(output[1]>NUM_OF_MONTHS || output[2]>MAX_DAYS_IN_MONTH[dateFunction.isLeapYear(output[0])][output[1]-1]) {
 			output[3] = 0;
+			throw InvalidDateTimeFormatException();
 		}
 	} else {
 		output[3] = 0;
@@ -231,6 +199,8 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 
 			if(hour < 12 && min < 60) {
 				timeArray.push_back(hour * 100 + min);
+			} else {
+				throw InvalidDateTimeFormatException();
 			}
 		}
 	} else if(wordChecking.length()>2 && stringExists("pm",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
@@ -250,6 +220,8 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 
 			if(hour < 12 && min < 60) {
 				timeArray.push_back((hour+12) * 100 + min);
+			} else {
+				throw InvalidDateTimeFormatException();
 			}
 		}
 	} else if((colonExist && wordChecking.length()==3 || wordChecking.length()==4) && isAllNumbers(wordChecking)) {
@@ -257,6 +229,8 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 		min = toNum(wordChecking)%100;
 		if(hour < 24 && min < 60) {
 			timeArray.push_back( hour * 100 + min);
+		} else {
+			throw InvalidDateTimeFormatException();
 		}
 	}
 	if(timeArray.size()==1) {
@@ -279,7 +253,7 @@ bool Parser::isDateFormat(string str) {
 bool Parser::containsDay(std::string str){
 	bool contains = false;
 	str = replaceWord(",","",str);
-	str = convertToLowerCase(str);
+	str = strToLower(str);
 
 	if( str== "today" || str == "tomorrow" ){
 		contains = true;
@@ -372,7 +346,7 @@ bool Parser::isCategory(std::string& input){
 }
 
 // String functions
-string Parser::convertToLowerCase(string input) {
+string Parser::strToLower(string input) {
 	string str = input;
 
 	for(unsigned int i = 0; i < str.length(); i++) {
@@ -386,7 +360,7 @@ string Parser::convertToLowerCase(string input) {
 }
 
 vector<string> Parser::explode(char delimiter, string input) {
-	removeWhiteSpaces(input);
+	trim(input);
 	vector<string> splittedStr;
 	string str;
 	int pos;
@@ -400,7 +374,7 @@ vector<string> Parser::explode(char delimiter, string input) {
 			str = input.substr(0, pos);
 			input.erase(0, pos+1);
 		}
-		removeWhiteSpaces(str);
+		trim(str);
 
 		if(!str.empty()) {
 			splittedStr.push_back(str);
@@ -444,7 +418,7 @@ int Parser::toNum(string str) {
 	return stoi(str);
 }
 
-string Parser::strval(int in) {
+string Parser::strVal(int in) {
 	ostringstream os;
 	os << in;
 	return os.str();
@@ -506,3 +480,23 @@ vector<string> Parser::splitBySpace(string input) {
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<vector<string> >(tokens));
 	return tokens;
 }
+
+// Unused function
+/* HEADER Parser::determineHeaderType(std::string header) {
+	if(header == HEADER_STRING[0]) {
+		return DESCRIPTION;
+	} else if(header == HEADER_STRING[1]) {
+		return START_DATE;
+	} else if(header == HEADER_STRING[2]) {
+		return START_TIME;
+	} else if(header == HEADER_STRING[3]) {
+		return DUE_DATE;
+	} else if(header == HEADER_STRING[4]) {
+		return DUE_TIME;
+	} else if(header == HEADER_STRING[5]) {
+		return CATEGORY_HEADER;
+	} else {
+		return UNDEFINED_HEADER;
+	}
+
+}*/

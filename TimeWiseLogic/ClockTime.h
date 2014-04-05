@@ -24,6 +24,12 @@ public:
 
 	bool checkOverdueTime();
 	TIMEDATE_STATUS isLater(ClockTime* otherTime);
+	
+	bool operator==(ClockTime);
+	bool operator>(ClockTime);
+	bool operator<(ClockTime);
+	bool operator>=(ClockTime);
+	bool operator<=(ClockTime);
 
 private:
 	int _time;

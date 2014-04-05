@@ -422,5 +422,8 @@ void Task::setBlockedTask(std::vector<Task*>* blockedTask){
 }
 
 bool Task::getBlockedStatus(){
+	if(_blockedTasks==NULL){
+		return false;
+	}
 	return (_blockedTasks->size()>1);
 }

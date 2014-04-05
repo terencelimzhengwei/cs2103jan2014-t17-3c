@@ -42,8 +42,7 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks){
 		if(listOfTasks.getTask(i)->getEndTime()!=NULL){
 			writeFile<< listOfTasks.getTask(i)->getEndTime()->toString();
 		}
-		writeFile<<"\n"<< "Priority: " << PRIORITY_STRING[listOfTasks.getTask(i)->getPriority()] << "\n"
-			<< "Category: " << listOfTasks.getTask(i)->getTaskCategory() << "\n"
+		writeFile<<"\n"<< "Category: " << listOfTasks.getTask(i)->getTaskCategory() << "\n"
 			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getTask(i)->getTaskStatus()] << "\n";
 		if(i==listOfTasks.undoneSize()-1){
 			writeFile<< "==========";
@@ -74,8 +73,7 @@ void Storage::saveDoneTasks(TaskList& listOfTasks){
 		if(listOfTasks.getCompletedTask(i)->getEndTime()!=NULL){
 			writeFile<< listOfTasks.getCompletedTask(i)->getEndTime()->toString();
 		}
-		writeFile<<"\n"<< "Priority: " << PRIORITY_STRING[listOfTasks.getCompletedTask(i)->getPriority()] << "\n"
-			<< "Category: " << listOfTasks.getCompletedTask(i)->getTaskCategory() << "\n"
+		writeFile<<"\n"<<"Category: " << listOfTasks.getCompletedTask(i)->getTaskCategory() << "\n"
 			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getCompletedTask(i)->getTaskStatus()] << "\n";
 		if(i==listOfTasks.undoneSize()-1){
 			writeFile<< "==========";
@@ -137,13 +135,9 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 					}break;
 				case 5:
 					taskHeader++;
-					newTask->setPriority(_parser.getPriority(details));
-					break;
-				case 6:
-					taskHeader++;
 					newTask->setCategory(details);
 					break;
-				case 7:
+				case 6:
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
 					newTask->setStatusAsDone();
@@ -222,13 +216,9 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 					}break;
 				case 5:
 					taskHeader++;
-					newTask->setPriority(_parser.getPriority(details));
-					break;
-				case 6:
-					taskHeader++;
 					newTask->setCategory(details);
 					break;
-				case 7:
+				case 6:
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
 					if(status==DONE){

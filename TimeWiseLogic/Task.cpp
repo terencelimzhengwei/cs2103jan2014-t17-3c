@@ -223,32 +223,33 @@ bool Task::hasStatus(TASK_STATUS status){
 }
 
 bool Task::checkClash(Task* task){
+	bool clash=false;
 	if(_endDate==NULL||task->getEndDate()==NULL){
-		return false;
+		clash = false;
 	}else if(_startDate==NULL && task->getStartDate()==NULL){
 		if(_endDate->isLater(task->getEndDate())==SAME){
-			return checkClashTime(task);
+			clash=checkClashTime(task);
 		}
 	}else if(_startDate==NULL){
-		if(_endDate->isLater(task->getEndDate())==EARLIER||_endDate->isLater(task->getEndDate())==SAME){
+		if(_endDate->isLater(task->getEndDate())==EARLIER&&_endDate->isLater(task->getStartDate())==LATER){
 			if(_endDate->isLater(task->getStartDate())==LATER||_endDate->isLater(task->getStartDate())==SAME){
-				return checkClashTime(task);
+				clash=true;
 			}
 		}
 	}else if(task->getStartDate()==NULL){
 		if(task->getEndDate()->isLater(_endDate)==EARLIER||task->getEndDate()->isLater(_endDate)==SAME){
 			if(task->getEndDate()->isLater(_startDate)==LATER||task->getEndDate()->isLater(_startDate)==SAME){
-				return checkClashTime(task);
+				clash=true;
 			}
 		}
 	}else{
 		if(_startDate->isLater(task->getEndDate())==EARLIER||_startDate->isLater(task->getEndDate())==SAME){
 			if(task->getStartDate()->isLater(_endDate)==EARLIER||task->getStartDate()->isLater(_endDate)==SAME){
-				return checkClashTime(task);
+				clash = true;
 			}
 		}
 	}
-	return false;
+	return clash;
 }
 
 bool Task::checkNewOverdue(){
@@ -334,44 +335,58 @@ void Task::setClash(bool clash){
 }
 
 bool Task::checkClashTime(Task* task){
-	if(_endTime==NULL && task->getEndTime()==NULL){
+	int startTime=DEFAULT_INDEX, endTime=DEFAULT_INDEX;
+	int otherStartTime=DEFAULT_INDEX,otherEndTime=DEFAULT_INDEX;
+	if(_endTime!=NULL){
+		endTime=_endTime->getTime();
+		if(_startTime==NULL){
+			startTime=endTime;
+		}
+	}if(_startTime!=NULL){
+		startTime=_startTime->getTime();
+		if(_endTime==NULL){
+			endTime=startTime;
+		}
+	}if(task->getEndTime()!=NULL){
+		otherEndTime=(task->getEndTime())->getTime();
+		if(task->getStartTime()==NULL){
+			otherStartTime=otherEndTime;
+		}
+	}if(task->getStartTime()!=NULL){
+		otherStartTime=(task->getStartTime())->getTime();
+		if(task->getEndTime()==NULL){
+			otherEndTime=otherStartTime;
+		}
+	}
+	if(endTime==DEFAULT_INDEX&&otherEndTime==DEFAULT_INDEX){
+		return true;
+	}
+	if(startTime<=otherEndTime&&otherStartTime<=endTime){
 		return true;
 	}
 
-	if(_endTime==NULL||task->getEndTime()==NULL){
-		return false;
-	}else if(_startTime==NULL && task->getStartTime()==NULL){
-		if(_endTime->isLater(task->getEndTime())==SAME){
-			return true;
-		}
-	}else if(_startTime==NULL){
-		if(_endTime->isLater(task->getEndTime())==EARLIER||_endTime->isLater(task->getEndTime())==SAME){
-			if(_endTime->isLater(task->getStartTime())==LATER||_endTime->isLater(task->getStartTime())==SAME){
-				return true;
-			}
-		}
-	}else if(task->getStartTime()==NULL){
-		if(task->getEndTime()->isLater(_endTime)==EARLIER||task->getEndTime()->isLater(_endTime)==SAME){
-			if(task->getEndTime()->isLater(_startTime)==LATER||task->getEndTime()->isLater(_startTime)==SAME){
-				return true;
-			}
-		}
-	}else{
-		if(_startTime->isLater(task->getEndTime())==EARLIER||_startTime->isLater(task->getEndTime())==SAME){
-			if(task->getStartTime()->isLater(_endTime)==EARLIER||task->getStartTime()->isLater(_endTime)==SAME){
-				return true;
-			}
-		}
-	}
 	return false;
 }
 
 void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime){
-	if(eDate->isLater(sDate)==EARLIER){
+	if(eDate!=NULL&&sDate!=NULL){
+		if(eDate->isLater(sDate)==EARLIER){
 		throw InvalidStartEndDateTime();
-	}else if(eDate->isLater(sDate)==SAME){
-		sDate=NULL;
-	}else if(sDate==NULL &&eDate==NULL){
+		}else if(eDate->isLater(sDate)==SAME){
+			sDate=NULL;
+			_startDate=sDate;
+		}
+	}
+	if(eTime!=NULL&&sTime!=NULL){
+		if(eTime->isLater(sTime)==EARLIER){
+			throw InvalidDateTimeFormatException();
+		}else if(eTime->isLater(sTime)==SAME){
+			sTime=NULL;
+			_startTime=sTime;
+		}
+	}
+
+	if(sDate==NULL &&eDate==NULL){
 		if(sTime==NULL && eTime!=NULL){
 			if(eTime->checkOverdueTime()){
 				_endDate=new Date();

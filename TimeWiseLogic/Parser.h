@@ -20,6 +20,7 @@ public:
 	static CMD_TYPE determineCommandType(std::string);
 	
 	// Parser functions
+	static vector<int> extractDate(string);
 	static vector<int> extractDate(string, int);
 	static vector<int> extractTime(string, int);
 	static bool isDateFormat(std::string);

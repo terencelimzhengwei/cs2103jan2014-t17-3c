@@ -53,6 +53,10 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
+vector<int> Parser::extractDate(string inputString) {
+	return extractDate(inputString, explode(' ',inputString).size() - 1);
+}
+
 vector<int> Parser::extractDate(string command, int pos) {
 	Date dateFunction;
 
@@ -63,9 +67,6 @@ vector<int> Parser::extractDate(string command, int pos) {
 
 	vector<string> parameters = splitBySpace(command);
 	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
-	if(pos==-1) {
-		pos = parameters.size() - 1;
-	}
 
 	int wordReading = pos;
 
@@ -274,8 +275,12 @@ bool Parser::isTimeFormat(string time) {
 	}
 }
 
-Date* Parser::createDate(std::string date) {
-	Date* _date = new Date;
+Date* Parser::createDate(string date) {
+	vector<int> dateData = extractDate(date);
+	return new Date(dateData[2], dateData[1], dateData[0]);
+
+
+	/* Date* _date = new Date;
 	std::string dateString = date;
 	std::vector<std::string> dateVector;
 	std::string temp;
@@ -301,7 +306,7 @@ Date* Parser::createDate(std::string date) {
 		_year=_year + 2000;
 	}
 	Date* newDate = new Date(_day,_month,_year);
-	return newDate;
+	return newDate;*/
 }
 
 ClockTime* Parser::createTime(string time) {

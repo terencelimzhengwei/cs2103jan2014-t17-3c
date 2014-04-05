@@ -620,6 +620,9 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 				vector<int> timeData = _parser.extractTime(components[i], j);
 				times.push_back(_parser.strval(timeData[0]));			
 				j = j - (temp-1);
+			} else if(_parser.isCategory(token[j])){
+				std::string cat=_parser.replaceWord("#","",token[j]);
+				newCommand->setCategory(cat);
 			}
 			
 		}

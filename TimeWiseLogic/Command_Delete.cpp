@@ -31,6 +31,9 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case MAIN:
 		if(_deletionIndex!=DEFAULT_INDEX ){
 			_taskDeleted=taskList.getTask(_deletionIndex);
+			if(_taskDeleted->getBlockedStatus()){
+				_blockedStatus=true;
+			}
 			taskList.deleteTask(_deletionIndex);
 			_lastCmdCalled="execute";
 			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your uncompleted list";
@@ -42,6 +45,9 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case COMPLETE:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted=taskList.getCompletedTask(_deletionIndex);
+			if(_taskDeleted->getBlockedStatus()){
+				_blockedStatus=true;
+			}
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
 			_lastCmdCalled="execute";
 			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your completed list";
@@ -53,6 +59,23 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case SEARCHED:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted=taskList.getSearchedTask(_deletionIndex);
+			if(_taskDeleted->getBlockedStatus()){
+				_blockedStatus=true;
+			}
+			taskList.deleteTaskFromSearchList(_deletionIndex);
+			_lastCmdCalled="execute";
+			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your searched list";
+			return true;
+		}else if(_deletionString!=DEFAULT_EMPTY){
+			//search delete
+			return true;
+		}
+	case FILTERED:
+		if(_deletionIndex!=DEFAULT_INDEX){
+			_taskDeleted=taskList.getFilteredTask(_deletionIndex);
+			if(_taskDeleted->getBlockedStatus()){
+				_blockedStatus=true;
+			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
 			_lastCmdCalled="execute";
 			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your searched list";
@@ -66,6 +89,9 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 }
 
 bool Command_Delete::undo(TaskList& taskList){
+	if(_blockedStatus){
+		_taskDeleted->addBlockedTask(_taskDeleted);
+	}
 	switch(_displayType){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);

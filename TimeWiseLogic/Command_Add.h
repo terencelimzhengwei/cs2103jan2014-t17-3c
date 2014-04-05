@@ -17,12 +17,6 @@ public:
 	void setTaskType(TASK_TYPE);
 	void setPreviousScreen(DISPLAY_TYPE*);
 
-	//checker for fields
-	bool hasEndDate();
-	bool hasStartDate();
-	bool hasStartTime();
-	bool hasEndTime();
-
 	virtual bool execute(TaskList&,std::string&);
 	virtual bool undo(TaskList&);
 

@@ -14,12 +14,6 @@ public:
 	void setPreviousScreen(DISPLAY_TYPE*);
 	void addSchedule(Date* startDate, Date* endDate, ClockTime* startTime, ClockTime* endTime);
 
-	//checker for fields
-	bool hasEndDate();
-	bool hasStartDate();
-	bool hasStartTime();
-	bool hasEndTime();
-
 	virtual bool execute(TaskList&,std::string&);
 	virtual bool undo(TaskList&);
 
@@ -29,9 +23,6 @@ private:
 	PRIORITY _taskPriority;
 	std::string _category;
 	std::string _userInput;
-	Date* _endDate;
-	ClockTime* _startTime;
-	ClockTime* _endTime;
 	std::string _lastCmdCalled;
 	std::vector<BlockSchedule> blockTimings;
 	std::vector<Task*> _addedTaskList;

@@ -3,6 +3,7 @@
 
 Command_Add::Command_Add() {
 	_type = ADD;
+	_taskDescription=DEFAULT_EMPTY;
 	_taskPriority = DEFAULT_PRIORITY;
 	_taskType = DEFAULT_TASK_TYPE;
 	_category = DEFAULT_EMPTY;
@@ -67,22 +68,12 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 		_addedTask->setDescription(_taskDescription);
 		_addedTask->setPriority(_taskPriority);
 		_addedTask->setCategory(_category);
-		if(hasEndDate()){
-			_addedTask->setEndDate(_endDate);
-		}
-		if(hasEndTime()){
-			_addedTask->setEndTime(_endTime);
-		}
-		if(hasStartDate()){
-			_addedTask->setStartDate(_startDate);
-		}
-		if(hasStartTime()){
-			_addedTask->setStartTime(_startTime);
-		}
+		_addedTask->setSchedule(_startDate,_endDate,_startTime,_endTime);
 		_addedTask->setTaskType(_taskType);
 		tasklist.addTask(*_addedTask);
 	}
 	_lastCmdCalled=="execute";
+	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	feedback = "Task added! " +_addedTask->toString();
 	return true;
 }
@@ -99,33 +90,6 @@ bool Command_Add::undo(TaskList& taskList){
 	}
 }
 
-bool Command_Add::hasEndDate(){
-	if(_endDate==NULL){
-		return false;
-	}
-	return true;
-}
-
-bool Command_Add::hasStartDate(){
-	if(_startDate==NULL){
-		return false;
-	}
-	return true;
-}
-
-bool Command_Add::hasStartTime(){
-	if(_startTime==NULL){
-		return false;
-	}
-	return true;
-}
-
-bool Command_Add::hasEndTime(){
-	if(_endTime==NULL){
-		return false;
-	}
-	return true;
-}
 
 void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){	
 	_previousScreen=*screen;

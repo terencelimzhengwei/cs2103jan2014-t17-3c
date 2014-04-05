@@ -1,8 +1,13 @@
 #include "Command_Block.h"
 
 
-Command_Block::Command_Block(void)
-{
+Command_Block::Command_Block(void){
+	_type = BLOCK;
+	_taskDescription=DEFAULT_EMPTY;
+	_taskPriority = DEFAULT_PRIORITY;
+	_taskType = DEFAULT_TASK_TYPE;
+	_category = DEFAULT_EMPTY;
+	_currentScreen=NULL;
 }
 
 
@@ -36,6 +41,7 @@ void Command_Block::addSchedule(Date* startDate, Date* endDate, ClockTime* start
 bool Command_Block::execute(TaskList& taskList,std::string& feedback){
 	*_currentScreen=MAIN;
 	Task* _addedTask=NULL;
+	std::vector<Task*>* _blockedTask = new std::vector<Task*>;
 	for(unsigned int i=0;i<blockTimings.size();i++){
 		if(_lastCmdCalled=="undo"){
 			taskList.addTask(*_addedTaskList[i]);
@@ -44,16 +50,13 @@ bool Command_Block::execute(TaskList& taskList,std::string& feedback){
 			_addedTask->setDescription(_taskDescription);
 			_addedTask->setPriority(_taskPriority);
 			_addedTask->setCategory(_category);
-			_addedTask->setEndDate(blockTimings[i].getEndDate());
-			_addedTask->setEndTime(blockTimings[i].getEndTime());
-			_addedTask->setStartDate(blockTimings[i].getStartDate());
-			_addedTask->setStartTime(blockTimings[i].getStartTime());
+			_addedTask->setSchedule(blockTimings[i].getStartDate(),blockTimings[i].getEndDate(),blockTimings[i].getStartTime(),blockTimings[i].getEndTime());
 			_addedTask->setTaskType(_taskType);
-			_addedTask->setBlockStatus(true);
+			_addedTask->setBlockedTask(_blockedTask);
+			_addedTask->addBlockedTask(_addedTask);
 			_addedTaskList.push_back(_addedTask);
 			taskList.addTask(*_addedTask);
 			//feedback = "Task added! " +_addedTask->toString();
-
 		}
 	}
 	_lastCmdCalled=="execute";

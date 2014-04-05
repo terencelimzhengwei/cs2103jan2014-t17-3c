@@ -40,6 +40,10 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 			delete _cmd;
 			_cmd = NULL;
 			return uuuct.what();
+		} catch (InvalidDateTimeFormatException& idtfe){
+			delete _cmd;
+			_cmd = NULL;
+			return idtfe.what();
 		}
 	}
 

@@ -33,6 +33,9 @@ bool TaskList::deleteTask(unsigned int& index)
 	//assert(index>=0);
 	//assert(index<_taskList.size());
 	if(index < _taskList.size()) {
+		if(_taskList[index]->getBlockedStatus()){
+			_taskList[index]->removeBlock();
+		}
 		_taskList.erase(_taskList.begin() + index);
 		updateClashStatus();
 		return true;
@@ -309,6 +312,21 @@ bool TaskList::deleteTaskFromSearchList(unsigned int& index)
 	return true;
 }
 
+bool TaskList::deleteTaskFromFilterList(unsigned int& index)
+{
+	Task* task=_filteredTaskList[index];
+	unsigned int deletionIndex;
+	for(unsigned int i=0;i<_taskList.size();i++){
+		if(_taskList[i]==task){
+			deletionIndex=i;
+			break;
+		}
+	}
+	deleteTask(deletionIndex);
+	_filteredTaskList.erase(_filteredTaskList.begin()+index);
+	return true;
+}
+
 Task* TaskList::getSearchedTask(int index){
 	return _searchedTaskList[index];
 }
@@ -346,6 +364,16 @@ Task* TaskList::setSearchedTaskAsDone(unsigned int index)
 	task->setStatusAsDone();
 	addTaskToDoneList(*task);
 	deleteTaskFromSearchList(index);
+	return task;
+}
+
+Task* TaskList::setFilteredTaskAsDone(unsigned int index)
+{
+	Task* task;
+	task=_filteredTaskList[index];
+	task->setStatusAsDone();
+	addTaskToDoneList(*task);
+	deleteTaskFromFilterList(index);
 	return task;
 }
 
@@ -445,4 +473,12 @@ void TaskList::shiftTask(Task* task){
 	unsigned int index = getTaskIndex(task);
 	deleteTask(index);
 	addTask(*task);
+}
+
+unsigned int TaskList::getLastTaskIndex(){
+	return _lastTaskIndex;
+}
+
+void TaskList::setLastTaskIndex(unsigned int index){
+	_lastTaskIndex=index;
 }

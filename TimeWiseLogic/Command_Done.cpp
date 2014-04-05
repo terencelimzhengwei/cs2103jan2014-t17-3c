@@ -28,6 +28,11 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 		feedback = "Task: '" + _task->toString() + "' has been marked as completed";
 		_lastCmdCalled="execute";
 		return true;
+	case FILTERED:
+		_task=tasklist.setFilteredTaskAsDone(_taskIndex);
+		feedback = "Task: '" + _task->toString() + "' has been marked as completed";
+		_lastCmdCalled="execute";
+		return true;
 	case COMPLETE:
 		throw UnableTosetAsDone();
 		return false;
@@ -45,7 +50,11 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 bool Command_Done::undo(TaskList& tasklist){
 	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
 	tasklist.setTaskAsUndone(index);
-	tasklist.addTaskToSearchedList(*_task);
+	if(_displayType==SEARCHED){
+		tasklist.addTaskToSearchedList(*_task);
+	}else if(_displayType==FILTERED){
+		tasklist.addTaskToFilteredList(*_task);
+	}
 	_lastCmdCalled="undo";
 	return true;
 }

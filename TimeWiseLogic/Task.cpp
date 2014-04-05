@@ -14,7 +14,6 @@ Task::Task(void){
 	_endDate = NULL;
 	_taskIndex= DEFAULT_INDEX;
 	_clashStatus=false;
-	_blockStatus=false;
 }
 
 
@@ -367,6 +366,61 @@ bool Task::checkClashTime(Task* task){
 	return false;
 }
 
-void Task::setBlockStatus(bool status){
-	_blockStatus=true;
+void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime){
+	if(eDate->isLater(sDate)==EARLIER){
+		throw InvalidDateTimeFormatException();
+	}else if(eDate->isLater(sDate)==SAME){
+		sDate=NULL;
+	}else if(sDate==NULL &&eDate==NULL){
+		if(sTime==NULL && eTime!=NULL){
+			if(eTime->checkOverdueTime()){
+				_endDate=new Date();
+				_endDate->setDateAsTomorrow();
+			}else{
+				_endDate=new Date();
+				_endDate->setDateAsToday();
+			}
+		}else if(sTime!=NULL && eTime!=NULL){
+			if(sTime->checkOverdueTime()){
+				_endDate=new Date;
+				_endDate->setDateAsTomorrow();
+			}else{
+				_endDate=new Date;
+				_endDate->setDateAsToday();
+			}
+		}
+		_startTime=sTime;
+		_endTime=eTime;
+	}else{
+		_startTime=sTime;
+		_startDate=sDate;
+		_endDate=eDate;
+		_endTime=eTime;
+	}
+}
+
+void Task::addBlockedTask(Task* task){
+	assert(_blockedTasks!=NULL);
+	_blockedTasks->push_back(task);
+}
+
+void Task::removeBlock(){
+	assert(_blockedTasks!=NULL);
+	for(unsigned int i=0;i<_blockedTasks->size();i++){
+		if(_blockedTasks->at(i)==this){
+			_blockedTasks->erase(_blockedTasks->begin()+i);
+		}
+	}
+	if(_blockedTasks->empty()){
+		delete _blockedTasks;
+		_blockedTasks=NULL;
+	}
+}
+
+void Task::setBlockedTask(std::vector<Task*>* blockedTask){
+	_blockedTasks=blockedTask;
+}
+
+bool Task::getBlockedStatus(){
+	return (_blockedTasks->size()>1);
 }

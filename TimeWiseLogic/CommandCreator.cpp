@@ -626,18 +626,24 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 		if(dates.size()==1){
 			endDate=_parser.createDate(dates[0]);
 		}else if(dates.size()==2){
-			endDate=_parser.createDate(dates[1]);
-			startDate=_parser.createDate(dates[0]);
+			endDate=_parser.createDate(dates[0]);
+			startDate=_parser.createDate(dates[1]);
 		}else{
 			//throw exception
 		}
 		if(times.size()==1){
 			endTime=_parser.createTime(times[0]);
 		}else if(times.size()==2){
-			endTime=_parser.createTime(times[1]);
-			startTime=_parser.createTime(times[0]);
+			endTime=_parser.createTime(times[0]);
+			startTime=_parser.createTime(times[1]);
 		}
 		newCommand->addSchedule(startDate,endDate,startTime,endTime);
+		startDate=NULL;
+		endDate=NULL;
+		startTime=NULL;
+		endTime=NULL;
+		dates.clear();
+		times.clear();
 	}
 	newCommand->setPreviousScreen(screen);
 	return newCommand;

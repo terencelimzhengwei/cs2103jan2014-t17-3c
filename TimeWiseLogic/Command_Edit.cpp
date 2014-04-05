@@ -116,6 +116,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	}
 	feedback = feedback + _editedTask->toString() +"'.";
 	tasklist.updateClashStatus();
+	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
 	tasklist.shiftTask(_editedTask);
 	return true;
 }

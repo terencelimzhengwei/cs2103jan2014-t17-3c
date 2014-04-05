@@ -19,5 +19,6 @@ private:
 	std::string _deletionString;
 	std::string _lastCmdCalled;
 	DISPLAY_TYPE _displayType;
+	bool _blockedStatus;
 };
 

@@ -22,6 +22,6 @@ bool Command_Display::execute(TaskList&, std::string&){
 	return true;
 }
 
-bool Command_Display::undo(TaskList&){
+bool Command_Display::undo(TaskList&, std::string&){
 	return false;
 }

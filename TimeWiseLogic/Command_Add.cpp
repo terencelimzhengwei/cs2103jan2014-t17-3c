@@ -81,19 +81,21 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 		tasklist.addTask(*_addedTask);
 	}
 	_lastCmdCalled == CMD_TYPE_STRING[12];
+	feedback = ADD_SUCCESS;
         tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
-	feedback = TASK + _addedTask->toString() + ADD_SUCCESS;
 	return true;
 }
 
-bool Command_Add::undo(TaskList& taskList){
+bool Command_Add::undo(TaskList& taskList, std::string& feedback){
 	if (taskList.isEmpty()){
+		feedback = EMPTY_TASKLIST;
 		return false;
 	} else {
 		unsigned int index = taskList.getTaskIndex(_addedTask);
 		taskList.deleteTask(index);
+		feedback = UNDO_ADD_SUCCESS;
 		*_currentScreen = _previousScreen;
-		_lastCmdCalled = CMD_TYPE_STRING[8];
+		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		return true;
 	}
 }

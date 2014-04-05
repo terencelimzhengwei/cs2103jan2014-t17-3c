@@ -608,7 +608,7 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 	newCommand->setDescription(description);
 	components.erase(components.begin());
 
-	for(int i=0 ; i<components.size() ; i++) {
+	for(unsigned int i=0 ; i<components.size() ; i++) {
 		vector<string> token = _parser.explode(' ', components[i]);
 		int temp; // storing the word number used for the date/time
 		for(int j = token.size()-1 ; j>=0 ; j--) {

@@ -59,7 +59,7 @@ static const char* USER_INPUT_INDEX_OUT_OF_RANGE_EXCEPTION = "Error! The task in
 static const char* MISSING_TASK_DESCRIPTION = "Error! You have not entered any task description";
 static const char* INVALID_USER_INPUT_COMMAND_WORD = "Error! Invalid command!";
 static const char* NO_ARGUMENT_EXCEPTION = "Error! No input detected";
-static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number";
+static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number.";
 static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter is invalid";
 static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
 static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
@@ -71,23 +71,31 @@ static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date
 
 //Feedback strings
  
-const std::string TASK = "Task: '";
-const std::string ADD_SUCCESS = "' has been successfully added to your schedule.";
-const std::string CLEAR_ALL_SUCCESS = "All tasks are successfully removed from your schedule!";
-const std::string CLEAR_COMPLETED_SUCCESS = "All completed tasks are successfully removed from your schedule!";
-const std::string CLEAR_UNCOMPLETED_SUCCESS = "All uncompleted tasks are successfully removed from your schedule!";
-const std::string CLEAR_SEARCHED_SUCCESS = "All searched tasks are successfully removed from your schedule!" ;
-const std::string CLEAR_FILTERED_SUCCESS = "All filtered tasks are successfully removed from your schedule!" ;
-const std::string DELETE_SUCCESS = "' has been successfully removed from your schedule.";
-const std::string DONE_SUCCESS = "' has been successfully marked as completed!";
-const std::string UNDONE_SUCCESS = "' has been successfully marked as uncompleted!";
-const std::string EDIT_SUCCESS = "' has been successfully modified to '";
-const std::string CLOSING_BRACKET = "'.";
+const std::string ADD_SUCCESS = " Task is successfully added";
+const std::string CLEAR_ALL_SUCCESS = "All tasks are successfully removed.";
+const std::string CLEAR_COMPLETED_SUCCESS = "All completed tasks are successfully removed.";
+const std::string CLEAR_UNCOMPLETED_SUCCESS = "All uncompleted tasks are successfully removed.";
+const std::string CLEAR_SEARCHED_SUCCESS = "All searched tasks are successfully removed." ;
+const std::string CLEAR_FILTERED_SUCCESS = "All filtered tasks are successfully removed." ;
+const std::string DELETE_SUCCESS = "Task is successfully removed.";
+const std::string DONE_SUCCESS = "Task is successfully marked as completed.";
+const std::string UNDONE_SUCCESS = "Task is successfully marked as uncompleted.";
+const std::string EDIT_SUCCESS = "Task is successfully edited.";
 const std::string CATEGORY_STRING = "' category";
 const std::string FILTER_CATEGORY_RESULTS[FILTER_COUNT] = {"All tasks displayed belong to '", "No task belongs to '",
 	                                                       "All tasks displayed were scheduled on the same date: ", "No task was scheduled on the date: "} ;
-const std::string SUCCESS = "Success";
+const std::string SUCCESS = "Success!";
 const std::string SEARCH_RESULTS[SEARCH_COUNT] = {"All tasks displayed contain the keyword '",
 												"No task contains the keyword '" };
-
+const std::string EMPTY_TASKLIST = "Cannot undo! your task list is empty!";
+const std::string CLOSING_BRACKET = "'.";
+//feedback for undo
+const std::string UNDO_ADD_SUCCESS = "Task added is removed!";
+const std::string UNDO_DELETE_SUCCESS = "Task is added back!";
+const std::string UNDO_CLEAR_COMPLETED_SUCCESS = "All completed tasks are added back to the list.";
+const std::string UNDO_CLEAR_UNCOMPLETED_SUCCESS = "All uncompleted tasks are added back to the list.";
+const std::string UNDO_CLEAR_ALL_SUCCESS = "All tasks are added back to the list.";
+const std::string UNDO_CLEAR_SEARCHED_SUCCESS = "All searched tasks are added back to the list.";
+const std::string UNDO_CLEAR_FILTERED_SUCCESS = "All filtered tasks are added back to the list.";
+const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original state!";
 #endif // !_CONSTANTS_H

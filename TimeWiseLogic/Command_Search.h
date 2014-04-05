@@ -8,7 +8,7 @@ public:
 	~Command_Search(void);
 
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 	void setKeyword(std::string);
 	void setPreviousScreen(DISPLAY_TYPE*);
 

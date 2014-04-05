@@ -17,7 +17,7 @@ public:
 	void setPreviousScreen(DISPLAY_TYPE*);
 
 	virtual bool execute(TaskList&,std::string&);
-	virtual bool undo(TaskList&);
+	virtual bool undo(TaskList&, std::string&);
 
 protected:
 	std::string _taskDescription;

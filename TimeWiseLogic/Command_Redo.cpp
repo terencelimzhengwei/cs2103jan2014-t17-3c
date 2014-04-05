@@ -16,7 +16,7 @@ bool Command_Redo::execute(TaskList& tasklist, std::string& feedback){
 	return true;
 }
 
-bool Command_Redo::undo(TaskList& tasklist){
+bool Command_Redo::undo(TaskList& tasklist, std::string&){
 	return false;
 }
 

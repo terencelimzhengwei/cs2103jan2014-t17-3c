@@ -15,7 +15,7 @@ public:
 	void addSchedule(Date* startDate, Date* endDate, ClockTime* startTime, ClockTime* endTime);
 
 	virtual bool execute(TaskList&,std::string&);
-	virtual bool undo(TaskList&);
+	virtual bool undo(TaskList&, std::string&);
 
 private:
 	std::string _taskDescription;

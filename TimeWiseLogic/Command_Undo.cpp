@@ -13,7 +13,7 @@ bool Command_Undo::execute(TaskList& tasklist, std::string& feedback){
 	feedback = SUCCESS;
 	return true;
 }
-bool Command_Undo::undo(TaskList& tasklist){
+bool Command_Undo::undo(TaskList& tasklist, std::string&){
 	return false;
 }
 

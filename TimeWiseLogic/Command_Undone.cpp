@@ -17,7 +17,7 @@ bool Command_Undone::execute(TaskList& tasklist, std::string& feedback){
 		Task* task = tasklist.getCompletedTask(_taskIndex);
 		_task = task;
 		tasklist.setTaskAsUndone(_taskIndex);
-		feedback = TASK + _task->toString() + UNDONE_SUCCESS;
+		feedback = UNDONE_SUCCESS;
 		return true;
 	}else{
 		throw UnableToUndoneUncompletedTasks();
@@ -25,9 +25,10 @@ bool Command_Undone::execute(TaskList& tasklist, std::string& feedback){
 	}
 }
 
-bool Command_Undone::undo(TaskList& tasklist){
+bool Command_Undone::undo(TaskList& tasklist, std::string& feedback){
 	int index = tasklist.getTaskIndex(_task);
 	tasklist.setTaskAsDone(index);
+	feedback = DONE_SUCCESS;
 	return true;
 }
 

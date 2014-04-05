@@ -17,15 +17,15 @@ public:
 	~Command_Clear(void);
 
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 	void setDisplayScreen(DISPLAY_TYPE);
 private:
 	void clearCompletedTasks(TaskList&);
 	void clearUncompletedTasks(TaskList&);
 	void clearAll(TaskList&);
 
-	void undoCompletedTasks(TaskList&);
-	void undoUncompletedTasks(TaskList&);
+	void undoCompletedTasks(TaskList&, std::string&);
+	void undoUncompletedTasks(TaskList&, std::string&);
 
 	void repopulateFilterList(TaskList&);
 	void repopulateSearchList(TaskList&);
@@ -33,7 +33,7 @@ private:
 	void clearScreen(TaskList&, std::string&);
 	void saveSearchedTasks(TaskList&);
 
-	void undoAll(TaskList&);
+	void undoAll(TaskList&, std::string&);
 	void saveFilteredTasks(TaskList&);
 
 	DISPLAY_TYPE _displayScreen;

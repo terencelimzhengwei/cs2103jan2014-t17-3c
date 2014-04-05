@@ -11,7 +11,7 @@ public:
 	~Command_Filter(void);
 
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 	void setCategory(std::string);
 	void setPriority(PRIORITY);
 	void setDate(Date*);

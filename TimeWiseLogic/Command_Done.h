@@ -11,7 +11,7 @@ public:
 	~Command_Done(void);
 
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 	void setCompletedIndex(int);
 	void setDisplayScreen(DISPLAY_TYPE);
 

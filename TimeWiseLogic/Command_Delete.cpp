@@ -37,7 +37,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 			}
 			taskList.deleteTask(_deletionIndex);
 			_lastCmdCalled = CMD_TYPE_STRING[13];
-			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
+			feedback = DELETE_SUCCESS;
 			return true;
 		}/*else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete
@@ -51,7 +51,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 			}
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
 			_lastCmdCalled = CMD_TYPE_STRING[13];
-			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
+			feedback = DELETE_SUCCESS;
 			return true;
 		}else if(_deletionString != DEFAULT_EMPTY){
 			//search delete
@@ -78,8 +78,8 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 				_blockedStatus=true;
 			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
-			_lastCmdCalled="execute";
-			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
+			_lastCmdCalled = CMD_TYPE_STRING[12];
+			feedback = DELETE_SUCCESS;
 			return true;
 		}else if(_deletionString != DEFAULT_EMPTY){
 			//search delete
@@ -89,7 +89,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	return false;
 }
 
-bool Command_Delete::undo(TaskList& taskList){
+bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 	if(_blockedStatus){
 		_taskDeleted->addBlockedTask(_taskDeleted);
 	}
@@ -97,16 +97,19 @@ bool Command_Delete::undo(TaskList& taskList){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);
 		_lastCmdCalled = CMD_TYPE_STRING[8];
+		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	case COMPLETE:
 		taskList.addTaskToDoneList(*_taskDeleted);
 		_lastCmdCalled = CMD_TYPE_STRING[8];
+		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	case SEARCHED:
 		taskList.addTask(*_taskDeleted);
 		std::vector<Task*>& searchResults = taskList.getSearchResults();
 		searchResults.push_back(_taskDeleted);
 		_lastCmdCalled = CMD_TYPE_STRING[8];
+		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	}
 	return true;

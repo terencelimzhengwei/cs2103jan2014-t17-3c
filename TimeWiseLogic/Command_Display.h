@@ -16,7 +16,7 @@ public:
 	void setCurrentScreen(DISPLAY_TYPE* screen);
 	void setNextScreen(DISPLAY_TYPE screen);
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&,std::string&);
 private:
 	DISPLAY_TYPE* _currentScreen;
 	DISPLAY_TYPE _nextScreen;

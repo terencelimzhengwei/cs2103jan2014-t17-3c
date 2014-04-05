@@ -46,7 +46,7 @@ bool Command_Filter::execute(TaskList& tasklist, std::string& feedback){
 	
 }
 
-bool Command_Filter::undo(TaskList& tasklist){
+bool Command_Filter::undo(TaskList& tasklist, std::string& feedback){
 	*_currentScreen =_previousScreen;
 	return true;
 }

@@ -64,8 +64,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 		break;
 	default:
 		return false;
-	}
-	feedback = TASK + _editedTask->toString() + EDIT_SUCCESS;
+	}	
 
 	_originalDescription = _editedTask->getDescription();
 	_originalCategory = _editedTask->getTaskCategory();
@@ -111,7 +110,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 			}
 		}
 	}
-	feedback = feedback + _editedTask->toString() + CLOSING_BRACKET;
+	feedback = EDIT_SUCCESS;
 	tasklist.updateClashStatus();
 	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
 	tasklist.shiftTask(_editedTask);
@@ -126,7 +125,7 @@ void Command_Edit::setIndex(int index){
 	_editIndex = index;
 }
 
-bool Command_Edit::undo(TaskList& tasklist){
+bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
 	_editedTask->setDescription(_originalDescription);
 	_editedTask->setCategory(_originalCategory);
 	_editedTask->setEndDate(_originalEndDate);
@@ -135,11 +134,12 @@ bool Command_Edit::undo(TaskList& tasklist){
 	_editedTask->setStartTime(_originalStartTime);
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
+	feedback = UNDO_EDIT_SUCCESS;
 	return true;
 }
 
 bool Command_Edit::noDateAndTime(){
-	if(_editedEndDate == NULL  &&_editedEndTime==  NULL && _editedStartDate == NULL &&_editedStartTime == NULL){
+	if(_editedEndDate == NULL  && _editedEndTime ==  NULL && _editedStartDate == NULL &&_editedStartTime == NULL){
 		return true;
 	}
 	return false;

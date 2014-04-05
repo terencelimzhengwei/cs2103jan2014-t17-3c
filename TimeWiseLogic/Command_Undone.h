@@ -11,7 +11,7 @@ public:
 	Command_Undone(void);
 	~Command_Undone(void);
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 	void setUncompletedIndex(int);
 	void setDisplayScreen(DISPLAY_TYPE);
 

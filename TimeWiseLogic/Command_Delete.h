@@ -15,7 +15,7 @@ public:
 	void setDisplayScreen(DISPLAY_TYPE display);
 
 	virtual bool execute(TaskList&, std::string&);
-	virtual bool undo(TaskList&);
+	virtual bool undo(TaskList&, std::string&);
 
 private:
 	Task* _taskDeleted;

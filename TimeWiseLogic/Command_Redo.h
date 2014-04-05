@@ -7,6 +7,6 @@ public:
 	Command_Redo(void);
 	~Command_Redo(void);
 	virtual bool execute(TaskList&, std::string&);
-	virtual bool undo(TaskList&);
+	virtual bool undo(TaskList&, std::string&);
 };
 

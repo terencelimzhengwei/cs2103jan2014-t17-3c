@@ -41,13 +41,13 @@ Command* CommandManager::getLastRedoCommand() const
 
 void CommandManager::DoCommand(Command* pCommand, std::string& feedback)
 {
-	if(pCommand->getType()==UNDO){
-		Undo();
-	}else if(pCommand->getType()==REDO){
+	if(pCommand->getType() == UNDO){
+		Undo(feedback);
+	}else if(pCommand->getType() == REDO){
 		Redo();
 	}else{
 		// Clear redo list
-		if(pCommand->getType()!=DISPLAY){
+		if(pCommand->getType() != DISPLAY){
 			ClearRedoList();
 		}
 		// Execute the command and add it to undo list if succeeded
@@ -62,14 +62,14 @@ void CommandManager::DoCommand(Command* pCommand, std::string& feedback)
 	}
 }
 
-void CommandManager::Undo()
+void CommandManager::Undo(std::string& feedback)
 {
 	if (CanUndo())
 	{
 		m_nCleanCount--;
 		Command* pCommand = undoList.back();
 		undoList.pop_back();
-		if (pCommand->undo(_taskList)){
+		if (pCommand->undo(_taskList, feedback)){
 			AddRedo(pCommand);
 		}else{
 			delete pCommand;

@@ -20,12 +20,12 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
 		_task=tasklist.setTaskAsDone(_taskIndex);
-		feedback = TASK + _task->toString() + DONE_SUCCESS;
+		feedback = DONE_SUCCESS;
 		_lastCmdCalled = CMD_TYPE_STRING[13];//CMD_TYPE_STRING[13] = "execute"
 		return true;
 	case SEARCHED:
 		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
-		feedback = TASK + _task->toString() + DONE_SUCCESS;
+		feedback = DONE_SUCCESS;
 		_lastCmdCalled = CMD_TYPE_STRING[13];
 		return true;
 	case FILTERED:
@@ -48,7 +48,7 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 
 }
 
-bool Command_Done::undo(TaskList& tasklist){
+bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
 	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
 	tasklist.setTaskAsUndone(index);
 	if(_displayType==SEARCHED){
@@ -57,6 +57,7 @@ bool Command_Done::undo(TaskList& tasklist){
 		tasklist.addTaskToFilteredList(*_task);
 	}
         _lastCmdCalled = CMD_TYPE_STRING[8];
+	feedback = UNDONE_SUCCESS;
 	return true;
 }
 

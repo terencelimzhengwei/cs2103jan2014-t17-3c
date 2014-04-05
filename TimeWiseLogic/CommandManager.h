@@ -18,7 +18,7 @@ public:
 	Command* getLastUndoCommand() const;
 	Command* getLastRedoCommand() const;
 	void DoCommand(Command* pCommand, std::string& feedback);
-	void Undo();
+	void Undo(std::string&);
 	void Redo();
 	void Clear();
 	void SetClean();

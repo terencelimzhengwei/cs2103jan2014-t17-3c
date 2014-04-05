@@ -23,7 +23,7 @@ public:
 	void setDisplayScreen(DISPLAY_TYPE);
 
 	bool execute(TaskList&, std::string&);
-	bool undo(TaskList&);
+	bool undo(TaskList&, std::string&);
 private:
 	int _editIndex;
 	std::string _editedDescription;

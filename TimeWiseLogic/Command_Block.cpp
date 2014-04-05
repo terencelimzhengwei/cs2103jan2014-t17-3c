@@ -63,7 +63,7 @@ bool Command_Block::execute(TaskList& taskList,std::string& feedback){
 	return true;
 }
 
-bool Command_Block::undo(TaskList& taskList){
+bool Command_Block::undo(TaskList& taskList, std::string& feedback){
 	if (taskList.isEmpty()){
 		return false;
 	} else {

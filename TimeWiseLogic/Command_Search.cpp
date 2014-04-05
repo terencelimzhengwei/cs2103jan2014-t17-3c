@@ -30,7 +30,7 @@ bool Command_Search::execute(TaskList& tasklist, std::string& feedback){
 	return true;
 }
 
-bool Command_Search::undo(TaskList& tasklist){
+bool Command_Search::undo(TaskList& tasklist, std::string&){
 	*_currentScreen = _previousScreen;
 	return true;
 }

@@ -19,7 +19,6 @@ class CommandCreator
 {
 private:
 	std::string _feedbackExceptiontoUI;
-	Parser _parser;
 public:
 	CommandCreator(void);
 	~CommandCreator(void);

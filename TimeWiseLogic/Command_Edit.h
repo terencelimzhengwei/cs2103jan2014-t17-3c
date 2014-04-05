@@ -1,22 +1,29 @@
 #pragma once
 #include "command.h"
+//********************************************************************************
+// This class contains methods which are responsible for modifying fields of an
+// individual task specified by its index on the display screen that the users are
+// working with. Regardless of the display screen, it is always possible to edit a
+// task.
+//********************************************************************************
 class Command_Edit :public Command
 {
 public:
 	Command_Edit(void);
 	~Command_Edit(void);
+	// setter methods for fields. They take in the new content for each field 
+	// from the user and reset the task accordingly.
+	void setIndex(int);
+	void setDescription(std::string);
+	void setCategory(std::string);
+	void setEndDate(Date*);
+	void setStartDate(Date*);
+	void setStartTime(ClockTime*);
+	void setEndTime(ClockTime*);
+	void setDisplayScreen(DISPLAY_TYPE);
 
-	void setIndex(int index);
-	void setDescription(std::string desc);
-	void setCategory(std::string category);
-	void setEndDate(Date* endDate);
-	void setStartDate(Date* startDate);
-	void setStartTime(ClockTime* startTime);
-	void setEndTime(ClockTime* endTime);
-	void setDisplayScreen(DISPLAY_TYPE screen);
-
-	bool execute(TaskList& tasklist, std::string& feedback);
-	bool undo(TaskList& tasklist);
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&);
 private:
 	int _editIndex;
 	std::string _editedDescription;

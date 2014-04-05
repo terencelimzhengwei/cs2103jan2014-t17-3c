@@ -6,11 +6,10 @@ public:
 	Command_Add();
 	~Command_Add(void);
 
-	//setter for fields
 	void setDescription(std::string);
 	void setPriority(PRIORITY);
 	void setCategory(std::string);
-	void setEndDate(Date& date);
+	void setEndDate(Date&);
 	void setStartDate(Date&);
 	void setStartTime(ClockTime&);
 	void setEndTime(ClockTime&);
@@ -26,11 +25,13 @@ protected:
 	PRIORITY _taskPriority;
 	std::string _category;
 	std::string _userInput;
+	std::string _lastCmdCalled;
+
 	Date* _startDate;
 	Date* _endDate;
 	ClockTime* _startTime;
 	ClockTime* _endTime;
-	std::string _lastCmdCalled;
+
 
 	Task* _addedTask;
 	DISPLAY_TYPE* _currentScreen;

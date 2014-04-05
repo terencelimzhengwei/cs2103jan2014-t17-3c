@@ -44,20 +44,20 @@
       <x>30</x>
       <y>120</y>
       <width>531</width>
-      <height>391</height>
+      <height>401</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Leelawadee</family>
-      <pointsize>9</pointsize>
+      <family>New Cicle</family>
+      <pointsize>10</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 9pt &quot;Leelawadee&quot;;</string>
+     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -212,16 +212,28 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
    <widget class="QPushButton" name="pushButton_minimize">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>0</y>
-      <width>21</width>
+      <x>540</x>
+      <y>20</y>
+      <width>20</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
     <property name="styleSheet">
      <string notr="true">font: 75 6pt &quot;Impact&quot;;
-background-color: transparent
-rgb(255, 0, 0)</string>
+background-color: rgb(233, 255, 120);
+border-radius: 7px;</string>
     </property>
     <property name="text">
      <string>_</string>
@@ -230,16 +242,28 @@ rgb(255, 0, 0)</string>
    <widget class="QPushButton" name="pushButton_close">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>0</y>
-      <width>21</width>
+      <x>558</x>
+      <y>20</y>
+      <width>20</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
     <property name="styleSheet">
      <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;
-background-color: transparent
-rgb(255, 0, 0)</string>
+background-color: rgb(255, 65, 52);
+border-radius: 7px;</string>
     </property>
     <property name="text">
      <string>X</string>
@@ -248,7 +272,7 @@ rgb(255, 0, 0)</string>
    <widget class="QLabel" name="label_title">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>40</x>
       <y>50</y>
       <width>201</width>
       <height>31</height>
@@ -262,46 +286,67 @@ color: rgb(0, 85, 255);</string>
      <string>Your Tasks</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLabel" name="label_help">
+    <property name="geometry">
+     <rect>
+      <x>61</x>
+      <y>541</y>
+      <width>489</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
+    </property>
+    <property name="text">
+     <string>You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="userInput">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>560</y>
+      <width>471</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>+Add Task</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_mlog">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>530</y>
-      <width>501</width>
-      <height>61</height>
+      <y>600</y>
+      <width>291</width>
+      <height>71</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label_help">
-       <property name="styleSheet">
-        <string notr="true">font: 75 10pt &quot;Leelawadee&quot;;</string>
-       </property>
-       <property name="text">
-        <string>List of Commands: add, block, clear, confirm, delete, display, done, edit, filter, search, undo, redo</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="userInput">
-       <property name="placeholderText">
-        <string>+Add Task</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="styleSheet">
+     <string notr="true">font: 75 13pt &quot;DK Crayon Crumble&quot;;
+color: rgb(0, 85, 255);</string>
+    </property>
+    <property name="text">
+     <string>                 WELCOME TO...</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
+   <zorder>userInput</zorder>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
    <zorder>label_date</zorder>
    <zorder>label_time</zorder>
-   <zorder>layoutWidget</zorder>
    <zorder>pushButton_minimize</zorder>
    <zorder>label_title</zorder>
    <zorder>label_help</zorder>
+   <zorder>label_mlog</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

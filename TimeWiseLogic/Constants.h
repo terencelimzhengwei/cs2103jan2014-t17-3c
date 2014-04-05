@@ -6,7 +6,7 @@
 #include <string>
 #include <ctime>
 
-static const int CMD_TYPE_COUNT		    = 12;
+static const int CMD_TYPE_COUNT		    = 13;
 static const int PRIORITY_COUNT			= 6;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
@@ -14,6 +14,8 @@ static const int MAX_PREPOSITION        = 12;
 static const int HEADER_COUNT			= 8;
 static const int DAYS_COUNT             = 19;
 static const int TIME_COUNT             = 2;
+static const int FILTER_COUNT           = 4;
+static const int SEARCH_COUNT           = 2;
 
 
 
@@ -28,7 +30,7 @@ enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED};
 enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, PRIORITY_HEADER, UNDEFINED_HEADER};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
-{ "add","delete","edit","clear","display","block", "done", "undone","undo", "redo","search","filter"};
+{ "add","delete","edit","clear","display","block", "done", "undone","undo", "redo","search","filter", "execute"};
 static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low", "H", "M", "L"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};
@@ -66,4 +68,26 @@ static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
 static const char* UNABLE_TO_EDIT_COMPLETED_TASKS = "This task has been completed. Please type 'undone' in order to edit it";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
+
+//Feedback strings
+ 
+const std::string TASK = "Task: '";
+const std::string ADD_SUCCESS = "' has been successfully added to your schedule.";
+const std::string CLEAR_ALL_SUCCESS = "All tasks are successfully removed from your schedule!";
+const std::string CLEAR_COMPLETED_SUCCESS = "All completed tasks are successfully removed from your schedule!";
+const std::string CLEAR_UNCOMPLETED_SUCCESS = "All uncompleted tasks are successfully removed from your schedule!";
+const std::string CLEAR_SEARCHED_SUCCESS = "All searched tasks are successfully removed from your schedule!" ;
+const std::string CLEAR_FILTERED_SUCCESS = "All filtered tasks are successfully removed from your schedule!" ;
+const std::string DELETE_SUCCESS = "' has been successfully removed from your schedule.";
+const std::string DONE_SUCCESS = "' has been successfully marked as completed!";
+const std::string UNDONE_SUCCESS = "' has been successfully marked as uncompleted!";
+const std::string EDIT_SUCCESS = "' has been successfully modified to '";
+const std::string CLOSING_BRACKET = "'.";
+const std::string CATEGORY_STRING = "' category";
+const std::string FILTER_CATEGORY_RESULTS[FILTER_COUNT] = {"All tasks displayed belong to '", "No task belongs to '",
+	                                                       "All tasks displayed were scheduled on the same date: ", "No task was scheduled on the date: "} ;
+const std::string SUCCESS = "Success";
+const std::string SEARCH_RESULTS[SEARCH_COUNT] = {"All tasks displayed contain the keyword '",
+												"No task contains the keyword '" };
+
 #endif // !_CONSTANTS_H

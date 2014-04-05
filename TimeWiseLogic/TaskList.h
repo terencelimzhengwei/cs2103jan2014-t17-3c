@@ -51,6 +51,8 @@ public:
 	bool isEmpty();
 	int undoneSize();
 	int doneSize();
+	int filteredSize();
+	int searchedSize();
 	void updateClashStatus();
 	void resetClash();
 	void deleteSearchedTasks();

@@ -816,6 +816,51 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(1230, timeData[0]);
 		}
 
+		TEST_METHOD(DateTest_Operators1) {
+			// operator==(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) == Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) == Date(12,12,1909));	// Different year
+			Assert::AreEqual(false, Date(12,12,1908) == Date(12,11,1908));	// Different month
+			Assert::AreEqual(false, Date(12,12,1908) == Date(11,12,1908));	// Different day
+
+			// operator>(Date)
+			Assert::AreEqual(false, Date(12,12,1908) > Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) > Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(true,  Date(12,12,1909) > Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(true,  Date(12,12,1908) > Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(false, Date(12,11,1908) > Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(false, Date(11,12,1908) > Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(true,  Date(12,12,1908) > Date(12,11,1908));	// Different day 2
+
+			// operator<(Date)
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,12,1908));	// All same
+			Assert::AreEqual(true,  Date(12,12,1908) < Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(false, Date(12,12,1909) < Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(true,  Date(12,11,1908) < Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(true,  Date(11,12,1908) < Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,11,1908));	// Different day 2
+		}
+
+		TEST_METHOD(DateTest_Opeartors2) {
+			// operator>=(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) >= Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(true,  Date(12,12,1909) >= Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(false, Date(12,11,1908) >= Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(false, Date(11,12,1908) >= Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,11,1908));	// Different day 2
+
+			// operator<=(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) <= Date(12,12,1908));	// All same
+			Assert::AreEqual(true,  Date(12,12,1908) <= Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(false, Date(12,12,1909) <= Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(false, Date(12,12,1908) <= Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(true,  Date(12,11,1908) <= Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(true,  Date(11,12,1908) <= Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(false, Date(12,12,1908) <= Date(11,12,1908));	// Different day 2
+		}
 
 		TEST_METHOD(System_Test1) {
 			// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users

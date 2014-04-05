@@ -3,17 +3,19 @@
 
 Command_Delete::Command_Delete() {
 	_type = DELETE;
-	_deletionString="";
-	_deletionIndex=DEFAULT_INDEX;
-	_taskDeleted=NULL;
+	_deletionString = DEFAULT_EMPTY;
+	//The default index is set to -1 when a new Command_Delete is dynamically created
+	//so that it will not clash with any other task index
+	_deletionIndex = DEFAULT_INDEX;
+	_taskDeleted = NULL;
 }
 
 Command_Delete::~Command_Delete(){
-	if(_lastCmdCalled=="execute"){
+	if(_lastCmdCalled == CMD_TYPE_STRING[13]){
 		delete _taskDeleted;
-		_taskDeleted=NULL;
+		_taskDeleted = NULL;
 	}else{
-		_taskDeleted=NULL;
+		_taskDeleted = NULL;
 	}
 }
 
@@ -25,39 +27,38 @@ void Command_Delete::setDeletionString(std::string deletionString){
 	_deletionString = deletionString;
 }
 
-//only by index first
 bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
-		if(_deletionIndex!=DEFAULT_INDEX ){
+		if(_deletionIndex != DEFAULT_INDEX ){
 			_taskDeleted=taskList.getTask(_deletionIndex);
 			if(_taskDeleted->getBlockedStatus()){
 				_blockedStatus=true;
 			}
 			taskList.deleteTask(_deletionIndex);
-			_lastCmdCalled="execute";
-			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your uncompleted list";
+			_lastCmdCalled = CMD_TYPE_STRING[13];
+			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
 			return true;
 		}/*else if(_deletionString!=DEFAULT_EMPTY){
 			//search delete
 			return true;
 		}*/
 	case COMPLETE:
-		if(_deletionIndex!=DEFAULT_INDEX){
-			_taskDeleted=taskList.getCompletedTask(_deletionIndex);
+		if(_deletionIndex != DEFAULT_INDEX){
+			_taskDeleted = taskList.getCompletedTask(_deletionIndex);
 			if(_taskDeleted->getBlockedStatus()){
 				_blockedStatus=true;
 			}
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
-			_lastCmdCalled="execute";
-			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your completed list";
+			_lastCmdCalled = CMD_TYPE_STRING[13];
+			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
 			return true;
-		}else if(_deletionString!=DEFAULT_EMPTY){
+		}else if(_deletionString != DEFAULT_EMPTY){
 			//search delete
 			return true;
 		}
 	case SEARCHED:
-		if(_deletionIndex!=DEFAULT_INDEX){
+		if(_deletionIndex != DEFAULT_INDEX){
 			_taskDeleted=taskList.getSearchedTask(_deletionIndex);
 			if(_taskDeleted->getBlockedStatus()){
 				_blockedStatus=true;
@@ -78,9 +79,9 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
 			_lastCmdCalled="execute";
-			feedback = "Task: '" + _taskDeleted->toString() + "' has been removed from your searched list";
+			feedback = TASK + _taskDeleted->toString() + DELETE_SUCCESS;
 			return true;
-		}else if(_deletionString!=DEFAULT_EMPTY){
+		}else if(_deletionString != DEFAULT_EMPTY){
 			//search delete
 			return true;
 		}
@@ -95,23 +96,23 @@ bool Command_Delete::undo(TaskList& taskList){
 	switch(_displayType){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);
-		_lastCmdCalled="undo";
+		_lastCmdCalled = CMD_TYPE_STRING[8];
 		break;
 	case COMPLETE:
 		taskList.addTaskToDoneList(*_taskDeleted);
-		_lastCmdCalled="undo";
+		_lastCmdCalled = CMD_TYPE_STRING[8];
 		break;
 	case SEARCHED:
 		taskList.addTask(*_taskDeleted);
-		std::vector<Task*>& searchResults=taskList.getSearchResults();
+		std::vector<Task*>& searchResults = taskList.getSearchResults();
 		searchResults.push_back(_taskDeleted);
-		_lastCmdCalled="undo";
+		_lastCmdCalled = CMD_TYPE_STRING[8];
 		break;
 	}
 	return true;
 }
 
 void Command_Delete::setDisplayScreen(DISPLAY_TYPE display){
-	_displayType=display;
+	_displayType = display;
 }
 

@@ -14,10 +14,14 @@ public:
 	ClockTime();
 	ClockTime(int time);
 	ClockTime(ClockTime& _time);
-	~ClockTime(void);
-	void setTimeNow(int time);
-	std::string toString();
+
+	~ClockTime();
+
+	void setTime(int time);
 	int getTime();
+
+	std::string toString();
+
 	bool checkOverdueTime();
 	TIMEDATE_STATUS isLater(ClockTime* otherTime);
 

@@ -337,17 +337,17 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual("2359",newTime->toString().c_str());
 			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newTime->isLater(otherTime)));
 			try{
-				newTime->setTimeNow(-1);
+				newTime->setTime(-1);
 			}catch(InvalidDateTimeFormatException& e){
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
 			try{
-				newTime->setTimeNow(2360);
+				newTime->setTime(2360);
 			}catch(InvalidDateTimeFormatException& e){
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
 			try{
-				newTime->setTimeNow(2400);
+				newTime->setTime(2400);
 			}catch(InvalidDateTimeFormatException& e){
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
@@ -359,7 +359,7 @@ namespace TimeWiseUnitTest
 			//Boundary Value analysis: set day month year as negative or zero, set month above 12, set day above valid day
 			Date* newDate = new Date(31,12,2014);
 			Date* otherDate = new Date(1,1,2014);
-			Assert::AreEqual(31,newDate->getDayNumber());
+			Assert::AreEqual(31,newDate->getDay());
 			Assert::AreEqual(12,newDate->getMonth());
 			Assert::AreEqual(2014,newDate->getYear());
 			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->isLater(otherDate)));
@@ -680,49 +680,49 @@ namespace TimeWiseUnitTest
 			Parser _parser;
 			Date* validInput1 = _parser.createDate("21/03/2013");
 			int  expectedCase1[3] = {21,3,2013};
-			int  outputCase1[3] = {validInput1->getDayNumber(), validInput1->getMonth(), validInput1->getYear()};
+			int  outputCase1[3] = {validInput1->getDay(), validInput1->getMonth(), validInput1->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase1[i], outputCase1[i]);
 			}
 			Date* validInput2 = _parser.createDate("21/03");
 			int  expectedCase2[3] = {21,3,2013};
-			int  outputCase2[3] = {validInput2->getDayNumber(), validInput2->getMonth(), validInput2->getYear()};
+			int  outputCase2[3] = {validInput2->getDay(), validInput2->getMonth(), validInput2->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase2[i], outputCase2[i]);
 			}
 			Date* validInput3 = _parser.createDate("21/03/13");
 			int  expectedCase3[3] = {21,3,2013};
-			int  outputCase3[3] = {validInput3->getDayNumber(), validInput3->getMonth(), validInput3->getYear()};
+			int  outputCase3[3] = {validInput3->getDay(), validInput3->getMonth(), validInput3->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase3[i], outputCase3[i]);
 			}
 			Date* validInput4 = _parser.createDate("21-03-2013");
 			int  expectedCase4[3] = {21,3,2013};
-			int  outputCase4[3] = {validInput4->getDayNumber(), validInput4->getMonth(), validInput4->getYear()};
+			int  outputCase4[3] = {validInput4->getDay(), validInput4->getMonth(), validInput4->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase4[i], outputCase4[i]);
 			}
 			Date* validInput5 = _parser.createDate("21-03");
 			int  expectedCase5[3] = {21,3,2013};
-			int  outputCase5[3] = {validInput5->getDayNumber(), validInput5->getMonth(), validInput5->getYear()};
+			int  outputCase5[3] = {validInput5->getDay(), validInput5->getMonth(), validInput5->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase5[i], outputCase5[i]);
 			}
 			Date* validInput6 = _parser.createDate("21-03-13");
 			int  expectedCase6[3] = {21,3,2013};
-			int  outputCase6[3] = {validInput6->getDayNumber(), validInput6->getMonth(), validInput6->getYear()};
+			int  outputCase6[3] = {validInput6->getDay(), validInput6->getMonth(), validInput6->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase6[i], outputCase6[i]);
 			}
 			Date* invalidInput7 = _parser.createDate("21*03*13");
 			int  expectedCase7[3] = {NULL,NULL,NULL};
-			int  outputCase7[3] = {invalidInput7->getDayNumber(), invalidInput7->getMonth(), invalidInput7->getYear()};
+			int  outputCase7[3] = {invalidInput7->getDay(), invalidInput7->getMonth(), invalidInput7->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase7[i], outputCase7[i]);
 			}
 			Date* invalidInput8 = _parser.createDate("21/03*13");
 			int  expectedCase8[3] = {21,NULL,2013};
-			int  outputCase8[3] = {invalidInput8->getDayNumber(), invalidInput8->getMonth(), invalidInput8->getYear()};
+			int  outputCase8[3] = {invalidInput8->getDay(), invalidInput8->getMonth(), invalidInput8->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
 			}

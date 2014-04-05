@@ -8,7 +8,51 @@ const int MAX_DAYS_IN_MONTH[2][12] = {
 	{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},	// Non leap year
 	{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}	// Leap year
 };
-const string MONTH_ABBR[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+const string MONTH[] = {
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December"
+};
 
-const string DAY[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-const string DAY_ABBR[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+const string MONTH_ABBR[] = {
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec"
+};
+
+const string DAY[] = {
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday"
+};
+const string DAY_ABBR[] = {
+	"Sun",
+	"Mon",
+	"Tue",
+	"Wed",
+	"Thu",
+	"Fri",
+	"Sat"
+};

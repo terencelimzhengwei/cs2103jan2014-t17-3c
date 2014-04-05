@@ -1,5 +1,6 @@
 #include "Date.h"
 
+// Constructors
 Date::Date() {
 	this->setDateAsToday();
 }
@@ -8,11 +9,33 @@ Date::Date(int day, int month, int year) {
 	this->setDate(day, month, year);
 }
 
-Date::Date(Date& date) {
-	this->setDate(date._dayNumber, date._month, date._year);
+Date::Date(Date& src) {
+	this->setDate(src._dayNumber, src._month, src._year);
 }
 
+// Destructors
 Date::~Date() {
+}
+
+// Get & "Set by input" functions
+int Date::getDay() {
+	return _dayNumber;
+}
+
+int Date::getMonth(){
+	return _month;
+}
+
+int Date::getYear() {
+	return _year;
+}
+
+int Date::getWeekDay() {
+	return _day;
+}
+
+string Date::getDayOfTheWeek() {
+	return DAY[_day];
 }
 
 void Date::setDate(int day, int month, int year) {
@@ -29,6 +52,7 @@ void Date::setDate(int day, int month, int year) {
 	_year = year;
 }
 
+// Set functions without input parameters
 void Date::setDateAsToday() {
 	_currentTime = time(0);   
 	localtime_s(&_timeNow,&_currentTime);
@@ -44,6 +68,7 @@ void Date::setDateAsTomorrow() {
 	(*this)++;
 }
 
+// Normal member functions
 TIMEDATE_STATUS Date::checkOverdue() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
@@ -73,22 +98,8 @@ TIMEDATE_STATUS Date::checkOverdue() {
 	}
 }
 
-std::string Date::getDayOfTheWeek() {
-	return DAY[_day];
-}
-
-std::string Date::toString() {
-	std::ostringstream convert;
-	std::string space = " ";
-	convert<<_year;
-	std::string year=convert.str();
-	year = year.substr(2);
-	convert.str(std::string());
-	std::string dateInString;
-	convert<<_dayNumber<<space<<MONTH_ABBR[_month-1]<<space<<year;
-
-	dateInString=convert.str();
-	return dateInString;
+bool Date::compare(Date* date) {
+	return (*this) == (*date);
 }
 
 TIMEDATE_STATUS Date::isLater(Date* otherDate) {
@@ -116,27 +127,34 @@ TIMEDATE_STATUS Date::isLater(Date* otherDate) {
 	}
 }
 
-int Date::getDayNumber(){
-	return _dayNumber;
+int Date::leapYear() {
+	return isLeapYear(_year);
 }
 
-int Date::getMonth(){
-	return _month;
-}
-
-int Date::getYear(){
-	return _year;
-}
-
-std::string Date::toFormat(){
-	std::ostringstream convert;
-	std::string slash = "/";
-	std::string dateInString;
-	convert<<_dayNumber<<slash<<_month<<slash<<_year;
-	dateInString=convert.str();
+string Date::toFormat() {
+	ostringstream convert;
+	string slash = "/";
+	string dateInString;
+	convert << _dayNumber << slash << _month << slash << _year;
+	dateInString = convert.str();
 	return dateInString;
 }
 
+string Date::toString() {
+	ostringstream convert;
+	string space = " ";
+	convert << _year;
+	string year=convert.str();
+	year = year.substr(2);
+	convert.str(string());
+	string dateInString;
+	convert << _dayNumber << space << MONTH_ABBR[_month-1] << space << year;
+
+	dateInString = convert.str();
+	return dateInString;
+}
+
+// "Global" functions (Functions not related to objects)
 int Date::getCurrentYear() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
@@ -155,7 +173,6 @@ int Date::getCurrentMonth() {
 	return thisMonth;
 }
 
-
 int Date::getCurrentDay() {
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
@@ -163,23 +180,6 @@ int Date::getCurrentDay() {
 	int thisDay = _timeNow.tm_mday;
 
 	return thisDay;
-}
-
-bool Date::compare(Date* date) {
-	if(date==NULL){
-		return false;
-	}
-	int day = date->getDayNumber();
-	int month = date->getMonth();
-	int year = date->getYear();
-	if(day==_dayNumber&&month==_month&&year==_year){
-		return true;
-	}
-	return false;
-}
-
-int Date::isLeapYear() {
-	return isLeapYear(_year);
 }
 
 int Date::isLeapYear(int year) {
@@ -195,8 +195,9 @@ int Date::isLeapYear(int year) {
 	return yearType;
 }
 
+// Operators
 Date& Date::operator++() {
-	if(_dayNumber == MAX_DAYS_IN_MONTH[isLeapYear()][_month-1]) {
+	if(_dayNumber == MAX_DAYS_IN_MONTH[this->leapYear()][_month-1]) {
 		_dayNumber = 1;
 		if(_month == 12) {
 			_month = 1;
@@ -222,11 +223,11 @@ Date& Date::operator--() {
 	if(_dayNumber == 0) {
 		if(_month > 1) {
 			_month -= 1;
-			_dayNumber = MAX_DAYS_IN_MONTH[isLeapYear()][_month-1];
+			_dayNumber = MAX_DAYS_IN_MONTH[this->leapYear()][_month-1];
 		} else {
 			_year -= 1;
 			_month = NUM_OF_MONTHS;
-			_dayNumber = MAX_DAYS_IN_MONTH[isLeapYear()][11];
+			_dayNumber = MAX_DAYS_IN_MONTH[this->leapYear()][11];
 		}
 	}
 	return *this;

@@ -1,40 +1,44 @@
 #include "ClockTime.h"
 
+#define hour(time) time/100
+#define minute(time) time%100
 
-ClockTime::ClockTime(){
+ClockTime::ClockTime() {
 }
 
-ClockTime::ClockTime(int time){
-	if(time/100<0||time/100>23||time%100>59||time%100<0||time<0){
+ClockTime::ClockTime(int time) {
+	/* if(time/100<0 || time/100>23 || time%100>59 || time%100<0 || time<0) {
 		delete this;
 		throw InvalidDateTimeFormatException();
 	}
-	_time=time;
-
+	_time = time; */
+	
+	this->setTime(time);
 }
 
-ClockTime::ClockTime(ClockTime& time){
-	if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()%100>59||time.getTime()%100<0){
+ClockTime::ClockTime(ClockTime& src) {
+	/* if(time.getTime()/100<0||time.getTime()/100>23||time.getTime()%100>59||time.getTime()%100<0){
 		delete this;
 		throw InvalidDateTimeFormatException();
 	}
-	_time= time._time;
+	_time= time._time; */
+	
+	this->setTime(src._time);
 }
 
-
-ClockTime::~ClockTime(void){
+ClockTime::~ClockTime() {
 }
 
+void ClockTime::setTime(int time) {
+	// if(time<0||time/100<0||time/100>23||time%100>59||time%100<0) {
 
-
-void ClockTime::setTimeNow(int time){
-	if(time<0||time/100<0||time/100>23||time%100>59||time%100<0){
+	if(time<0 || hour(time)>23 || minute(time)>59) {
 		throw InvalidDateTimeFormatException();
 	}
-	_time=time;
+	_time = time;
 }
 
-bool ClockTime::checkOverdueTime(){
+bool ClockTime::checkOverdueTime() {
 	bool hasElapsed;
 	struct tm today;
 	time_t currentTime = time(0);	// get local time
@@ -46,7 +50,7 @@ bool ClockTime::checkOverdueTime(){
 	if( hr < today.tm_hour ){
 		hasElapsed = true;
 	}
-	else if ( hr == today.tm_hour && min < today.tm_min){
+	else if ( hr == today.tm_hour && min < today.tm_min) {
 		hasElapsed = true; 
 	}
 	else{
@@ -55,7 +59,7 @@ bool ClockTime::checkOverdueTime(){
 	return hasElapsed;
 }
 
-std::string ClockTime::toString(){
+std::string ClockTime::toString() {
 	std::ostringstream stream;
 	int timeInt = _time;
 	stream<<_time;
@@ -78,18 +82,18 @@ std::string ClockTime::toString(){
 		return timeInString;
 	}
 }
-TIMEDATE_STATUS ClockTime::isLater(ClockTime* otherTime)
-{
-	if(otherTime==NULL){
+
+TIMEDATE_STATUS ClockTime::isLater(ClockTime* otherTime) {
+	if(otherTime==NULL) {
 		return LATER;
-	}else if(_time>otherTime->getTime()){
+	} else if(_time>otherTime->getTime()) {
 		return LATER;
-	}else if(_time==otherTime->getTime()){
+	} else if(_time==otherTime->getTime()) {
 		return SAME;
 	}
 	return EARLIER;
 }
 
-int ClockTime::getTime(){
+int ClockTime::getTime() {
 	return _time;
 }

@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="TimeWiseGUI">
+    <file>DK Crayon Crumble.ttf</file>
+    <file>feedbackground2.png</file>
+    <file>TimeWise background 3.png</file>
+    <file>Background new.jpg</file>
+    <file>new_TimeWise background.png</file>
+    <file>CFJackStory-Regular.ttf</file>
+    <file>EHSMB.TTF</file>
+    <file>123.jpg</file>
+    <file>Homestead-Display.ttf</file>
+    <file>comesinhandy.ttf</file>
+  </qresource>
+</RCC>

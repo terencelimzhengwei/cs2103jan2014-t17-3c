@@ -12,7 +12,7 @@ Command_Delete::Command_Delete() {
 }
 
 Command_Delete::~Command_Delete(){
-	if(_lastCmdCalled == CMD_TYPE_STRING[EXECUTE]){
+	if(_lastCmdCalled == EXECUTE){
 		delete _taskDeleted;
 		_taskDeleted = NULL;
 	}else{
@@ -37,7 +37,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 				_blockedStatus=true;
 			}
 			taskList.deleteTask(_deletionIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
 			return true;
 		}/*else if(_deletionString!=DEFAULT_EMPTY){
@@ -51,7 +51,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 				_blockedStatus = true;
 			}
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
 			return true;
 		}else if(_deletionString != DEFAULT_EMPTY){
@@ -65,7 +65,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 				_blockedStatus = true;
 			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
 			return true;
 		}else if(_deletionString != DEFAULT_EMPTY){
@@ -79,7 +79,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 				_blockedStatus = true;
 			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
-			_lastCmdCalled = CMD_TYPE_STRING[EXECUTE];
+			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
 			return true;
 		}else if(_deletionString != DEFAULT_EMPTY){
@@ -97,12 +97,12 @@ bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 	switch(_displayType){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);
-		_lastCmdCalled = CMD_TYPE_STRING[8];
+		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	case COMPLETE:
 		taskList.addTaskToDoneList(*_taskDeleted);
-		_lastCmdCalled = CMD_TYPE_STRING[8];
+		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	case SEARCHED:

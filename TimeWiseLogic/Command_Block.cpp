@@ -59,7 +59,7 @@ bool Command_Block::execute(TaskList& taskList,std::string& feedback){
 			//feedback = "Task added! " +_addedTask->toString();
 		}
 	}
-	_lastCmdCalled=="execute";
+	_lastCmdCalled== EXECUTE;
 	return true;
 }
 
@@ -71,8 +71,8 @@ bool Command_Block::undo(TaskList& taskList, std::string& feedback){
 			unsigned int index = taskList.getTaskIndex(_addedTaskList[i]);
 			taskList.deleteTask(index);
 		}
-			*_currentScreen=_previousScreen;
-			_lastCmdCalled="undo";
+			*_currentScreen =_previousScreen;
+			_lastCmdCalled =  CMD_TYPE_STRING[UNDO];
 			return true;
 	}
 }

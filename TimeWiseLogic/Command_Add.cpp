@@ -75,7 +75,7 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 		_addedTask->setTaskType(_taskType);
 		tasklist.addTask(*_addedTask);
 	}
-	_lastCmdCalled == CMD_TYPE_STRING[EXECUTE];
+	_lastCmdCalled == EXECUTE;
 	feedback = ADD_SUCCESS;
         tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	return true;

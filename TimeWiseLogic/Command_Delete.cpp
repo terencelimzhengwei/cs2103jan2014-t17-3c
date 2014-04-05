@@ -8,6 +8,7 @@ Command_Delete::Command_Delete() {
 	//so that it will not clash with any other task index
 	_deletionIndex = DEFAULT_INDEX;
 	_taskDeleted = NULL;
+	_blockedStatus=false;
 }
 
 Command_Delete::~Command_Delete(){

@@ -105,31 +105,18 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	current_line = lines.size();
 	ui.userInput->setText("");
 	emit lineExecuted(lines.back());
-
-	try {
-		checkEmpty(input);
 		
-		std::string userCommand = input.toLocal8Bit().constData();
+	std::string userCommand = input.toLocal8Bit().constData();
 
-		std::string messageLog = _logic.processCommand(userCommand);
+	std::string messageLog = _logic.processCommand(userCommand);
 
-		autoComplete();
-		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
-		displayTaskList(displayType);
+	autoComplete();
+	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+	displayTaskList(displayType);
 
-		QString outputMessage = QString::fromStdString(messageLog);
-		ui.label_mlog->setText(outputMessage);
-		//showFeedback(outputMessage);
-	}
-	catch(const std::invalid_argument& e) {
-		ui.label_mlog->setText(e.what());
-	}
-}
-
-int TimeWiseGUI::checkEmpty(QString input) {
-	if(input.size() == 0) {
-		throw std::invalid_argument( "cannot enter empty input!" );
-	}
+	QString outputMessage = QString::fromStdString(messageLog);
+	ui.label_mlog->setText(outputMessage);
+	//showFeedback(outputMessage);
 }
 
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
@@ -165,6 +152,7 @@ void TimeWiseGUI::setMainData() {
 	model->removeRows(0, model->rowCount());
 
 	TaskList taskList = _logic.getTaskList();
+	int latestTaskIndex = taskList.getLastTaskIndex();
 
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
@@ -174,10 +162,16 @@ void TimeWiseGUI::setMainData() {
 		QColor rowColorClash(254, 255, 185);
 		QColor cellColorBlock(170, 237, 255);
 
+		QFont font;
+		if(i == latestTaskIndex) {
+			font.setWeight(99);
+		} else {
+			font.setBold(false);
+		}
+
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
-
 			switch (j) {
 			case 0: {
 				std::string taskDescription = (taskList.getTask(i))->getDescription();
@@ -240,6 +234,7 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			}
+			model->setData(model->index(i,j), font, Qt::FontRole);
 			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
 			bool checkClash = taskList.getTask(i)->isClash();
 			if(qStatus == "overdue" && checkClash) {
@@ -253,9 +248,13 @@ void TimeWiseGUI::setMainData() {
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
-			model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
+			/*bool isBlocked = taskList.getTask(i)->getBlockedStatus();
+			if(isBlocked) {
+				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
+			}*/
 		}
 	}
+	ui.tableView->scrollTo(model->index(latestTaskIndex,0));
 }
 
 void TimeWiseGUI::setData(std::vector<Task*>& taskList)
@@ -350,7 +349,9 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
-			model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
+			/*if(taskList[i]->getBlockedStatus()) {
+				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
+			}*/
 		}
 	}
 }
@@ -392,9 +393,6 @@ void TimeWiseGUI::setupTable() {
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
-
-	//enable table to scroll to the bottom whenever a new row is inserted.
-	connect(ui.tableView->model(), SIGNAL(rowsInserted (const QModelIndex &, int, int )), ui.tableView, SLOT(scrollToBottom ()));
 }
 
 //set date and time

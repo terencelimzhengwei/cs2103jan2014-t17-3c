@@ -128,7 +128,7 @@ public:
         label_mlog = new QLabel(centralWidget);
         label_mlog->setObjectName(QStringLiteral("label_mlog"));
         label_mlog->setGeometry(QRect(50, 600, 291, 71));
-        label_mlog->setStyleSheet(QLatin1String("font: 75 13pt \"DK Crayon Crumble\";\n"
+        label_mlog->setStyleSheet(QLatin1String("font: 13pt \"CF Jack Story\";\n"
 "color: rgb(0, 85, 255);"));
         label_mlog->setWordWrap(true);
         TimeWiseGUIClass->setCentralWidget(centralWidget);
@@ -159,7 +159,7 @@ public:
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
-        label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "                 WELCOME TO...", 0));
+        label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "                      WELCOME TO...", 0));
     } // retranslateUi
 
 };

@@ -440,23 +440,26 @@ void TimeWiseGUI::setupHotKeys() {
 }
 
 void TimeWiseGUI::undo(){
-	_logic.processCommand("undo");
-	setMainData();
+	std::string messageLog = _logic.processCommand("undo");
+	QString outputMessage = QString::fromStdString(messageLog);
+	ui.label_mlog->setText(outputMessage);
+	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+	displayTaskList(displayType);
 }
 
 void TimeWiseGUI::redo(){
 	_logic.processCommand("redo");
-	setMainData();
+	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+	displayTaskList(displayType);
 }
 
 void TimeWiseGUI::displayMain(){
-	_logic.processCommand("display main");
+    _logic.processCommand("display main");
 	setMainData();
 	ui.label_title->setText("Your Tasks");
 }
 
 void TimeWiseGUI::displayDone(){
-	_logic.processCommand("display done");
 	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 	setData(taskList);
 	ui.label_title->setText("Completed Tasks");

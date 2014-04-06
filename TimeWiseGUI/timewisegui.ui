@@ -79,7 +79,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>40</y>
+      <y>50</y>
       <width>211</width>
       <height>31</height>
      </rect>
@@ -178,7 +178,7 @@
     <property name="font">
      <font>
       <family>Electronic Highway Sign</family>
-      <pointsize>18</pointsize>
+      <pointsize>17</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -186,7 +186,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
-font: 75 18pt &quot;Electronic Highway Sign&quot;;</string>
+font: 75 17pt &quot;Electronic Highway Sign&quot;;</string>
     </property>
     <property name="text">
      <string>Date</string>
@@ -196,7 +196,7 @@ font: 75 18pt &quot;Electronic Highway Sign&quot;;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>70</y>
+      <y>80</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -212,61 +212,61 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
    <widget class="QPushButton" name="pushButton_minimize">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>460</x>
       <y>20</y>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 6pt &quot;Impact&quot;;
-background-color: rgb(233, 255, 120);
-border-radius: 7px;</string>
+     <string notr="true">
+background-color: transparent
+</string>
     </property>
     <property name="text">
-     <string>_</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_close">
     <property name="geometry">
      <rect>
-      <x>558</x>
+      <x>510</x>
       <y>20</y>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>20</width>
-      <height>20</height>
+      <width>40</width>
+      <height>15</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(255, 65, 52);
-border-radius: 7px;</string>
+     <string notr="true">
+background-color: transparent
+</string>
     </property>
     <property name="text">
-     <string>X</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_title">

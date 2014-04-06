@@ -68,7 +68,7 @@ public:
         tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
         label_date = new QLabel(centralWidget);
         label_date->setObjectName(QStringLiteral("label_date"));
-        label_date->setGeometry(QRect(330, 40, 211, 31));
+        label_date->setGeometry(QRect(330, 50, 211, 31));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -84,34 +84,34 @@ public:
         label_date->setPalette(palette);
         QFont font1;
         font1.setFamily(QStringLiteral("Electronic Highway Sign"));
-        font1.setPointSize(18);
+        font1.setPointSize(17);
         font1.setBold(false);
         font1.setItalic(false);
         font1.setWeight(9);
         label_date->setFont(font1);
         label_date->setStyleSheet(QLatin1String("color: rgb(255, 255, 255);\n"
-"font: 75 18pt \"Electronic Highway Sign\";"));
+"font: 75 17pt \"Electronic Highway Sign\";"));
         label_time = new QLabel(centralWidget);
         label_time->setObjectName(QStringLiteral("label_time"));
-        label_time->setGeometry(QRect(330, 70, 141, 20));
+        label_time->setGeometry(QRect(330, 80, 141, 20));
         label_time->setStyleSheet(QLatin1String("color: rgb(255, 255, 255);\n"
 "font: 75 14pt \"Electronic Highway Sign\";"));
         pushButton_minimize = new QPushButton(centralWidget);
         pushButton_minimize->setObjectName(QStringLiteral("pushButton_minimize"));
-        pushButton_minimize->setGeometry(QRect(540, 20, 20, 20));
-        pushButton_minimize->setMinimumSize(QSize(20, 20));
-        pushButton_minimize->setMaximumSize(QSize(20, 20));
-        pushButton_minimize->setStyleSheet(QLatin1String("font: 75 6pt \"Impact\";\n"
-"background-color: rgb(233, 255, 120);\n"
-"border-radius: 7px;"));
+        pushButton_minimize->setGeometry(QRect(460, 20, 40, 15));
+        pushButton_minimize->setMinimumSize(QSize(40, 15));
+        pushButton_minimize->setMaximumSize(QSize(40, 15));
+        pushButton_minimize->setStyleSheet(QLatin1String("\n"
+"background-color: transparent\n"
+""));
         pushButton_close = new QPushButton(centralWidget);
         pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
-        pushButton_close->setGeometry(QRect(558, 20, 20, 20));
-        pushButton_close->setMinimumSize(QSize(20, 20));
-        pushButton_close->setMaximumSize(QSize(20, 20));
-        pushButton_close->setStyleSheet(QLatin1String("font: 75 11pt \"MS Shell Dlg 2\";\n"
-"background-color: rgb(255, 65, 52);\n"
-"border-radius: 7px;"));
+        pushButton_close->setGeometry(QRect(510, 20, 40, 15));
+        pushButton_close->setMinimumSize(QSize(40, 15));
+        pushButton_close->setMaximumSize(QSize(40, 15));
+        pushButton_close->setStyleSheet(QLatin1String("\n"
+"background-color: transparent\n"
+""));
         label_title = new QLabel(centralWidget);
         label_title->setObjectName(QStringLiteral("label_title"));
         label_title->setGeometry(QRect(40, 50, 201, 31));
@@ -155,8 +155,8 @@ public:
         TimeWiseGUIClass->setWindowTitle(QApplication::translate("TimeWiseGUIClass", "TimeWiseGUI", 0));
         label_date->setText(QApplication::translate("TimeWiseGUIClass", "Date", 0));
         label_time->setText(QApplication::translate("TimeWiseGUIClass", "Time", 0));
-        pushButton_minimize->setText(QApplication::translate("TimeWiseGUIClass", "_", 0));
-        pushButton_close->setText(QApplication::translate("TimeWiseGUIClass", "X", 0));
+        pushButton_minimize->setText(QString());
+        pushButton_close->setText(QString());
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));

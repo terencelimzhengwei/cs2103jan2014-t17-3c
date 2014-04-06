@@ -80,8 +80,6 @@ DISPLAY_TYPE TimeWiseLogic::setScreenToDisplay(Command* cmd){
 	switch(cmd->getType()){
 	case ADD:
 		_displayType = MAIN;
-	case BLOCK:
-		_displayType=MAIN;
 	default:
 		return _displayType;
 	}

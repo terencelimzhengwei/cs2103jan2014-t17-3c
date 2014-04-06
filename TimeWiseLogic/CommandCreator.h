@@ -11,7 +11,6 @@
 #include "Command_Filter.h"
 #include "Command_Undo.h"
 #include "Command_Redo.h"
-#include "Command_Block.h"
 #include "Command_Display.h"
 #include "Exceptions.h"
 #include "Constants.h"
@@ -41,6 +40,5 @@ public:
 	Command* createCommandUndo();
 	Command* createCommandRedo();
 	Command* createCommandDisplay(string parameter, DISPLAY_TYPE* displayType);
-	Command* createCommandBlock(std::string parameter,DISPLAY_TYPE* screen);
 };
 

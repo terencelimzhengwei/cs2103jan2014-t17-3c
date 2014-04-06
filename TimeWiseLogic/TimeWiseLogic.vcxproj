@@ -65,13 +65,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BlockSchedule.h" />
     <ClInclude Include="Calendar.h" />
     <ClInclude Include="ClockTime.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="Command_Add.h" />
-    <ClInclude Include="Command_Block.h" />
     <ClInclude Include="Command_Clear.h" />
     <ClInclude Include="CommandCreator.h" />
     <ClInclude Include="Command_Delete.h" />
@@ -93,13 +91,11 @@
     <ClInclude Include="TimeWiseLogic.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BlockSchedule.cpp" />
     <ClCompile Include="Calendar.cpp" />
     <ClCompile Include="ClockTime.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Command_Add.cpp" />
-    <ClCompile Include="Command_Block.cpp" />
     <ClCompile Include="Command_Clear.cpp" />
     <ClCompile Include="CommandCreator.cpp" />
     <ClCompile Include="Command_Delete.cpp" />

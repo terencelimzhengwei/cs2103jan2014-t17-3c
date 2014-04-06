@@ -117,8 +117,6 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 			case DISPLAY:
 				return createCommandDisplay(parameter,&displayType);
-			case BLOCK:
-				return createCommandBlock(parameter,&displayType);
 			default: {
 				return NULL;
 			}
@@ -578,66 +576,4 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;
-}
-
-Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* screen){
-	std::vector<std::string> components;
-	std::vector<std::string> times;
-	std::vector<std::string> dates;
-	std::string part;
-	std::string category;
-	Date* startDate=NULL;
-	Date* endDate=NULL;
-	ClockTime* startTime=NULL;
-	ClockTime* endTime=NULL;
-	Command_Block* newCommand= new Command_Block;
-	components = Parser::explode('\\',parameter);
-	//std::vector<std::string> tokens;
-	//tokens=Parser::splitBySpace(components.top);
-	std::string description = components.front();
-	newCommand->setDescription(description);
-	components.erase(components.begin());
-
-	for(unsigned int i=0 ; i<components.size() ; i++) {
-		vector<string> token = Parser::explode(' ', components[i]);
-		int temp; // storing the word number used for the date/time
-		for(int j = token.size()-1 ; j>=0 ; j--) {
-			if(temp = Parser::extractDate(components[i], j)[3]) {
-				vector<int> dateData = Parser::extractDate(components[i], j);
-				dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
-				j = j - (temp-1);
-			} else if(temp = Parser::extractTime(components[i], j)[1]) {
-				vector<int> timeData = Parser::extractTime(components[i], j);
-				times.push_back(Parser::strVal(timeData[0]));			
-				j = j - (temp-1);
-			} else if(Parser::isCategory(token[j])){
-				std::string cat = Parser::strReplace("#","",token[j]);
-				newCommand->setCategory(cat);
-			}
-			
-		}
-		if(dates.size()==1){
-			endDate = Parser::createDate(dates[0]);
-		}else if(dates.size()==2){
-			endDate = Parser::createDate(dates[0]);
-			startDate = Parser::createDate(dates[1]);
-		}else{
-			//throw exception
-		}
-		if(times.size()==1){
-			endTime = Parser::createTime(times[0]);
-		}else if(times.size()==2){
-			endTime = Parser::createTime(times[0]);
-			startTime = Parser::createTime(times[1]);
-		}
-		newCommand->addSchedule(startDate,endDate,startTime,endTime);
-		startDate=NULL;
-		endDate=NULL;
-		startTime=NULL;
-		endTime=NULL;
-		dates.clear();
-		times.clear();
-	}
-	newCommand->setPreviousScreen(screen);
-	return newCommand;
 }

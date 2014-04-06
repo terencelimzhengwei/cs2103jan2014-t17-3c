@@ -8,7 +8,6 @@ Command_Delete::Command_Delete() {
 	//so that it will not clash with any other task index
 	_deletionIndex = DEFAULT_INDEX;
 	_taskDeleted = NULL;
-	_blockedStatus = false;
 }
 
 Command_Delete::~Command_Delete(){
@@ -33,9 +32,6 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case MAIN:
 		if(_deletionIndex != DEFAULT_INDEX ){
 			_taskDeleted=taskList.getTask(_deletionIndex);
-			if(_taskDeleted->getBlockedStatus()){
-				_blockedStatus=true;
-			}
 			taskList.deleteTask(_deletionIndex);
 			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
@@ -47,9 +43,6 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case COMPLETE:
 		if(_deletionIndex != DEFAULT_INDEX){
 			_taskDeleted = taskList.getCompletedTask(_deletionIndex);
-			if(_taskDeleted->getBlockedStatus()){
-				_blockedStatus = true;
-			}
 			taskList.deleteTaskFromCompletedList(_deletionIndex);
 			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
@@ -61,9 +54,6 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case SEARCHED:
 		if(_deletionIndex != DEFAULT_INDEX){
 			_taskDeleted = taskList.getSearchedTask(_deletionIndex);
-			if(_taskDeleted->getBlockedStatus()){
-				_blockedStatus = true;
-			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
 			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
@@ -75,9 +65,6 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case FILTERED:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted = taskList.getFilteredTask(_deletionIndex);
-			if(_taskDeleted->getBlockedStatus()){
-				_blockedStatus = true;
-			}
 			taskList.deleteTaskFromSearchList(_deletionIndex);
 			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
@@ -91,9 +78,6 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 }
 
 bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
-	if(_blockedStatus){
-		_taskDeleted->addBlockedTask(_taskDeleted);
-	}
 	switch(_displayType){
 	case MAIN:
 		taskList.addTask(*_taskDeleted);

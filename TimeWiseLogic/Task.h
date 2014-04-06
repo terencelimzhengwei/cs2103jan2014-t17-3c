@@ -53,12 +53,7 @@ public:
 	std::string toString();
 	bool isClash();
 	void resetClash();
-	void setBlockStatus(bool status);
 	void setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime);
-	void addBlockedTask(Task* task);
-	void removeBlock();
-	void setBlockedTask(std::vector<Task*>* _blockedTask);
-	bool getBlockedStatus();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
@@ -73,5 +68,4 @@ protected:
 	ClockTime *_startTime;
 	ClockTime *_endTime;
 	Parser _parser;
-	std::vector<Task*>* _blockedTasks;
 };

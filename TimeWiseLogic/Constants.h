@@ -99,4 +99,157 @@ const std::string UNDO_CLEAR_FILTERED_SUCCESS = "All filtered tasks are added ba
 const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original state!";
 const std::string NO_COMMAND_LINE = "Please key in your command...";
 const std::string EXECUTE = "execute";
+
+const std::string MONTH_WORD[] = {
+	"January",
+	"Jan",
+	"February",
+	"Feb",
+	"March",
+	"Mar",
+	"April",
+	"Apr",
+	"May",
+	"June",
+	"Jun",
+	"July",
+	"Jul",
+	"August",
+	"Aug",
+	"September",
+	"Sep",
+	"Sept",
+	"October",
+	"Oct",
+	"November",
+	"Nov",
+	"December",
+	"Dec"
+};
+const int MONTH_WORD_VALUE[] = {
+	1,	//"January",
+	1,	//"Jan",
+	2,	//"February",
+	2,	//"Feb",
+	3,	//"March",
+	3,	//"Mar",
+	4,	//"April",
+	4,	//"Apr",
+	5,	//"May",
+	6,	//"June",
+	6,	//"Jun",
+	7,	//"July",
+	7,	//"Jul",
+	8,	//"August",
+	8,	//"Aug",
+	9,	//"September",
+	9,	//"Sep",
+	9,	//"Sept",
+	10,	//"October",
+	10,	//"Oct",
+	11,	//"November",
+	11,	//"Nov",
+	12,	//"December",
+	12,	//"Dec"
+};
+
+const int DAY_WORD_NUM = 5;
+const std::string DAY_WORD[] = {
+	"yesterday",
+	"ytd",
+	"today",
+	"tomorrow",
+	"tmr"
+};
+const int DAY_WORD_OFFSET[] = {
+	-1,		// yesterday
+	-1,		// ytd
+	0,		// today
+	1,		// tomorrow
+	1		// tmr
+};
+
+const int WDAY_WORD_NUM = 24;
+const std::string WDAY_WORD[] = {
+	"Sunday",
+	"Sun",
+	"Monday",
+	"Mon",
+	"Tuesday",
+	"Tue",
+	"Tues",
+	"Wednesday",
+	"Wed",
+	"Thursday",
+	"Thu",
+	"Thur",
+	"Thurs",
+	"Friday",
+	"Fri",
+	"Saturday",
+	"Sat",
+	"Sundays",
+	"Mondays",
+	"Tuesdays",
+	"Wednesdays",
+	"Thursdays",
+	"Fridays",
+	"Saturdays",
+};
+const int WDAY_WORD_VALUE[] = {
+	0,	// Sunday
+	0,	// Sun
+	1,	// Monday
+	1,	// Mon
+	2,	// Tuesday
+	2,	// Tue
+	2,	// Tues
+	3,	// Wednesday
+	3,	// Wed
+	4,	// Thursday,
+	4,	// Thu
+	4,	// Thur
+	4,	// Thurs
+	5,	// Friday
+	5,	// Fri
+	6,	// Saturday
+	6,	// Sat
+	0, // "Sundays",
+	1, // "Mondays",
+	2, // "Tuesdays",
+	3, // "Wednesdays",
+	4, // "Thursdays",
+	5, // "Fridays",
+	6, // "Saturdays"
+};
+
+const std::string PRECEDING_WORD_NEUTRAL[] = {
+	"at",
+	"on",
+	"between",
+	"by",
+	"before",
+	"in",
+	"due"
+};
+const std::string PRECEDING_WORD_START[] = {
+	"start from",
+	"from"
+};
+const std::string PRECEDING_WORD_END[] = {
+	"to",
+	"until",
+	"till"
+};
+const std::string PRECEDING_WORD_REPEAT[] = {
+	"every",
+	"repeat on",
+};
+const std::string PRECEDING_WORD_LAST[] = {
+	"last"
+};
+const std::string PRECEDING_WORD_NEXT[] = {
+	"next"
+};
+
 #endif // !_CONSTANTS_H

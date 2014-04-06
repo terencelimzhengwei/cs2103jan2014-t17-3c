@@ -156,7 +156,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 
 	for(int pos = param.size()-1 ; pos>0 ; pos--) {
 		if(Parser::isCategory(param[pos]) && category.empty()) {
-			category = Parser::replaceWord("#", "", param[pos]);
+			category = Parser::strReplace("#", "", param[pos]);
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
 		} else if(Parser::extractDate(command, pos)[3]) {
 				vector<int> dateData = Parser::extractDate(command, pos);
@@ -478,7 +478,7 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 
 	for(int pos = param.size()-1 ; pos>=0 ; pos--) {
 		if(Parser::isCategory(param[pos]) && category.empty()) {
-			category = Parser::replaceWord("#", "", param[pos]);
+			category = Parser::strReplace("#", "", param[pos]);
 			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
 		} else if(Parser::extractDate(command, pos)[3]) {
 			vector<int> dateData = Parser::extractDate(command, pos);
@@ -611,7 +611,7 @@ Command* CommandCreator::createCommandBlock(std::string parameter,DISPLAY_TYPE* 
 				times.push_back(Parser::strVal(timeData[0]));			
 				j = j - (temp-1);
 			} else if(Parser::isCategory(token[j])){
-				std::string cat = Parser::replaceWord("#","",token[j]);
+				std::string cat = Parser::strReplace("#","",token[j]);
 				newCommand->setCategory(cat);
 			}
 			

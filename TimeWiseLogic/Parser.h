@@ -7,6 +7,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <utility>
+#include <regex>
 #include "ClockTime.h"
 #include "Date.h"
 #include "Calendar.h"
@@ -22,6 +24,8 @@ public:
 	// Parser functions
 	static vector<int> extractDate(string);
 	static vector<int> extractDate(string, int);
+	static pair<Date,Date> extractDateImproved(string, string&);
+
 	static vector<int> extractTime(string, int);
 	static bool isDateFormat(std::string);
 	static bool isTimeFormat(std::string);
@@ -37,10 +41,21 @@ public:
 	// String functions
 	static vector<string> explode(char delimiter, string input);
 	static bool isAllNumbers(std::string);
-	static string replaceWord(std::string, std::string, std::string);
 	static bool stringExists(string, string);
+
+	static string strIReplace(string, string, string);
+
+	static string strReplace(string, string, string);
+	static vector<string> strReplace(string, string, vector<string>);
+	static string strReplace(vector<string>, string, string);
+	static string strReplace(vector<string>, vector<string>, string);
+	static vector<string> strReplace(vector<string>, vector<string>, vector<string>);
+
+	static int strSearch(string, string);
+
 	static string strToLower(string str);
 	static string strVal(int);
+	static vector<string> strVal(vector<int>);
 	static int toNum(string);
 	static string trim(string);
 
@@ -51,10 +66,6 @@ public:
 	// Deprecated string functions
 	static void removeWhiteSpaces(string&);
 	static vector<string> splitBySpace(string input);
-
-	// Unused functions
-	// bool containsDay(std::string);
-	// HEADER determineHeaderType(std::string);
 };
 
 #endif

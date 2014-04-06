@@ -36,10 +36,10 @@ public:
 	std::string toFormat();
 	std::string toString();
 	
-	int isLeapYear(int);
-	int getCurrentYear();
-	int getCurrentMonth();
-	int getCurrentDay();
+	static int isLeapYear(int);
+	static int getCurrentYear();
+	static int getCurrentMonth();
+	static int getCurrentDay();
 
 	Date operator+(int);
 	Date operator-(int);
@@ -56,8 +56,6 @@ public:
 	Date operator-=(int);
 
 private:
-	time_t _currentTime;
-	struct tm _timeNow ;
 
 	int _dayNumber;
 	int _month;

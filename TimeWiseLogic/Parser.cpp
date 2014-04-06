@@ -1,7 +1,7 @@
 #include "Parser.h"
 
-const string DAY_SHORT_HAND[] = {"yesterday", "ytd", "today", "tomorrow", "tmr"};
-const int DAY_SHORT_HAND_OFFSET[] = {-1, -1, 0, 1, 1};
+const int PRECEDING_YEAR_OFFEST = -33;
+
 
 Parser::Parser(void) {
 }
@@ -53,8 +53,8 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
-vector<int> Parser::extractDate(string inputString) {
-	return extractDate(inputString, explode(' ',inputString).size() - 1);
+vector<int> Parser::extractDate(string command) {
+	return extractDate(command, splitBySpace(command).size() - 1);
 }
 
 vector<int> Parser::extractDate(string command, int pos) {
@@ -62,8 +62,8 @@ vector<int> Parser::extractDate(string command, int pos) {
 
 	bool dateFound = false;
 
-	command = replaceWord(",", "", command);
-	command = replaceWord(".", "", command);
+	command = strReplace(",", "", command);
+	command = strReplace(".", "", command);
 
 	vector<string> parameters = splitBySpace(command);
 	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
@@ -93,11 +93,10 @@ vector<int> Parser::extractDate(string command, int pos) {
 				dateFound = true;
 			}
 		} else if(dateComponent.size() == 1) {
-			int dayShortHandNum = sizeof(DAY_SHORT_HAND_OFFSET) / sizeof(DAY_SHORT_HAND_OFFSET[0]);
-			for(int i=0 ; i<dayShortHandNum && !dateFound ; i++) {
-				if(strToLower(dateComponent[0]) == strToLower(DAY_SHORT_HAND[i])) {
+			for(int i=0 ; i<DAY_WORD_NUM && !dateFound ; i++) {
+				if(strToLower(dateComponent[0]) == strToLower(DAY_WORD[i])) {
 					dateFunction.setDateAsToday();
-					dateFunction += DAY_SHORT_HAND_OFFSET[i];
+					dateFunction += DAY_WORD_OFFSET[i];
 					output[0] = dateFunction.getYear();
 					output[1] = dateFunction.getMonth();
 					output[2] = dateFunction.getDay();
@@ -105,9 +104,9 @@ vector<int> Parser::extractDate(string command, int pos) {
 					dateFound = true;
 				}
 			}
-			for(int i=0 ; i<DAY_PER_WEEK && !dateFound; i++) {
-				if(strToLower(dateComponent[0])==strToLower(DAY[i]) || strToLower(dateComponent[0])==strToLower(DAY_ABBR[i])) {
-					for(dateFunction.setDateAsToday() ; dateFunction.getDayOfTheWeek()!=DAY[i] ; dateFunction++);
+			for(int i=0 ; i<WDAY_WORD_NUM && !dateFound; i++) {
+				if(strToLower(dateComponent[0])==strToLower(WDAY_WORD[i])) {
+					for(dateFunction.setDateAsToday() ; dateFunction.getWeekDay()!=WDAY_WORD_VALUE[i] ; dateFunction++);
 					output[0] = dateFunction.getYear();
 					output[1] = dateFunction.getMonth();
 					output[2] = dateFunction.getDay();
@@ -122,8 +121,8 @@ vector<int> Parser::extractDate(string command, int pos) {
 		string dateCandidate = strToLower(parameters[wordReading]);
 		for(int i=0;i<12;i++) {
 			string monthInNumStr = strVal(i+1);
-			dateCandidate = replaceWord(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
-			dateCandidate = replaceWord(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
+			dateCandidate = strReplace(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
+			dateCandidate = strReplace(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
 		}
 		if(isAllNumbers(parameters[wordReading-1]) && isAllNumbers(dateCandidate)) {
 			dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
@@ -140,8 +139,8 @@ vector<int> Parser::extractDate(string command, int pos) {
 		
 		for(int i=0;i<12;i++) {
 			string monthInNumStr = strVal(i+1);
-			dateCandidate = replaceWord(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
-			dateCandidate = replaceWord(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
+			dateCandidate = strReplace(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
+			dateCandidate = strReplace(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
 		}
 		
 		if(isAllNumbers(parameters[wordReading-2]) && isAllNumbers(dateCandidate) && isAllNumbers(parameters[wordReading])) {
@@ -167,12 +166,53 @@ vector<int> Parser::extractDate(string command, int pos) {
 	return output;
 }
 
+// New version of extractDate
+pair<Date,Date> Parser::extractDateImproved(string cmd, string& dateRemoved) {
+	int currentYear  = Date::getCurrentYear();
+	int currentMonth = Date::getCurrentMonth();
+	int currentDay   = Date::getCurrentDay();
+	
+	string rgx;
+
+	// Month-in-word pattern
+	for(int m=1 ; m<=12 ; m++) {
+		cmd = strIReplace(MONTH[m-1], "-month" + strVal(m), cmd);
+		cmd = strIReplace(MONTH_ABBR[m-1], "-month" + strVal(m), cmd);
+	}
+	// Month-in-word pattern (with year)
+	rgx = "(^|\\s|,|.)-month([0-9]{2}) ([0-9]{1,2})(st|nd|rd|th)?,? ([0-9]{2,4})($|\\s|,|.)";
+	cmd = regex_replace(cmd, regex(rgx), "$1$3/$2/$5$6");
+	rgx = "(^|\\s|,|.)([0-9]{1,2})(st|nd|rd|th)? -month([0-9]{1,2}),? ([0-9]{2,4})($|\\s|,|.)";
+	cmd = regex_replace(cmd, regex(rgx), "$1$2/$4/$5$6");
+	// Month-in-word pattern (without year)
+	rgx = "(^|\\s|,|.)-m([0-9]{1,2}) ([0-9]{1,2})(st|nd|rd|th)?($|\\s|,|.)";
+	cmd = regex_replace(cmd, regex(rgx), "$1$3/$2/" + strVal(currentYear) + "$5");
+	rgx = "(^|\\s|,|.)([0-9]{1,2})(st|nd|rd|th)? -m([0-9]{1,2})($|\\s|,|.)";
+	cmd = regex_replace(cmd, regex(rgx), "$1$2/$4/" + strVal(currentYear) + "$5");
+
+	// 2-2-4 and 4-2-2 pattern
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\.]([0-9]{1,2})[-\\.]([0-9]{4})($|\\s)"), "$2/$3/$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{4})[-\\.]([0-9]{1,2})[-\\.]([0-9]{1,2})($|\\s)"), "$4/$3/$2");
+
+	// 2-2-2 pattern
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\./]([0-9]{1,2})[-\\./]([0-9]{1,2})($|\\s)"), "$2/$3/" + strVal(currentYear/100) + "$4");
+	
+	// 2-2 pattern
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})/([0-9]{1,2})($|\\s)"), "$2/$3/" + strVal(currentYear));
+
+	// Remove leading 0 in day and month
+	cmd = regex_replace(cmd, regex("(^|\\s)0([0-9])/([0-9]{1,2})/([0-9]{2}|[0-9]{4})($|\\s)"), "$2/$3/$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})/0([0-9])/([0-9]{2}|[0-9]{4})($|\\s)"), "$2/$3/$4");
+
+	return pair<Date,Date>();
+}
+
 vector<int> Parser::extractTime(string command, int pos=-1) {
 	vector<int> timeArray;
 	bool colonExist = false;
 
-	command = replaceWord(",", "", command);
-	command = replaceWord(".", "", command);
+	command = strReplace(",", "", command);
+	command = strReplace(".", "", command);
 	vector<string> word = splitBySpace(command);
 	if(pos==-1) {
 		pos = word.size() - 1;
@@ -180,13 +220,13 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 	string wordChecking = word[pos];
 	int hour, min;
 
-	if(wordChecking != replaceWord(":","",wordChecking)) {
+	if(wordChecking != strReplace(":","",wordChecking)) {
 		colonExist = true;
 	}
-	wordChecking = replaceWord(":","",wordChecking);
+	wordChecking = strReplace(":","",wordChecking);
 		
 	if(wordChecking.length()>2 && stringExists("am",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
-		wordChecking = replaceWord("am","",wordChecking);
+		wordChecking = strReplace("am","",wordChecking);
 		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
 			if(wordChecking.length()<=2) {
 				hour = toNum(wordChecking);
@@ -207,7 +247,7 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 			}
 		}
 	} else if(wordChecking.length()>2 && stringExists("pm",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
-		wordChecking = replaceWord("pm","",wordChecking);
+		wordChecking = strReplace("pm","",wordChecking);
 		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
 			if(wordChecking.length()<=2) {
 				hour = toNum(wordChecking);
@@ -256,7 +296,7 @@ bool Parser::isDateFormat(string str) {
 
 bool Parser::isPreposition(std::string word) {
 	bool matchFound = false;
-	word = replaceWord(",", "", word);
+	word = strReplace(",", "", word);
 	for(int i = 0; i < MAX_PREPOSITION; i++) {
 		if(word == PREPOSITION[i]){
 			matchFound = true;
@@ -346,7 +386,8 @@ string Parser::strToLower(string input) {
 	return str;
 }
 
-vector<string> Parser::explode(char delimiter, string input) {
+// Old version of explode(char, string)
+/* vector<string> Parser::explode(char delimiter, string input) {
 	trim(input);
 	vector<string> splittedStr;
 	string str;
@@ -368,6 +409,16 @@ vector<string> Parser::explode(char delimiter, string input) {
 		}
 	}
 	return splittedStr;
+}*/
+// New version of explode(char, string)
+vector<string> Parser::explode(char delim, string s) {
+	vector<string> result;
+    istringstream iss(s);
+
+    for(string token ; std::getline(iss, token, delim) ; ) {
+        result.push_back(std::move(token));
+    }
+    return result;
 }
 
 bool Parser::isAllNumbers(string str) {
@@ -383,7 +434,18 @@ bool Parser::isAllNumbers(string str) {
 	return true;
 }
 
-string Parser::replaceWord(string search, string replace, string subject) {
+string Parser::strIReplace(string search, string replace, string subject) {
+	int pos;
+	do {
+		pos = strSearch(search, subject);
+		if(pos!=-1) {
+			subject.replace(pos, search.length(), replace);
+		}
+	} while(pos!=-1);
+	return subject;
+}
+
+string Parser::strReplace(string search, string replace, string subject) {
 	int pos;
 	do {
 		pos = subject.find(search);
@@ -392,6 +454,42 @@ string Parser::replaceWord(string search, string replace, string subject) {
 		}
 	} while(pos!=-1);
 	return subject;
+}
+
+vector<string> Parser::strReplace(string search, string replace, vector<string> subjectArray) {
+	vector<string> outputArray;
+	for(string subject : subjectArray) {
+		outputArray.push_back(strReplace(search, replace, subject));
+	}
+	return outputArray;
+}
+
+string Parser::strReplace(vector<string> searchArray, string replace, string subject) {
+	for(string search : searchArray) {
+		subject = strReplace(search, replace, subject);
+	}
+	return subject;
+}
+
+string Parser::strReplace(vector<string> searchArray, vector<string> replaceArray, string subject) {
+	for(unsigned int i=0 ; i<searchArray.size() && i<replaceArray.size() ; i++) {
+		subject = strReplace(searchArray[i], replaceArray[i], subject);
+	}
+	return subject;
+}
+
+vector<string> Parser::strReplace(vector<string> searchArray, vector<string> replaceArray, vector<string> subjectArray) {
+	vector<string> outputArray;
+	for(string subject : subjectArray) {
+		outputArray.push_back(strReplace(searchArray, replaceArray, subject));
+	}
+	return outputArray;
+}
+
+int Parser::strSearch(string keyword, string subject) {
+	subject = strToLower(subject);
+	keyword = strToLower(keyword);
+	return subject.find(keyword);
 }
 
 bool Parser::stringExists(string find, string input) {
@@ -409,6 +507,14 @@ string Parser::strVal(int in) {
 	ostringstream os;
 	os << in;
 	return os.str();
+}
+
+vector<string> Parser::strVal(vector<int> inputArray) {
+	vector<string> outputArray;
+	for(int i=0 ; i<inputArray.size() ; i++) {
+		outputArray.push_back(strVal(inputArray[i]));
+	}
+	return outputArray;
 }
 
 string Parser::trim(string str) {
@@ -467,47 +573,3 @@ vector<string> Parser::splitBySpace(string input) {
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<vector<string> >(tokens));
 	return tokens;
 }
-
-// Unused function
-/*
-
-bool Parser::containsDay(std::string str){
-	bool contains = false;
-	str = replaceWord(",","",str);
-	str = strToLower(str);
-
-	if( str== "today" || str == "tomorrow" ){
-		contains = true;
-	}
-	else{   
-		for(int i = 0; i<7; i++){
-			if(str == DAY[i]||str==DAY_ABBR[i]){
-				contains = true;
-				break;
-			}
-		}
-	}
-
-	return contains;
-}
-
-HEADER Parser::determineHeaderType(std::string header) {
-	if(header == HEADER_STRING[0]) {
-		return DESCRIPTION;
-	} else if(header == HEADER_STRING[1]) {
-		return START_DATE;
-	} else if(header == HEADER_STRING[2]) {
-		return START_TIME;
-	} else if(header == HEADER_STRING[3]) {
-		return DUE_DATE;
-	} else if(header == HEADER_STRING[4]) {
-		return DUE_TIME;
-	} else if(header == HEADER_STRING[5]) {
-		return CATEGORY_HEADER;
-	} else {
-		return UNDEFINED_HEADER;
-	}
-
-}
-
-*/

@@ -242,10 +242,6 @@ void TimeWiseGUI::setMainData() {
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
-			bool isBlocked = taskList.getTask(i)->getBlockedStatus();
-			if(isBlocked) {
-				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
-			}
 		}
 	}
 	ui.tableView->scrollTo(model->index(latestTaskIndex,0));
@@ -338,9 +334,6 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == "done") {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
-			}
-			if(taskList[i]->getBlockedStatus()) {
-				model->setData(model->index(i, 1), cellColorBlock, Qt::BackgroundRole);
 			}
 		}
 	}

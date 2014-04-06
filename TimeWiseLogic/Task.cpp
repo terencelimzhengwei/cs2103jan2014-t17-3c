@@ -413,32 +413,3 @@ void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime
 		_endTime=eTime;
 	}
 }
-
-void Task::addBlockedTask(Task* task){
-	assert(_blockedTasks!=NULL);
-	_blockedTasks->push_back(task);
-}
-
-void Task::removeBlock(){
-	assert(_blockedTasks!=NULL);
-	for(unsigned int i=0;i<_blockedTasks->size();i++){
-		if(_blockedTasks->at(i)==this){
-			_blockedTasks->erase(_blockedTasks->begin()+i);
-		}
-	}
-	if(_blockedTasks->empty()){
-		delete _blockedTasks;
-		_blockedTasks=NULL;
-	}
-}
-
-void Task::setBlockedTask(std::vector<Task*>* blockedTask){
-	_blockedTasks=blockedTask;
-}
-
-bool Task::getBlockedStatus(){
-	if(_blockedTasks==NULL){
-		return false;
-	}
-	return (_blockedTasks->size()>1);
-}

@@ -21,7 +21,7 @@ static const int SEARCH_COUNT           = 2;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
-enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, BLOCK, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
+enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
 enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum FILTER_TYPE{CATEGORY,PRI,DATE};
@@ -30,7 +30,7 @@ enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED};
 enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, PRIORITY_HEADER, UNDEFINED_HEADER};
 
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
-{ "add","delete","edit","clear","display","block", "search", "filter", "undo", "redo",  "undone", "done"};
+{ "add","delete","edit","clear","display", "search", "filter", "undo", "redo",  "undone", "done"};
 static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low", "H", "M", "L"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};

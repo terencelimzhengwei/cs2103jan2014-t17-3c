@@ -24,9 +24,6 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	else if(commandTypeString == CMD_TYPE_STRING[DISPLAY]) {
 		return DISPLAY;
 	}
-	else if(commandTypeString == CMD_TYPE_STRING[BLOCK]) {
-		return BLOCK;
-	}
 	else if(commandTypeString == CMD_TYPE_STRING[DONE]) {
 		return DONE;
 	}

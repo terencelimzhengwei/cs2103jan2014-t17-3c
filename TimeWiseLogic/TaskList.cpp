@@ -33,9 +33,6 @@ bool TaskList::deleteTask(unsigned int& index)
 	//assert(index>=0);
 	//assert(index<_taskList.size());
 	if(index < _taskList.size()) {
-		if(_taskList[index]->getBlockedStatus()){
-			_taskList[index]->removeBlock();
-		}
 		_taskList.erase(_taskList.begin() + index);
 		updateClashStatus();
 		return true;

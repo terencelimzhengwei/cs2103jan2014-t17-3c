@@ -36,7 +36,7 @@ public:
 	std::string toFormat();
 	std::string toString();
 	
-	static int isLeapYear(int);
+	static bool isLeapYear(int);
 	static int getCurrentYear();
 	static int getCurrentMonth();
 	static int getCurrentDay();

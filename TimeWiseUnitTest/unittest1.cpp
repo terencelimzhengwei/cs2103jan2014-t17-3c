@@ -5,10 +5,8 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace TimeWiseUnitTest
-{		
-	TEST_CLASS(UnitTest1)
-	{
+namespace TimeWiseUnitTest {		
+	TEST_CLASS(UnitTest1) {
 	public:
 		TEST_METHOD(CommandAddTest) {
 			//equivalence partition: floating task, timed task, deadline task
@@ -208,7 +206,7 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual("2359",(_taskList.getTask(2)->getEndTime()->toString()).c_str());
 		}
 
-		    TEST_METHOD(CommandDoneUndoneTest) {
+		TEST_METHOD(CommandDoneUndoneTest) {
 			TaskList _taskList;
 			std::vector<Command_Add*> commandToBeExecuted;
 			ClockTime startTime(1200);
@@ -359,31 +357,33 @@ namespace TimeWiseUnitTest
 			//Boundary Value analysis: set day month year as negative or zero, set month above 12, set day above valid day
 			Date* newDate = new Date(31,12,2014);
 			Date* otherDate = new Date(1,1,2014);
-			Assert::AreEqual(31,newDate->getDay());
-			Assert::AreEqual(12,newDate->getMonth());
-			Assert::AreEqual(2014,newDate->getYear());
+			Assert::AreEqual(2014, newDate->getYear());
+			Assert::AreEqual(12, newDate->getMonth());
+			Assert::AreEqual(31, newDate->getDay());
 			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->isLater(otherDate)));
-			try{
+			try {
 				newDate->setDate(0,0,0);
-			}catch(InvalidDateTimeFormatException& e){
+			} catch(InvalidDateTimeFormatException& e) {
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
-			try{
+			try {
 				newDate->setDate(31,2,2014);
-			}catch(InvalidDateTimeFormatException& e){
+			} catch(InvalidDateTimeFormatException& e) {
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
-			try{
+			try {
 				newDate->setDate(31,13,2014);
-			}catch(InvalidDateTimeFormatException& e){
+			} catch(InvalidDateTimeFormatException& e){
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
-			newDate->setDate(28,2,2014);
-			try{
-				newDate->setDate(29,2,2016);
-			}catch(InvalidDateTimeFormatException& e){
+			try {
+				newDate->setDate(29,2,2014);
+			} catch(InvalidDateTimeFormatException& e){
 				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
 			}
+			Assert::AreEqual(true, Date::isLeapYear(2016));
+			newDate->setDate(29,2,2016);
+
 			delete newDate;
 			delete otherDate;
 		}
@@ -556,26 +556,25 @@ namespace TimeWiseUnitTest
 		}
 
 		TEST_METHOD(ParserTest_IsTimeFormat) {
-			Parser _parser;
-			bool validInput1 = _parser.isTimeFormat("8pm");
+			bool validInput1 = Parser::isTimeFormat("8pm");
 			bool expectedCase1 = true;
-			bool validInput2= _parser.isTimeFormat("16:00");
+			bool validInput2= Parser::isTimeFormat("16:00");
 			bool expectedCase2 = true;
-			bool validInput3= _parser.isTimeFormat("1630");
+			bool validInput3= Parser::isTimeFormat("1630");
 			bool expectedCase3 = true;
-			bool validInput4= _parser.isTimeFormat("8.30am");
+			bool validInput4= Parser::isTimeFormat("8.30am");
 			bool expectedCase4 = true;
-			bool validInput5= _parser.isTimeFormat("0000");
+			bool validInput5= Parser::isTimeFormat("0000");
 			bool expectedCase5 = true;
-			bool invalidInput6= _parser.isTimeFormat("am");
+			bool invalidInput6= Parser::isTimeFormat("am");
 			bool expectedCase6 = false;
-			bool invalidInput7= _parser.isTimeFormat("2400");
+			bool invalidInput7= Parser::isTimeFormat("2400");
 			bool expectedCase7 = false;
-			bool invalidInput8= _parser.isTimeFormat("4/03");
+			bool invalidInput8= Parser::isTimeFormat("4/03");
 			bool expectedCase8 = false;
-			bool invalidInput9= _parser.isTimeFormat("430");
+			bool invalidInput9= Parser::isTimeFormat("430");
 			bool expectedCase9 = false;
-			bool invalidInput10 = _parser.isTimeFormat("hello");
+			bool invalidInput10 = Parser::isTimeFormat("hello");
 			bool expectedCase10 = false;
 
 			Assert::AreEqual(expectedCase1, validInput1);
@@ -602,53 +601,50 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase1, validInput1);
 			Assert::AreEqual(expectedCase2, invalidInput2);
 			Assert::AreEqual(expectedCase3,invalidInput3);
-
-
 		}
 
 	    TEST_METHOD(ParserTest_IsDateFormat) {
-			Parser _parser;
-			bool validInput1 = _parser.isDateFormat("22/12/2013");
+			bool validInput1 = Parser::isDateFormat("22/12/2013");
 			bool expectedCase1 = true;
-			bool validInput2= _parser.isDateFormat("22/12");
+			bool validInput2= Parser::isDateFormat("22/12");
 			bool expectedCase2 = true;
-			//bool validInput3= _parser.isDateFormat("22-07-2013");
+			//bool validInput3= Parser::isDateFormat("22-07-2013");
 			bool expectedCase3 = true;
-			//bool validInput4= _parser.isDateFormat("22-12");
+			//bool validInput4= Parser::isDateFormat("22-12");
 			bool expectedCase4 = true;
-			//bool validInput5= _parser.isDateFormat("22.12.2013");
+			//bool validInput5= Parser::isDateFormat("22.12.2013");
 			bool expectedCase5 = true;
-			//bool validInput6= _parser.isDateFormat("22.12");
+			//bool validInput6= Parser::isDateFormat("22.12");
 			bool expectedCase6 = true;
-			bool validInput7= _parser.isDateFormat("tomorrow");
+			bool validInput7= Parser::isDateFormat("tomorrow");
 			bool expectedCase7 = true;
-			bool validInput8= _parser.isDateFormat("today");
+			bool validInput8= Parser::isDateFormat("today");
 			bool expectedCase8 = true;
-			bool validInput9= _parser.isDateFormat("tmr");
+			bool validInput9= Parser::isDateFormat("tmr");
 			bool expectedCase9 = true;
-			//bool invalidInput10 = _parser.isDateFormat("tonight");
+			//bool invalidInput10 = Parser::isDateFormat("tonight");
 			bool expectedCase10 = true;
-			//bool invalidInput11 = _parser.isDateFormat("2day");
+			//bool invalidInput11 = Parser::isDateFormat("2day");
 			bool expectedCase11 = true;
-			bool invalidInput12 = _parser.isDateFormat("22,12,2013");
+			bool invalidInput12 = Parser::isDateFormat("22,12,2013");
 			bool expectedCase12 = false;
-			bool invalidInput13 = _parser.isDateFormat("22,12");
+			bool invalidInput13 = Parser::isDateFormat("22,12");
 			bool expectedCase13 = false;
-			bool invalidInput14 = _parser.isDateFormat("45/07/2013");
+			bool invalidInput14 = Parser::isDateFormat("45/07/2013");
 			bool expectedCase14 = false;
-			bool invalidInput15 = _parser.isDateFormat("15/15/2013");
+			bool invalidInput15 = Parser::isDateFormat("15/15/2013");
 			bool expectedCase15 = false;
-			//bool invalidInput16 = _parser.isDateFormat("15/07/403");
+			//bool invalidInput16 = Parser::isDateFormat("15/07/403");
 			bool expectedCase16 = false;
-			bool invalidInput17 = _parser.isDateFormat("15/07/13");
+			bool invalidInput17 = Parser::isDateFormat("15/07/13");
 			bool expectedCase17 = true;
-			bool invalidInput18 = _parser.isDateFormat("hello/hello/2013");
+			bool invalidInput18 = Parser::isDateFormat("hello/hello/2013");
 			bool expectedCase18 = false;
-			bool invalidInput19 = _parser.isDateFormat("hello");
+			bool invalidInput19 = Parser::isDateFormat("hello");
 			bool expectedCase19 = false;
-			bool validInput20 = _parser.isDateFormat("22 March 2013");
+			bool validInput20 = Parser::isDateFormat("22 March 2013");
 			bool expectedCase20 = true;
-			bool validInput21= _parser.isDateFormat("22 March");
+			bool validInput21= Parser::isDateFormat("22 March");
 			bool expectedCase21 = true;
 			
 
@@ -675,45 +671,47 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(expectedCase21, validInput21);
 		}
 
-		TEST_METHOD (ParserTest_CreatDate) {
-			Parser _parser;
-			Date* validInput1 = _parser.createDate("21/03/2013");
+		TEST_METHOD(ParserTest_CreateDate) {
+			Date* validInput1 = Parser::createDate("21/03/2013");
 			int  expectedCase1[3] = {21,3,2013};
 			int  outputCase1[3] = {validInput1->getDay(), validInput1->getMonth(), validInput1->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase1[i], outputCase1[i]);
 			}
-			Date* validInput2 = _parser.createDate("21/03");
-			int  expectedCase2[3] = {21,3,2013};
+
+			Date* validInput2 = Parser::createDate("21/03");
+			int  expectedCase2[3] = {21,3,2014};
 			int  outputCase2[3] = {validInput2->getDay(), validInput2->getMonth(), validInput2->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase2[i], outputCase2[i]);
 			}
-			Date* validInput3 = _parser.createDate("21/03/13");
+
+			Date* validInput3 = Parser::createDate("21/03/13");
 			int  expectedCase3[3] = {21,3,2013};
 			int  outputCase3[3] = {validInput3->getDay(), validInput3->getMonth(), validInput3->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase3[i], outputCase3[i]);
 			}
-			Date* validInput4 = _parser.createDate("21-03-2013");
+
+			/* Date* validInput4 = Parser::createDate("21-03-2013");
 			int  expectedCase4[3] = {21,3,2013};
 			int  outputCase4[3] = {validInput4->getDay(), validInput4->getMonth(), validInput4->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase4[i], outputCase4[i]);
 			}
-			Date* validInput5 = _parser.createDate("21-03");
-			int  expectedCase5[3] = {21,3,2013};
+			Date* validInput5 = Parser::createDate("21-03");
+			int  expectedCase5[3] = {21,3,2014};
 			int  outputCase5[3] = {validInput5->getDay(), validInput5->getMonth(), validInput5->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase5[i], outputCase5[i]);
 			}
-			Date* validInput6 = _parser.createDate("21-03-13");
+			Date* validInput6 = Parser::createDate("21-03-13");
 			int  expectedCase6[3] = {21,3,2013};
 			int  outputCase6[3] = {validInput6->getDay(), validInput6->getMonth(), validInput6->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase6[i], outputCase6[i]);
 			}
-			Date* invalidInput7 = _parser.createDate("21*03*13");
+			Date* invalidInput7 = Parser::createDate("21*03*13");
 			int  expectedCase7[3] = {NULL,NULL,NULL};
 			int  outputCase7[3] = {invalidInput7->getDay(), invalidInput7->getMonth(), invalidInput7->getYear()};
 			for (int i = 0; i <3; i++) {
@@ -724,7 +722,7 @@ namespace TimeWiseUnitTest
 			int  outputCase8[3] = {invalidInput8->getDay(), invalidInput8->getMonth(), invalidInput8->getYear()};
 			for (int i = 0; i <3; i++) {
 				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
-			}
+			}*/
 		}
 		
 		TEST_METHOD(ParserTest_ExtractDate) {

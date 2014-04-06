@@ -100,6 +100,8 @@ const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original stat
 const std::string NO_COMMAND_LINE = "Please key in your command...";
 const std::string EXECUTE = "execute";
 
+const int PRECEDING_YEAR_OFFEST = -33;
+
 const std::string MONTH_WORD[] = {
 	"January",
 	"Jan",

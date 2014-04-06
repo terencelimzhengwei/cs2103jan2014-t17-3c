@@ -546,12 +546,11 @@ namespace TimeWiseUnitTest
 			Assert::AreEqual(convertedCase6, expectedCase6);
 		}
 		
-		TEST_METHOD (ParserTest_ReplaceWord) {
-			Parser _parser;
-			std::string validInput1 = _parser.replaceWord("!", "", "!low");
-			std::string expectedCase1 = "low";
-			std::string validInput2= _parser.replaceWord("!", "", "#personal");
-			std::string expectedCase2 = "personal";
+		TEST_METHOD (ParserTest_StrReplace) {
+			string validInput1 = Parser::strReplace("!", "", "!low");
+			string expectedCase1 = "low";
+			string validInput2= Parser::strReplace("!", "", "#personal");
+			string expectedCase2 = "personal";
 			Assert::AreEqual(expectedCase1, validInput1);
 			Assert::AreNotEqual(expectedCase2, validInput2);
 		}

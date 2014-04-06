@@ -54,6 +54,9 @@ void Date::setDate(int day, int month, int year) {
 
 // Set functions without input parameters
 void Date::setDateAsToday() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
 	_currentTime = time(0);   
 	localtime_s(&_timeNow,&_currentTime);
 
@@ -70,6 +73,9 @@ void Date::setDateAsTomorrow() {
 
 // Normal member functions
 TIMEDATE_STATUS Date::checkOverdue() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -156,6 +162,9 @@ string Date::toString() {
 
 // "Global" functions (Functions not related to objects)
 int Date::getCurrentYear() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -165,6 +174,9 @@ int Date::getCurrentYear() {
 }
 
 int Date::getCurrentMonth() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -174,6 +186,9 @@ int Date::getCurrentMonth() {
 }
 
 int Date::getCurrentDay() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
 	_currentTime = time(0);   
 	localtime_s( &_timeNow, &_currentTime ); // get local PC time
 
@@ -210,7 +225,7 @@ Date Date::operator-(int num) {
 	if(num<0) {
 		return (*this) + (-num);
 	}
-	for(int i=0 ; i<(-num) ; i++) {
+	for(int i=0 ; i<num ; i++) {
 		(*this)--;
 	}
 	return *this;

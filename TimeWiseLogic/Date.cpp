@@ -42,8 +42,9 @@ void Date::setDate(int day, int month, int year) {
 	if(month<1 || month>NUM_OF_MONTHS || year<1 || day<1) {
 		throw InvalidDateTimeFormatException();
 	} else {
-		int leapYear = isLeapYear(year);
-		if(_dayNumber>MAX_DAYS_IN_MONTH[leapYear][month-1]) {
+		if(isLeapYear(year) == true && day > MAX_DAYS_IN_MONTH[LEAP_YEAR][month-1]) {
+			throw InvalidDateTimeFormatException();
+		} else if(isLeapYear(year)==false && day > MAX_DAYS_IN_MONTH[NOT_LEAP_YEAR][month-1]) {
 			throw InvalidDateTimeFormatException();
 		}
 	}
@@ -197,17 +198,17 @@ int Date::getCurrentDay() {
 	return thisDay;
 }
 
-int Date::isLeapYear(int year) {
-	int yearType = NOT_LEAP_YEAR;
+bool Date::isLeapYear(int year) {
+	bool leapYear = false;
 
 	if(year % 400 == 0) {
-		yearType = LEAP_YEAR;
+		leapYear = true;
 	} else if(year % 100 == 0) {
-		yearType = NOT_LEAP_YEAR;
+		leapYear = false;
 	} else if(year % 4 == 0) {
-		yearType = LEAP_YEAR;
+		leapYear = true;
 	}
-	return yearType;
+	return leapYear;
 }
 
 // Operators

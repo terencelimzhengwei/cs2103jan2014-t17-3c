@@ -1,8 +1,5 @@
 #include "Parser.h"
 
-const int PRECEDING_YEAR_OFFEST = -33;
-
-
 Parser::Parser(void) {
 }
 
@@ -83,7 +80,7 @@ vector<int> Parser::extractDate(string command, int pos) {
 					if(dateComponent.size() == 3) {
 						output[0] = toNum(dateComponent[2]);
 						if(dateComponent[2].length()==2) {
-							output[0] += dateFunction.getCurrentYear()/100;	
+							output[0] += dateFunction.getCurrentYear() - (dateFunction.getCurrentYear()%100);	
 						}
 					} else {
 						output[0] += dateFunction.getCurrentYear();
@@ -286,29 +283,40 @@ vector<int> Parser::extractTime(string command, int pos=-1) {
 }
 
 bool Parser::isDateFormat(string str) {
-	if(extractDate(str, explode(' ', str).size()-1)[3]) {
+	vector<int> dateData;
+	try {
+		dateData = extractDate(str, explode(' ', str).size()-1);
+	} catch(InvalidDateTimeFormatException&) {
+		return false;
+	}
+	if(dateData[3]!=0) {
 		return true;
 	} else {
 		return false;
 	}
 }
 
-
-bool Parser::isPreposition(std::string word) {
+// Check whether a word is a preposition, according to the preposition list in Constants.h
+bool Parser::isPreposition(string word) {
 	bool matchFound = false;
 	word = strReplace(",", "", word);
-	for(int i = 0; i < MAX_PREPOSITION; i++) {
-		if(word == PREPOSITION[i]){
+	for(string preposition : PREPOSITION) {
+		if(word == preposition) {
 			matchFound = true;
 			break;
 		}
 	}
-
 	return matchFound;
 }
 
 bool Parser::isTimeFormat(string time) {
-	if(extractTime(time)[1]) {
+	vector<int> timeData;
+	try {
+		timeData = extractTime(time);
+	} catch(InvalidDateTimeFormatException&) {
+		return false;
+	}
+	if(timeData[1]!=0) {
 		return true;
 	} else {
 		return false;
@@ -511,8 +519,8 @@ string Parser::strVal(int in) {
 
 vector<string> Parser::strVal(vector<int> inputArray) {
 	vector<string> outputArray;
-	for(int i=0 ; i<inputArray.size() ; i++) {
-		outputArray.push_back(strVal(inputArray[i]));
+	for(int input : inputArray) {
+		outputArray.push_back(strVal(input));
 	}
 	return outputArray;
 }

@@ -289,17 +289,17 @@ color: rgb(0, 85, 255);</string>
    <widget class="QLabel" name="label_help">
     <property name="geometry">
      <rect>
-      <x>61</x>
+      <x>50</x>
       <y>541</y>
-      <width>489</width>
-      <height>16</height>
+      <width>491</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
+     <string notr="true">font: 75 10.5pt &quot;New Cicle&quot;;</string>
     </property>
     <property name="text">
-     <string>You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo</string>
+     <string>You may: Add, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -308,9 +308,9 @@ color: rgb(0, 85, 255);</string>
    <widget class="QLineEdit" name="userInput">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>50</x>
       <y>560</y>
-      <width>471</width>
+      <width>491</width>
       <height>20</height>
      </rect>
     </property>

@@ -6,7 +6,6 @@
 #include <QShortcut>
 
 const char* ADD_COMMAND = "add";
-const char* BLOCK_COMMAND = "block";
 const char* CLEAR_COMMAND = "clear";
 const char* DELETE_COMMAND = "delete";
 const char* DISPLAY_COMMAND = "display";
@@ -16,7 +15,6 @@ const char* FILTER_COMMAND = "filter";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
-const char* BLOCK_FORMAT = "block: <description>\\<date 1><time 1>\\<date 2><time 2>...<#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
 const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
 const char* DISPLAY_FORMAT = "display: main or completed";
@@ -24,7 +22,7 @@ const char* DONE_FORMAT = "done: <ID> or <#category>";
 const char* EDIT_FORMAT = "edit: <ID> <contents>";
 const char* FILTER_FORMAT = "filter: <dates> or <#category>";
 const char* SEARCH_FORMAT = "search: <keywords>";
-const char* DEFAULT_DISPLAY = "You may: Add, Block, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
+const char* DEFAULT_DISPLAY = "You may: Add, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -47,8 +45,9 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 
 	autoComplete();
 
-	if(numberOfOverdues() > 0) {
-		setOverdueMessage(numberOfOverdues());
+	int overdues = numberOfOverdues();
+	if(overdues > 0) {
+		setOverdueMessage(overdues);
 	}
 }
 
@@ -76,8 +75,6 @@ bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
-	} else if(ui.userInput->text() == BLOCK_COMMAND) {
-		ui.label_help->setText(BLOCK_FORMAT);
 	} else if(ui.userInput->text() == CLEAR_COMMAND) {
 		ui.label_help->setText(CLEAR_FORMAT);
 	} else if(ui.userInput->text() == DELETE_COMMAND) {
@@ -397,7 +394,7 @@ void TimeWiseGUI::setupClock() {
 
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT( updateTime() ));
-	timer->start(1000);
+	timer->start();
 }
 
 void TimeWiseGUI::updateTime() {
@@ -469,13 +466,14 @@ void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 	QMessageBox overdueInfo;
 	ostringstream outstr;
 	
-	outstr << "You have " << overdueCount << " overdue task(s).";
+	outstr << "Reminder! You have " << overdueCount << " overdue task(s).";
 	std::string overdueReminder = outstr.str();
 	QString qOverdue = QString::fromStdString(overdueReminder);
 
-	overdueInfo.setText(qOverdue);
-	overdueInfo.setIcon(QMessageBox::Information);
-	overdueInfo.exec();
+	ui.label_mlog->setText(qOverdue);
+	//overdueInfo.setText(qOverdue);
+	//overdueInfo.setIcon(QMessageBox::Information);
+	//overdueInfo.exec();
 }
 
 int TimeWiseGUI::numberOfOverdues() {

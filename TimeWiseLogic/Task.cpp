@@ -463,4 +463,11 @@ bool Task::withTime(){
 	return false;
 }
 
+void Task::editSchedule(ClockTime* sTime,ClockTime* eTime){
+	_startTime=sTime;
+	_endTime=eTime;
+	setTime();
+	setDateBasedOnTime();
+}
+
 

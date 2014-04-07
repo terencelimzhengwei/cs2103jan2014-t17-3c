@@ -92,28 +92,13 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 			}
 		}
 		if(!noTime()){
-			if(_editedEndTime != NULL){
-				_editedTask->setEndTime(_editedEndTime);
-			}if(_editedStartTime != NULL){
-				_editedTask->setStartTime(_editedStartTime);
-			} else {
-				_editedTask->setStartTime(NULL);
-			}
-			if(_editedTask->getEndDate() == NULL){
-				Date* date = new Date();
-				if(_editedEndTime->checkOverdueTime() == EARLIER){
-					date->setDateAsToday();
-				} else {
-					date->setDateAsTomorrow();
-				}
-				_editedTask->setEndDate(date);
-			}
+			_editedTask->editSchedule(_editedStartTime,_editedEndTime);
 		}
 	}
 	feedback = EDIT_SUCCESS;
 	tasklist.updateClashStatus();
-	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
 	tasklist.shiftTask(_editedTask);
+	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
 	return true;
 }
 

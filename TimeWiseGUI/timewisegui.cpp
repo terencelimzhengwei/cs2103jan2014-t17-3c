@@ -156,7 +156,6 @@ void TimeWiseGUI::setMainData() {
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
 		QColor rowColorClash(254, 255, 185);
-		QColor cellColorBlock(170, 237, 255);
 
 		QFont font;
 		if(i == latestTaskIndex) {
@@ -179,6 +178,10 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			case 1: {
+				std::string taskDay = taskList.getTask(i)->getDayString();
+				QString qDay = QString::fromStdString(taskDay);
+				QStandardItem* item = new QStandardItem(qDay);
+				model->setItem(i, j, item);
 				break;
 			}
 			case 2: {
@@ -191,18 +194,18 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			case 3: {
-				if(taskList.getTask(i)->getEndDate()!=NULL){
-					std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
-					QString qTask = QString::fromStdString(taskEndDate);
+				if(taskList.getTask(i)->getStartTime()!=NULL){
+					std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
+					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
 				break;
 			}
 			case 4: {
-				if(taskList.getTask(i)->getStartTime()!=NULL){
-					std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
-					QString qTask = QString::fromStdString(taskStartTime);
+				if(taskList.getTask(i)->getEndDate()!=NULL){
+					std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
+					QString qTask = QString::fromStdString(taskEndDate);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
@@ -257,7 +260,6 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 		QColor rowColorOverdue(255, 0, 0, 50);
 		QColor rowColorComplete(146, 255, 192);
 		QColor rowColorClash(254, 255, 185);
-		QColor cellColorBlock(170, 237, 255);
 
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
@@ -273,6 +275,10 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			case 1: {
+				std::string taskDay = taskList[i]->getDayString();
+				QString qDay = QString::fromStdString(taskDay);
+				QStandardItem* item = new QStandardItem(qDay);
+				model->setItem(i, j, item);
 				break;
 			}
 			case 2: {			
@@ -285,18 +291,18 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			case 3: {
-				if(taskList[i]->getEndDate()!=NULL){
-					std::string taskEndDate = taskList[i]->getEndDate()->toString();
-					QString qTask = QString::fromStdString(taskEndDate);
+				if(taskList[i]->getStartTime()!=NULL){
+					std::string taskStartTime = taskList[i]->getStartTime()->toString();
+					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
 				break;
 			}
 			case 4: {
-				if(taskList[i]->getStartTime()!=NULL){
-					std::string taskStartTime = taskList[i]->getStartTime()->toString();
-					QString qTask = QString::fromStdString(taskStartTime);
+				if(taskList[i]->getEndDate()!=NULL){
+					std::string taskEndDate = taskList[i]->getEndDate()->toString();
+					QString qTask = QString::fromStdString(taskEndDate);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
 				}
@@ -343,10 +349,10 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 void TimeWiseGUI::setupTable() {
 	model = new QStandardItemModel (0, 5, this);
 	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
-	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Blk")));
+	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Day")));
 	model->setHorizontalHeaderItem(2, new QStandardItem(QString("S. Date")));
-	model->setHorizontalHeaderItem(3, new QStandardItem(QString("D. Date")));
-	model->setHorizontalHeaderItem(4, new QStandardItem(QString("S. Time")));
+	model->setHorizontalHeaderItem(3, new QStandardItem(QString("S. Time")));
+	model->setHorizontalHeaderItem(4, new QStandardItem(QString("D. Date")));
 	model->setHorizontalHeaderItem(5, new QStandardItem(QString("D. Time")));
 	model->setHorizontalHeaderItem(6, new QStandardItem(QString("Category")));
 	setMainData();
@@ -356,22 +362,22 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 	//set column widths of table. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 180);
+	ui.tableView->setColumnWidth(0, 170);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(1, 23);
+	ui.tableView->setColumnWidth(1, 40);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(2, 66);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(3, 66);
-	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 48);
+	ui.tableView->setColumnWidth(3, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
+	ui.tableView->setColumnWidth(4, 66);
+	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(5, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(6, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(535);
-	ui.tableView->setMaximumWidth(535);
+	ui.tableView->setMinimumWidth(540);
+	ui.tableView->setMaximumWidth(540);
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
@@ -432,6 +438,7 @@ void TimeWiseGUI::undo(){
 	std::string messageLog = _logic.processCommand("undo");
 	QString outputMessage = QString::fromStdString(messageLog);
 	ui.label_mlog->setText(outputMessage);
+	//autoComplete();
 	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 	displayTaskList(displayType);
 }

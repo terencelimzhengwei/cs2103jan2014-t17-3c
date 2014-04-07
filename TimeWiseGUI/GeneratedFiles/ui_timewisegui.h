@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -43,9 +43,9 @@ public:
             TimeWiseGUIClass->setObjectName(QStringLiteral("TimeWiseGUIClass"));
         TimeWiseGUIClass->setWindowModality(Qt::NonModal);
         TimeWiseGUIClass->setEnabled(true);
-        TimeWiseGUIClass->resize(600, 708);
-        TimeWiseGUIClass->setMinimumSize(QSize(600, 708));
-        TimeWiseGUIClass->setMaximumSize(QSize(600, 708));
+        TimeWiseGUIClass->resize(600, 713);
+        TimeWiseGUIClass->setMinimumSize(QSize(600, 713));
+        TimeWiseGUIClass->setMaximumSize(QSize(600, 713));
         TimeWiseGUIClass->setAutoFillBackground(false);
         TimeWiseGUIClass->setStyleSheet(QStringLiteral("#TimeWiseGUIClass{image: url(:/TimeWiseGUI/new_TimeWise background.png);}"));
         centralWidget = new QWidget(TimeWiseGUIClass);
@@ -98,17 +98,17 @@ public:
 "font: 75 14pt \"Electronic Highway Sign\";"));
         pushButton_minimize = new QPushButton(centralWidget);
         pushButton_minimize->setObjectName(QStringLiteral("pushButton_minimize"));
-        pushButton_minimize->setGeometry(QRect(460, 20, 40, 15));
-        pushButton_minimize->setMinimumSize(QSize(40, 15));
-        pushButton_minimize->setMaximumSize(QSize(40, 15));
+        pushButton_minimize->setGeometry(QRect(490, 30, 30, 15));
+        pushButton_minimize->setMinimumSize(QSize(30, 15));
+        pushButton_minimize->setMaximumSize(QSize(30, 15));
         pushButton_minimize->setStyleSheet(QLatin1String("\n"
 "background-color: transparent\n"
 ""));
         pushButton_close = new QPushButton(centralWidget);
         pushButton_close->setObjectName(QStringLiteral("pushButton_close"));
-        pushButton_close->setGeometry(QRect(510, 20, 40, 15));
-        pushButton_close->setMinimumSize(QSize(40, 15));
-        pushButton_close->setMaximumSize(QSize(40, 15));
+        pushButton_close->setGeometry(QRect(520, 30, 30, 15));
+        pushButton_close->setMinimumSize(QSize(30, 15));
+        pushButton_close->setMaximumSize(QSize(30, 15));
         pushButton_close->setStyleSheet(QLatin1String("\n"
 "background-color: transparent\n"
 ""));
@@ -128,7 +128,7 @@ public:
         userInput->setStyleSheet(QStringLiteral("border-radius: 9px"));
         label_mlog = new QLabel(centralWidget);
         label_mlog->setObjectName(QStringLiteral("label_mlog"));
-        label_mlog->setGeometry(QRect(50, 600, 291, 71));
+        label_mlog->setGeometry(QRect(40, 600, 291, 71));
         label_mlog->setStyleSheet(QLatin1String("font: 13pt \"CF Jack Story\";\n"
 "color: rgb(0, 85, 255);"));
         label_mlog->setWordWrap(true);

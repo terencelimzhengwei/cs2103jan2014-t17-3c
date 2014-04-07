@@ -48,7 +48,7 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
-	bool checkClashTime(Task* task);
+	bool checkTimeClashForDeadlineTask(Task* task);
 	void setClash(bool clash);
 	std::string toString();
 	bool isClash();
@@ -60,6 +60,8 @@ public:
 	void checkInvalidDate();
 	void setDateBasedOnTime();
 	void setTime();
+	bool checkTimeClashForTimedTask(Task* task);
+	bool withTime();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;

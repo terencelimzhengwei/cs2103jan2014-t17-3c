@@ -62,6 +62,7 @@ public:
 	void setTime();
 	bool checkTimeClashForTimedTask(Task* task);
 	bool withTime();
+	void editSchedule(ClockTime* sTime,ClockTime* eTime);
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;

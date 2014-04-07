@@ -238,14 +238,14 @@ bool Task::checkClash(Task* task){
 				clash = true;
 			}else if(task->getEndDate()->isLater(_startDate)==SAME){
 				clash=true;
-				if(_startTime!=NULL){
+				if(_startTime!=NULL&&task->getEndTime()!=NULL){
 					if(task->getEndTime()->isLater(_startTime)==EARLIER){
 						clash=false;
 					}
 				}
 			}else if(task->getEndDate()->isLater(_endDate)==SAME){
 				clash=true;
-				if(_endTime!=NULL){
+				if(_endTime!=NULL&&task->getEndTime()!=NULL){
 					if(task->getEndTime()->isLater(_endTime)==LATER){
 						clash=false;
 					}
@@ -256,14 +256,14 @@ bool Task::checkClash(Task* task){
 				clash = true;
 			}else if(_endDate->isLater(task->getStartDate())==SAME){
 				clash=true;
-				if(task->getStartTime()!=NULL){
+				if(task->getStartTime()!=NULL&&_endTime!=NULL){
 					if(_endTime->isLater(task->getStartTime())==EARLIER){
 						clash=false;
 					}
 				}
 			}else if(_endDate->isLater(task->getEndDate())==SAME){
 				clash=true;
-				if(task->getEndTime()!=NULL){
+				if(task->getEndTime()!=NULL&&_endTime!=NULL){
 					if(_endTime->isLater(task->getEndTime())==LATER){
 						clash=false;
 					}
@@ -468,6 +468,27 @@ void Task::editSchedule(ClockTime* sTime,ClockTime* eTime){
 	_endTime=eTime;
 	setTime();
 	setDateBasedOnTime();
+}
+
+std::string Task::getDayString(){
+	if(_startDate!=NULL){
+		if(_startDate->isToday()){
+			return "today";
+		}else if(_startDate->isTomorrow()){
+			return "tmrw";
+		}else{
+			return _startDate->getDayOfTheWeek();
+		}
+	}else if(_endDate!=NULL){
+		if(_endDate->isToday()){
+			return "today";
+		}else if(_endDate->isTomorrow()){
+			return "tmrw";
+		}else{
+			return _endDate->getDayOfTheWeek();
+		}
+	}
+	return DEFAULT_EMPTY;
 }
 
 

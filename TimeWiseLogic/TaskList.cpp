@@ -106,14 +106,14 @@ std::vector<Task*> TaskList::getSearchResults(){
 
 bool TaskList::updateOverdueTaskList(){
 	_overdueTaskList.clear();
-
+	bool overdue=false;
 	for(unsigned int i=0;i<_taskList.size();i++){
 		if(_taskList[i]->checkOverdue()){
 			_overdueTaskList.push_back(_taskList[i]);
-			return true;
+			overdue=true;
 		}
 	}
-	return false;
+	return overdue;
 }
 
 void TaskList::clearCompletedTasks(){

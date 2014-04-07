@@ -44,7 +44,6 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	setupHotKeys();
 
 	autoComplete();
-
 	int overdues = numberOfOverdues();
 	if(overdues > 0) {
 		setOverdueMessage(overdues);

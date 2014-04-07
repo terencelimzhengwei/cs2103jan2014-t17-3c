@@ -51,6 +51,7 @@ void Date::setDate(int day, int month, int year) {
 	_dayNumber = day;
 	_month = month;
 	_year = year;
+	_day=getDayFromDate(day,month,year);
 }
 
 // Set functions without input parameters
@@ -69,6 +70,11 @@ void Date::setDateAsToday() {
 
 void Date::setDateAsTomorrow() {
 	setDateAsToday();
+	(*this)++;
+}
+
+void Date::setDateAsDayAfterTomorrow() {
+	setDateAsTomorrow();
 	(*this)++;
 }
 
@@ -329,4 +335,40 @@ Date Date::operator+=(int num) {
 Date Date::operator-=(int num) {
 	*this = *this - num;
 	return *this;
+}
+
+int Date::getDayFromDate(int day,int month,int year)
+{
+	tm timeStruct = {};
+	timeStruct.tm_year = year - 1900;
+	timeStruct.tm_mon = month - 1;
+	timeStruct.tm_mday = day;
+	timeStruct.tm_hour = 12;    //  To avoid any doubts about summer time, etc.
+	mktime( &timeStruct );
+	return timeStruct.tm_wday;  //  0...6 for Sunday...Saturday
+}
+
+bool Date::isToday(){
+	if(_dayNumber==getCurrentDay()&&_month==getCurrentMonth()&&_year==getCurrentYear()){
+		return true;
+	}
+	return false;
+}
+
+bool Date::isTomorrow(){
+	time_t tomorrow = time(0) + 24*60*60;
+	struct tm _timeNow ;
+
+	localtime_s( &_timeNow, &tomorrow);
+	int day = _timeNow.tm_mday;
+	int month = _timeNow.tm_mon + 1;
+	int year = _timeNow.tm_year + 1900;
+	if(_dayNumber==day&&_month==month&&_year==year){
+		return true;
+	}
+	return false;
+}
+
+void Date::setNextDay(){
+	(*this)++;
 }

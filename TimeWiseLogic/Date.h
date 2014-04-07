@@ -31,6 +31,7 @@ public:
 
 	TIMEDATE_STATUS checkOverdue();
 	bool compare(Date* date);
+	bool isToday();
 	TIMEDATE_STATUS isLater(Date* otherDate);
 	int leapYear();
 	std::string toFormat();
@@ -40,6 +41,7 @@ public:
 	static int getCurrentYear();
 	static int getCurrentMonth();
 	static int getCurrentDay();
+	int getDayFromDate(int,int,int);
 
 	Date operator+(int);
 	Date operator-(int);
@@ -54,6 +56,9 @@ public:
 	bool operator<=(Date);
 	Date operator+=(int);
 	Date operator-=(int);
+	bool isTomorrow();
+	void setDateAsDayAfterTomorrow();
+	void setNextDay();
 
 private:
 

@@ -161,7 +161,7 @@ string Date::toString() {
 	year = year.substr(2);
 	convert.str(string());
 	string dateInString;
-	convert << _dayNumber << space << MONTH_ABBR[_month-1] << space << year;
+	convert << _dayNumber << space << MONTH_ABBR[_month-1];
 
 	dateInString = convert.str();
 	return dateInString;

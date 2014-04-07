@@ -63,6 +63,7 @@ public:
 	bool checkTimeClashForTimedTask(Task* task);
 	bool withTime();
 	void editSchedule(ClockTime* sTime,ClockTime* eTime);
+	std::string getDayString();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;

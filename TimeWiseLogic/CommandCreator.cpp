@@ -220,86 +220,22 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 		}
 	}
 	if(!times.empty()) {
-		if (dates.empty()) {
-			switch(times.size()){
-			case 1: {
-				// compare the time set by users with the current time
-				ClockTime* endTime = Parser::createTime(times.back());
-				bool timeStatus = endTime->checkOverdueTime();
-				Date* toBeSet = new Date();
-				// when current time is later than time set by user, set end date 
-				// to tomorrow
-				if(timeStatus) {
-					toBeSet->setDateAsTomorrow();
-					commandAdd->setEndDate(*toBeSet);
-				} else {
-					//when current time is earlier than the time set by user, 
-					//set end date to today
-					int month = toBeSet->getCurrentMonth();
-					int year = toBeSet->getCurrentYear();
-					int day = toBeSet->getCurrentDay();
-					Date* today=new Date(day,month,year);
-					commandAdd->setEndDate(*today);
-				}
-				commandAdd->setEndTime(*endTime);
-				break;
-		  }
-			case 2:{
-				// compare the time set by users with the current time
-				ClockTime* startTime = Parser::createTime(times.back());
-				times.pop_back();
-				ClockTime* endTime = Parser::createTime(times.back());
-				bool startStatus = startTime->checkOverdueTime();
-				bool endStatus = endTime->checkOverdueTime();
-				Date toBeSet;
-				// when end time and start time set by users are both earlier than current time, set end date 
-				// to tomorrow
-				if(startStatus && endStatus) {
-					toBeSet.setDateAsTomorrow();
-					commandAdd->setEndDate(toBeSet);
-				} else {
-					// two possibilities current time is in between start and end time
-					// or current time is earlier then start time
-					//endDate is set to today
-					int month = toBeSet.getCurrentMonth();
-					int year = toBeSet.getCurrentYear();
-					int day = toBeSet. getCurrentDay();
-					Date today(day,month,year);
-					commandAdd->setEndDate(today);
-				}
-				
-				commandAdd->setStartTime(*startTime);
-				commandAdd->setEndTime(*endTime);
-				break;
-		    }
-			default:
-				delete commandAdd;
-				commandAdd=NULL;
-				throw InvalidAddCommandInputException();
-			}
-
-		} else {
-			switch(times.size()) {
-			case 1:
-				commandAdd->setEndTime(*Parser::createTime(times.back()));
-				break;
-			case 2:
-				commandAdd->setStartTime(*Parser::createTime(times.back()));
-				times.pop_back();
-				commandAdd->setEndTime(*Parser::createTime(times.back()));
-				break;
-			default:
-				delete commandAdd;
-				commandAdd = NULL;
-				throw InvalidAddCommandInputException();
-
-			}
-			
+		switch(times.size()) {
+		case 1:
+			commandAdd->setEndTime(*Parser::createTime(times.back()));
+			break;
+		case 2:
+			commandAdd->setStartTime(*Parser::createTime(times.back()));
+			times.pop_back();
+			commandAdd->setEndTime(*Parser::createTime(times.back()));
+			break;
+		default:
+			delete commandAdd;
+			commandAdd = NULL;
+			throw InvalidAddCommandInputException();
 
 		}
-		
    }
-
 	commandAdd->setPreviousScreen(screen);
 	return commandAdd;
 } else {

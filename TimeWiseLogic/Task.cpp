@@ -369,47 +369,83 @@ bool Task::checkClashTime(Task* task){
 }
 
 void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime){
-	if(eDate!=NULL&&sDate!=NULL){
-		if(eDate->isLater(sDate)==EARLIER){
-		throw InvalidStartEndDateTime();
-		}else if(eDate->isLater(sDate)==SAME){
-			sDate=NULL;
-			_startDate=sDate;
-		}
-	}
-	if(eTime!=NULL&&sTime!=NULL){
-		if(eTime->isLater(sTime)==EARLIER){
-			throw InvalidDateTimeFormatException();
-		}else if(eTime->isLater(sTime)==SAME){
-			sTime=NULL;
-			_startTime=sTime;
-		}
-	}
+	_startDate=sDate;
+	_endDate=eDate;
+	_startTime=sTime;
+	_endTime=eTime;
+	
+	checkInvalidDate();
+	setTime();
+	setDateBasedOnTime();
+}
 
-	if(sDate==NULL &&eDate==NULL){
-		if(sTime==NULL && eTime!=NULL){
-			if(eTime->checkOverdueTime()){
-				_endDate=new Date();
-				_endDate->setDateAsTomorrow();
-			}else{
-				_endDate=new Date();
-				_endDate->setDateAsToday();
-			}
-		}else if(sTime!=NULL && eTime!=NULL){
-			if(sTime->checkOverdueTime()){
-				_endDate=new Date;
-				_endDate->setDateAsTomorrow();
-			}else{
-				_endDate=new Date;
-				_endDate->setDateAsToday();
-			}
+bool Task::isFloating(){
+	if(_endDate==NULL && _startDate==NULL && _endTime==NULL && _startTime==NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::isDeadline(){
+	if(_endDate!=NULL && _startDate==NULL){
+		return true;
+	}
+	return false;
+}
+
+void Task::checkInvalidDate(){
+	if(_endDate!=NULL&&_startDate!=NULL){
+		if(_endDate->isLater(_startDate)==EARLIER){
+			throw InvalidStartEndDateTime();
+		}else if(_endDate->isLater(_startDate)==SAME){
+			delete _startDate;
+			_startDate=NULL;
 		}
-		_startTime=sTime;
-		_endTime=eTime;
-	}else{
-		_startTime=sTime;
-		_startDate=sDate;
-		_endDate=eDate;
-		_endTime=eTime;
 	}
 }
+
+void Task::setDateBasedOnTime()
+{
+	if(_endDate==NULL){
+		if(_startTime!=NULL && _endTime!=NULL){
+			if(_startTime->isLater(_endTime)==LATER){
+				if(_startTime->checkOverdueTime()){
+					_startDate=new Date;
+					_startDate->setDateAsTomorrow();
+					_endDate=new Date;
+					_endDate->setDateAsDayAfterTomorrow();
+				}else{
+					_startDate=new Date;
+					_startDate->setDateAsToday();
+					_endDate=new Date;
+					_endDate->setDateAsTomorrow();
+				}
+			}else{
+				if(_startTime->checkOverdueTime()){
+					_endDate=new Date;
+					_endDate->setDateAsTomorrow();
+				}else{
+					_endDate=new Date;
+					_endDate->setDateAsToday();
+				}			
+			}
+		}
+	}else if(_startDate==NULL&&_endDate!=NULL){
+		if(_startTime!=NULL && _endTime!=NULL){
+			if(_startTime->isLater(_endTime)==LATER){
+				_startDate=_endDate;
+				_endDate=new Date(*_startDate);
+				_endDate->setNextDay();
+			}
+		}
+	}
+}
+
+void Task::setTime(){
+	if(_startTime==NULL&&_endTime!=NULL){
+		_startTime=_endTime;
+		_endTime = new ClockTime((_startTime->getTime()+100)%2400);
+	}
+}
+
+

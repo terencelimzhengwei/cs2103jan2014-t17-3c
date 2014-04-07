@@ -101,4 +101,3 @@ void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){
 	_previousScreen = *screen;
 	_currentScreen = screen;
 }
-

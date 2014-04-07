@@ -54,6 +54,12 @@ public:
 	bool isClash();
 	void resetClash();
 	void setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime);
+	bool isFloating();
+	bool isDeadline();
+	bool isTimed();
+	void checkInvalidDate();
+	void setDateBasedOnTime();
+	void setTime();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;

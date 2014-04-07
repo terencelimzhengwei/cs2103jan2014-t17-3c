@@ -13,19 +13,19 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>708</height>
+    <height>713</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>600</width>
-    <height>708</height>
+    <height>713</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>600</width>
-    <height>708</height>
+    <height>713</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -212,21 +212,21 @@ font: 75 14pt &quot;Electronic Highway Sign&quot;;</string>
    <widget class="QPushButton" name="pushButton_minimize">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>20</y>
-      <width>40</width>
+      <x>490</x>
+      <y>30</y>
+      <width>30</width>
       <height>15</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>40</width>
+      <width>30</width>
       <height>15</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>40</width>
+      <width>30</width>
       <height>15</height>
      </size>
     </property>
@@ -242,21 +242,21 @@ background-color: transparent
    <widget class="QPushButton" name="pushButton_close">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>20</y>
-      <width>40</width>
+      <x>520</x>
+      <y>30</y>
+      <width>30</width>
       <height>15</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>40</width>
+      <width>30</width>
       <height>15</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>40</width>
+      <width>30</width>
       <height>15</height>
      </size>
     </property>
@@ -324,7 +324,7 @@ color: rgb(0, 85, 255);</string>
    <widget class="QLabel" name="label_mlog">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>40</x>
       <y>600</y>
       <width>291</width>
       <height>71</height>

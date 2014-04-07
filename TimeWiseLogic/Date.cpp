@@ -35,7 +35,7 @@ int Date::getWeekDay() {
 }
 
 string Date::getDayOfTheWeek() {
-	return DAY[_day];
+	return DAY_ABBR[_day];
 }
 
 void Date::setDate(int day, int month, int year) {

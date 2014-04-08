@@ -226,10 +226,10 @@ bool Task::checkClash(Task* task){
 	bool clash=false;
 	if(isDeadline()&&task->isDeadline()){
 		if(_endDate->isLater(task->getEndDate())==SAME){
-			if(withTime()&&task->withTime()){
-				clash=checkTimeClashForDeadlineTask(task);
-			}else{
+			if(!withTime()&&!task->withTime()){
 				clash=true;
+			}else{
+				clash=checkTimeClashForDeadlineTask(task);
 			}
 		}
 	}else{
@@ -357,8 +357,35 @@ void Task::setClash(bool clash){
 }
 
 bool Task::checkTimeClashForDeadlineTask(Task* task){
-	if((_startTime->isLater(task->getEndTime())==EARLIER)&&(task->getStartTime()->isLater(_endTime)==EARLIER)){
-		return true;
+	int sTime=DEFAULT_INDEX;
+	int eTime=DEFAULT_INDEX;
+	int othersTime = DEFAULT_INDEX;
+	int othereTime = DEFAULT_INDEX;
+	if(_startTime!=NULL){
+		sTime=_startTime->getTime();
+	}if(_endTime!=NULL){
+		eTime=_endTime->getTime();
+	}if(task->getEndTime()!=NULL){
+		othereTime=task->getEndTime()->getTime();
+	}if(task->getStartTime()!=NULL){
+		othersTime=task->getStartTime()->getTime();
+	}
+	if(sTime!=DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
+		if((sTime<othereTime)&&(othersTime<eTime)){
+			return true;
+		}
+	}else if(sTime==DEFAULT_INDEX&&othersTime==DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
+		if(othereTime=eTime){
+			return true;
+		}
+	}else if(sTime==DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
+		if(eTime<othereTime&&eTime>othersTime){
+			return true;
+		}
+	}else if(othersTime==DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX&&sTime!=DEFAULT_INDEX&&eTime!=DEFAULT_INDEX){
+		if(othereTime<eTime&&othereTime>sTime){
+			return true;
+		}
 	}
 	return false;
 }
@@ -423,13 +450,21 @@ void Task::setDateBasedOnTime(){
 					_endDate->setDateAsToday();
 				}			
 			}
-		}else if(_startDate==NULL&&_endDate!=NULL){
-			if(_startTime!=NULL && _endTime!=NULL){
-				if(_startTime->isLater(_endTime)==LATER){
-					_startDate=_endDate;
-					_endDate=new Date(*_startDate);
-					_endDate->setNextDay();
+		}else if(_startTime==NULL&&_endTime!=NULL){
+				if(_endTime->checkOverdueTime()){
+					_endDate=new Date;
+					_endDate->setDateAsTomorrow();
+				}else{
+					_endDate=new Date;
+					_endDate->setDateAsToday();
 				}
+		}
+	}else if(_startDate==NULL&&_endDate!=NULL){
+		if(_startTime!=NULL && _endTime!=NULL){
+			if(_startTime->isLater(_endTime)==LATER){
+				_startDate=_endDate;
+				_endDate=new Date(*_startDate);
+				_endDate->setNextDay();
 			}
 		}
 	}
@@ -441,10 +476,16 @@ void Task::setTime(){
 			_startTime=_endTime;
 			_endTime=NULL;
 		}
-	}else{
-		if(_startTime==NULL&&_endTime!=NULL){
-			_startTime=_endTime;
-			_endTime=new ClockTime((_startTime->getTime()+100)%2400);
+	}
+	if(_startTime!=NULL&&_endTime!=NULL){
+		if(_startTime->isLater(_endTime)==SAME){
+			if(isTimed()){
+				delete _endTime;
+				_endTime=NULL;
+			}else{
+				delete _startTime;
+				_startTime=NULL;
+			}
 		}
 	}
 }

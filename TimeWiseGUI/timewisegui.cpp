@@ -456,6 +456,7 @@ void TimeWiseGUI::displayMain(){
 }
 
 void TimeWiseGUI::displayDone(){
+	_logic.processCommand("display done");
 	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 	setData(taskList);
 	ui.label_title->setText("Completed Tasks");

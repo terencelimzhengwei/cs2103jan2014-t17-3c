@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}</ProjectGuid>
+    <RootNamespace>TimeWiseLogic</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Jian Xiang\Desktop\TimeWise;C:\Users\Jian Xiang\Desktop\TimeWise\TimeWiseLogic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Calendar.h" />
+    <ClInclude Include="ClockTime.h" />
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandManager.h" />
+    <ClInclude Include="Command_Add.h" />
+    <ClInclude Include="Command_Clear.h" />
+    <ClInclude Include="CommandCreator.h" />
+    <ClInclude Include="Command_Delete.h" />
+    <ClInclude Include="Command_Display.h" />
+    <ClInclude Include="Command_Done.h" />
+    <ClInclude Include="Command_Edit.h" />
+    <ClInclude Include="Command_Filter.h" />
+    <ClInclude Include="Command_Redo.h" />
+    <ClInclude Include="Command_Search.h" />
+    <ClInclude Include="Command_Undo.h" />
+    <ClInclude Include="Command_Undone.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Date.h" />
+    <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="Storage.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskList.h" />
+    <ClInclude Include="TimeWiseLogic.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Calendar.cpp" />
+    <ClCompile Include="ClockTime.cpp" />
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CommandManager.cpp" />
+    <ClCompile Include="Command_Add.cpp" />
+    <ClCompile Include="Command_Clear.cpp" />
+    <ClCompile Include="CommandCreator.cpp" />
+    <ClCompile Include="Command_Delete.cpp" />
+    <ClCompile Include="Command_Display.cpp" />
+    <ClCompile Include="Command_Done.cpp" />
+    <ClCompile Include="Command_Edit.cpp" />
+    <ClCompile Include="Command_Filter.cpp" />
+    <ClCompile Include="Command_Redo.cpp" />
+    <ClCompile Include="Command_Search.cpp" />
+    <ClCompile Include="Command_Undo.cpp" />
+    <ClCompile Include="Command_Undone.cpp" />
+    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="Exceptions.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Storage.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="TaskList.cpp" />
+    <ClCompile Include="TimeWiseLogic.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

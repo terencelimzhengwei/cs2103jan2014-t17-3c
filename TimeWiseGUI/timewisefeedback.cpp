@@ -1,14 +1,9 @@
 #include "timewisefeedback.h"
+#include <QScrollBar>
 
 TimeWiseFeedback::TimeWiseFeedback(QWidget *parent) : QWidget(parent) {
 	ui.setupUi(this);
 	this->setWindowFlags(Qt::CustomizeWindowHint);
-	this->setWindowFlags(Qt::FramelessWindowHint);
-
-	QFontDatabase fontDatabase; 
-	fontDatabase.addApplicationFont(":/TimeWiseGUI/DK Crayon Crumble.ttf");
-	ui.userFeedback->setFont(QFont("DK Crayon Crumble",13));
-
 	ui.pushButton_ok->setFocus();
 }
 
@@ -21,8 +16,4 @@ void TimeWiseFeedback::paintEvent(QPaintEvent *pe) {
 	o.initFrom(this);                                                                                                                                                                
 	QPainter p(this);                                                                                                                                                                
 	style()->drawPrimitive(QStyle::PE_Widget, &o, &p, this);                                                                                                                         
-}
-
-void TimeWiseFeedback::setData(const QString &labelText) {
-	ui.userFeedback->setText(labelText);
 }

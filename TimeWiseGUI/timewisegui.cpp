@@ -11,7 +11,9 @@ const char* DELETE_COMMAND = "delete";
 const char* DISPLAY_COMMAND = "display";
 const char* DONE_COMMAND = "done";
 const char* EDIT_COMMAND = "edit";
+const char* EXIT_COMMAND = "exit";
 const char* FILTER_COMMAND = "filter";
+const char* HELP_COMMAND = "help";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
@@ -22,7 +24,7 @@ const char* DONE_FORMAT = "done: <ID> or <#category>";
 const char* EDIT_FORMAT = "edit: <ID> <contents>";
 const char* FILTER_FORMAT = "filter: <dates> or <#category>";
 const char* SEARCH_FORMAT = "search: <keywords>";
-const char* DEFAULT_DISPLAY = "You may: Add, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
+const char* DEFAULT_DISPLAY = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -96,23 +98,29 @@ void TimeWiseGUI::on_userInput_textChanged() {
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 
-	//Stores user inputs into a QStringList for retrieval later when key up or down is pressed
-	lines << ui.userInput->text();
-	current_line = lines.size();
-	ui.userInput->setText("");
-	emit lineExecuted(lines.back());
+	if(input == HELP_COMMAND) {
+		showFeedback();
+	} 
+	if(input == EXIT_COMMAND) {
+		exit(0);
+	} else {
+		//Stores user inputs into a QStringList for retrieval later when key up or down is pressed
+		lines << ui.userInput->text();
+		current_line = lines.size();
+		emit lineExecuted(lines.back());
 		
-	std::string userCommand = input.toLocal8Bit().constData();
+		std::string userCommand = input.toLocal8Bit().constData();
 
-	std::string messageLog = _logic.processCommand(userCommand);
+		std::string messageLog = _logic.processCommand(userCommand);
 
-	autoComplete();
-	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
-	displayTaskList(displayType);
+		autoComplete();
+		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+		displayTaskList(displayType);
 
-	QString outputMessage = QString::fromStdString(messageLog);
-	ui.label_mlog->setText(outputMessage);
-	//showFeedback(outputMessage);
+		QString outputMessage = QString::fromStdString(messageLog);
+		ui.label_mlog->setText(outputMessage);
+	}
+	ui.userInput->setText("");
 }
 
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
@@ -268,7 +276,6 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			switch (j) {
 			case 0: {
 				std::string taskDescription = (taskList[i])->getDescription();
-
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
@@ -362,22 +369,22 @@ void TimeWiseGUI::setupTable() {
 	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 	//set column widths of table. Hardcoded and very primitive.
-	ui.tableView->setColumnWidth(0, 170);
+	ui.tableView->setColumnWidth(0, 190);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(1, 40);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(2, 66);
+	ui.tableView->setColumnWidth(2, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(3, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Fixed);
-	ui.tableView->setColumnWidth(4, 66);
+	ui.tableView->setColumnWidth(4, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(5, 48);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(6, 55);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Stretch);
-	ui.tableView->setMinimumWidth(540);
-	ui.tableView->setMaximumWidth(540);
+	ui.tableView->setMinimumWidth(535);
+	ui.tableView->setMaximumWidth(535);
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
@@ -545,8 +552,7 @@ void TimeWiseGUI::next_line() {
 	}
 }
 
-/*void TimeWiseGUI::showFeedback(QString outputMessage) {
+void TimeWiseGUI::showFeedback() {
 	feedback = new TimeWiseFeedback();
 	feedback->show();
-	feedback->setData(outputMessage);
-}*/
+}

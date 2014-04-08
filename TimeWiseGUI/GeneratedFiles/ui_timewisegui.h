@@ -119,8 +119,8 @@ public:
 "color: rgb(0, 85, 255);"));
         label_help = new QLabel(centralWidget);
         label_help->setObjectName(QStringLiteral("label_help"));
-        label_help->setGeometry(QRect(50, 541, 491, 20));
-        label_help->setStyleSheet(QStringLiteral("font: 75 10.5pt \"New Cicle\";"));
+        label_help->setGeometry(QRect(60, 541, 491, 20));
+        label_help->setStyleSheet(QStringLiteral("font: 75 11pt \"New Cicle\";"));
         label_help->setWordWrap(true);
         userInput = new QLineEdit(centralWidget);
         userInput->setObjectName(QStringLiteral("userInput"));
@@ -158,7 +158,7 @@ public:
         pushButton_minimize->setText(QString());
         pushButton_close->setText(QString());
         label_title->setText(QApplication::translate("TimeWiseGUIClass", "Your Tasks", 0));
-        label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Clear, Confirm, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
+        label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "                      WELCOME TO...", 0));
     } // retranslateUi

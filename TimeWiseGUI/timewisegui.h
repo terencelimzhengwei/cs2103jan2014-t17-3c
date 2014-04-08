@@ -49,7 +49,7 @@ public:
 
 	//other functions
 	void autoComplete();
-	//void showFeedback(QString outputMessage);
+	void showFeedback();
 
 private slots:
 	void updateTime();

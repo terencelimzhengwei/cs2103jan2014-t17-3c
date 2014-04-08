@@ -13,7 +13,6 @@ class TimeWiseFeedback : public QWidget
 public:
 	TimeWiseFeedback(QWidget *parent = 0);
 	~TimeWiseFeedback();
-	void setData(const QString &labelText);
 	void paintEvent(QPaintEvent *pe);
 
 private:

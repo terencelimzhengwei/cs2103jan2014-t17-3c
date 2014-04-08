@@ -18,13 +18,13 @@ const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
 const char* CLEAR_FORMAT = "clear or clear all";
-const char* DELETE_FORMAT = "delete: <ID> or <keywords>";
+const char* DELETE_FORMAT = "delete: <ID>";
 const char* DISPLAY_FORMAT = "display: main or completed";
-const char* DONE_FORMAT = "done: <ID> or <#category>";
+const char* DONE_FORMAT = "done: <ID>";
 const char* EDIT_FORMAT = "edit: <ID> <contents>";
 const char* FILTER_FORMAT = "filter: <dates> or <#category>";
 const char* SEARCH_FORMAT = "search: <keywords>";
-const char* DEFAULT_DISPLAY = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo";
+const char* DEFAULT_DISPLAY = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -100,8 +100,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 
 	if(input == HELP_COMMAND) {
 		showFeedback();
-	} 
-	if(input == EXIT_COMMAND) {
+	} else if(input == EXIT_COMMAND) {
 		exit(0);
 	} else {
 		//Stores user inputs into a QStringList for retrieval later when key up or down is pressed

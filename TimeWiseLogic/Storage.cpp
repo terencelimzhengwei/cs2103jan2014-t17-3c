@@ -110,28 +110,52 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartDate(_parser.createDate(details));
+						try{
+							newTask->setStartDate(_parser.createDate(details));
+						}catch(...){
+							delete newTask->getStartDate();
+							newTask->setStartDate(NULL);
+							_corrupted=true;
+						}
 					}break;
 				case 2:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndDate(_parser.createDate(details));
+						try{
+							newTask->setEndDate(_parser.createDate(details));
+						}catch(...){
+							delete newTask->getEndDate();
+							newTask->setEndDate(NULL);
+							_corrupted=true;
+						}					
 					}break;
 				case 3:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartTime(_parser.createTime(details));
+						try{
+							newTask->setStartTime(_parser.createTime(details));
+						}catch(...){
+							delete newTask->getStartTime();
+							newTask->setStartTime(NULL);
+							_corrupted=true;
+						}						
 					}break;
 				case 4:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndTime(_parser.createTime(details));
+						try{
+							newTask->setEndTime(_parser.createTime(details));
+						}catch(...){
+							delete newTask->getEndTime();
+							newTask->setEndTime(NULL);
+							_corrupted=true;
+						}						
 					}break;
 				case 5:
 					taskHeader++;
@@ -141,20 +165,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
 					newTask->setStatusAsDone();
-					/*if(status==DONE){
-						newTask->setStatusAsDone();
-						break;
-					}else if(status==UNCOMPLETED){
-						newTask->setStatusasUndone();
-						break;
-					}else if(status==OVERDUE){
-						newTask->setStatusAsOverdue();
-						break;
-					}else{
-						break;
-					}*/
 				}
-
 				getline(input, userInput);
 			} 
 			listOfTasks.addTaskToDoneList(*newTask);
@@ -178,9 +189,11 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 				return;
 			}
 			Task* newTask = new Task;
+
 			while (userInput != "==========") {
 				std::string details = _parser.removeFirstWord(userInput);
 				_parser.removeWhiteSpaces(details);
+
 				switch(taskHeader){
 				case 0 :
 					newTask->setDescription(details);
@@ -191,34 +204,58 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartDate(_parser.createDate(details));
+						try{
+							newTask->setStartDate(_parser.createDate(details));
+						}catch(...){
+							delete newTask->getStartDate();
+							newTask->setStartDate(NULL);
+							_corrupted=true;
+						}
 					}break;
 				case 2:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndDate(_parser.createDate(details));
+						try{
+							newTask->setEndDate(_parser.createDate(details));
+						}catch(...){
+							delete newTask->getEndDate();
+							newTask->setEndDate(NULL);
+							_corrupted=true;
+						}					
 					}break;
 				case 3:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setStartTime(_parser.createTime(details));
+						try{
+							newTask->setStartTime(_parser.createTime(details));
+						}catch(...){
+							delete newTask->getStartTime();
+							newTask->setStartTime(NULL);
+							_corrupted=true;
+						}						
 					}break;
 				case 4:
 					taskHeader++;
 					if(details==""||details==" "){
 						break;
 					}else{
-						newTask->setEndTime(_parser.createTime(details));
+						try{
+							newTask->setEndTime(_parser.createTime(details));
+						}catch(...){
+							delete newTask->getEndTime();
+							newTask->setEndTime(NULL);
+							_corrupted=true;
+						}						
 					}break;
 				case 5:
 					taskHeader++;
 					newTask->setCategory(details);
 					break;
-				case 6:
+				case 6:{
 					taskHeader++;
 					TASK_STATUS status=_parser.getTaskStatus(details);
 					if(status==DONE){
@@ -230,11 +267,17 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 					}else if(status==OVERDUE){
 						newTask->setStatusAsOverdue();
 						break;
-					}else{
+					}else {
+						_corrupted=true;
 						break;
 					}
 				}
-
+				default:
+					_corrupted=true;
+				}
+				if(taskHeader>6){
+					break;
+				}
 				getline(input, userInput);
 			} 
 			listOfTasks.addTask(*newTask);

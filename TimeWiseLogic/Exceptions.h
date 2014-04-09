@@ -74,6 +74,9 @@ public:
 	virtual const char* what() const throw();
 };
 
+class CorruptedFile: public std:: exception {
+};
+
 // this exception is thrown when the users enter:
 //1. A start date that is later than a due date
 //2. A start time that is later than a due time (on the same day)

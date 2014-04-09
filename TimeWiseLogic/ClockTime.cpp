@@ -38,7 +38,7 @@ bool ClockTime::checkOverdueTime() {
 	if( hr < today.tm_hour ){
 		hasElapsed = true;
 	}
-	else if ( hr == today.tm_hour && min < today.tm_min) {
+	else if ( hr == today.tm_hour && min <= today.tm_min) {
 		hasElapsed = true; 
 	}
 	else{

@@ -580,7 +580,7 @@ bool Task::isDoubleTime()
 }
 
 bool Task::checkClashDate(Task* task){
-	return _startDate<task->getEndDate() && task->getStartDate()<_endDate;
+	return _startDate->isLater(task->getEndDate())==EARLIER && task->getStartDate()->isLater(_endDate)==EARLIER;
 }
 
 

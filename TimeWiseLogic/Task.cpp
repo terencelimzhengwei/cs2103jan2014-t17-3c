@@ -224,49 +224,55 @@ bool Task::hasStatus(TASK_STATUS status){
 
 bool Task::checkClash(Task* task){
 	bool clash=false;
-	if(isDeadline()&&task->isDeadline()){
-		if(_endDate->isLater(task->getEndDate())==SAME){
-			if(!withTime()&&!task->withTime()){
-				clash=true;
-			}else{
-				clash=checkTimeClashForDeadlineTask(task);
+	if(isSingleDate()&&task->isSingleDate()){
+		if(isDoubleTime()&&task->isDoubleTime()){
+			clash=checkTimeClashForDeadlineTask(task);
+		}
+	}else if(isDoubleDate()&&task->isDoubleDate()){
+		if(checkClashDate(task)){
+			clash=true;
+		}else if(_startDate==task->getEndDate()){
+			if(hasStartTime()&&task->hasEndTime()){
+				if(_startTime<_endTime){
+					clash=true;
+				}
+			}
+		}else if(_endDate==task->getStartDate()){
+			if(hasEndTime()&&task->hasStartTime()){
+				if(_endTime>_startTime){
+					clash=true;
+				}
 			}
 		}
-	}else{
-		if(isTimed()&&task->isDeadline()){
-			if(task->getEndDate()->isLater(_startDate)==LATER&&task->getEndDate()->isLater(_endDate)==EARLIER){
-				clash = true;
-			}else if(task->getEndDate()->isLater(_startDate)==SAME){
-				clash=true;
-				if(_startTime!=NULL&&task->getEndTime()!=NULL){
-					if(task->getEndTime()->isLater(_startTime)==EARLIER){
-						clash=false;
-					}
-				}
-			}else if(task->getEndDate()->isLater(_endDate)==SAME){
-				clash=true;
-				if(_endTime!=NULL&&task->getEndTime()!=NULL){
-					if(task->getEndTime()->isLater(_endTime)==LATER){
-						clash=false;
-					}
+	}else if(isDoubleDate()&&task->isSingleDate()){
+		if(task->getEndDate()<_endDate&&task->getEndDate()>_startDate){
+			clash = true;
+		}else if(task->getEndDate()==_startDate){
+			if(hasStartTime()&&task->isDoubleTime()){
+				if(task->getStartTime()>_startTime){
+					clash = true;
 				}
 			}
-		}if(isDeadline()&&task->isTimed()){
-			if(_endDate->isLater(task->getStartDate())==LATER&&_endDate->isLater(task->getEndDate())==EARLIER){
-				clash = true;
-			}else if(_endDate->isLater(task->getStartDate())==SAME){
-				clash=true;
-				if(task->getStartTime()!=NULL&&_endTime!=NULL){
-					if(_endTime->isLater(task->getStartTime())==EARLIER){
-						clash=false;
-					}
+		}else if(task->getEndDate()==_endDate){
+			if(hasEndTime()&&task->isDoubleTime()){
+				if(task->getEndTime()<_endTime){
+					clash = true;
 				}
-			}else if(_endDate->isLater(task->getEndDate())==SAME){
-				clash=true;
-				if(task->getEndTime()!=NULL&&_endTime!=NULL){
-					if(_endTime->isLater(task->getEndTime())==LATER){
-						clash=false;
-					}
+			}
+		}
+	}else if(isSingleDate()&&task->isDoubleDate()){
+		if(task->getEndDate()>_endDate&&task->getStartDate()<_endDate){
+			clash = true;
+		}else if(task->getStartDate()==_endDate){
+			if(task->hasStartTime()&&isDoubleTime()){
+				if(task->getStartTime()<_startTime){
+					clash = true;
+				}
+			}
+		}else if(task->getEndDate()==_endDate){
+			if(task->hasEndTime()&&isDoubleTime()){
+				if(task->getEndTime()>_endTime){
+					clash = true;
 				}
 			}
 		}
@@ -370,12 +376,9 @@ bool Task::checkTimeClashForDeadlineTask(Task* task){
 	}if(task->getStartTime()!=NULL){
 		othersTime=task->getStartTime()->getTime();
 	}
-	if(sTime!=DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
-		if((sTime<othereTime)&&(othersTime<eTime)){
-			return true;
-		}
-	}else if(sTime==DEFAULT_INDEX&&othersTime==DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
-		if(othereTime=eTime){
+	
+	if(sTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
+		if(sTime<othereTime&&othersTime<eTime){
 			return true;
 		}
 	}else if(sTime==DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
@@ -408,7 +411,7 @@ bool Task::isFloating(){
 	return false;
 }
 
-bool Task::isDeadline(){
+bool Task::isSingleDate(){
 	if(_endDate!=NULL && _startDate==NULL){
 		return true;
 	}
@@ -471,7 +474,7 @@ void Task::setDateBasedOnTime(){
 }
 
 void Task::setTime(){
-	if(isTimed()){
+	if(isDoubleDate()){
 		if(_startTime==NULL&&_endTime!=NULL){
 			_startTime=_endTime;
 			_endTime=NULL;
@@ -479,7 +482,7 @@ void Task::setTime(){
 	}
 	if(_startTime!=NULL&&_endTime!=NULL){
 		if(_startTime->isLater(_endTime)==SAME){
-			if(isTimed()){
+			if(isDoubleDate()){
 				delete _endTime;
 				_endTime=NULL;
 			}else{
@@ -490,7 +493,7 @@ void Task::setTime(){
 	}
 }
 
-bool Task::isTimed(){
+bool Task::isDoubleDate(){
 	if(_endDate!=NULL && _startDate!=NULL){
 		return true;
 	}
@@ -531,5 +534,54 @@ std::string Task::getDayString(){
 	}
 	return DEFAULT_EMPTY;
 }
+
+bool Task::isSingleTime()
+{
+	if(_startTime==NULL&&_endTime!=NULL||_startTime!=NULL&&_endTime==NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasStartTime(){
+	if(_startTime!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasEndTime(){
+	if(_endTime!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasEndDate(){
+	if(_endDate!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasStartDate(){
+	if(_startDate!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::isDoubleTime()
+{
+	if(_startTime!=NULL&&_endTime!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::checkClashDate(Task* task){
+	return _startDate<task->getEndDate() && task->getStartDate()<_endDate;
+}
+
 
 

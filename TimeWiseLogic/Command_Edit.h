@@ -23,6 +23,9 @@ public:
 	void setDisplayScreen(DISPLAY_TYPE);
 
 	bool execute(TaskList&, std::string&);
+
+	void saveOriginalTaskDetails();
+
 	bool undo(TaskList&, std::string&);
 private:
 	int _editIndex;
@@ -48,5 +51,14 @@ private:
 	bool noDate();
 	bool noTime();
 	void resetTimeAndDate();
+	bool emptyParameters();
+	bool noCategory();
+	bool noDescription();
+	bool noEndTime();
+	bool noStartTime();
+	bool noStartDate();
+	bool noEndDate();
+	void getOriginalTask(TaskList& tasklist);
+	void editTaskWithNewParameters();
 };
 

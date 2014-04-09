@@ -49,52 +49,10 @@ void Command_Edit::setEndTime(ClockTime* endTime){
 }
 
 bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
-	switch(_displayScreen){
-	case MAIN:
-		_editedTask = tasklist.getTask(_editIndex);
-		break;
-	case COMPLETE:
-		_editedTask = tasklist.getCompletedTask(_editIndex);
-		break;
-	case SEARCHED:
-		_editedTask = tasklist.getSearchedTask(_editIndex);
-		break;
-	case FILTERED:
-		_editedTask = tasklist.getFilteredTask(_editIndex);
-		break;
-	default:
-		return false;
-	}	
 
-	_originalDescription = _editedTask->getDescription();
-	_originalCategory = _editedTask->getTaskCategory();
-	_originalEndDate = _editedTask->getEndDate();
-	_originalStartDate = _editedTask->getStartDate();
-	_originalEndTime = _editedTask->getEndTime();
-	_originalStartTime =_editedTask->getStartTime();
-	if(_editedDescription != DEFAULT_EMPTY){
-		_editedTask->setDescription(_editedDescription);
-	}else if(_editedCategory != DEFAULT_EMPTY){
-		_editedTask->setCategory(_editedCategory);
-	}else{
-		if(noDateAndTime()){
-			resetTimeAndDate();
-		}
-	}
-	if(!noDateAndTime()){
-		if(!noDate()){
-			if(_editedEndDate != NULL){
-				_editedTask->setEndDate(_editedEndDate);
-			}if(_editedStartDate != NULL){
-				_editedTask->setStartDate(_editedStartDate);
-			}else{
-				_editedTask->setStartDate(NULL);
-			}
-		}
-		if(!noTime()){
-			_editedTask->editSchedule(_editedStartTime,_editedEndTime);
-		}
-	}
+	getOriginalTask(tasklist);
+	saveOriginalTaskDetails();
+	editTaskWithNewParameters();
 	feedback = EDIT_SUCCESS;
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
@@ -124,21 +82,21 @@ bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
 }
 
 bool Command_Edit::noDateAndTime(){
-	if(_editedEndDate == NULL  && _editedEndTime ==  NULL && _editedStartDate == NULL &&_editedStartTime == NULL){
+	if(noDate()  && noTime()){
 		return true;
 	}
 	return false;
 }
 
 bool Command_Edit::noDate(){
-	if(_editedEndDate == NULL && _editedStartDate == NULL){
+	if(noEndDate() && noStartDate()){
 		return true;
 	}
 	return false;
 }
 
 bool Command_Edit::noTime(){
-	if(_editedEndTime == NULL && _editedStartTime == NULL){
+	if(noEndTime() && noEndDate()){
 		return true;
 	}
 	return false;
@@ -150,3 +108,101 @@ void Command_Edit::resetTimeAndDate(){
 	_editedTask->setStartTime(NULL);
 	_editedTask->setStartDate(NULL);
 }
+
+bool Command_Edit::emptyParameters(){
+	if(noDescription()&&noCategory()&&noDateAndTime()){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noDescription(){
+	if(_editedDescription==DEFAULT_EMPTY){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noCategory(){
+	if(_editedCategory==DEFAULT_EMPTY){
+		return true;
+	}
+	return false;
+}
+bool Command_Edit::noEndDate(){
+	if(_editedEndDate==NULL){
+		return true;
+	}
+	return false;
+}
+bool Command_Edit::noStartDate(){
+	if(_editedStartDate==NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noStartTime(){
+	if(_editedStartTime==NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noEndTime(){
+	if(_editedEndTime==NULL){
+		return true;
+	}
+	return false;
+}
+
+void Command_Edit::saveOriginalTaskDetails(){
+	_originalDescription = _editedTask->getDescription();
+	_originalCategory = _editedTask->getTaskCategory();
+	_originalEndDate = _editedTask->getEndDate();
+	_originalStartDate = _editedTask->getStartDate();
+	_originalEndTime = _editedTask->getEndTime();
+	_originalStartTime =_editedTask->getStartTime();
+}
+
+void Command_Edit::getOriginalTask(TaskList& tasklist){
+	switch(_displayScreen){
+	case COMPLETE:
+		_editedTask = tasklist.getCompletedTask(_editIndex);
+		break;
+	case SEARCHED:
+		_editedTask = tasklist.getSearchedTask(_editIndex);
+		break;
+	case FILTERED:
+		_editedTask = tasklist.getFilteredTask(_editIndex);
+		break;
+	default:
+		_editedTask = tasklist.getTask(_editIndex);
+		break;
+	}	
+}
+
+void Command_Edit::editTaskWithNewParameters(){
+	if(!noDescription()){
+		_editedTask->setDescription(_editedDescription);
+	}if(!noCategory()){
+		_editedTask->setCategory(_editedCategory);
+	}if(emptyParameters()){
+		resetTimeAndDate();
+	}
+	if(!noDateAndTime()){
+		if(!noDate()){
+			if(!noEndDate()){
+				_editedTask->setEndDate(_editedEndDate);
+			}if(!noStartDate()){
+				_editedTask->setStartDate(_editedStartDate);
+			}else{
+				_editedTask->setStartDate(NULL);
+			}
+		}
+		if(!noTime()){
+			_editedTask->editSchedule(_editedStartTime,_editedEndTime);
+		}
+	}
+}
+

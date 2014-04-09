@@ -4,6 +4,7 @@
 
 TimeWiseLogic::TimeWiseLogic(void){
 	_manager = new CommandManager(_taskList);
+	_logger = Logger::getLogger();
 	_displayType=MAIN;
 	_cmd = NULL;
 	initLogic();
@@ -72,6 +73,7 @@ TaskList TimeWiseLogic::getTaskList()
 }
 
 void TimeWiseLogic::initLogic(){
+	_logger->log("TimeWiseLogic","Initializing Logic");
 	_storage.retrieveFile(_taskList);
 	_taskList.updateOverdueTaskList();
 }

@@ -115,19 +115,20 @@ void Command_Clear::undoCompletedTasks(TaskList& tasklist, std::string& feedback
 }
 
 void Command_Clear::undoUncompletedTasks(TaskList& tasklist, std::string& feedback){
+	int checkClash;
 	for(unsigned int i = 0;i < _deletedUndoneTasks.size();i++){
-		tasklist.addTask(*_deletedUndoneTasks[i]);
+		tasklist.addTask(*_deletedUndoneTasks[i], checkClash);
 		feedback = UNDO_CLEAR_UNCOMPLETED_SUCCESS;
 	}
 	if(_displayScreen == SEARCHED){
 		for(unsigned int i = 0;i < _deletedSearchedTasks.size();i++){
-			tasklist.addTask(*_deletedSearchedTasks[i]);
+			tasklist.addTask(*_deletedSearchedTasks[i], checkClash);
 		}
 		repopulateSearchList(tasklist);
 		feedback = UNDO_CLEAR_SEARCHED_SUCCESS;
 	} else if(_displayScreen ==  FILTERED){
 		for(unsigned int i = 0; i<_deletedFilteredTasks.size(); i++){
-			tasklist.addTask(*_deletedFilteredTasks[i]);
+			tasklist.addTask(*_deletedFilteredTasks[i], checkClash);
 		}
 		repopulateFilterList(tasklist);
 		feedback = UNDO_CLEAR_FILTERED_SUCCESS;

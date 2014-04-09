@@ -1,13 +1,11 @@
 #include "CommandCreator.h"
 
 
-CommandCreator::CommandCreator(void)
-{
+CommandCreator::CommandCreator(void){
 }
 
 
-CommandCreator::~CommandCreator(void)
-{
+CommandCreator::~CommandCreator(void){
 }
 
 
@@ -28,12 +26,11 @@ bool CommandCreator::isValidIndex(int id) {
 
 
 
-	//the below methods are responsible for creating the derived commands
+//the below methods are responsible for creating the derived commands
 Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist)
 {
 	try {
-
-		string commandTypeString = Parser::getFirstWord(userInput);
+        string commandTypeString = Parser::getFirstWord(userInput);
 		CMD_TYPE commandType = Parser::determineCommandType(commandTypeString); 
 
 		// Assume all other commands are adding event
@@ -133,9 +130,6 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (NotANumberException& nane) {
 		_feedbackExceptiontoUI = nane.what();
 		throw NotANumberException();
-	} catch (InvalidHeaderException& ihe) {
-		_feedbackExceptiontoUI = ihe.what();
-		throw InvalidHeaderException();
 	} catch (InvalidDateTimeFormatException& idtfe) {
 		_feedbackExceptiontoUI = idtfe.what();
 		throw InvalidDateTimeFormatException();
@@ -215,7 +209,7 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 			break;
 		default:
 			delete commandAdd;
-			commandAdd=NULL;
+			commandAdd = NULL;
 			throw InvalidAddCommandInputException();
 		}
 	}

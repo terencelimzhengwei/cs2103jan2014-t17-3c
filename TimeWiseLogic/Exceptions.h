@@ -44,10 +44,6 @@ public:
 	virtual const char* what() const throw();
 };
 //For edit command, when the user enters headers which TiMEWiSE! does not support
-class InvalidHeaderException: public std::exception {
-public:
-	virtual const char* what() const throw();
-};
 class EmptyTaskListException: public std::exception {
 public:
 	virtual const char* what() const throw();
@@ -61,10 +57,6 @@ public:
 	virtual const char* what() const throw();
 };
 class UnableTosetAsDone: public std:: exception {
-public:
-	virtual const char* what() const throw();
-};
-class UnableToEditCompletedTasks: public std::exception {
 public:
 	virtual const char* what() const throw();
 };

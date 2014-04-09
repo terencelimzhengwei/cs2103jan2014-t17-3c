@@ -63,17 +63,15 @@ static const char* MISSING_TASK_DESCRIPTION = "Error! You have not entered any t
 static const char* INVALID_USER_INPUT_COMMAND_WORD = "Error! Invalid command!";
 static const char* NO_ARGUMENT_EXCEPTION = "Error! No input detected";
 static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number.";
-static const char* INVALID_USER_INPUT_HEADER = "Error! The header that you enter is invalid";
 static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
 static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
 static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid parameters for Clear. Only accepts ALL,DONE,UNDONE";
 static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
-static const char* UNABLE_TO_EDIT_COMPLETED_TASKS = "This task has been completed. Please type 'undone' in order to edit it";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 //Feedback strings
  
-const std::string ADD_SUCCESS = " Task is successfully added";
+const std::string ADD_SUCCESS = " Task is successfully added.";
 const std::string CLEAR_ALL_SUCCESS = "All tasks are successfully removed.";
 const std::string CLEAR_COMPLETED_SUCCESS = "All completed tasks are successfully removed.";
 const std::string CLEAR_UNCOMPLETED_SUCCESS = "All uncompleted tasks are successfully removed.";
@@ -102,6 +100,7 @@ const std::string UNDO_CLEAR_FILTERED_SUCCESS = "All filtered tasks are added ba
 const std::string UNDO_EDIT_SUCCESS = "Task content is restored to original state!";
 const std::string NO_COMMAND_LINE = "Please key in your command...";
 const std::string EXECUTE = "execute";
+const std::string CLASH_EXIST = "Task is successfully added. Note: Clash Exists.";
 
 const int PRECEDING_YEAR_OFFEST = -33;
 

@@ -10,7 +10,7 @@ public:
 	TaskList(void);
 	~TaskList(void);
 
-	void addTask(Task&);
+	void addTask(Task&, int&);
 	void addTaskToDoneList(Task&);
 	void addTaskToSearchedList(Task&);
 	void addTaskToOverdueList(Task&);

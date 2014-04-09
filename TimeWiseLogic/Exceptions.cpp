@@ -18,9 +18,6 @@ const char* NoArgumentException::what() const throw(){
 const char* NotANumberException::what() const throw(){
 	return USER_INPUT_NOT_A_NUMBER; 
 }
-const char* InvalidHeaderException::what() const throw(){ 
-	return INVALID_USER_INPUT_HEADER; 
-}
 
 const char* EmptyTaskListException::what() const throw(){ 
 	return TASKLIST_EMPTY; 
@@ -35,9 +32,6 @@ const char* InvalidClearCommandInputException::what() const throw(){
 }
 const char* UnableTosetAsDone::what() const throw() {
 	return TASK_ALREADY_COMPLETED;
-}
-const char* UnableToEditCompletedTasks::what() const throw() {
-	return UNABLE_TO_EDIT_COMPLETED_TASKS;
 }
 
 const char* UnableToUndoneUncompletedTasks::what() const throw() {

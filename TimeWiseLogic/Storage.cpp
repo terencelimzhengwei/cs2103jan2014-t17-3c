@@ -181,6 +181,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks){
 void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 	std::string userInput="";
 	std::ifstream input(_undoneFileName);
+	int checkClash;
 	std::string temp;
 	int taskHeader;
 
@@ -283,7 +284,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 				}
 				getline(input, userInput);
 			} 
-			listOfTasks.addTask(*newTask);
+			listOfTasks.addTask(*newTask, checkClash);
 		} 
 	}
 

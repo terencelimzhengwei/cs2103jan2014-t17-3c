@@ -63,10 +63,11 @@ void Command_Add::setEndDate(Date& date)
 
 bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 	*_currentScreen = MAIN;
+	int checkClash;
 	//Check whether the previous command was deleting a task and the user tries to undo this, 
 	//the task will added back to tasklist.
 	if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
-		tasklist.addTask(*_addedTask);
+		tasklist.addTask(*_addedTask, checkClash);
 		tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	} else {
 		_addedTask = new Task;
@@ -74,10 +75,14 @@ bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
 		_addedTask->setCategory(_category);
 		_addedTask->setSchedule(_startDate,_endDate,_startTime,_endTime);
 		_addedTask->setTaskType(_taskType);
-		tasklist.addTask(*_addedTask);
+		tasklist.addTask(*_addedTask, checkClash);
+	}
+	if (checkClash == 1){
+		feedback = ADD_SUCCESS;
+	} else {
+		feedback = CLASH_EXIST;
 	}
 	_lastCmdCalled == EXECUTE;
-	feedback = ADD_SUCCESS;
         tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	return true;
 }

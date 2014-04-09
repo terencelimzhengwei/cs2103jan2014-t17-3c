@@ -32,10 +32,6 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 			delete _cmd;
 			_cmd = NULL;
 			return oore.what();
-		} catch (UnableToEditCompletedTasks& uect) {
-			delete _cmd;
-			_cmd = NULL;
-			return uect.what();
 		} catch (UnableTosetAsDone& usad) {
 			delete _cmd;
 			_cmd = NULL;

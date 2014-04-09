@@ -1,4 +1,3 @@
-
 #include "Task.h"
 
 
@@ -376,7 +375,7 @@ bool Task::checkTimeClashForDeadlineTask(Task* task){
 	}if(task->getStartTime()!=NULL){
 		othersTime=task->getStartTime()->getTime();
 	}
-	
+
 	if(sTime!=DEFAULT_INDEX&&othersTime!=DEFAULT_INDEX&&eTime!=DEFAULT_INDEX&&othereTime!=DEFAULT_INDEX){
 		if(sTime<othereTime&&othersTime<eTime){
 			return true;
@@ -398,7 +397,7 @@ void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime
 	_endDate=eDate;
 	_startTime=sTime;
 	_endTime=eTime;
-	
+
 	checkInvalidDate();
 	setTime();
 	setDateBasedOnTime();
@@ -451,16 +450,16 @@ void Task::setDateBasedOnTime(){
 				}else{
 					_endDate=new Date;
 					_endDate->setDateAsToday();
-				}			
+				}                       
 			}
 		}else if(_startTime==NULL&&_endTime!=NULL){
-				if(_endTime->checkOverdueTime()){
-					_endDate=new Date;
-					_endDate->setDateAsTomorrow();
-				}else{
-					_endDate=new Date;
-					_endDate->setDateAsToday();
-				}
+			if(_endTime->checkOverdueTime()){
+				_endDate=new Date;
+				_endDate->setDateAsTomorrow();
+			}else{
+				_endDate=new Date;
+				_endDate->setDateAsToday();
+			}
 		}
 	}else if(_startDate==NULL&&_endDate!=NULL){
 		if(_startTime!=NULL && _endTime!=NULL){
@@ -582,6 +581,4 @@ bool Task::isDoubleTime()
 bool Task::checkClashDate(Task* task){
 	return _startDate->isLater(task->getEndDate())==EARLIER && task->getStartDate()->isLater(_endDate)==EARLIER;
 }
-
-
 

@@ -9,14 +9,16 @@ TaskList::~TaskList(void){
 	_taskList.clear();
 }
 
-void TaskList::addTask(Task& task){
+void TaskList::addTask(Task& task, int& checkCLash){
 	_clashedTask.clear();
-	for(unsigned int i=0;i<_taskList.size();i++){
+	checkCLash = 1;
+	for(unsigned int i = 0;i <_taskList.size();i++){
 		if(_taskList[i]->checkClash(&task)){
 			if(_clashedTask.empty()){
 				_clashedTask.push_back(&task);
 			}
 			_clashedTask.push_back(_taskList[i]);
+			checkCLash = 0;
 		}
 		if(!task.checkLater(_taskList[i])){
 			_taskList.insert(_taskList.begin()+i,&task);
@@ -26,6 +28,7 @@ void TaskList::addTask(Task& task){
 	}  
 	_taskList.push_back(&task);
 	updateClashStatus();
+	
 }
 
 bool TaskList::deleteTask(unsigned int& index)
@@ -173,11 +176,12 @@ Task* TaskList::setTaskAsDone(unsigned int index)
 
 Task* TaskList::setTaskAsUndone(unsigned int index)
 {
+	int checkClash;
 	if(index <_completedTaskList.size()) {
 		Task* task;
 		task=_completedTaskList[index];
 		task->setStatusasUndone();
-		addTask(*task);
+		addTask(*task, checkClash);
 		deleteTaskFromCompletedList(index);
 		return task;
 	} else {
@@ -474,7 +478,8 @@ std::vector<Task*> TaskList::getClashedTask(){
 void TaskList::shiftTask(Task* task){
 	unsigned int index = getTaskIndex(task);
 	deleteTask(index);
-	addTask(*task);
+	int checkClash;
+	addTask(*task, checkClash);
 }
 
 unsigned int TaskList::getLastTaskIndex(){

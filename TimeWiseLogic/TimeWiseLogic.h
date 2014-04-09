@@ -4,6 +4,7 @@
 
 #include "Constants.h"
 #include "TaskList.h"
+#include "Logger.h"
 #include "Storage.h"
 #include "CommandCreator.h"
 #include "CommandManager.h"
@@ -26,6 +27,7 @@ private:
 	TaskList _taskList;
 	Storage _storage;
 	CommandManager *_manager;
+	Logger* _logger;
 
 	Command* _cmd;
 	std::string _feedback;

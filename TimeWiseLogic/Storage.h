@@ -4,6 +4,7 @@
 
 #include "TaskList.h"
 #include "Parser.h"
+#include "Logger.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -16,6 +17,7 @@ private:
 	std::string _doneFileName;
 	Parser _parser;
 	bool _corrupted;
+	Logger* _logger;
 
 	void saveUndoneTasks(TaskList&);
 	void saveDoneTasks(TaskList&);

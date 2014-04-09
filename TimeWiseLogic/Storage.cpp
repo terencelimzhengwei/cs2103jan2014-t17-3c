@@ -2,6 +2,7 @@
 
 
 Storage::Storage(void) {
+	_logger = Logger::getLogger();
 	_undoneFileName = "undoneTasks.txt";
 	_doneFileName = "doneTasks.txt";
 
@@ -12,11 +13,13 @@ Storage::~Storage(void)
 }
 
 void Storage::saveFile(TaskList& listOfTasks){ 
+	_logger->log("Storage","Saving Tasks to Text file");
 	saveUndoneTasks(listOfTasks);
 	saveDoneTasks(listOfTasks);
 }
 
 void Storage::retrieveFile(TaskList& listOfTasks) { 
+	_logger->log("Storage","Retrieving Tasks from Text file");
 	retrieveUndoneTasks(listOfTasks);
 	retrieveDoneTasks(listOfTasks);
 }

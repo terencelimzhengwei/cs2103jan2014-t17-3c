@@ -65,7 +65,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case FILTERED:
 		if(_deletionIndex!=DEFAULT_INDEX){
 			_taskDeleted = taskList.getFilteredTask(_deletionIndex);
-			taskList.deleteTaskFromSearchList(_deletionIndex);
+			taskList.deleteTaskFromFilterList(_deletionIndex);
 			_lastCmdCalled = EXECUTE;
 			feedback = DELETE_SUCCESS;
 			return true;
@@ -89,13 +89,22 @@ bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		feedback = UNDO_DELETE_SUCCESS;
 		break;
-	case SEARCHED:
+	case SEARCHED:{
 		taskList.addTask(*_taskDeleted);
 		std::vector<Task*>& searchResults = taskList.getSearchResults();
 		searchResults.push_back(_taskDeleted);
 		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		feedback = UNDO_DELETE_SUCCESS;
 		break;
+				  }
+	case FILTERED:{
+		taskList.addTask(*_taskDeleted);
+		std::vector<Task*>& filterResults = taskList.getFilterResults();
+		taskList.addTaskToFilteredList(*_taskDeleted);
+		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
+		feedback = UNDO_DELETE_SUCCESS;
+		break;
+				  }
 	}
 	return true;
 }

@@ -48,6 +48,9 @@ public:
 	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
+
+	bool checkClashDate(Task* task);
+
 	bool checkTimeClashForDeadlineTask(Task* task);
 	void setClash(bool clash);
 	std::string toString();
@@ -55,8 +58,8 @@ public:
 	void resetClash();
 	void setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime);
 	bool isFloating();
-	bool isDeadline();
-	bool isTimed();
+	bool isSingleDate();
+	bool isDoubleDate();
 	void checkInvalidDate();
 	void setDateBasedOnTime();
 	void setTime();
@@ -64,6 +67,12 @@ public:
 	bool withTime();
 	void editSchedule(ClockTime* sTime,ClockTime* eTime);
 	std::string getDayString();
+	bool isSingleTime();
+	bool isDoubleTime();
+	bool hasStartDate();
+	bool hasEndDate();
+	bool hasStartTime();
+	bool hasEndTime();
 protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
@@ -78,4 +87,7 @@ protected:
 	ClockTime *_startTime;
 	ClockTime *_endTime;
 	Parser _parser;
+
+
+
 };

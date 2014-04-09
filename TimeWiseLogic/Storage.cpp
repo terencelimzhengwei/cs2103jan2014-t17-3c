@@ -275,7 +275,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 				default:
 					_corrupted=true;
 				}
-				if(taskHeader>6){
+				if(taskHeader>8){
 					break;
 				}
 				getline(input, userInput);

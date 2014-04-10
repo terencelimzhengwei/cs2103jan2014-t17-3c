@@ -320,7 +320,8 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 	}
 	Date date;
 	if(Parser::isDate(parameter, date)) {
-		commandFilter->setDate( &date );
+		Date* tempDate = new Date(date);
+		commandFilter->setDate( tempDate );
 		return commandFilter;
 	} else {
 		throw InvalidFilterParameters();
@@ -393,13 +394,17 @@ Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, v
 		commandEdit->setCategory(category);
 	}
 	if( !dates.empty() ) {
+		Date* tempDate;
 		switch(dates.size()) {
 		case 1:
-			commandEdit->setEndDate( &dates[0] );
+			tempDate = new Date( dates[0] );
+			commandEdit->setEndDate( tempDate );
 			break;
 		case 2:
-			commandEdit->setStartDate( &dates[1] );
-			commandEdit->setEndDate( &dates[0] );
+			tempDate = new Date( dates[1] );
+			commandEdit->setStartDate( tempDate );
+			tempDate = new Date( dates[0] );
+			commandEdit->setEndDate( tempDate );
 			break;
 		default:
 			delete commandEdit;
@@ -408,14 +413,19 @@ Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, v
 		}
 	}
 	if(!times.empty()) {
+		ClockTime* tempTime;
 		switch(times.size()) {
-		case 1:
-			commandEdit->setEndTime( &times[0] );
+		case 1: {
+			tempTime = new ClockTime( times[0] );
+			commandEdit->setEndTime( tempTime );
 			break;
+		}
 		case 2:
-			commandEdit->setStartTime( &times[1] );
+			tempTime = new ClockTime( times[1] );
+			commandEdit->setStartTime( tempTime );
 			times.pop_back();
-			commandEdit->setEndTime( &times[0] );
+			tempTime = new ClockTime( times[0] );
+			commandEdit->setEndTime( tempTime );
 			break;
 		default:
 			delete commandEdit;

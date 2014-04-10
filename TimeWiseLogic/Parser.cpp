@@ -160,45 +160,138 @@ vector<int> Parser::extractDate(string command, int pos) {
 	return output;
 }
 
-// New version of extractDate
-pair<Date,Date> Parser::extractDateImproved(string cmd, string& dateRemoved) {
-	int currentYear  = Date::getCurrentYear();
-	int currentMonth = Date::getCurrentMonth();
-	int currentDay   = Date::getCurrentDay();
+// New version of extractDate and extractTime
+pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& dateTimeRemoved) {
+	string originalCommand = cmd;
+
+	vector<string> word = explode(' ', cmd);
+	int wordNum = word.size();
+
+	string checkingSentence = "";
+	string checkingResult = "";
+	dateTimeRemoved = "";
+	vector<string> checkingResultArray;
+	int nonDateTimeWordNum;
+	int checkingEndWordPos;
+	Date dateGot;
+	ClockTime timeGot;
+	int dateCount = 0;
+	int timeCount = 0;
+	stack<Date> dateStack;
+	stack<ClockTime> timeStack;
+
+	for(int wordPos=wordNum-1 ; wordPos>=0 ; wordPos--) {
+		if(checkingSentence.empty()) {
+			checkingEndWordPos = wordPos;
+			checkingSentence = word[wordPos];
+		} else {
+			checkingSentence = word[wordPos] + " " + checkingSentence;
+		}
+
+		checkingResult = regexDateTime(checkingSentence);
+
+		checkingResultArray = explode(' ', checkingResult);
+
+		if(isValidConvertedDate(checkingResultArray[0], dateGot)) {
+			dateCount++;
+			nonDateTimeWordNum = checkingResultArray.size() - 1;
+			for(int i=0 ; i<nonDateTimeWordNum ; i++) {
+				if(i || !isPreposition(word[checkingEndWordPos-i])) {
+					dateTimeRemoved = word[checkingEndWordPos-i] + " " + dateTimeRemoved;
+				}
+			}
+			checkingSentence.clear();
+			dateStack.push(Date(dateGot));
+		} else if(isValidConvertedTime(checkingResultArray[0], timeGot)) {
+			timeCount++;
+			nonDateTimeWordNum = checkingResultArray.size() - 1;
+			for(int i=0 ; i<nonDateTimeWordNum ; i++) {
+				if(i || !isPreposition(word[checkingEndWordPos-i])) {
+					dateTimeRemoved = word[checkingEndWordPos-i] + " " + dateTimeRemoved;
+				}
+			}
+			checkingSentence.clear();
+			timeStack.push(ClockTime(timeGot));
+		}
+	}
+
+	if(isPreposition(getLastWord(checkingSentence))) {
+		dateTimeRemoved = removeLastWord(checkingSentence) + " " + dateTimeRemoved;
+	} else {
+		dateTimeRemoved = checkingSentence + " " + dateTimeRemoved;
+	}
+	dateTimeRemoved = strTruncate(dateTimeRemoved);
+
+	return pair<stack<Date>,stack<ClockTime>>(dateStack, timeStack);
+}
+
+string Parser::regexDateTime(string cmd) {
+	vector<string> weekdayDate(7);
+	Date tempDate;
+	tempDate.setDateAsToday();
+	int currentYear    = Date::getCurrentYear();
+	int currentMonth   = Date::getCurrentMonth();
+	int currentDay     = Date::getCurrentDay();
+	int currentWeekday = tempDate.getWeekDay();
 	
 	string rgx;
 
+	cmd = strReplace(",", ", ", cmd);
 	// Month-in-word pattern
-	for(int m=1 ; m<=12 ; m++) {
-		cmd = strIReplace(MONTH[m-1], "-month" + strVal(m), cmd);
-		cmd = strIReplace(MONTH_ABBR[m-1], "-month" + strVal(m), cmd);
+	for(int i=0 ; i<MONTH_WORD_NUM ; i++) {
+		cmd = strIReplace(MONTH_WORD[i], "<month=" + strVal(MONTH_WORD_VALUE[i]) + ">", cmd);
 	}
-	// Month-in-word pattern (with year)
-	rgx = "(^|\\s|,|.)-month([0-9]{2}) ([0-9]{1,2})(st|nd|rd|th)?,? ([0-9]{2,4})($|\\s|,|.)";
-	cmd = regex_replace(cmd, regex(rgx), "$1$3/$2/$5$6");
-	rgx = "(^|\\s|,|.)([0-9]{1,2})(st|nd|rd|th)? -month([0-9]{1,2}),? ([0-9]{2,4})($|\\s|,|.)";
-	cmd = regex_replace(cmd, regex(rgx), "$1$2/$4/$5$6");
+	// Month-in-word pattern
+	rgx = "(^|\\s)<month=([1]?[0-9])> ([0123]?[0-9])(st|nd|rd|th)?,? ([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 <date=$3/$2/$5>$6");
+	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?<month=([1]?[0-9])>,? ?([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 <date=$2/$4/$5>$6");
 	// Month-in-word pattern (without year)
-	rgx = "(^|\\s|,|.)-m([0-9]{1,2}) ([0-9]{1,2})(st|nd|rd|th)?($|\\s|,|.)";
-	cmd = regex_replace(cmd, regex(rgx), "$1$3/$2/" + strVal(currentYear) + "$5");
-	rgx = "(^|\\s|,|.)([0-9]{1,2})(st|nd|rd|th)? -m([0-9]{1,2})($|\\s|,|.)";
-	cmd = regex_replace(cmd, regex(rgx), "$1$2/$4/" + strVal(currentYear) + "$5");
-
+	rgx = "(^|\\s)<month=([1]?[0-9])> ([0123]?[0-9])(st|nd|rd|th)?($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 <date=$3/$2/" + strVal(currentYear) + ">$5");
+	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?<month=([0-9])>($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 <date=$2/$4/" + strVal(currentYear) + ">$5");
+	
 	// 2-2-4 and 4-2-2 pattern
-	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\.]([0-9]{1,2})[-\\.]([0-9]{4})($|\\s)"), "$2/$3/$4");
-	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{4})[-\\.]([0-9]{1,2})[-\\.]([0-9]{1,2})($|\\s)"), "$4/$3/$2");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])[-\\./]([01]?[0-9])[-\\./]([1-9][0-9]{3})($|[\\s,\\.])"), "$1 <date=$2/$3/$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)([1-9][0-9]{3})[-\\.]([01]?[0-9])[-\\.]([0123]?[0-9])($|[\\s,\\.])"), "$1 <date=$4/$3/$2>$5");
 
 	// 2-2-2 pattern
-	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\./]([0-9]{1,2})[-\\./]([0-9]{1,2})($|\\s)"), "$2/$3/" + strVal(currentYear/100) + "$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\./]([01]?[0-9])[-\\./]([0-9]{2})($|[\\s,\\.])"), "$1 <date=$2/$3/" + strVal(currentYear/100) + "$4>$5");
 	
 	// 2-2 pattern
-	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})/([0-9]{1,2})($|\\s)"), "$2/$3/" + strVal(currentYear));
+	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])/([01]?[0-9])($|[\\s,\\.])"), "$1 <date=$2/$3/" + strVal(currentYear) + ">$5");
 
 	// Remove leading 0 in day and month
-	cmd = regex_replace(cmd, regex("(^|\\s)0([0-9])/([0-9]{1,2})/([0-9]{2}|[0-9]{4})($|\\s)"), "$2/$3/$4");
-	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})/0([0-9])/([0-9]{2}|[0-9]{4})($|\\s)"), "$2/$3/$4");
+	cmd = regex_replace(cmd, regex("<date=0([0-9])/([0-9]{1,2})/([0-9]{2}|[0-9]{4})>($|[\\s,\\.])"), "<date=$1/$2/$3>$4");
+	cmd = regex_replace(cmd, regex("<date=([0-9]{1,2})/0([0-9])/([0-9]{2}|[0-9]{4})>($|[\\s,\\.])"), "<date=$1/$2/$3>$4");
 
-	return pair<Date,Date>();
+	// Change the 2-digit year to 4-digit
+	cmd = regex_replace(cmd, regex("<date=([0-9]{1,2})/([0-9]{1,2})/([0-9]{2})>($|[\\s,\\.])"), "<date=$1/$2/" + strVal(currentYear/100) + "$3>$4");
+
+	for(int i=0 ; i<DAY_WORD_NUM ; i++) {
+		cmd = strIReplace(DAY_WORD[i], "<date=" + (Date()+DAY_WORD_OFFSET[i]).toFormat() + ">", cmd);
+	}
+	tempDate.setDateAsToday();
+	for(int wd=currentWeekday, i=0 ; i==0 || wd!=((currentWeekday+DAY_PER_WEEK)%DAY_PER_WEEK) ; i++, tempDate++) {
+		weekdayDate[wd] = tempDate.toFormat();
+		wd = (wd + 1) % DAY_PER_WEEK;
+	}
+	for(int i=0 ; i<WDAY_WORD_NUM ; i++) {
+		cmd = strIReplace(WDAY_WORD[i], "<date=" + weekdayDate[WDAY_WORD_VALUE[i]] + ">", cmd);
+	}
+
+	// Time stuffs
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([0-2]?[0-9]):([0-5][0-9])($|[\\s,\\.])"), "$1<time=$2:$3>$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timeAM=$3:00>$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timePM=$3:00>$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9]):?([0-5][0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timeAM=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9]):?([0-5][0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timePM=$3:$4>$5");
+
+	cmd = regex_replace(cmd, regex("(^|\\s)(<date=[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}> )([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1$2<time=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to) ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1<time=$3:$4>$5");
+
+	return strTruncate(cmd);
 }
 
 vector<int> Parser::extractTime(string command, int pos=-1) {
@@ -440,24 +533,26 @@ bool Parser::isAllNumbers(string str) {
 }
 
 string Parser::strIReplace(string search, string replace, string subject) {
-	int pos;
+	int lastPos = 0, pos;
 	do {
-		pos = strSearch(search, subject);
+		pos = strSearch(search, subject, lastPos);
 		if(pos!=-1) {
 			subject.replace(pos, search.length(), replace);
 		}
+		lastPos = pos - search.length() + replace.length() + 1;
 	} while(pos!=-1);
 	return subject;
 }
 
 string Parser::strReplace(string search, string replace, string subject) {
-	int pos;
+	int lastPos = 0, pos;
 	do {
-		pos = subject.find(search);
-		if(pos!=-1) {
+		pos = subject.find(search, lastPos);
+		if(pos!=string::npos) {
 			subject.replace(pos, search.length(), replace);
 		}
-	} while(pos!=-1);
+		lastPos = pos - search.length() + replace.length() + 1;
+	} while(pos!=string::npos);
 	return subject;
 }
 
@@ -495,6 +590,23 @@ int Parser::strSearch(string keyword, string subject) {
 	subject = strToLower(subject);
 	keyword = strToLower(keyword);
 	return subject.find(keyword);
+}
+
+int Parser::strSearch(string keyword, string subject, int pos) {
+	subject = strToLower(subject);
+	keyword = strToLower(keyword);
+	return subject.find(keyword, pos);
+}
+
+string Parser::strTruncate(string input) {
+	int pos;
+	do {
+		pos = input.find("  ");
+		if(pos!=string::npos) {
+			input.replace(pos, 2, " ");
+		}
+	} while(pos!=string::npos);
+	return trim(input);
 }
 
 bool Parser::stringExists(string find, string input) {
@@ -544,17 +656,19 @@ string Parser::trim(string str) {
 }
 
 // String shortcut functions (Functions make use of written functions)
-string Parser::getFirstWord(string inputString) {
+string Parser::getFirstWord(string& inputString) {
+	string firstWord;
 	vector<string> wordArray = explode(' ', trim(inputString));
 
 	if(wordArray.size()>0) {
-		return wordArray[0];
-	} else {
-		return "";
+		firstWord = wordArray[0];
+		firstWord = strReplace(",", "", firstWord);
+		firstWord = strReplace(",", "", firstWord);
 	}
+	return firstWord;
 }
 
-string Parser::removeFirstWord(string inputString) {
+string Parser::removeFirstWord(string& inputString) {
 	string first;
 	istringstream iss(trim(inputString));
 	iss >> first;
@@ -563,6 +677,32 @@ string Parser::removeFirstWord(string inputString) {
 	oss << iss.rdbuf();
 
 	return oss.str();
+}
+
+string Parser::getLastWord(string& inputString) {
+	string lastWord;
+	vector<string> wordArray = explode(' ', trim(inputString));
+
+	if(wordArray.size()>0) {
+		lastWord = wordArray[wordArray.size()-1];
+		lastWord = strReplace(",", "", lastWord);
+		lastWord = strReplace(",", "", lastWord);
+	}
+	return lastWord;
+}
+
+string Parser::removeLastWord(string& inputString) {
+	string str = inputString;
+	while(str.back() == ' ') {
+		str.pop_back();
+	}
+	while(str.back() != ' ') {
+		str.pop_back();
+	}
+	while(str.back() == ' ') {
+		str.pop_back();
+	}
+	return str;
 }
 
 // Deprecated string functions
@@ -577,4 +717,51 @@ vector<string> Parser::splitBySpace(string input) {
 	istringstream iss(input);
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter<vector<string> >(tokens));
 	return tokens;
+}
+
+bool Parser::isValidConvertedDate(string& input, Date& outputDate) {
+	input = getFirstWord(input);
+	input = strReplace(".", "", input);
+	input = strReplace(",", "", input);
+	smatch sm;
+	if(regex_match(input, sm, regex("^<date=([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})>$"))) {
+		try {
+			outputDate = Date(toNum(sm[1]), toNum(sm[2]), toNum(sm[3]));
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Parser::isValidConvertedTime(string& input, ClockTime& outputTime) {
+
+	input = getFirstWord(input);
+	input = strReplace(".", "", input);
+	input = strReplace(",", "", input);
+	smatch sm;
+	if(regex_match(input, sm, regex("^<time=([0-9]{1,2}):([0-9]{2})>$"))) {
+		try {
+			outputTime = ClockTime( toNum(sm[1])*100 + toNum(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	} else if(regex_match(input, sm, regex("^<timeAM=([0-9]{1,2}):([0-9]{2})>$"))) {
+		try {
+			outputTime = ClockTime( (toNum(sm[1])%12) * 100 + toNum(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	} else if(regex_match(input, sm, regex("^<timePM=([0-9]{1,2}):([0-9]{2})>$"))) {
+		try {
+			outputTime = ClockTime( (toNum(sm[1])%12 + 12) * 100 + toNum(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	return false;
 }

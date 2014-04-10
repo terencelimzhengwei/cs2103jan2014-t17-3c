@@ -24,7 +24,7 @@ public:
 	// Parser functions
 	static vector<int> extractDate(string);
 	static vector<int> extractDate(string, int);
-	static pair<Date,Date> extractDateImproved(string, string&);
+	static pair<stack<Date>,stack<ClockTime>> extractDateTime(string, string&);
 
 	static vector<int> extractTime(string, int);
 	static bool isDateFormat(std::string);
@@ -52,6 +52,9 @@ public:
 	static vector<string> strReplace(vector<string>, vector<string>, vector<string>);
 
 	static int strSearch(string, string);
+	static int strSearch(string, string, int);
+
+	static string strTruncate(string);
 
 	static string strToLower(string str);
 	static string strVal(int);
@@ -60,12 +63,19 @@ public:
 	static string trim(string);
 
 	// String shortcut functions
-	static string getFirstWord(string);
-	static string removeFirstWord(string);
+	static string getFirstWord(string&);
+	static string removeFirstWord(string&);
+	static string getLastWord(string&);
+	static string removeLastWord(string&);
 
 	// Deprecated string functions
 	static void removeWhiteSpaces(string&);
 	static vector<string> splitBySpace(string input);
+
+private:
+	static string regexDateTime(string);
+	static bool isValidConvertedDate(string&, Date&);
+	static bool isValidConvertedTime(string&, ClockTime&);
 };
 
 #endif

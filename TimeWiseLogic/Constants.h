@@ -104,6 +104,7 @@ const std::string CLASH_EXIST = "Task is successfully added. Note: Clash Exists.
 
 const int PRECEDING_YEAR_OFFEST = -33;
 
+const int MONTH_WORD_NUM = 24;
 const std::string MONTH_WORD[] = {
 	"January",
 	"Jan",
@@ -121,8 +122,8 @@ const std::string MONTH_WORD[] = {
 	"August",
 	"Aug",
 	"September",
-	"Sep",
 	"Sept",
+	"Sep",
 	"October",
 	"Oct",
 	"November",
@@ -147,8 +148,8 @@ const int MONTH_WORD_VALUE[] = {
 	8,	//"August",
 	8,	//"Aug",
 	9,	//"September",
-	9,	//"Sep",
 	9,	//"Sept",
+	9,	//"Sep",
 	10,	//"October",
 	10,	//"Oct",
 	11,	//"November",
@@ -175,6 +176,13 @@ const int DAY_WORD_OFFSET[] = {
 
 const int WDAY_WORD_NUM = 24;
 const std::string WDAY_WORD[] = {
+	"Sundays",
+	"Mondays",
+	"Tuesdays",
+	"Wednesdays",
+	"Thursdays",
+	"Fridays",
+	"Saturdays",
 	"Sunday",
 	"Sun",
 	"Monday",
@@ -185,22 +193,22 @@ const std::string WDAY_WORD[] = {
 	"Wednesday",
 	"Wed",
 	"Thursday",
-	"Thu",
 	"Thur",
+	"Thu",
 	"Thurs",
 	"Friday",
 	"Fri",
 	"Saturday",
 	"Sat",
-	"Sundays",
-	"Mondays",
-	"Tuesdays",
-	"Wednesdays",
-	"Thursdays",
-	"Fridays",
-	"Saturdays",
 };
 const int WDAY_WORD_VALUE[] = {
+	0, // "Sundays",
+	1, // "Mondays",
+	2, // "Tuesdays",
+	3, // "Wednesdays",
+	4, // "Thursdays",
+	5, // "Fridays",
+	6, // "Saturdays"
 	0,	// Sunday
 	0,	// Sun
 	1,	// Monday
@@ -218,13 +226,6 @@ const int WDAY_WORD_VALUE[] = {
 	5,	// Fri
 	6,	// Saturday
 	6,	// Sat
-	0, // "Sundays",
-	1, // "Mondays",
-	2, // "Tuesdays",
-	3, // "Wednesdays",
-	4, // "Thursdays",
-	5, // "Fridays",
-	6, // "Saturdays"
 };
 
 const std::string PRECEDING_WORD_NEUTRAL[] = {

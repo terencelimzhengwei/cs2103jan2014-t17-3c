@@ -161,7 +161,7 @@ vector<int> Parser::extractDate(string command, int pos) {
 }
 
 // New version of extractDate and extractTime
-pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& dateTimeRemoved) {
+void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& dateResult, vector<ClockTime>& timeResult) {
 	string originalCommand = cmd;
 
 	vector<string> word = explode(' ', cmd);
@@ -177,8 +177,8 @@ pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& d
 	ClockTime timeGot;
 	int dateCount = 0;
 	int timeCount = 0;
-	stack<Date> dateStack;
-	stack<ClockTime> timeStack;
+	vector<Date> dateArray;
+	vector<ClockTime> timeArray;
 
 	for(int wordPos=wordNum-1 ; wordPos>=0 ; wordPos--) {
 		if(checkingSentence.empty()) {
@@ -201,7 +201,7 @@ pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& d
 				}
 			}
 			checkingSentence.clear();
-			dateStack.push(Date(dateGot));
+			dateArray.push_back(Date(dateGot));
 		} else if(isValidConvertedTime(checkingResultArray[0], timeGot)) {
 			timeCount++;
 			nonDateTimeWordNum = checkingResultArray.size() - 1;
@@ -211,7 +211,7 @@ pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& d
 				}
 			}
 			checkingSentence.clear();
-			timeStack.push(ClockTime(timeGot));
+			timeArray.push_back(ClockTime(timeGot));
 		}
 	}
 
@@ -222,7 +222,8 @@ pair<stack<Date>,stack<ClockTime>> Parser::extractDateTime(string cmd, string& d
 	}
 	dateTimeRemoved = strTruncate(dateTimeRemoved);
 
-	return pair<stack<Date>,stack<ClockTime>>(dateStack, timeStack);
+	dateResult = dateArray;
+	timeResult = timeArray;
 }
 
 string Parser::regexDateTime(string cmd) {
@@ -656,7 +657,7 @@ string Parser::trim(string str) {
 }
 
 // String shortcut functions (Functions make use of written functions)
-string Parser::getFirstWord(string& inputString) {
+string Parser::getFirstWord(string inputString) {
 	string firstWord;
 	vector<string> wordArray = explode(' ', trim(inputString));
 
@@ -668,7 +669,7 @@ string Parser::getFirstWord(string& inputString) {
 	return firstWord;
 }
 
-string Parser::removeFirstWord(string& inputString) {
+string Parser::removeFirstWord(string inputString) {
 	string first;
 	istringstream iss(trim(inputString));
 	iss >> first;
@@ -679,7 +680,7 @@ string Parser::removeFirstWord(string& inputString) {
 	return oss.str();
 }
 
-string Parser::getLastWord(string& inputString) {
+string Parser::getLastWord(string inputString) {
 	string lastWord;
 	vector<string> wordArray = explode(' ', trim(inputString));
 
@@ -691,7 +692,7 @@ string Parser::getLastWord(string& inputString) {
 	return lastWord;
 }
 
-string Parser::removeLastWord(string& inputString) {
+string Parser::removeLastWord(string inputString) {
 	string str = inputString;
 	while(str.back() == ' ') {
 		str.pop_back();

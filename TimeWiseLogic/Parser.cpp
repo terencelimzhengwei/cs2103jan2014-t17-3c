@@ -192,7 +192,7 @@ void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& 
 
 		checkingResultArray = explode(' ', checkingResult);
 
-		if(isValidConvertedDate(checkingResultArray[0], dateGot)) {
+		if(dateCount<2 && isValidConvertedDate(checkingResultArray[0], dateGot)) {
 			dateCount++;
 			nonDateTimeWordNum = checkingResultArray.size() - 1;
 			for(int i=0 ; i<nonDateTimeWordNum ; i++) {
@@ -202,7 +202,7 @@ void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& 
 			}
 			checkingSentence.clear();
 			dateArray.push_back(Date(dateGot));
-		} else if(isValidConvertedTime(checkingResultArray[0], timeGot)) {
+		} else if(timeCount<2 && isValidConvertedTime(checkingResultArray[0], timeGot)) {
 			timeCount++;
 			nonDateTimeWordNum = checkingResultArray.size() - 1;
 			for(int i=0 ; i<nonDateTimeWordNum ; i++) {

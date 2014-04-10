@@ -224,7 +224,7 @@ bool Task::hasStatus(TASK_STATUS status){
 bool Task::checkClash(Task* task){
 	bool clash=false;
 	if(isSingleDate()&&task->isSingleDate()){
-		if(_endDate==task->getEndDate()){
+		if(*_endDate==*task->getEndDate()){
 			if(isDoubleTime()&&task->isDoubleTime()){
 				clash=checkTimeClashForDeadlineTask(task);
 			}
@@ -581,8 +581,5 @@ bool Task::isDoubleTime()
 }
 
 bool Task::checkClashDate(Task* task){
-	bool chk1=_startDate<task->getEndDate();
-	bool chk2=task->getStartDate()<_endDate;
-	return _startDate->isLater(task->getEndDate())==EARLIER && task->getStartDate()->isLater(_endDate)==EARLIER;
+	return *_startDate<*task->getEndDate() && *task->getStartDate()<*_endDate;
 }
-

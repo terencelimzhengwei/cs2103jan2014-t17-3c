@@ -138,7 +138,6 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 }
 
 Command* CommandCreator::createCommandAdd(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
-	//bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
 	string category;
 	string description;
 	
@@ -316,16 +315,11 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 		commandFilter->setCategory(parameter.substr(1));
 		return commandFilter;
 	}
-	if(Parser::isDateFormat(parameter)){
-		vector<int> dateData = Parser::extractDate(parameter, -1);
-		std::string dateString = Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]);
-		Date* date = Parser::createDate(dateString);
-		commandFilter->setDate(date);
-		delete date;
-		date=NULL;
+	Date date;
+	if(Parser::isDate(parameter, date)) {
+		commandFilter->setDate( &date );
 		return commandFilter;
-
-	}else{
+	} else {
 		throw InvalidAddCommandInputException();
 		//Invalid Filter parameter();
 	}
@@ -352,89 +346,57 @@ Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* di
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandEdit(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen){
-	bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
+Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
 	string category;
-	string priority;
+	string parameters;
 	string description;
-	int index=DEFAULT_INDEX;
-	vector<string> dates;
-	vector<string> times;
+	int index = DEFAULT_INDEX;
+	vector<Date> dates;
+	vector<ClockTime> times;
+	smatch sm;
 
-	memset(descriptionWord, true, sizeof descriptionWord);	// Assume all words in the command are descriptions first.
-
-	for(int pos = param.size()-1 ; pos>=0 ; pos--) {
-		if(Parser::isCategory(param[pos]) && category.empty()) {
-			category = Parser::strReplace("#", "", param[pos]);
-			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
-		} else if(Parser::extractDate(command, pos)[3]) {
-			vector<int> dateData = Parser::extractDate(command, pos);
-			dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
-
-			for(int i=0 ; i<dateData[3] ; i++) {
-				descriptionWord[pos - i] = false;
-			}
-			pos = pos - (dateData[3] - 1);
-
-			// Check preposition
-			if( (pos-1) >= 0 && Parser::isPreposition(param[pos-1]) ) {
-				descriptionWord[pos - 1] = false;
-			}
-		} else if(Parser::extractTime(command, pos)[1]) {
-			vector<int> timeData = Parser::extractTime(command, pos);
-			times.push_back(Parser::strVal(timeData[0]));
-			descriptionWord[pos] = false;
-
-			// Check preposition
-			if( (pos-1) >= 0 && Parser::isPreposition(param[pos-1]) ) {
-				descriptionWord[pos - 1] = false;
-			}
-		} else if(Parser::isAllNumbers(param[pos])) {
-			index = Parser::toNum(param[pos]);
-			if (isValidIndex(index)){
-				index--;
-				descriptionWord[pos] = false;
-			}else{
-				throw InvalidAddCommandInputException();
-				//invalid Index for edit;
-			}
+	if( regex_match(parameter, sm, regex("^\\s*([0-9]*) (.+)\\s*$")) ) {
+		if( isValidIndex(Parser::toNum(sm[1])) ) {
+			index = Parser::toNum(sm[1]) - 1;
+			parameter = sm[2];
+		} else {
+			throw InvalidAddCommandInputException();
 		}
+	} else {
+		throw InvalidAddCommandInputException();
 	}
-	if(index==DEFAULT_INDEX){
+	if(index==DEFAULT_INDEX) {
 		throw InvalidAddCommandInputException();
 		//no index
 	}
-	
 
-	for(unsigned int pos=0 ; pos<param.size(); pos++) {
-		if(descriptionWord[pos]) {
-			if(description.empty()) {
-				description = param[pos];
-			} else {
-				description = description + " " + param[pos];
-			}
+	Parser::extractDateTime(parameter, description, dates, times);
+	
+	vector<string> descriptionWord = Parser::explode(' ', description);
+	for(int pos = descriptionWord.size()-1 ; category.empty() && pos>=0 ; pos--) {
+		if(Parser::isCategory(descriptionWord[pos])) {
+			category = Parser::strReplace("#", "", descriptionWord[pos]);
+			description = Parser::strReplace(descriptionWord[pos], "", description);
 		}
 	}
-	//delete descriptionWord;
 
 	description = Parser::trim(description);
 
 	Command_Edit* commandEdit = new Command_Edit();
-	if(description!=""){
+	if( !description.empty() ){
 		commandEdit->setDescription(description);
 	}
-	if(category!="") {
+	if( !category.empty() ) {
 		commandEdit->setCategory(category);
 	}
-	if(!dates.empty()) {
-		switch(dates.size()){
+	if( !dates.empty() ) {
+		switch(dates.size()) {
 		case 1:
-			commandEdit->setEndDate(Parser::createDate(dates.back()));
+			commandEdit->setEndDate( &dates[0] );
 			break;
 		case 2:
-			commandEdit->setStartDate(Parser::createDate(dates.back()));
-			dates.pop_back();
-			commandEdit->setEndDate(Parser::createDate(dates.back()));
+			commandEdit->setStartDate( &dates[1] );
+			commandEdit->setEndDate( &dates[0] );
 			break;
 		default:
 			delete commandEdit;
@@ -443,25 +405,22 @@ Command* CommandCreator::createCommandEdit(string command, int parameterNum, vec
 		}
 	}
 	if(!times.empty()) {
-			switch(times.size()) {
-			case 1:
-				commandEdit->setEndTime(Parser::createTime(times.back()));
-				break;
-			case 2:
-				commandEdit->setStartTime(Parser::createTime(times.back()));
-				times.pop_back();
-				commandEdit->setEndTime(Parser::createTime(times.back()));
-				break;
-			default:
-				delete commandEdit;
-				commandEdit = NULL;
-				throw InvalidAddCommandInputException();
-			}
+		switch(times.size()) {
+		case 1:
+			commandEdit->setEndTime( &times[0] );
+			break;
+		case 2:
+			commandEdit->setStartTime( &times[1] );
+			times.pop_back();
+			commandEdit->setEndTime( &times[0] );
+			break;
+		default:
+			delete commandEdit;
+			commandEdit = NULL;
+			throw InvalidAddCommandInputException();
 		}
-	if(index==DEFAULT_INDEX){
-		throw InvalidAddCommandInputException();
-		//Exception
 	}
+
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;

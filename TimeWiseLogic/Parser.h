@@ -38,6 +38,15 @@ public:
 
 	static Date* createDate(std::string date);
 
+	static bool isDate(string);
+	static bool isDate(string, Date&);
+	static bool isTime(string);
+	static bool isTime(string, ClockTime&);
+
+	static string regexDateTime(string);
+	static bool isValidConvertedDate(string&, Date&);
+	static bool isValidConvertedTime(string&, ClockTime&);
+
 	// String functions
 	static vector<string> explode(char delimiter, string input);
 	static bool isAllNumbers(std::string);
@@ -71,11 +80,6 @@ public:
 	// Deprecated string functions
 	static void removeWhiteSpaces(string&);
 	static vector<string> splitBySpace(string input);
-
-private:
-	static string regexDateTime(string);
-	static bool isValidConvertedDate(string&, Date&);
-	static bool isValidConvertedTime(string&, ClockTime&);
 };
 
 #endif

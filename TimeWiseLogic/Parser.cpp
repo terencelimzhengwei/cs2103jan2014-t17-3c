@@ -766,3 +766,21 @@ bool Parser::isValidConvertedTime(string& input, ClockTime& outputTime) {
 	}
 	return false;
 }
+
+bool Parser::isDate(string input) {
+	Date temp;
+	return isValidConvertedDate(regexDateTime(input), temp);
+}
+
+bool Parser::isTime(string input) {
+	ClockTime temp;
+	return isValidConvertedTime(regexDateTime(input), temp);
+}
+
+bool Parser::isDate(string input, Date& outputDate) {
+	return isValidConvertedDate(regexDateTime(input), outputDate);
+}
+
+bool Parser::isTime(string input, ClockTime& outputTime) {
+	return isValidConvertedTime(regexDateTime(input), outputTime);
+}

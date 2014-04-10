@@ -138,109 +138,70 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 }
 
 Command* CommandCreator::createCommandAdd(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen) {
-	bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
+	//bool* descriptionWord = new bool[param.size()];//rmb to delete this in destructor
 	string category;
 	string description;
-	vector<string> dates;
-	vector<string> times;
+	
+	vector<Date> dates;
+	vector<ClockTime> times;
+	Parser::extractDateTime(command, description, dates, times);
+	
+	vector<string> descriptionWord = Parser::explode(' ', description);
+	for(int pos = descriptionWord.size()-1 ; category.empty() && pos>=0 ; pos--) {
+		if(Parser::isCategory(descriptionWord[pos])) {
+			category = Parser::strReplace("#", "", descriptionWord[pos]);
+			description = Parser::strReplace(descriptionWord[pos], "", description);
+		}
+	}
+	
+	if(hasArg(description)) {
+		Command_Add* commandAdd = new Command_Add;
 
-	memset(descriptionWord, true, sizeof descriptionWord);	// Assume all words in the command are descriptions first.
+		if(!category.empty()) {
+			commandAdd->setCategory(category);
+		}
 
-	for(int pos = param.size()-1 ; pos>0 ; pos--) {
-		if(Parser::isCategory(param[pos]) && category.empty()) {
-			category = Parser::strReplace("#", "", param[pos]);
-			descriptionWord[pos] = false;	// It is a category, so it is not a part of description.
-		} else if(Parser::extractDate(command, pos)[3]) {
-				vector<int> dateData = Parser::extractDate(command, pos);
-				dates.push_back(Parser::strVal(dateData[2]) + "/" + Parser::strVal(dateData[1]) + "/" + Parser::strVal(dateData[0]));
+		commandAdd->setDescription(description);
 
-				for(int i=0 ; i<dateData[3] ; i++) {
-					descriptionWord[pos - i] = false;
-				}
-				pos = pos - (dateData[3] - 1);
-
-				// Check preposition
-				if( (pos-1) >= 0 && Parser::isPreposition(param[pos-1]) ) {
-					descriptionWord[pos - 1] = false;
-				}
-			
-		} else if(Parser::extractTime(command, pos)[1]) {
-			vector<int> timeData = Parser::extractTime(command, pos);
-			times.push_back(Parser::strVal(timeData[0]));
-			descriptionWord[pos] = false;
-
-			// Check preposition
-			if( (pos-1) >= 0 && Parser::isPreposition(param[pos-1]) ) {
-				descriptionWord[pos - 1] = false;
+		if(!dates.empty()) {
+			switch(dates.size()) {
+			case 1:
+				commandAdd->setEndDate(dates[0]);
+				break;
+			case 2:
+				commandAdd->setStartDate(dates[1]);
+				commandAdd->setEndDate(dates[0]);
+				break;
+			default:
+				delete commandAdd;
+				commandAdd = NULL;
+				throw InvalidAddCommandInputException();
 			}
 		}
-	}
 
-	for(unsigned int pos=0 ; pos<param.size(); pos++) {
-		if(descriptionWord[pos]) {
-			if(description.empty()) {
-				description = param[pos];
-			} else {
-				description = description + " " + param[pos];
+		if(!times.empty()) {
+			switch(times.size()) {
+			case 1:
+				commandAdd->setEndTime(times[0]);
+				break;
+			case 2:
+				commandAdd->setStartTime(times[1]);
+				commandAdd->setEndTime(times[0]);
+				break;
+			default:
+				delete commandAdd;
+				commandAdd = NULL;
+				throw InvalidAddCommandInputException();
 			}
 		}
+		commandAdd->setPreviousScreen(screen);
+		return commandAdd;
+	} else {
+		throw InvalidAddCommandInputException();
+		return NULL;
 	}
-	//delete descriptionWord;
-
-	description = Parser::trim(description);
-	if (hasArg(description)) {
-	Command_Add* commandAdd = new Command_Add;
-
-	if(category!="") {
-		commandAdd->setCategory(category);
-	}
-
-	commandAdd->setDescription(description);
-
-	if(!dates.empty()) {
-		switch(dates.size()){
-		case 1:
-			commandAdd->setEndDate(*Parser::createDate(dates.back()));
-			break;
-		case 2:
-			commandAdd->setStartDate(*Parser::createDate(dates.back()));
-			dates.pop_back();
-			commandAdd->setEndDate(*Parser::createDate(dates.back()));
-			break;
-		default:
-			delete commandAdd;
-			commandAdd = NULL;
-			throw InvalidAddCommandInputException();
-		}
-	}
-	if(!times.empty()) {
-		switch(times.size()) {
-		case 1:
-			commandAdd->setEndTime(*Parser::createTime(times.back()));
-			break;
-		case 2:
-			commandAdd->setStartTime(*Parser::createTime(times.back()));
-			times.pop_back();
-			commandAdd->setEndTime(*Parser::createTime(times.back()));
-			break;
-		default:
-			delete commandAdd;
-			commandAdd = NULL;
-			throw InvalidAddCommandInputException();
-
-		}
-   }
-	commandAdd->setPreviousScreen(screen);
-	return commandAdd;
-} else {
-	throw InvalidAddCommandInputException();
-	return NULL;
-}
 }
 
-	
-
-	
 Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE* type) {
 	if(Parser::isAllNumbers(parameter)) {
 		int id = Parser::toNum(parameter);
@@ -260,7 +221,6 @@ Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE*
 	}
 
 }
-
 
 Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
 	if(*type==COMPLETE){
@@ -318,30 +278,30 @@ Command* CommandCreator::createCommandRedo(){
 	return newCommand;
 }
 
-Command* CommandCreator::createCommandClear(std::string parameter,DISPLAY_TYPE* type){
-	if(parameter=="all"){
+Command* CommandCreator::createCommandClear(std::string parameter,DISPLAY_TYPE* type) {
+	if(parameter=="all") {
 		Command_Clear* newCommand=new Command_Clear(ALL);
 		newCommand->setDisplayScreen(*type);
 		return newCommand;
-	}else if(parameter=="done"){
+	} else if(parameter=="done") {
 		Command_Clear* newCommand=new Command_Clear(COMPLETED_TASKS);
 		newCommand->setDisplayScreen(*type);
 		return newCommand;
-	}else if(parameter=="undone"){
+	} else if(parameter=="undone") {
 		Command_Clear* newCommand=new Command_Clear(UNCOMPLETED_TASKS);
 		newCommand->setDisplayScreen(*type);
 		return newCommand;
-	}else if(parameter==""){
+	} else if(parameter=="") {
 		Command_Clear* newCommand=new Command_Clear(SCREEN);
 		newCommand->setDisplayScreen(*type);
 		return newCommand;
-	}else{
+	} else {
 		throw InvalidClearCommandInputException();
 	}
 	return NULL;
 }
 
-Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE* type){
+Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE* type) {
 	Command_Search* commandSearch = new Command_Search;
 	parameter = Parser::trim(parameter);
 	commandSearch->setKeyword(parameter);
@@ -349,7 +309,7 @@ Command* CommandCreator::createCommandSearch(std::string parameter,DISPLAY_TYPE*
 	return commandSearch;
 }
 
-Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE* screen){
+Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE* screen) {
 	Command_Filter* commandFilter= new Command_Filter();
 	commandFilter->setPreviousScreen(screen);
 	if(parameter[0]=='#'){
@@ -371,7 +331,6 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 	}
 	return NULL;
 }
-
 
 std::string CommandCreator::getFeedback() {
 	return _feedbackExceptiontoUI;

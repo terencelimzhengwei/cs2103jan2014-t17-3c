@@ -54,7 +54,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 			}
 			case DELETE: {
 				if(hasArg(parameter)) {
-					return createCommandDelete(parameter,&displayType);
+					return createCommandDelete(parameters,&displayType,tasklist);
 				} else {
 					throw NoArgumentException();
 					return NULL;
@@ -204,24 +204,30 @@ Command* CommandCreator::createCommandAdd(string command, int parameterNum, vect
 	}
 }
 
-Command* CommandCreator::createCommandDelete(std::string parameter,DISPLAY_TYPE* type) {
-	if(Parser::isAllNumbers(parameter)) {
-		int id = Parser::toNum(parameter);
-		if(isValidIndex(id)){
-		id = id - 1;
-		Command_Delete* commandDelete = new Command_Delete;
-		commandDelete->setDeletionIndex(id);
-		commandDelete->setDisplayScreen(*type);
-		return commandDelete;
+Command* CommandCreator::createCommandDelete(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist) {
+	Command_Delete* commandDelete = new Command_Delete;
+	while(!parameter.empty()){
+		if(Parser::isAllNumbers(parameter.back())) {
+			int id = Parser::toNum(parameter.back());
+			if(isValidIndex(id)&&isValidDeleteIndex(id,type,tasklist)){
+				id = id - 1;
+				commandDelete->addDeletionIndex(id);
+				commandDelete->setDisplayScreen(*type);
+			} else {
+				delete commandDelete;
+				commandDelete=NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
 		} else {
-			throw OutOfRangeException();
+			delete commandDelete;
+			commandDelete=NULL;
+			throw NotANumberException();
 			return NULL;
 		}
-	} else {
-		throw NotANumberException();
-		return NULL;
+		parameter.pop_back();
 	}
-
+	return commandDelete;
 }
 
 Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
@@ -437,4 +443,34 @@ Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, v
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;
+}
+
+bool CommandCreator::isValidDeleteIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist){
+	switch(*type){
+	case MAIN:
+		if(id>tasklist.undoneSize()){
+			return false;
+		}
+		break;
+	case COMPLETE:
+		if(id>tasklist.doneSize()){
+			return false;
+		}
+		break;
+	case SEARCH:{
+		unsigned int size = tasklist.getSearchResults().size();
+		if(id>size){
+			return false;
+		}
+		break;
+				}
+	case FILTERED:{
+		unsigned int size = tasklist.getFilterResults().size();
+		if(id>size){
+			return false;
+		}
+		break;
+				  }
+	}
+	return true;
 }

@@ -30,7 +30,7 @@ public:
 
 	Command* interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist);
 	Command* createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
-	Command* createCommandDelete(std::string,DISPLAY_TYPE*);
+	Command* createCommandDelete(vector<string> prarameter ,DISPLAY_TYPE* type, TaskList& tasklist);
 	Command* createCommandEdit(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
 	Command* createCommandDone(std::string,DISPLAY_TYPE*);
@@ -40,5 +40,6 @@ public:
 	Command* createCommandUndo();
 	Command* createCommandRedo();
 	Command* createCommandDisplay(string parameter, DISPLAY_TYPE* displayType);
+	bool isValidDeleteIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist);
 };
 

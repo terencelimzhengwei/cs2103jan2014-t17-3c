@@ -25,6 +25,7 @@ Global
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Debug|Win32.Build.0 = Debug|Win32
 		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Release|Win32.ActiveCfg = Release|Win32
+		{1DD13DF3-EBA2-4F2C-806D-FEF32A0FB758}.Release|Win32.Build.0 = Release|Win32
 		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Debug|Win32.ActiveCfg = Debug|Win32
 		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Debug|Win32.Build.0 = Debug|Win32
 		{67C36086-5112-480B-BEFA-1C67F48E5B08}.Release|Win32.ActiveCfg = Release|Win32
@@ -33,6 +34,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = $(DefaultQtVersion)
+		Qt5Version = msvc201232bit
 	EndGlobalSection
 EndGlobal

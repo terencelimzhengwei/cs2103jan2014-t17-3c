@@ -76,4 +76,8 @@ class InvalidStartEndDateTime: public std::exception {
 public:
 	virtual const char* what() const throw();
 };
+class InvalidFilterParameters: public std::exception {
+public:
+	virtual const char* what() const throw();
+};
 #endif

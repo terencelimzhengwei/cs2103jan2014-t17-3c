@@ -133,6 +133,9 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (InvalidDateTimeFormatException& idtfe) {
 		_feedbackExceptiontoUI = idtfe.what();
 		throw InvalidDateTimeFormatException();
+	} catch (InvalidFilterParameters& ifp) {
+		_feedbackExceptiontoUI = ifp.what();
+		throw InvalidFilterParameters();
 	}
 
 }
@@ -320,7 +323,7 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 		commandFilter->setDate( &date );
 		return commandFilter;
 	} else {
-		throw InvalidAddCommandInputException();
+		throw InvalidFilterParameters();
 		//Invalid Filter parameter();
 	}
 	return NULL;

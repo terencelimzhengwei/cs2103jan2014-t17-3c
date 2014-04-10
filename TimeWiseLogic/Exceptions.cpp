@@ -41,3 +41,6 @@ const char* UnableToUndoneUncompletedTasks::what() const throw() {
 const char* InvalidStartEndDateTime::what() const throw() {
 	return START_DATE_TIME_LATER_THAN_END_DATE_TIME;
 }
+const char* InvalidFilterParameters::what() const throw() {
+	return INVALID_FILTER_INPUT;
+}

@@ -4,6 +4,7 @@
 #include <qdatetime.h>
 #include <QHeaderView>
 #include <QShortcut>
+#include <QScrollBar>
 
 const char* ADD_COMMAND = "add";
 const char* CLEAR_COMMAND = "clear";
@@ -17,7 +18,7 @@ const char* HELP_COMMAND = "help";
 const char* SEARCH_COMMAND = "search";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
-const char* CLEAR_FORMAT = "clear or clear all";
+const char* CLEAR_FORMAT = "clear: all or done or undone";
 const char* DELETE_FORMAT = "delete: <ID>";
 const char* DISPLAY_FORMAT = "display: main or completed";
 const char* DONE_FORMAT = "done: <ID>";
@@ -65,10 +66,13 @@ bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
 			} else if(keyEvent->key() == Qt::Key_Down) {
 				next_line();
 				return true;
+			} else if(keyEvent->key() == Qt::Key_Home) {
+				ui.tableView->setFocus();
+				return true;
 			}
 		}
 		return false;
-	}
+	} 
 	return QMainWindow::eventFilter(obj, event);
 }
 
@@ -387,6 +391,8 @@ void TimeWiseGUI::setupTable() {
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
+
+	ui.tableView->setSelectionMode(QAbstractItemView::NoSelection);
 }
 
 //set date and time
@@ -477,9 +483,6 @@ void TimeWiseGUI::setOverdueMessage(int overdueCount) {
 	QString qOverdue = QString::fromStdString(overdueReminder);
 
 	ui.label_mlog->setText(qOverdue);
-	//overdueInfo.setText(qOverdue);
-	//overdueInfo.setIcon(QMessageBox::Information);
-	//overdueInfo.exec();
 }
 
 int TimeWiseGUI::numberOfOverdues() {

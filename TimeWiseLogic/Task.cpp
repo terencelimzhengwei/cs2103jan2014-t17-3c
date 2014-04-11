@@ -2,8 +2,16 @@
 
 
 Task::Task(void){
+	initializeTask();
+}
+
+
+Task::~Task(void){
+	resetPointers();
+}
+
+void Task::initializeTask(){
 	_taskDescription=DEFAULT_EMPTY;
-	_taskType = DEFAULT_TASK_TYPE;
 	_taskStatus = DEFAULT_TASK_STATUS;
 	_category=DEFAULT_EMPTY;
 	_startTime = NULL;
@@ -14,23 +22,22 @@ Task::Task(void){
 	_clashStatus=false;
 }
 
-
-Task::~Task(void){
-	if(_startTime!=NULL){
+void Task::resetPointers(){
+	if(!hasStartTime()){
 		delete _startTime;
 		_startTime=NULL;
 	}
-	if(_startDate!=NULL){
+	if(!hasStartDate()){
 		delete _startDate;
-		_startTime=NULL;
+		_startDate=NULL;
 	}
-	if(_endDate!=NULL){
+	if(!hasEndDate()){
 		delete _endDate;
-		_startTime=NULL;
+		_endDate=NULL;
 	}
-	if(_endTime!=NULL){
+	if(!hasEndTime()){
 		delete _endTime;
-		_startTime=NULL;
+		_endTime=NULL;
 	}
 }
 
@@ -57,15 +64,14 @@ void Task::setStatusAsOverdue(){
 	_taskStatus= OVERDUE;
 }
 
-bool Task::checkOverdue()
-{
-	if(_endDate==NULL){
+bool Task::checkOverdue(){
+	if(!hasEndDate()){
 		return false;
 	}else{
 		if(_endDate->checkOverdue()==LATER){
 			return true;
 		}else if(_endDate->checkOverdue()==SAME){
-			if(_endTime==NULL){
+			if(!hasEndTime()){
 				return false;
 			}else if(_endTime->checkOverdueTime()){
 				return true;
@@ -73,10 +79,6 @@ bool Task::checkOverdue()
 		}
 	}
 	return false;
-}
-
-void Task::setTaskType(TASK_TYPE type){
-	_taskType = type;
 }
 
 Date* Task::getEndDate(){
@@ -102,28 +104,20 @@ std::string Task::getTaskCategory(){
 	return _category;
 }
 
-void Task::setStartTime(ClockTime* startTime)
-{
+void Task::setStartTime(ClockTime* startTime){
 	_startTime = startTime;
 }
-void Task::setEndTime(ClockTime* endTime)
-{
+void Task::setEndTime(ClockTime* endTime){
 	_endTime = endTime;
 }
 
 void Task::setCategory(std::string category){
 	_category = category;
 }
-
-void Task::setIndex(int index){ 
-	assert(index>=0);
-	_taskIndex = index;
-}
 void Task::setEndDate(Date* endDate){
 	_endDate = endDate;
 }
-void Task::setStartDate(Date* startDate)
-{
+void Task::setStartDate(Date* startDate){
 	_startDate = startDate;
 }
 
@@ -132,34 +126,27 @@ bool Task::hasKeyword(std::string keyword){
 	std::string keywordInLowerCase = keyword;
 	std::string taskInLowerCase = _taskDescription;
 
-	transform(keywordInLowerCase.begin(), keywordInLowerCase.end(), keywordInLowerCase.begin(), ::tolower);
-	transform(taskInLowerCase.begin(), taskInLowerCase.end(), taskInLowerCase.begin(), ::tolower);
+	convertToLowerCase(keywordInLowerCase,taskInLowerCase);
+	index = findIndexOfKeywordInTask(taskInLowerCase,keywordInLowerCase);
 
-	index=taskInLowerCase.find(keywordInLowerCase);
-
-	if(index!=std::string::npos){
-		return true;
-	}
-	return false;
+	return isValidIndex(index);
 }
 
 bool Task::checkLater(Task* otherTask){
-	if(_endDate==NULL){
+	if(!hasEndDate()){
 		return false;
 	}
-	assert(_endDate!=NULL);
-	if((_endDate->isLater(otherTask->getEndDate()))==LATER){
+	if(*_endDate>*otherTask->getEndDate()){
 		return true;
-	}else if((_endDate->isLater(otherTask->getEndDate()))==EARLIER){
+	}else if(*_endDate<*otherTask->getEndDate()){
 		return false;
 	}else{
-		if(_endTime==NULL){
+		if(!hasEndTime()){
 			return false;
 		}
-		assert(_endTime!=NULL);
-		if((_endTime->isLater(otherTask->getEndTime()))==LATER){
+		if(*_endTime>*otherTask->getEndTime()){
 			return true;
-		}else if((_endTime->isLater(otherTask->getEndTime()))==EARLIER){
+		}else if(*_endTime<*otherTask->getEndTime()){
 			return false;
 		}
 	}
@@ -561,4 +548,20 @@ bool Task::isDoubleTime()
 
 bool Task::checkClashDate(Task* task){
 	return *_startDate<*task->getEndDate() && *task->getStartDate()<*_endDate;
+}
+
+void Task::convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase){
+	_parser.strToLower(keywordInLowerCase);
+	_parser.strToLower(taskInLowerCase);
+}
+
+unsigned int Task::findIndexOfKeywordInTask(std::string taskInLowerCase, std::string keywordInLowerCase){
+	return taskInLowerCase.find(keywordInLowerCase);
+}
+
+bool Task::isValidIndex(unsigned int index){
+	if(index!=std::string::npos){
+		return true;
+	}
+	return false;
 }

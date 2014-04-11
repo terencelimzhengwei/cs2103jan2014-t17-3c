@@ -458,14 +458,14 @@ bool CommandCreator::isValidDeleteIndex(int id,DISPLAY_TYPE* type,TaskList& task
 		}
 		break;
 	case SEARCH:{
-		unsigned int size = tasklist.getSearchResults().size();
+		int size = tasklist.getSearchResults().size();
 		if(id>size){
 			return false;
 		}
 		break;
 				}
 	case FILTERED:{
-		unsigned int size = tasklist.getFilterResults().size();
+		int size = tasklist.getFilterResults().size();
 		if(id>size){
 			return false;
 		}

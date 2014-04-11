@@ -40,9 +40,10 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 		if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
 			_task = tasklist.setTaskAsDone(_taskIndex);
 			_lastCmdCalled = EXECUTE;
+			return true;
+		}
+		return false;
 	}
-
-}
 }
 
 bool Command_Done::undo(TaskList& tasklist, std::string& feedback){

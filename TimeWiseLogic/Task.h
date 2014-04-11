@@ -35,7 +35,6 @@ public:
 	void setStatusAsDone();
 	void setStatusasUndone();
 	void setStatusAsOverdue();
-	void setTaskType(TASK_TYPE type);
 	//check overdue
 	bool checkOverdue();
 	bool checkNewOverdue();
@@ -70,9 +69,13 @@ public:
 	bool hasEndDate();
 	bool hasStartTime();
 	bool hasEndTime();
+	void initializeTask();
+	void resetPointers();
+	void convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase);
+	unsigned int findIndexOfKeywordInTask(std::string taskInLowerCase, std::string keywordInLowerCase);
+	bool isValidIndex(unsigned int index);
 protected:
 	std::string _taskDescription;
-	TASK_TYPE _taskType;
 	TASK_STATUS _taskStatus;
 	std::string _category;
 	int _taskIndex;

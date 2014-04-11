@@ -12,14 +12,14 @@ public:
 
 	bool execute(TaskList&, std::string&);
 	bool undo(TaskList&, std::string&);
-	void setCompletedIndex(int);
-	void setDisplayScreen(DISPLAY_TYPE);
+	void addDoneIndex(int);
+	void setPreviousScreen(DISPLAY_TYPE* screen);
 
 private:
-	int _taskIndex;
-	Task* _task;
-	DISPLAY_TYPE _displayType;
-	std::string _lastCmdCalled;
-
+	std::vector<Task*> _doneTasks;
+	std::vector<unsigned int> _doneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE  _previousScreen;
+	std::string   _lastCmdCalled;
 };
 

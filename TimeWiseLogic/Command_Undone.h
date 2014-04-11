@@ -12,12 +12,13 @@ public:
 	~Command_Undone(void);
 	bool execute(TaskList&, std::string&);
 	bool undo(TaskList&, std::string&);
-	void setUncompletedIndex(int);
+	void addUndoneIndex(int index);
 	void setDisplayScreen(DISPLAY_TYPE);
 
 private:
-	int _taskIndex;
-	Task* _task;
+	std::vector<Task*> _undoneTasks;
+	std::vector<unsigned int> _undoneTaskIndex;
 	DISPLAY_TYPE _displayType;
+	std::string _lastCmdCalled;
 };
 

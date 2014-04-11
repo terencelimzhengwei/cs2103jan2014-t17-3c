@@ -264,6 +264,9 @@ void TaskList::deleteSearchedTasks(){
 			if(_taskList[i]==_searchedTaskList.back()){
 				_taskList.erase(_taskList.begin()+i);
 				_searchedTaskList.pop_back();
+				if(_searchedTaskList.empty()){
+					return;
+				}
 			}
 		}
 	}
@@ -430,6 +433,16 @@ int TaskList::getTaskIndexInSearchedList(Task* task){
 	return DEFAULT_INDEX;
 }
 
+int TaskList::getTaskIndexInFilteredList(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<_filteredTaskList.size();i++){
+		if(task==_filteredTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
 void TaskList::clearSearchedTasks()
 {
 	_searchedTaskList.clear();
@@ -482,4 +495,16 @@ void TaskList::setLastTaskIndex(unsigned int index){
 
 void TaskList::resetLastTaskIndex(){
 	_lastTaskIndex=DEFAULT_INDEX;
+}
+
+void TaskList::resetLastTaskIndexList(){
+	_lastTaskIndexList.clear();
+}
+
+void TaskList::addLastTaskIndex(unsigned int index){
+	_lastTaskIndexList.push_back(index);
+}
+
+std::vector<int> TaskList::getLastTaskIndexList(){
+	return _lastTaskIndexList;
 }

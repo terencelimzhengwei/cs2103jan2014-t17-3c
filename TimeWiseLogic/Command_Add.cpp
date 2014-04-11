@@ -185,7 +185,17 @@ void Command_Add::lastCmdCalledIs(std::string cmd)
 }
 
 void Command_Add::setIndexToBoldInGUI(TaskList& tasklist){
-	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
+	//tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
+	if(!tasklist.getClashedTask().empty()){
+		std::vector<Task*> clashlist = tasklist.getClashedTask();
+		for(unsigned int i=0;i<clashlist.size();i++){
+			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
+			tasklist.addLastTaskIndex(index);
+		}
+	}else{
+		unsigned int index = tasklist.getTaskIndex(_addedTask);
+		tasklist.addLastTaskIndex(index);
+	}
 }
 
 void Command_Add::removeAddedTask(TaskList& tasklist){

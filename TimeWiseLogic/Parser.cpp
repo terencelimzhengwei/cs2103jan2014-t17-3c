@@ -238,6 +238,8 @@ string Parser::regexDateTime(string cmd) {
 	string rgx;
 
 	cmd = strReplace(",", ", ", cmd);
+	cmd = strTruncate(cmd);
+
 	// Month-in-word pattern
 	for(int i=0 ; i<MONTH_WORD_NUM ; i++) {
 		cmd = strIReplace(MONTH_WORD[i], "<month=" + strVal(MONTH_WORD_VALUE[i]) + ">", cmd);
@@ -283,13 +285,14 @@ string Parser::regexDateTime(string cmd) {
 	}
 
 	// Time stuffs
-	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([0-2]?[0-9]):([0-5][0-9])($|[\\s,\\.])"), "$1<time=$2:$3>$4");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([0-2]?[0-9])[:\\.]([0-5][0-9])($|[\\s,\\.])"), "$1<time=$3:$4>$5");
 	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timeAM=$3:00>$4");
 	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timePM=$3:00>$4");
-	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9]):?([0-5][0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timeAM=$3:$4>$5");
-	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9]):?([0-5][0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timePM=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[:\\.]?([0-5][0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timeAM=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to)? ?([01]?[0-9])[:\\.]?([0-5][0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])"), "$1<timePM=$3:$4>$5");
 
-	cmd = regex_replace(cmd, regex("(^|\\s)(<date=[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}> )([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1$2<time=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)(<date=[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}> )(at|from|to)? ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1$2<time=$3:$4>$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-2][0-9])([0-5][0-9]) ?(at|from|to)? ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1<time=$2:$3> <time=$5:$6>$7");
 	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to) ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1<time=$3:$4>$5");
 
 	return strTruncate(cmd);
@@ -417,54 +420,24 @@ bool Parser::isTimeFormat(string time) {
 Date* Parser::createDate(string date) {
 	vector<int> dateData = extractDate(date);
 	return new Date(dateData[2], dateData[1], dateData[0]);
-
-
-	/* Date* _date = new Date;
-	std::string dateString = date;
-	std::vector<std::string> dateVector;
-	std::string temp;
-	std::string day="",month="",year="";
-	int _day,_month,_year;
-	unsigned int index= 0, index1= 0;
-	index = dateString.find_first_of("/");
-	day = dateString.substr(0,index);
-	temp = dateString.substr(index+1);
-	if(temp.find_first_of("/")!=std::string::npos){
-		index1 = temp.find_first_of("/");
-		month = temp.substr(0,index1);
-		year = temp.substr(index1+1);
-		_year = toNum(year);
-	}else{
-		month = temp.substr(index+1);
-		_year = _date->getCurrentYear();
-	}
-
-	_day = toNum(day);
-	_month = toNum(month);
-	if(_year<100){
-		_year=_year + 2000;
-	}
-	Date* newDate = new Date(_day,_month,_year);
-	return newDate;*/
 }
 
 ClockTime* Parser::createTime(string time) {
-	//return new ClockTime(extractTime(time, 0)[0]);
 	return new ClockTime(toNum(time));
 }
 
-TASK_STATUS Parser::getTaskStatus(std::string input){
+TASK_STATUS Parser::getTaskStatus(std::string input) {
 	if(input == TASK_STATUS_STRING[0]){
 		return UNCOMPLETED;
-	}else if(input == TASK_STATUS_STRING[1]){
+	} else if(input == TASK_STATUS_STRING[1])  {
 		return COMPLETED;
-	}else if(input == TASK_STATUS_STRING[2]){
+	} else if(input == TASK_STATUS_STRING[2]) {
 		return OVERDUE;
 	}
 	return UNCOMPLETED;
 }
 
-bool Parser::isCategory(std::string& input){
+bool Parser::isCategory(std::string& input) {
 	if(input[0]=='#'){
 		return true;
 	}
@@ -485,31 +458,6 @@ string Parser::strToLower(string input) {
 	return str;
 }
 
-// Old version of explode(char, string)
-/* vector<string> Parser::explode(char delimiter, string input) {
-	trim(input);
-	vector<string> splittedStr;
-	string str;
-	int pos;
-
-	while(!input.empty()) {
-		pos = input.find(delimiter);
-		if(pos == string::npos) {
-			str = input;
-			input.clear();
-		} else {
-			str = input.substr(0, pos);
-			input.erase(0, pos+1);
-		}
-		trim(str);
-
-		if(!str.empty()) {
-			splittedStr.push_back(str);
-		}
-	}
-	return splittedStr;
-}*/
-// New version of explode(char, string)
 vector<string> Parser::explode(char delim, string s) {
 	vector<string> result;
     istringstream iss(s);
@@ -750,15 +698,27 @@ bool Parser::isValidConvertedTime(string& input, ClockTime& outputTime) {
 		}
 		return true;
 	} else if(regex_match(input, sm, regex("^<timeAM=([0-9]{1,2}):([0-9]{2})>$"))) {
+		int hour = toNum(sm[1]);
+
+		if(hour==0 || hour>12) {
+			return false;
+		}
+
 		try {
-			outputTime = ClockTime( (toNum(sm[1])%12) * 100 + toNum(sm[2]) );
+			outputTime = ClockTime( (hour%12) * 100 + toNum(sm[2]) );
 		} catch (InvalidDateTimeFormatException e) {
 			return false;
 		}
 		return true;
 	} else if(regex_match(input, sm, regex("^<timePM=([0-9]{1,2}):([0-9]{2})>$"))) {
+		int hour = toNum(sm[1]);
+
+		if(hour==0 || hour>12) {
+			return false;
+		}
+
 		try {
-			outputTime = ClockTime( (toNum(sm[1])%12 + 12) * 100 + toNum(sm[2]) );
+			outputTime = ClockTime( (hour%12 + 12) * 100 + toNum(sm[2]) );
 		} catch (InvalidDateTimeFormatException e) {
 			return false;
 		}

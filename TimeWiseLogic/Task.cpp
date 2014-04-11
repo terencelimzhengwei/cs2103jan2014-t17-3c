@@ -136,17 +136,17 @@ bool Task::checkLater(Task* otherTask){
 	if(!hasEndDate()){
 		return false;
 	}
-	if(*_endDate>*otherTask->getEndDate()){
+	if(_endDate->isLater(otherTask->getEndDate())==LATER){
 		return true;
-	}else if(*_endDate<*otherTask->getEndDate()){
+	}else if(_endDate->isLater(otherTask->getEndDate())==EARLIER){
 		return false;
 	}else{
 		if(!hasEndTime()){
 			return false;
 		}
-		if(*_endTime>*otherTask->getEndTime()){
+		if(_endTime->isLater(otherTask->getEndTime())==LATER){
 			return true;
-		}else if(*_endTime<*otherTask->getEndTime()){
+		}else if(_endTime->isLater(otherTask->getEndTime())==EARLIER){
 			return false;
 		}
 	}

@@ -161,6 +161,12 @@ void TimeWiseGUI::setMainData() {
 	TaskList taskList = _logic.getTaskList();
 	int latestTaskIndex = taskList.getLastTaskIndex();
 
+	if(taskList.undoneSize() == 0) {
+		ui.emptyLogo->show();
+	} else {
+		ui.emptyLogo->hide();
+	}
+
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
 		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
@@ -264,6 +270,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
+
+	ui.emptyLogo->hide();
 
 	for(int i = 0; i < taskList.size(); i++) {
 		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();

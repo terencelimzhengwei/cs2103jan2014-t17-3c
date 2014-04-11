@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="TimeWiseGUI">
+    <file>Emptylogo.png</file>
     <file>DK Crayon Crumble.ttf</file>
     <file>TimeWise background 3.png</file>
     <file>helpguide.png</file>

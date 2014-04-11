@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'timewisegui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.2.0
+** Created by: Qt User Interface Compiler version 5.2.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -36,6 +36,7 @@ public:
     QLabel *label_help;
     QLineEdit *userInput;
     QLabel *label_mlog;
+    QLabel *emptyLogo;
 
     void setupUi(QMainWindow *TimeWiseGUIClass)
     {
@@ -133,6 +134,10 @@ public:
         label_mlog->setStyleSheet(QLatin1String("font: 13pt \"CF Jack Story\";\n"
 "color: rgb(0, 85, 255);"));
         label_mlog->setWordWrap(true);
+        emptyLogo = new QLabel(centralWidget);
+        emptyLogo->setObjectName(QStringLiteral("emptyLogo"));
+        emptyLogo->setGeometry(QRect(80, 230, 421, 171));
+        emptyLogo->setStyleSheet(QStringLiteral("image: url(:/TimeWiseGUI/Emptylogo.png);"));
         TimeWiseGUIClass->setCentralWidget(centralWidget);
         userInput->raise();
         pushButton_close->raise();
@@ -143,6 +148,7 @@ public:
         label_title->raise();
         label_help->raise();
         label_mlog->raise();
+        emptyLogo->raise();
 
         retranslateUi(TimeWiseGUIClass);
         QObject::connect(pushButton_close, SIGNAL(clicked()), TimeWiseGUIClass, SLOT(close()));
@@ -162,6 +168,7 @@ public:
         label_help->setText(QApplication::translate("TimeWiseGUIClass", "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit", 0));
         userInput->setPlaceholderText(QApplication::translate("TimeWiseGUIClass", "+Add Task", 0));
         label_mlog->setText(QApplication::translate("TimeWiseGUIClass", "                      WELCOME TO...", 0));
+        emptyLogo->setText(QString());
     } // retranslateUi
 
 };

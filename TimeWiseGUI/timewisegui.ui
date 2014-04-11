@@ -344,6 +344,22 @@ color: rgb(0, 85, 255);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="emptyLogo">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>230</y>
+      <width>421</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/TimeWiseGUI/Emptylogo.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>userInput</zorder>
    <zorder>pushButton_close</zorder>
    <zorder>tableView</zorder>
@@ -353,6 +369,7 @@ color: rgb(0, 85, 255);</string>
    <zorder>label_title</zorder>
    <zorder>label_help</zorder>
    <zorder>label_mlog</zorder>
+   <zorder>emptyLogo</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

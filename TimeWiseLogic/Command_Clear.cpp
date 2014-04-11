@@ -12,7 +12,7 @@ Command_Clear::Command_Clear(CLEAR_TYPE clearType){
 }
 
 Command_Clear::~Command_Clear(void){
-	if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
+	if(_lastCmdCalled == EXECUTE){
 		if(!_deletedUndoneTasks.empty()){
 			for(unsigned int i = 0;i < _deletedUndoneTasks.size();i++){
 				delete _deletedUndoneTasks[i];

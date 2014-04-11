@@ -12,7 +12,7 @@ Command_Clear::Command_Clear(CLEAR_TYPE clearType){
 }
 
 Command_Clear::~Command_Clear(void){
-	if(_lastCmdCalled == CMD_TYPE_STRING[8]){
+	if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
 		if(!_deletedUndoneTasks.empty()){
 			for(unsigned int i = 0;i < _deletedUndoneTasks.size();i++){
 				delete _deletedUndoneTasks[i];
@@ -148,7 +148,7 @@ void Command_Clear::undoAll(TaskList& tasklist, std::string& feedback){
 
 void Command_Clear::clearScreen(TaskList& tasklist,std::string& feedback) {
 	if(_displayScreen == SEARCHED){
-		if(_lastCmdCalled != CMD_TYPE_STRING[8]){
+		if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
 			saveSearchedTasks(tasklist);
 		}
 		tasklist.deleteSearchedTasks(); 

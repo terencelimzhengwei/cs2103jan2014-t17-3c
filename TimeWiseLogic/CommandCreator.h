@@ -33,13 +33,13 @@ public:
 	Command* createCommandDelete(vector<string> prarameter ,DISPLAY_TYPE* type, TaskList& tasklist);
 	Command* createCommandEdit(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
-	Command* createCommandDone(std::string,DISPLAY_TYPE*);
-	Command* createCommandUndone(std::string,DISPLAY_TYPE*);
+	Command* createCommandDone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist);
+	Command* createCommandUndone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist);
 	Command* createCommandSearch(std::string,DISPLAY_TYPE*);
 	Command* createCommandFilter(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndo();
 	Command* createCommandRedo();
 	Command* createCommandDisplay(string parameter, DISPLAY_TYPE* displayType);
-	bool isValidDeleteIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist);
+	bool isValidRemovalIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist);
 };
 

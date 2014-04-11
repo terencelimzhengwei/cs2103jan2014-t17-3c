@@ -71,7 +71,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 					  }
 			case DONE: {
 				if(hasArg(parameter)) {
-					return createCommandDone(parameter,&displayType);
+					return createCommandDone(parameters,&displayType,tasklist);
 				} else {
 					throw NoArgumentException();
 					return NULL;
@@ -88,7 +88,7 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 						 }
 			case UNDONE: {
 				if(hasArg(parameter)) {
-					return createCommandUndone(parameter,&displayType);
+					return createCommandUndone(parameters,&displayType,tasklist);
 				} else {
 					throw NoArgumentException();
 					return NULL;
@@ -136,6 +136,12 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (InvalidFilterParameters& ifp) {
 		_feedbackExceptiontoUI = ifp.what();
 		throw InvalidFilterParameters();
+	} catch (UnableTosetAsDone& utsad){
+		_feedbackExceptiontoUI = utsad.what();
+		throw utsad;
+	} catch (UnableToUndoneUncompletedTasks& utuuct){
+		_feedbackExceptiontoUI = utuuct.what();
+		throw utuuct;
 	}
 
 }
@@ -209,7 +215,7 @@ Command* CommandCreator::createCommandDelete(vector<string> parameter,DISPLAY_TY
 	while(!parameter.empty()){
 		if(Parser::isAllNumbers(parameter.back())) {
 			int id = Parser::toNum(parameter.back());
-			if(isValidIndex(id)&&isValidDeleteIndex(id,type,tasklist)){
+			if(isValidIndex(id)&&isValidRemovalIndex(id,type,tasklist)){
 				id = id - 1;
 				commandDelete->addDeletionIndex(id);
 				commandDelete->setDisplayScreen(*type);
@@ -230,50 +236,64 @@ Command* CommandCreator::createCommandDelete(vector<string> parameter,DISPLAY_TY
 	return commandDelete;
 }
 
-Command* CommandCreator::createCommandDone(std::string parameter,DISPLAY_TYPE* type){
+Command* CommandCreator::createCommandDone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist){
 	if(*type==COMPLETE){
-		
 		throw UnableTosetAsDone();
 		return NULL;
 
 	}
-	if(Parser::isAllNumbers(parameter)) {
-		int id = Parser::toNum(parameter);
-		if(isValidIndex(id)) {
-		id--;
-		Command_Done* commandDone = new Command_Done;
-		commandDone->setCompletedIndex(id);
-		commandDone->setDisplayScreen(*type);
-		return commandDone;
-	} else {
-		throw OutOfRangeException();
-		return NULL;
+	Command_Done* commandDone = new Command_Done;
+	while(!parameter.empty()){
+		if(Parser::isAllNumbers(parameter.back())){
+			int id = Parser::toNum(parameter.back());
+			if(isValidIndex(id)&&isValidRemovalIndex(id,type,tasklist)) {
+				id--;
+				commandDone->addDoneIndex(id);
+				parameter.pop_back();
+			} else {
+				delete commandDone;
+				commandDone=NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
+		}
+		else {
+			delete commandDone;
+			commandDone=NULL;
+			throw NotANumberException();
+			return NULL;
+		} 
 	}
-	}
-	else {
-		throw NotANumberException();
-		return NULL;
-	} 
+	commandDone->setPreviousScreen(type);
+	return commandDone;
 }
 
-Command* CommandCreator::createCommandUndone(std::string parameter,DISPLAY_TYPE* type){
-	if(Parser::isAllNumbers(parameter)) {
-		int id = Parser::toNum(parameter);
-		if (isValidIndex(id)) {
-		id--;
-		//implement protection
-		Command_Undone* commandUndone = new Command_Undone;
-		commandUndone->setUncompletedIndex(id);
-		commandUndone->setDisplayScreen(*type);
-		return commandUndone;
-		} else {
-			throw OutOfRangeException();
-			return NULL;
+Command* CommandCreator::createCommandUndone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist)
+{
+	Command_Undone* commandUndone = new Command_Undone;
+	while(!parameter.empty()){
+		if(Parser::isAllNumbers(parameter.back())){
+			int id = Parser::toNum(parameter.back());
+			if(isValidIndex(id)&&isValidRemovalIndex(id,type,tasklist)) {
+				id--;
+				commandUndone->addUndoneIndex(id);
+				parameter.pop_back();
+			} else {
+				delete commandUndone;
+				commandUndone=NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
 		}
-	} else {
-		throw NotANumberException();
-		return NULL;
+		else {
+			delete commandUndone;
+			commandUndone=NULL;
+			throw NotANumberException();
+			return NULL;
+		} 
 	}
+	commandUndone->setDisplayScreen(*type);
+	return commandUndone;
 }
 
 Command* CommandCreator::createCommandUndo(){
@@ -445,7 +465,7 @@ Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, v
 	return commandEdit;
 }
 
-bool CommandCreator::isValidDeleteIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist){
+bool CommandCreator::isValidRemovalIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist){
 	switch(*type){
 	case MAIN:
 		if(id>tasklist.undoneSize()){

@@ -23,12 +23,10 @@ public:
 	ClockTime* getStartTime();
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
-	PRIORITY getPriority();	
 
 	//setter functions
 	void setIndex(int);
 	void setDescription(std::string desc);
-	void setPriority(PRIORITY taskPriority);
 	void setCategory(std::string category);
 	void setEndDate(Date* endDate);
 	void setStartDate(Date* startDate);
@@ -42,7 +40,6 @@ public:
 	bool checkOverdue();
 	bool checkNewOverdue();
 	bool hasKeyword(std::string keyword);
-	bool hasPriority(PRIORITY priority);
 	bool hasDate(Date* date);
 	bool hasCategory(std::string category);
 	bool hasStatus(TASK_STATUS status);
@@ -77,7 +74,6 @@ protected:
 	std::string _taskDescription;
 	TASK_TYPE _taskType;
 	TASK_STATUS _taskStatus;
-	PRIORITY _taskPriority;
 	std::string _category;
 	int _taskIndex;
 	bool _clashStatus;

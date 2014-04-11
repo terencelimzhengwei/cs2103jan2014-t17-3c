@@ -254,16 +254,6 @@ void TaskList::populateFilterList(Date* date){
 	return;
 }
 
-void TaskList::populateFilterList(PRIORITY priority){
-	_filteredTaskList.clear();
-
-	for(unsigned int i=0;i<_taskList.size();i++){
-		if(_taskList[i]->hasPriority(priority)){
-			_filteredTaskList.push_back(_taskList[i]);
-		}
-	}
-}
-
 std::vector<Task*> TaskList::getFilterResults(){
 	return _filteredTaskList;
 }

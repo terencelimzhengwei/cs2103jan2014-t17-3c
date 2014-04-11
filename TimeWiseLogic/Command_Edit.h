@@ -60,5 +60,6 @@ private:
 	bool noEndDate();
 	void getOriginalTask(TaskList& tasklist);
 	void editTaskWithNewParameters();
+	void setIndexToBoldInGUI(TaskList& tasklist);
 };
 

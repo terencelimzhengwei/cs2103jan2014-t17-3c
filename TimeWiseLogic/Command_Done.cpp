@@ -3,62 +3,95 @@
 
 Command_Done::Command_Done(void){
 	_type = DONE;
-	_taskIndex = DEFAULT_INDEX;
-	_task = NULL;
-	_displayType = COMPLETE;
+	_currentScreen=NULL;
 }
 
 
 Command_Done::~Command_Done(void){
-}
-
-void Command_Done::setCompletedIndex(int index){
-	_taskIndex = index;
+	_currentScreen=NULL;
 }
 
 bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
-	switch(_displayType){
+	switch(_previousScreen){
 	case MAIN:
-		_task=tasklist.setTaskAsDone(_taskIndex);
-		feedback = DONE_SUCCESS;
-		_lastCmdCalled = EXECUTE;
-		return true;
-	case SEARCHED:
-		_task=tasklist.setSearchedTaskAsDone(_taskIndex);
-		feedback = DONE_SUCCESS;
-		_lastCmdCalled = EXECUTE;
-		return true;
-	case FILTERED:
-		_task=tasklist.setFilteredTaskAsDone(_taskIndex);
-		feedback = DONE_SUCCESS;
-		_lastCmdCalled = EXECUTE;
-		return true;
-	case COMPLETE:
-		throw UnableTosetAsDone();
-		return false;
-	default:
-		if(_lastCmdCalled == CMD_TYPE_STRING[UNDO]){
-			_task = tasklist.setTaskAsDone(_taskIndex);
-			_lastCmdCalled = EXECUTE;
+		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+			for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+				tasklist.setTaskAsDone(_doneTaskIndex[i]);
+			}
+			_lastCmdCalled=EXECUTE;
+			feedback = DONE_SUCCESS;
+			*_currentScreen=COMPLETE;
 			return true;
 		}
+		for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+			_doneTasks.push_back(tasklist.setTaskAsDone(_doneTaskIndex[i]));
+		}
+		feedback = DONE_SUCCESS;
+		_lastCmdCalled = EXECUTE;
+		*_currentScreen=COMPLETE;
+		return true;
+	case SEARCHED:
+		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+			for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+				tasklist.setSearchedTaskAsDone(_doneTaskIndex[i]);
+			}
+			_lastCmdCalled=EXECUTE;
+			feedback = DONE_SUCCESS;
+			*_currentScreen=COMPLETE;
+			return true;
+		}
+		for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+			_doneTasks.push_back(tasklist.setSearchedTaskAsDone(_doneTaskIndex[i]));
+		}
+		feedback = DONE_SUCCESS;
+		_lastCmdCalled = EXECUTE;
+		*_currentScreen=COMPLETE;
+		return true;
+	case FILTERED:
+		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+			for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+				tasklist.setFilteredTaskAsDone(_doneTaskIndex[i]);
+			}
+			_lastCmdCalled=EXECUTE;
+			feedback = DONE_SUCCESS;
+			*_currentScreen=COMPLETE;
+			return true;
+		}
+		for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+			_doneTasks.push_back(tasklist.setFilteredTaskAsDone(_doneTaskIndex[i]));
+		}
+		feedback = DONE_SUCCESS;
+		_lastCmdCalled = EXECUTE;
+		*_currentScreen=COMPLETE;
+		return true;
+	default:
+		throw UnableTosetAsDone();
 		return false;
 	}
 }
 
 bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
-	unsigned int index = tasklist.getTaskIndexInCompletedList(_task);
-	tasklist.setTaskAsUndone(index);
-	if(_displayType == SEARCHED){
-		tasklist.addTaskToSearchedList(*_task);
-	}else if(_displayType == FILTERED){
-		tasklist.addTaskToFilteredList(*_task);
+
+	for(unsigned int i=0;i<_doneTasks.size();i++){
+		unsigned int index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
+		tasklist.setTaskAsUndone(index);
+		if(_previousScreen == SEARCHED){
+			tasklist.addTaskToSearchedList(*_doneTasks[i]);
+		}else if(_previousScreen == FILTERED){
+			tasklist.addTaskToFilteredList(*_doneTasks[i]);
+		}
 	}
-        _lastCmdCalled = CMD_TYPE_STRING[8];
+    _lastCmdCalled = CMD_TYPE_STRING[UNDO];
 	feedback = UNDONE_SUCCESS;
+	*_currentScreen=_previousScreen;
 	return true;
 }
 
-void Command_Done::setDisplayScreen(DISPLAY_TYPE screen){
-	_displayType = screen;
+void Command_Done::setPreviousScreen(DISPLAY_TYPE* screen){
+	_currentScreen=screen;
+	_previousScreen=*screen;
+}
+
+void Command_Done::addDoneIndex(int index){
+	_doneTaskIndex.push_back(index);
 }

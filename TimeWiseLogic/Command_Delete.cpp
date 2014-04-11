@@ -6,7 +6,6 @@ Command_Delete::Command_Delete() {
         _deletionString = DEFAULT_EMPTY;
         //The default index is set to -1 when a new Command_Delete is dynamically created
         //so that it will not clash with any other task index
-        _deletionIndex = DEFAULT_INDEX;
 }
 
 Command_Delete::~Command_Delete(){
@@ -80,8 +79,8 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 		}
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getFilteredTask(_deletionIndex));
-				taskList.deleteTaskFromFilterList(_deletionIndex);
+				_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
+				taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
 				_lastCmdCalled = EXECUTE;
 				feedback = DELETE_SUCCESS;
 			}

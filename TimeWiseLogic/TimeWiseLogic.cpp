@@ -16,43 +16,43 @@ TimeWiseLogic::~TimeWiseLogic(void)
 }
 
 std::string TimeWiseLogic::processCommand(std::string commandLine){
-	if (commandLine == DEFAULT_EMPTY) {
+	if (emptyCommandLine(commandLine)) {
 		return NO_COMMAND_LINE;
 	} else {
 		_taskList.resetLastTaskIndex();
 		_taskList.resetLastTaskIndexList();
+
 		if(!parseCommand(commandLine)){
-		return _creator.getFeedback();
+			return _creator.getFeedback();
 	    } else {
 			try {
-			std::string feedback;
-			_manager->DoCommand(_cmd, feedback);
-			_storage.saveFile(_taskList);
-			return feedback;
-		} catch (OutOfRangeException& oore) {
-			delete _cmd;
-			_cmd = NULL;
-			return oore.what();
-		} catch (UnableTosetAsDone& usad) {
-			delete _cmd;
-			_cmd = NULL;
-			return usad.what();
-		} catch (UnableToUndoneUncompletedTasks&  uuuct) {
-			delete _cmd;
-			_cmd = NULL;
-			return uuuct.what();
-		} catch (InvalidDateTimeFormatException& idtfe){
-			delete _cmd;
-			_cmd = NULL;
-			return idtfe.what();
-		} catch (InvalidStartEndDateTime& isedt) {
-			delete _cmd;
-			_cmd = NULL;
-			return isedt.what();
+				std::string feedback;
+				_manager->DoCommand(_cmd, feedback);
+				_storage.saveFile(_taskList);
+				return feedback;
+			} catch (OutOfRangeException& oore) {
+				delete _cmd;
+				_cmd = NULL;
+				return oore.what();
+			} catch (UnableTosetAsDone& usad) {
+				delete _cmd;
+				_cmd = NULL;
+				return usad.what();
+			} catch (UnableToUndoneUncompletedTasks&  uuuct) {
+				delete _cmd;
+				_cmd = NULL;
+				return uuuct.what();
+			} catch (InvalidDateTimeFormatException& idtfe){
+				delete _cmd;
+				_cmd = NULL;
+				return idtfe.what();
+			} catch (InvalidStartEndDateTime& isedt) {
+				delete _cmd;
+				_cmd = NULL;
+				return isedt.what();
+			}
 		}
 	}
-
-}
 }
 
 bool TimeWiseLogic::parseCommand(std::string commandLine){
@@ -64,8 +64,7 @@ bool TimeWiseLogic::parseCommand(std::string commandLine){
 	return true;
 }
 
-TaskList TimeWiseLogic::getTaskList()
-{
+TaskList TimeWiseLogic::getTaskList(){
 	return _taskList;
 }
 
@@ -75,23 +74,10 @@ void TimeWiseLogic::initLogic(){
 	_taskList.updateOverdueTaskList();
 }
 
-DISPLAY_TYPE TimeWiseLogic::setScreenToDisplay(Command* cmd){
-	switch(cmd->getType()){
-	case ADD:
-		_displayType = MAIN;
-	default:
-		return _displayType;
-	}
-}
-
 DISPLAY_TYPE TimeWiseLogic::getScreenToDisplay(){
 	return _displayType;
 }
 
-std::string TimeWiseLogic::getUserInput(){
-	return _userInput;
-}
-
-void TimeWiseLogic::changeDisplay(DISPLAY_TYPE type){
-	_displayType=type;
+bool TimeWiseLogic::emptyCommandLine(std::string commandLine){
+	return (commandLine==DEFAULT_EMPTY);
 }

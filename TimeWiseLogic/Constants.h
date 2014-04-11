@@ -46,6 +46,9 @@ const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 const std::string DEFAULT_EMPTY = "";
+const std::string TODAY_DISPLAY ="Today";
+const std::string TMR_DISPLAY ="Tmrw";
+
 
 // These string store exception messages to be displayed by TiMEWiSE! in the CLI 
 // in case of user input error.

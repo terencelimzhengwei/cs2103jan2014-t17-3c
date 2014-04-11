@@ -13,8 +13,8 @@ public:
 	QString timeToString();
 
 private:
-	QDate date;
-	QTime time;
+	QDate _date;
+	QTime _time;
 };
 
 #endif

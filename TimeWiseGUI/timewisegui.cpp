@@ -7,23 +7,21 @@
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
-	ui.userInput->installEventFilter(this);
-
 	setupTable();
+	setupClock();
+	setupFont();
+	setupHotKeys();
+	autoComplete();
 
-	//set cursor to userInput lineEdit as soon as program is opened.
+	//set cursor to userInput box as soon as program is opened.
 	QTimer::singleShot(0, ui.userInput, SLOT(setFocus()));
-	
+
 	//remove title header of main window
 	this->setWindowFlags(Qt::CustomizeWindowHint);
 
-	setupClock();
+	ui.userInput->installEventFilter(this);
 
-	setupFont();
-
-	setupHotKeys();
-
-	autoComplete();
+	//displays number of overdue tasks (if any) as soon as program is opened.
 	int overdues = numberOfOverdues();
 	if(overdues > 0) {
 		setOverdueMessage(overdues);
@@ -33,27 +31,10 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 TimeWiseGUI::~TimeWiseGUI() {
 }
 
-bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
-	if (obj == ui.userInput) {
-		if (event->type() == QEvent::KeyPress) {
-			QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-			if (keyEvent->key() == Qt::Key_Up) {
-				previous_line();
-				return true;
-			} else if(keyEvent->key() == Qt::Key_Down) {
-				next_line();
-				return true;
-			} else if(keyEvent->key() == Qt::Key_Home) {
-				ui.tableView->setFocus();
-				return true;
-			}
-		}
-		return false;
-	} 
-	return QMainWindow::eventFilter(obj, event);
-}
-
-
+//========================================================
+//       USER INPUT BOX - WHEN TEXT CHANGES [SLOT]
+//========================================================
+//As user types in user input box, guide changes to show command format
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
@@ -76,6 +57,9 @@ void TimeWiseGUI::on_userInput_textChanged() {
 	}
 }
 
+//========================================================
+//     USER INPUT BOX - WHEN 'ENTER' IS PRESSED [SLOT]
+//========================================================
 void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 
@@ -85,23 +69,27 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		exit(0);
 	} else {
 		//Stores user inputs into a QStringList for retrieval later when key up or down is pressed
-		lines << ui.userInput->text();
+		lines << input;
 		current_line = lines.size();
 		emit lineExecuted(lines.back());
 		
-		std::string userCommand = input.toLocal8Bit().constData();
-
-		std::string messageLog = _logic.processCommand(userCommand);
+		std::string userCommand = input.toLocal8Bit().constData();   //converts QString to string type.
+		std::string messageLog = _logic.processCommand(userCommand); //sends user input to logic for processing.
+		QString outputMessage = QString::fromStdString(messageLog);  //converts string to QString type.
+		ui.label_mlog->setText(outputMessage);                       //displays feedback.
 
 		autoComplete();
+
 		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 		displayTaskList(displayType);
-
-		QString outputMessage = QString::fromStdString(messageLog);
-		ui.label_mlog->setText(outputMessage);
 	}
 	ui.userInput->setText(BLANK);
 }
+
+//========================================================
+//				MANAGE PAGE TO DISPLAY
+//		[Main, Search, Filtered, Completed]
+//========================================================
 
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 	switch(displayType){
@@ -136,36 +124,24 @@ void TimeWiseGUI::setMainData() {
 	model->removeRows(0, model->rowCount());
 
 	TaskList taskList = _logic.getTaskList();
-	int latestTaskIndex = taskList.getLastTaskIndex();
-
+	vector<int> latestIndices = taskList.getLastTaskIndexList();
+	
+	//displays an image if table is empty; else, conceal it.
 	if(taskList.undoneSize() == 0) {
 		ui.emptyLogo->show();
 	} else {
 		ui.emptyLogo->hide();
 	}
 
+	//goes through each cell in the table and sets every attributes of every task into the respective cells.
 	for(int i = 0; i < taskList.undoneSize(); i++) {
-		TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
-		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-		QColor rowColorOverdue(255, 0, 0, 50);
-		QColor rowColorComplete(146, 255, 192);
-		QColor rowColorClash(254, 255, 185);
-
-		QFont font;
-		if(i == latestTaskIndex) {
-			font.setWeight(99);
-			font.setPointSize(9);
-		} else {
-			font.setBold(false);
-		}
-
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
+
 			switch (j) {
 			case 0: {
 				std::string taskDescription = (taskList.getTask(i))->getDescription();
-
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
@@ -224,8 +200,13 @@ void TimeWiseGUI::setMainData() {
 				break;
 			}
 			}
-			model->setData(model->index(i,j), font, Qt::FontRole);
-			//highlight description in red if that task is overdue, in green is task is done, and in yellow if task is clashed.
+			//highlight description in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
+			TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
+			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+			QColor rowColorOverdue(255, 0, 0, 50);
+			QColor rowColorComplete(146, 255, 192);
+			QColor rowColorClash(254, 255, 185); 
+			
 			bool checkClash = taskList.getTask(i)->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
@@ -238,25 +219,32 @@ void TimeWiseGUI::setMainData() {
 			} else if (qStatus == DONE_STATUS) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
+
+			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
+			QFont font;
+			font.setBold(false);
+			for(int k = 0; k < latestIndices.size(); k++) {
+				if(i == latestIndices[k]) {
+					font.setWeight(99);
+					font.setPointSize(9);
+				} 
+			}
+			model->setData(model->index(i,j), font, Qt::FontRole);
 		}
 	}
-	ui.tableView->scrollTo(model->index(latestTaskIndex,0));
+	//scrolls to latest task after all tasks have been set in table.
+	if(!latestIndices.empty()) {
+		ui.tableView->scrollTo(model->index(latestIndices[0],0));
+	}
 }
 
-void TimeWiseGUI::setData(std::vector<Task*>& taskList)
-{
+void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
 
 	ui.emptyLogo->hide();
 
 	for(int i = 0; i < taskList.size(); i++) {
-		TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
-		QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-		QColor rowColorOverdue(255, 0, 0, 50);
-		QColor rowColorComplete(146, 255, 192);
-		QColor rowColorClash(254, 255, 185);
-
 		for(int j = 0; j < 7; j++) {
 			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
@@ -322,7 +310,14 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 				break;
 			}
 			}
-			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
+
+			//highlight row in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
+			TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
+			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+			QColor rowColorOverdue(255, 0, 0, 50);
+			QColor rowColorComplete(146, 255, 192);
+			QColor rowColorClash(254, 255, 185);
+			
 			bool checkClash = taskList[i]->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
@@ -339,9 +334,12 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 	}
 }
 
+//=====================================================
+//                   TABLE SET-UP
+//=====================================================
 
-//set up tableView
 void TimeWiseGUI::setupTable() {
+	//creates model and names column header titles
 	model = new QStandardItemModel (0, 5, this);
 	model->setHorizontalHeaderItem(0, new QStandardItem(QString("Description")));
 	model->setHorizontalHeaderItem(1, new QStandardItem(QString("Day")));
@@ -356,7 +354,7 @@ void TimeWiseGUI::setupTable() {
 	//allows long texts to be wrapped.
 	ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-	//set column widths of table. Hardcoded and very primitive.
+	//set column widths of table.
 	ui.tableView->setColumnWidth(0, 190);
 	ui.tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui.tableView->setColumnWidth(1, 40);
@@ -376,15 +374,17 @@ void TimeWiseGUI::setupTable() {
 
 	//set up row heights of table.
 	ui.tableView->verticalHeader()->setDefaultSectionSize(27);
-
+	
 	ui.tableView->setSelectionMode(QAbstractItemView::NoSelection);
 }
 
-//set date and time
+//=====================================================
+//                 CLOCK SET-UP
+//=====================================================
 void TimeWiseGUI::setupClock() {	
-	clock = new TimeWiseClock();
-	ui.label_date->setText(clock->dateToString());
-	ui.label_time->setText(clock->timeToString());
+	_clock = new TimeWiseClock();
+	ui.label_date->setText(_clock->dateToString());
+	ui.label_time->setText(_clock->timeToString());
 
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT( updateTime() ));
@@ -392,9 +392,9 @@ void TimeWiseGUI::setupClock() {
 }
 
 void TimeWiseGUI::updateTime() {
-	clock = new TimeWiseClock();
-	ui.label_date->setText(clock->dateToString());
-	ui.label_time->setText(clock->timeToString());
+	_clock = new TimeWiseClock();
+	ui.label_date->setText(_clock->dateToString());
+	ui.label_time->setText(_clock->timeToString());
 
 	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();
@@ -404,7 +404,9 @@ void TimeWiseGUI::updateTime() {
 	}
 }
 
-//font setting
+//=====================================================
+//                FONTS SET-UP 
+//=====================================================
 void TimeWiseGUI::setupFont(){
 	QFontDatabase fontDatabase; 
 	fontDatabase.addApplicationFont(":/TimeWiseGUI/CFJackStory-Regular.ttf");
@@ -417,7 +419,9 @@ void TimeWiseGUI::setupFont(){
 	ui.label_time->setFont(QFont("Electronic Highway Sign",14,75));
 }
 
-//enable hotkeys
+//=====================================================
+//                HOTKEYS SET-UP
+//=====================================================
 void TimeWiseGUI::setupHotKeys() {
 	QShortcut *shortcutUndo = new QShortcut(QKeySequence("F3"), this);
 	QShortcut *shortcutRedo = new QShortcut(QKeySequence("F4"), this);
@@ -429,6 +433,7 @@ void TimeWiseGUI::setupHotKeys() {
 	QObject::connect(shortcutDone, SIGNAL(activated()), this, SLOT(displayDone()));
 }
 
+//undo slot for undo shortcut
 void TimeWiseGUI::undo(){
 	std::string messageLog = _logic.processCommand(UNDO_COMMAND);
 	QString outputMessage = QString::fromStdString(messageLog);
@@ -437,18 +442,21 @@ void TimeWiseGUI::undo(){
 	displayTaskList(displayType);
 }
 
+//redo slot for redo shortcut
 void TimeWiseGUI::redo(){
 	_logic.processCommand(REDO_COMMAND);
 	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 	displayTaskList(displayType);
 }
 
+//displayMain slot for shortcut to display main list
 void TimeWiseGUI::displayMain(){
     _logic.processCommand(DISPLAY_MAIN);
 	setMainData();
 	ui.label_title->setText(MAIN_TITLE);
 }
 
+//displayDone slot for shortcut to display done list
 void TimeWiseGUI::displayDone(){
 	_logic.processCommand(DISPLAY_DONE);
 	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
@@ -456,10 +464,11 @@ void TimeWiseGUI::displayDone(){
 	ui.label_title->setText(COMPLETED_TITLE);
 }
 
+//=====================================================
+//            OVERDUE TASKS COUNT REMINDER
+//=====================================================
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {
-	QMessageBox overdueInfo;
 	ostringstream outstr;
-	
 	outstr << "Reminder! You have " << overdueCount << " overdue task(s).";
 	std::string overdueReminder = outstr.str();
 	QString qOverdue = QString::fromStdString(overdueReminder);
@@ -474,7 +483,9 @@ int TimeWiseGUI::numberOfOverdues() {
 	return overdueTasksCount;
 }
 
-//"auto-complete"
+//=====================================================
+//                 AUTO-COMPLETER
+//=====================================================
 void TimeWiseGUI::autoComplete() {
 	QStringList descList;
 	TaskList taskList = _logic.getTaskList();
@@ -490,9 +501,38 @@ void TimeWiseGUI::autoComplete() {
 	//for display function
 	descList << DISPLAY_DONE << DISPLAY_MAIN;
 
-	descCompleter = new QCompleter(descList, this);
-	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-	ui.userInput->setCompleter(descCompleter);
+	_descCompleter = new QCompleter(descList, this);
+	_descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+	ui.userInput->setCompleter(_descCompleter);
+}
+
+//=====================================================
+//           KEY-PRESSED EVENTS FOR USER INPUT BOX
+//=====================================================
+//enables user to press certain keys (up, down, home) while 
+//focus is at user input box to do specific tasks.
+//Pressing up will retrieve previous line of input.
+//Pressing down will retrieve next line of input.
+//Pressing home will bring focus away to table.
+
+bool TimeWiseGUI::eventFilter(QObject* obj, QEvent *event) {
+	if (obj == ui.userInput) {
+		if (event->type() == QEvent::KeyPress) {
+			QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+			if (keyEvent->key() == Qt::Key_Up) {
+				previous_line();
+				return true;
+			} else if(keyEvent->key() == Qt::Key_Down) {
+				next_line();
+				return true;
+			} else if(keyEvent->key() == Qt::Key_Home) {
+				ui.tableView->setFocus();
+				return true;
+			}
+		}
+		return false;
+	} 
+	return QMainWindow::eventFilter(obj, event);
 }
 
 void TimeWiseGUI::previous_line() {
@@ -511,7 +551,6 @@ void TimeWiseGUI::previous_line() {
 	ui.userInput->selectAll();
 }
 
-
 void TimeWiseGUI::next_line() {
 	if (lines.empty()) {
 		return;
@@ -529,7 +568,10 @@ void TimeWiseGUI::next_line() {
 	}
 }
 
+//=====================================================
+//                HELP PAGE SET-UP
+//=====================================================
 void TimeWiseGUI::showHelp() {
-	helpScreen = new TimeWiseFeedback();
-	helpScreen->show();
+	_helpScreen = new TimeWiseFeedback();
+	_helpScreen->show();
 }

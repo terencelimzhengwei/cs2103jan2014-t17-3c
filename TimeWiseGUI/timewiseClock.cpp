@@ -1,8 +1,8 @@
 #include "timewiseclock.h"
 
 TimeWiseClock::TimeWiseClock() {
-	date = QDate::currentDate();
-	time = QTime::currentTime();
+	_date = QDate::currentDate();
+	_time = QTime::currentTime();
 }
 
 TimeWiseClock::~TimeWiseClock()
@@ -10,9 +10,9 @@ TimeWiseClock::~TimeWiseClock()
 }
 
 QString TimeWiseClock::dateToString(){
-	return date.toString();
+	return _date.toString();
 }
 
 QString TimeWiseClock::timeToString(){
-	return time.toString();
+	return _time.toString();
 }

@@ -57,6 +57,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
 	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
+	setIndexToBoldInGUI(tasklist);
 	return true;
 }
 
@@ -77,6 +78,7 @@ bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
 	_editedTask->setStartTime(_originalStartTime);
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
+	setIndexToBoldInGUI(tasklist);
 	feedback = UNDO_EDIT_SUCCESS;
 	return true;
 }

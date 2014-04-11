@@ -20,6 +20,7 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		return NO_COMMAND_LINE;
 	} else {
 		_taskList.resetLastTaskIndex();
+		_taskList.resetLastTaskIndexList();
 		if(!parseCommand(commandLine)){
 		return _creator.getFeedback();
 	    } else {

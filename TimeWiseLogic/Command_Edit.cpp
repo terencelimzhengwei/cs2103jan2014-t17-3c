@@ -206,3 +206,33 @@ void Command_Edit::editTaskWithNewParameters(){
 	}
 }
 
+
+void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
+	//tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
+	if(!tasklist.getClashedTask().empty()){
+		std::vector<Task*> clashlist = tasklist.getClashedTask();
+		for(unsigned int i=0;i<clashlist.size();i++){
+			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
+			tasklist.addLastTaskIndex(index);
+		}
+	}else{
+		unsigned int index;
+		switch(_displayScreen){
+		case MAIN:
+			index = tasklist.getTaskIndex(_editedTask);
+			tasklist.addLastTaskIndex(index);
+			break;
+		case SEARCHED:
+			index = tasklist.getTaskIndexInSearchedList(_editedTask);
+			tasklist.addLastTaskIndex(index);
+		case FILTERED:
+			index = tasklist.getTaskIndexInFilteredList(_editedTask);
+			tasklist.addLastTaskIndex(index);
+		case COMPLETED:
+			index = tasklist.getTaskIndexInCompletedList(_editedTask);
+			tasklist.addLastTaskIndex(index);
+		default:
+			break;
+		}
+	}
+}

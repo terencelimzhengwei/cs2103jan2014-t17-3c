@@ -16,12 +16,12 @@ bool CommandManager::CanRedo() const
 
 int CommandManager::getUndoLevel() const
 {
-	return m_nUndoLevel;
+	return allowableUndoLevel;
 }
 
 void CommandManager::setUndoLevel(int newValue)
 {
-	m_nUndoLevel = newValue;
+	allowableUndoLevel = newValue;
 }
 
 bool CommandManager::IsDirty() const
@@ -108,7 +108,7 @@ void CommandManager::SetClean()
 
 void CommandManager::AddUndo(Command* pCommand)
 {
-	if (undoList.size() >= m_nUndoLevel)
+	if (undoList.size() >= allowableUndoLevel)
 	{
 		delete undoList.front();
 		undoList.pop_front();

@@ -14,8 +14,7 @@ public:
 	Task(void);
 	~Task(void);
 
-	//getter functions
-	int getIndex();
+//----Getter functions-----------------------------------------------------------------------------
 	std::string getDescription();
 	Date* getEndDate();
 	Date* getStartDate();
@@ -24,8 +23,7 @@ public:
 	TASK_STATUS getTaskStatus();
 	std::string getTaskCategory();
 
-	//setter functions
-	void setIndex(int);
+//----Setter functions-----------------------------------------------------------------------------
 	void setDescription(std::string desc);
 	void setCategory(std::string category);
 	void setEndDate(Date* endDate);
@@ -35,13 +33,12 @@ public:
 	void setStatusAsDone();
 	void setStatusasUndone();
 	void setStatusAsOverdue();
-	//check overdue
+
 	bool checkOverdue();
 	bool checkNewOverdue();
 	bool hasKeyword(std::string keyword);
 	bool hasDate(Date* date);
 	bool hasCategory(std::string category);
-	bool hasStatus(TASK_STATUS status);
 	bool checkLater(Task* otherTask);
 	bool checkClash(Task* task);
 
@@ -72,13 +69,13 @@ public:
 	void initializeTask();
 	void resetPointers();
 	void convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase);
-	unsigned int findIndexOfKeywordInTask(std::string taskInLowerCase, std::string keywordInLowerCase);
+	unsigned int findIndexOfKeywordInString(std::string taskInLowerCase, std::string keywordInLowerCase);
 	bool isValidIndex(unsigned int index);
+	void getTimeOfBothTaskInInt(int& sTime, int& eTime, int& othersTime, int& othereTime, Task* task);
 protected:
 	std::string _taskDescription;
 	TASK_STATUS _taskStatus;
 	std::string _category;
-	int _taskIndex;
 	bool _clashStatus;
 
 	Date *_endDate;
@@ -86,7 +83,4 @@ protected:
 	ClockTime *_startTime;
 	ClockTime *_endTime;
 	Parser _parser;
-
-
-
 };

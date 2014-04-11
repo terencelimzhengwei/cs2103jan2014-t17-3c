@@ -13,12 +13,13 @@ public:
 	bool execute(TaskList&, std::string&);
 	bool undo(TaskList&, std::string&);
 	void addUndoneIndex(int index);
-	void setDisplayScreen(DISPLAY_TYPE);
-
+	void setPreviousScreen(DISPLAY_TYPE* screen);
+	void setIndexToBoldInGUI(TaskList& tasklist);
 private:
 	std::vector<Task*> _undoneTasks;
 	std::vector<unsigned int> _undoneTaskIndex;
-	DISPLAY_TYPE _displayType;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
 	std::string _lastCmdCalled;
 };
 

@@ -14,7 +14,7 @@ public:
 	bool undo(TaskList&, std::string&);
 	void addDoneIndex(int);
 	void setPreviousScreen(DISPLAY_TYPE* screen);
-
+	void setIndexToBoldInGUI(TaskList& tasklist);
 private:
 	std::vector<Task*> _doneTasks;
 	std::vector<unsigned int> _doneTaskIndex;

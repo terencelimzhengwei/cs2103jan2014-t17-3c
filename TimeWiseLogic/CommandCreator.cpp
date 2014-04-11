@@ -292,7 +292,7 @@ Command* CommandCreator::createCommandUndone(vector<string> parameter,DISPLAY_TY
 			return NULL;
 		} 
 	}
-	commandUndone->setDisplayScreen(*type);
+	commandUndone->setPreviousScreen(type);
 	return commandUndone;
 }
 

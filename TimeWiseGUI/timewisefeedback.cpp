@@ -3,7 +3,7 @@
 TimeWiseFeedback::TimeWiseFeedback(QWidget *parent) : QWidget(parent) {
 	ui.setupUi(this);
 	this->setWindowFlags(Qt::CustomizeWindowHint);
-	ui.textEdit->scrollToAnchor("hello");
+	ui.textEdit->scrollToAnchor(" ");
 	ui.pushButton_ok->setFocus();
 }
 

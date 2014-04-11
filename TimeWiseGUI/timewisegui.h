@@ -49,7 +49,7 @@ public:
 
 	//other functions
 	void autoComplete();
-	void showFeedback();
+	void showHelp();
 
 private slots:
 	void updateTime();
@@ -67,7 +67,7 @@ private:
 	Ui::TimeWiseGUIClass ui;
 	TimeWiseLogic _logic;
 	QCompleter *descCompleter;
-	TimeWiseFeedback *feedback;
+	TimeWiseFeedback *helpScreen;
 
 	//these are for the history retrieval used in line Edit
 	int current_line;

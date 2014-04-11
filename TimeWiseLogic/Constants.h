@@ -8,7 +8,6 @@
 
 static const int CMD_TYPE_COUNT		    = 13;
 static const int LOG_TYPE_COUNT			= 5;
-static const int PRIORITY_COUNT			= 6;
 static const int TASK_STATUS_COUNT		= 3;
 static const int TASK_TYPE_COUNT		= 3;
 static const int MAX_PREPOSITION        = 12;
@@ -23,21 +22,19 @@ static const int SEARCH_COUNT           = 2;
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum TASK_TYPE{TIMED, DEADLINE, FLOATING};
 enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
-enum PRIORITY{HIGH,MEDIUM,LOW,DEFAULTPRI};
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
-enum FILTER_TYPE{CATEGORY,PRI,DATE};
+enum FILTER_TYPE{CATEGORY, DATE};
 enum CLEAR_TYPE{ALL,UNCOMPLETED_TASKS,COMPLETED_TASKS,SCREEN};
 enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED};
-enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, PRIORITY_HEADER, UNDEFINED_HEADER};
+enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, UNDEFINED_HEADER};
 enum LOG_TYPE{ INFOLOG, NOTICELOG, WARNINGLOG, ERRORLOG, FATALLOG };
 
 static const std::string LOG_TYPE_STRING[LOG_TYPE_COUNT]		=		{"INFOLOG","NOTICELOG","WARNINGLOG","ERRORLOG","FATALLOG"};
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
 { "add","delete","edit","clear","display", "search", "filter", "undo", "redo",  "undone", "done"};
-static const std::string PRIORITY_STRING[PRIORITY_COUNT]		=		{"high","medium","low", "H", "M", "L"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string TASK_TYPE_STRING[TASK_TYPE_COUNT]		=		{"timed","deadline","floating"};
-static const std::string HEADER_STRING[HEADER_COUNT] = {"description", "startDate", "startTime","dueDate", "dueTime", "category", "priority"};
+static const std::string HEADER_STRING[HEADER_COUNT] = {"description", "startDate", "startTime","dueDate", "dueTime", "category"};
 static const std::string DAYS_IN_WEEK[DAYS_COUNT] = 
 {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", 
 "mon", "tues", "wed", "thurs", "fri", "sat", "sun", "today", "tomorrow", "2day", "tmr", "tml"};
@@ -50,7 +47,6 @@ const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "
 
 const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;
-const PRIORITY DEFAULT_PRIORITY = LOW;
 const TASK_TYPE DEFAULT_TASK_TYPE = FLOATING;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 const std::string DEFAULT_EMPTY = "";

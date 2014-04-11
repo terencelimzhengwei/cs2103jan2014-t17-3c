@@ -5,7 +5,6 @@ Task::Task(void){
 	_taskDescription=DEFAULT_EMPTY;
 	_taskType = DEFAULT_TASK_TYPE;
 	_taskStatus = DEFAULT_TASK_STATUS;
-	_taskPriority=DEFAULT_PRIORITY;
 	_category=DEFAULT_EMPTY;
 	_startTime = NULL;
 	_endTime = NULL;
@@ -112,10 +111,6 @@ void Task::setEndTime(ClockTime* endTime)
 	_endTime = endTime;
 }
 
-void Task::setPriority(PRIORITY taskPriority){
-	_taskPriority = taskPriority;
-}
-
 void Task::setCategory(std::string category){
 	_category = category;
 }
@@ -148,10 +143,6 @@ bool Task::hasKeyword(std::string keyword){
 	return false;
 }
 
-PRIORITY Task::getPriority(){
-	return _taskPriority;
-}
-
 bool Task::checkLater(Task* otherTask){
 	if(_endDate==NULL){
 		return false;
@@ -173,13 +164,6 @@ bool Task::checkLater(Task* otherTask){
 		}
 	}
 	return true;
-}
-
-bool Task::hasPriority(PRIORITY priority){
-	if(_taskPriority==priority){
-		return true;
-	}
-	return false;
 }
 
 bool Task::hasDate(Date* date){
@@ -302,7 +286,6 @@ std::string Task::toString(){
 	std::string endDate="";
 	std::string endTime="";
 	std::string startTime="";
-	std::string priority="";
 	std::string category="";
 
 	if(_startDate!=NULL){
@@ -317,7 +300,6 @@ std::string Task::toString(){
 	if(_endTime!=NULL){
 		endTime=_endTime->toString();
 	}
-	priority=PRIORITY_STRING[_taskPriority];
 	category=_category;
 
 	std::string command = description;
@@ -341,9 +323,6 @@ std::string Task::toString(){
 		description+=endTime;
 	}
 
-	if(priority!=""){
-		description+=" !"+priority;
-	}
 	if(category!=""){
 		description+=" #"+category;
 	}

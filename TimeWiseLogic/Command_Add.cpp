@@ -2,9 +2,9 @@
 #include "Command_Add.h"
 
 //***************************************************************************************
-//When a new Command_Add object is dynamically created, it will set _setPriority to LOW,
-//_taskType to FLOATING and _category to "". 
-//This means that, when a task with only description is entered, it's priority, type and
+//When a new Command_Add object is dynamically created, it will set _taskType to FLOATING 
+//and _category to "". 
+//This means that, when a task with only description is entered, it's type and
 //category will be set to these default values.
 //***************************************************************************************
 Command_Add::Command_Add() {

@@ -35,7 +35,6 @@ public:
 	void populateSearchList(std::string& keyword);
 	void populateFilterList(std::string& category);
 	void populateFilterList(Date* date);
-	void populateFilterList(PRIORITY priority);
 
 	std::vector<Task*> getSearchResults();
 	std::vector<Task*> getOverdueTaskList();

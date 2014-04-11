@@ -24,7 +24,6 @@ namespace TimeWiseUnitTest {
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check for floating task with category");
-			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 			commandToBeExecuted[1]->setPreviousScreen(&displayScreen);
 
@@ -33,7 +32,6 @@ namespace TimeWiseUnitTest {
 			commandToBeExecuted[2]->setDescription("check for deadline task without category");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
-			// commandToBeExecuted[2]->setPriority(HIGH);
 			commandToBeExecuted[2]->setCategory("test");
 			commandToBeExecuted[2]->setPreviousScreen(&displayScreen);
 
@@ -44,7 +42,6 @@ namespace TimeWiseUnitTest {
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
 			commandToBeExecuted[3]->setEndTime(endTime);
-			// commandToBeExecuted[3]->setPriority(HIGH);
 			commandToBeExecuted[3]->setCategory("test");
 			commandToBeExecuted[3]->setPreviousScreen(&displayScreen);
 
@@ -54,7 +51,6 @@ namespace TimeWiseUnitTest {
 
 			commandToBeExecuted[1]->execute(_taskList, feedback);
 			Assert::AreEqual("check for floating task with category",_taskList.getTask(0)->getDescription().c_str());
-			//Assert::AreEqual(static_cast<int>(HIGH),static_cast<int>(_taskList.getTask(0)->getPriority()));
 			Assert::AreEqual("test",_taskList.getTask(0)->getTaskCategory().c_str());
 
 			commandToBeExecuted[2]->execute(_taskList, feedback);
@@ -86,7 +82,6 @@ namespace TimeWiseUnitTest {
 
 			commandToBeExecuted.push_back(new Command_Add);
 			commandToBeExecuted[1]->setDescription("check floating task with cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
@@ -106,22 +101,6 @@ namespace TimeWiseUnitTest {
 			commandToBeExecuted[2]->execute(_taskList, feedback);
 			commandToBeExecuted[3]->execute(_taskList, feedback);
 
-			/*Command_Delete* commandToBeDeleted = new Command_Delete;
-			commandToBeDeleted->setDeletionIndex(0);
-			commandToBeDeleted->execute(_taskList, feedback);*/
-			Assert::AreEqual("check for floating task without priority and cat",_taskList.getTask(0)->getDescription().c_str());
-			//Assert::AreEqual("check deadline task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
-			//Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(2)->getDescription().c_str());
-			/*commandToBeDeleted->setDeletionIndex(1);
-			commandToBeDeleted->execute(_taskList, feedback);
-			Assert::AreEqual("check for floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
-			Assert::AreEqual("check timed task without priority and cat",_taskList.getTask(1)->getDescription().c_str());
-			commandToBeDeleted->setDeletionIndex(1);
-			commandToBeDeleted->execute(_taskList, feedback);
-			Assert::AreEqual("check for floating task with priority and cat",_taskList.getTask(0)->getDescription().c_str());
-			commandToBeDeleted->setDeletionIndex(0);
-			commandToBeDeleted->execute(_taskList, feedback);
-			Assert::AreEqual(0,_taskList.undoneSize());*/
 		}
 
 		TEST_METHOD(CommandClearTest) {
@@ -133,20 +112,19 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -167,20 +145,19 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -215,20 +192,19 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -277,20 +253,19 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -309,10 +284,10 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(_taskList.getTask(1)->getDescription().c_str(),searchedtask[1]->getDescription().c_str());
 			Assert::AreEqual(_taskList.getTask(2)->getDescription().c_str(),searchedtask[2]->getDescription().c_str());
 			Assert::AreEqual(_taskList.getTask(3)->getDescription().c_str(),searchedtask[3]->getDescription().c_str());
-			search->setKeyword("check timed task without priority and cat");
+			search->setKeyword("check timed task without cat");
 			search->execute(_taskList, feedback);
 			std::vector<Task*> searchedtask1= _taskList.getSearchResults();
-			Assert::AreEqual("check timed task without priority and cat",searchedtask1[0]->getDescription().c_str());
+			Assert::AreEqual("check timed task without cat",searchedtask1[0]->getDescription().c_str());
 			/*search->setCategory("test");
 			search->execute(_taskList);
 			std::vector<Task*> searchedtask2= _taskList.getSearchResults();
@@ -397,20 +372,19 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);
@@ -435,22 +409,21 @@ namespace TimeWiseUnitTest {
 			Date endDate(12,3,2014);
 			std::string feedback;
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[0]->setDescription("check for floating task without priority and cat");
+			commandToBeExecuted[0]->setDescription("check for floating task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[1]->setDescription("check floating task with priority and cat");
-			// commandToBeExecuted[1]->setPriority(HIGH);
+			commandToBeExecuted[1]->setDescription("check floating task with cat");
 			commandToBeExecuted[1]->setCategory("test");
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[2]->setDescription("check deadline task without priority and cat");
+			commandToBeExecuted[2]->setDescription("check deadline task without cat");
 			commandToBeExecuted[2]->setEndDate(endDate);
 			commandToBeExecuted[2]->setEndTime(endTime);
 
 			commandToBeExecuted.push_back(new Command_Add);
-			commandToBeExecuted[3]->setDescription("check timed task without priority and cat");
+			commandToBeExecuted[3]->setDescription("check timed task without cat");
 			commandToBeExecuted[3]->setStartDate(startDate);
 			commandToBeExecuted[3]->setStartTime(startTime);
 			commandToBeExecuted[3]->setEndDate(endDate);

@@ -4,7 +4,6 @@
 #include <qdatetime.h>
 #include <QHeaderView>
 #include <QShortcut>
-#include <QScrollBar>
 
 const char* ADD_COMMAND = "add";
 const char* CLEAR_COMMAND = "clear";
@@ -16,16 +15,30 @@ const char* EXIT_COMMAND = "exit";
 const char* FILTER_COMMAND = "filter";
 const char* HELP_COMMAND = "help";
 const char* SEARCH_COMMAND = "search";
+const char* UNDO_COMMAND = "undo";
+const char* REDO_COMMAND = "redo";
 
 const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
 const char* CLEAR_FORMAT = "clear: all or done or undone";
 const char* DELETE_FORMAT = "delete: <ID>";
-const char* DISPLAY_FORMAT = "display: main or completed";
+const char* DISPLAY_FORMAT = "display: main or done";
 const char* DONE_FORMAT = "done: <ID>";
 const char* EDIT_FORMAT = "edit: <ID> <contents>";
 const char* FILTER_FORMAT = "filter: <dates> or <#category>";
 const char* SEARCH_FORMAT = "search: <keywords>";
 const char* DEFAULT_DISPLAY = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit";
+
+const char* BLANK = "";
+const char* MAIN_TITLE = "Your Tasks";
+const char* COMPLETED_TITLE = "Completed Tasks";
+const char* SEARCHED_TITLE = "Searched Tasks";
+const char* FILTERED_TITLE = "Filtered Tasks";
+
+const char* OVERDUE_STATUS = "overdue";
+const char* DONE_STATUS = "done";
+
+const char* DISPLAY_MAIN = "display main";
+const char* DISPLAY_DONE = "display done";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -103,7 +116,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 	QString input = ui.userInput->text();
 
 	if(input == HELP_COMMAND) {
-		showFeedback();
+		showHelp();
 	} else if(input == EXIT_COMMAND) {
 		exit(0);
 	} else {
@@ -123,32 +136,32 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		QString outputMessage = QString::fromStdString(messageLog);
 		ui.label_mlog->setText(outputMessage);
 	}
-	ui.userInput->setText("");
+	ui.userInput->setText(BLANK);
 }
 
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 	switch(displayType){
 	case MAIN: {
 		setMainData();
-		ui.label_title->setText("Your Tasks");
+		ui.label_title->setText(MAIN_TITLE);
 		break;
 	}
 	case SEARCHED: {
 		vector<Task*> taskList = _logic.getTaskList().getSearchResults();
 		setData(taskList);
-		ui.label_title->setText("Searched Tasks");
+		ui.label_title->setText(SEARCHED_TITLE);
 		break;
 	}
 	case COMPLETE:{
 		vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 		setData(taskList);
-		ui.label_title->setText("Completed Tasks");
+		ui.label_title->setText(COMPLETED_TITLE);
 		break;
 	}
 	case FILTERED:{
 		vector<Task*> taskList = _logic.getTaskList().getFilterResults();
 		setData(taskList);
-		ui.label_title->setText("Filtered Tasks");
+		ui.label_title->setText(FILTERED_TITLE);
 		break;
 	}
 	}
@@ -248,17 +261,17 @@ void TimeWiseGUI::setMainData() {
 			}
 			}
 			model->setData(model->index(i,j), font, Qt::FontRole);
-			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
+			//highlight description in red if that task is overdue, in green is task is done, and in yellow if task is clashed.
 			bool checkClash = taskList.getTask(i)->isClash();
-			if(qStatus == "overdue" && checkClash) {
+			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == "done" && checkClash) {
+			} else if (qStatus == DONE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
-			} else if(qStatus == "overdue") {
+			} else if(qStatus == OVERDUE_STATUS) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == "done") {
+			} else if (qStatus == DONE_STATUS) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}
@@ -347,15 +360,15 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList)
 			}
 			//highlight description in red if that task is overdue, in green is task is done, and in yellow is task is clashed.
 			bool checkClash = taskList[i]->isClash();
-			if(qStatus == "overdue" && checkClash) {
+			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == "done" && checkClash) {
+			} else if (qStatus == DONE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
 				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
-			} else if(qStatus == "overdue") {
+			} else if(qStatus == OVERDUE_STATUS) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == "done") {
+			} else if (qStatus == DONE_STATUS) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
 		}
@@ -423,7 +436,7 @@ void TimeWiseGUI::updateTime() {
 
 	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();
-		if(_logic.getScreenToDisplay()==MAIN){
+		if(_logic.getScreenToDisplay() == MAIN){
 			setMainData();
 		}
 	}
@@ -455,31 +468,30 @@ void TimeWiseGUI::setupHotKeys() {
 }
 
 void TimeWiseGUI::undo(){
-	std::string messageLog = _logic.processCommand("undo");
+	std::string messageLog = _logic.processCommand(UNDO_COMMAND);
 	QString outputMessage = QString::fromStdString(messageLog);
 	ui.label_mlog->setText(outputMessage);
-	//autoComplete();
 	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 	displayTaskList(displayType);
 }
 
 void TimeWiseGUI::redo(){
-	_logic.processCommand("redo");
+	_logic.processCommand(REDO_COMMAND);
 	DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
 	displayTaskList(displayType);
 }
 
 void TimeWiseGUI::displayMain(){
-    _logic.processCommand("display main");
+    _logic.processCommand(DISPLAY_MAIN);
 	setMainData();
-	ui.label_title->setText("Your Tasks");
+	ui.label_title->setText(MAIN_TITLE);
 }
 
 void TimeWiseGUI::displayDone(){
-	_logic.processCommand("display done");
+	_logic.processCommand(DISPLAY_DONE);
 	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
 	setData(taskList);
-	ui.label_title->setText("Completed Tasks");
+	ui.label_title->setText(COMPLETED_TITLE);
 }
 
 void TimeWiseGUI::setOverdueMessage(int overdueCount) {
@@ -514,47 +526,40 @@ void TimeWiseGUI::autoComplete() {
 	}
 
 	//for display function
-	descList << "display completed" << "display main";
+	descList << DISPLAY_DONE << DISPLAY_MAIN;
 
 	descCompleter = new QCompleter(descList, this);
 	descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
 	ui.userInput->setCompleter(descCompleter);
 }
 
-/*void TimeWiseGUI::wheelEvent(QWheelEvent *ev ) {
-	if ( ev->delta() > 0 ) {
-		previous_line();
-	} else {
-		next_line();
-	}
-}*/
-
 void TimeWiseGUI::previous_line() {
-	if ( lines.empty() )
+	if (lines.empty()) {
 		return;
+	}
 
-	if ( !ui.userInput->text().isEmpty() 
-		&& ( current_line >= lines.size() || ui.userInput->text() != lines[current_line] ) )
+	if (!ui.userInput->text().isEmpty() 
+		&& ( current_line >= lines.size() || ui.userInput->text() != lines[current_line])) {
 		unfinished = ui.userInput->text();
-
-	if ( current_line > 0 )
+	}
+	if (current_line > 0) {
 		current_line--;
-
+	}
 	ui.userInput->setText(lines[current_line]);
 	ui.userInput->selectAll();
 }
 
 
 void TimeWiseGUI::next_line() {
-	if ( lines.empty() ) {
+	if (lines.empty()) {
 		return;
 	}
 
 	current_line++;
 
-	if ( current_line >= lines.size() ) {
+	if (current_line >= lines.size()) {
 		ui.userInput->setText(unfinished);
-		unfinished = "";
+		unfinished = BLANK;
 		current_line = lines.size();
 	} else {
 		ui.userInput->setText(lines[current_line]);
@@ -562,7 +567,7 @@ void TimeWiseGUI::next_line() {
 	}
 }
 
-void TimeWiseGUI::showFeedback() {
-	feedback = new TimeWiseFeedback();
-	feedback->show();
+void TimeWiseGUI::showHelp() {
+	helpScreen = new TimeWiseFeedback();
+	helpScreen->show();
 }

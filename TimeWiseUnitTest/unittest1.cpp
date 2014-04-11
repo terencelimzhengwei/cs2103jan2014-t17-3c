@@ -818,7 +818,6 @@ namespace TimeWiseUnitTest {
 		TEST_METHOD(System_Test2) {
 			TimeWiseLogic _logic;
 			//Test for command delete and the feedback that the system return to user
-			_logic.changeDisplay(MAIN);
 			std::string cmd1 = _logic.processCommand("add do laundry");
 			std::string cmd2 = _logic.processCommand("add do laundry by 21/05");
 			std::string cmd3 = _logic.processCommand("add do laundry from 21/5 to 22/5");
@@ -871,7 +870,6 @@ namespace TimeWiseUnitTest {
 			std::string cmd11 = _logic.processCommand("done -3");
 			std::string expected11 = "Error! The task index that you entered is not a number.";
 			Assert::AreEqual(cmd11,expected11);
-			_logic.changeDisplay(COMPLETE);
 			std::string cmd12 = _logic.processCommand("undone 1");
 			std::string expected12 = "Task: 'do laudry on 21/4/2014 to 22/4/2014 !low' has been successfully marked as uncompleted.";
 			Assert::AreEqual(cmd12,expected12);
@@ -890,7 +888,6 @@ namespace TimeWiseUnitTest {
 			std::string cmd8 = _logic.processCommand("done 5");
 			std::string cmd9 = _logic.processCommand("done 6");
 			
-			_logic.changeDisplay(MAIN);
 			int _undoneSize1 = _logic.getTaskList().undoneSize();
 			int expectedUndoneSize1 = 5;
 			Assert::AreEqual(_undoneSize1,expectedUndoneSize1);
@@ -901,7 +898,6 @@ namespace TimeWiseUnitTest {
 			int expectedUndoneSize2 = 0;
 			Assert::AreEqual(_undoneSize2,expectedUndoneSize2);
 
-			_logic.changeDisplay(COMPLETE);
 			int _doneSize1 = _logic.getTaskList().doneSize();
 			int expectedDoneSize1 = 2;
 			Assert::AreEqual(_doneSize1, expectedDoneSize1);

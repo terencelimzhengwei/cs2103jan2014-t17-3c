@@ -1,44 +1,8 @@
 #include "timewisegui.h"
-#include "tableModel.h"
 #include <stdio.h>
 #include <qdatetime.h>
 #include <QHeaderView>
 #include <QShortcut>
-
-const char* ADD_COMMAND = "add";
-const char* CLEAR_COMMAND = "clear";
-const char* DELETE_COMMAND = "delete";
-const char* DISPLAY_COMMAND = "display";
-const char* DONE_COMMAND = "done";
-const char* EDIT_COMMAND = "edit";
-const char* EXIT_COMMAND = "exit";
-const char* FILTER_COMMAND = "filter";
-const char* HELP_COMMAND = "help";
-const char* SEARCH_COMMAND = "search";
-const char* UNDO_COMMAND = "undo";
-const char* REDO_COMMAND = "redo";
-
-const char* ADD_FORMAT = "add: <description> <start date> <due date> <start time> <due time> <#category>";
-const char* CLEAR_FORMAT = "clear: all or done or undone";
-const char* DELETE_FORMAT = "delete: <ID>";
-const char* DISPLAY_FORMAT = "display: main or done";
-const char* DONE_FORMAT = "done: <ID>";
-const char* EDIT_FORMAT = "edit: <ID> <contents>";
-const char* FILTER_FORMAT = "filter: <dates> or <#category>";
-const char* SEARCH_FORMAT = "search: <keywords>";
-const char* DEFAULT_DISPLAY = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit";
-
-const char* BLANK = "";
-const char* MAIN_TITLE = "Your Tasks";
-const char* COMPLETED_TITLE = "Completed Tasks";
-const char* SEARCHED_TITLE = "Searched Tasks";
-const char* FILTERED_TITLE = "Filtered Tasks";
-
-const char* OVERDUE_STATUS = "overdue";
-const char* DONE_STATUS = "done";
-
-const char* DISPLAY_MAIN = "display main";
-const char* DISPLAY_DONE = "display done";
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
@@ -418,10 +382,9 @@ void TimeWiseGUI::setupTable() {
 
 //set date and time
 void TimeWiseGUI::setupClock() {	
-	QDate date = QDate::currentDate();
-	ui.label_date->setText(date.toString());
-	QTime time = QTime::currentTime();
-	ui.label_time->setText(time.toString());
+	clock = new TimeWiseClock();
+	ui.label_date->setText(clock->dateToString());
+	ui.label_time->setText(clock->timeToString());
 
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT( updateTime() ));
@@ -429,10 +392,9 @@ void TimeWiseGUI::setupClock() {
 }
 
 void TimeWiseGUI::updateTime() {
-	QDate date = QDate::currentDate();
-	ui.label_date->setText(date.toString());
-	QTime time = QTime::currentTime();
-	ui.label_time->setText(time.toString());
+	clock = new TimeWiseClock();
+	ui.label_date->setText(clock->dateToString());
+	ui.label_time->setText(clock->timeToString());
 
 	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();

@@ -68,6 +68,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_timewisefeedback.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="timewiseClock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="timewisegui.h">
@@ -97,6 +100,12 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants_ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="timewiseClock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

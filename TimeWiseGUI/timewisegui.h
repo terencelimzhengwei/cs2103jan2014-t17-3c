@@ -17,6 +17,8 @@
 #include <string>
 #include <stdexcept>
 #include "ui_timewisegui.h"
+#include "Constants_ui.h"
+#include "TimeWiseClock.h"
 #include "TimeWiseLogic.h"
 #include "timewisefeedback.h"
 
@@ -67,6 +69,7 @@ private:
 	Ui::TimeWiseGUIClass ui;
 	TimeWiseLogic _logic;
 	QCompleter *descCompleter;
+	TimeWiseClock *clock;
 	TimeWiseFeedback *helpScreen;
 
 	//these are for the history retrieval used in line Edit

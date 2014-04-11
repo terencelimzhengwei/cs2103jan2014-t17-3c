@@ -103,6 +103,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tableModel.cpp" />
+    <ClCompile Include="timewiseClock.cpp" />
     <ClCompile Include="timewisefeedback.cpp" />
     <ClCompile Include="timewisegui.cpp" />
   </ItemGroup>
@@ -133,7 +134,9 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_timewisefeedback.h" />
     <ClInclude Include="GeneratedFiles\ui_timewisegui.h" />
+    <ClInclude Include="Constants_ui.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="timewiseClock.h" />
     <CustomBuild Include="timewisefeedback.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing timewisefeedback.h...</Message>
@@ -195,7 +198,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" lupdateOptions="" lreleaseOptions="" Qt5Version_x0020_Win32="msvc201232bit" />
+      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" lupdateOptions="" lreleaseOptions="" Qt5Version_x0020_Win32="msvc2012" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

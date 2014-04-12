@@ -15,7 +15,13 @@ public:
 
 	virtual bool execute(TaskList&, std::string&);
 	virtual bool undo(TaskList&, std::string&);
-
+	bool wasUndone();
+	bool wasExecuted();
+	void lastCmdCalledIs(std::string cmd);
+	void permanantlyDeleteTask();
+	void redo(TaskList& taskList);
+	void deleteTaskWithBackUp(TaskList& taskList);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
 private:
 	std::string _deletionString;
 	std::string _lastCmdCalled;

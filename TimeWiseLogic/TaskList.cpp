@@ -65,7 +65,7 @@ void TaskList::clearTask(){
 }
 
 void TaskList::populateSearchList(std::string& keyword){
-	clearSearchedTasks();
+	resetSearchedTasks();
 	for(unsigned int i=0;i<undoneSize();i++){
 		if(_uncompletedTaskList[i]->hasKeyword(keyword)){
 			addTaskToSearchedList(*_uncompletedTaskList[i]);
@@ -237,28 +237,15 @@ std::vector<Task*> TaskList::getFilterResults(){
 	return _filteredTaskList;
 }
 
-void TaskList::deleteSearchedTasks(){
+void TaskList::clearSearchedTasks(){
 	while(!_searchedTaskList.empty()){
-		for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
-			if(_uncompletedTaskList[i]==_searchedTaskList.back()){
-				_uncompletedTaskList.erase(_uncompletedTaskList.begin()+i);
-				_searchedTaskList.pop_back();
-				if(_searchedTaskList.empty()){
-					return;
-				}
-			}
-		}
+		deleteTaskFromSearchList(0);
 	}
 }
 
-void TaskList::deleteFilteredTasks(){
+void TaskList::clearFilteredTasks(){
 	while(!_filteredTaskList.empty()){
-		for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
-			if(_uncompletedTaskList[i]==_filteredTaskList.back()){
-				_uncompletedTaskList.erase(_uncompletedTaskList.begin()+i);
-				_filteredTaskList.pop_back();
-			}
-		}
+		deleteTaskFromFilterList(0);
 	}
 }
 
@@ -282,7 +269,7 @@ bool TaskList::deleteTaskFromOverdueList(unsigned int& index)
 	}
 }
 
-bool TaskList::deleteTaskFromSearchList(unsigned int& index){
+bool TaskList::deleteTaskFromSearchList(unsigned int index){
 	Task* task=getSearchedTask(index);
 	unsigned int deletionIndex;
 	if(task->getTaskStatus()==COMPLETED) {
@@ -306,7 +293,8 @@ bool TaskList::deleteTaskFromSearchList(unsigned int& index){
 	return true;
 }
 
-bool TaskList::deleteTaskFromFilterList(unsigned int& index){
+bool TaskList::deleteTaskFromFilterList(unsigned int index)
+{
 	Task* task=_filteredTaskList[index];
 	unsigned int deletionIndex;
 	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
@@ -432,12 +420,11 @@ int TaskList::getTaskIndexInFilteredList(Task* task){
 	return DEFAULT_INDEX;
 }
 
-void TaskList::clearSearchedTasks(){
+void TaskList::resetSearchedTasks(){
 	_searchedTaskList.clear();
 }
 
-void TaskList::clearFilteredTasks()
-{
+void TaskList::resetFilteredTasks(){
 	_filteredTaskList.clear();
 }
 void TaskList::resetClash(){

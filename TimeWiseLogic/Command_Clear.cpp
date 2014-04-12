@@ -38,11 +38,9 @@ bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 		clearScreen(tasklist,feedback);
 		break;
 	default:
-		lastCmdCalledIs(EXECUTE);
 		return false;
 	}
-
-	_lastCmdCalled = EXECUTE;
+	lastCmdCalledIs(EXECUTE);
 	return true;
 }
 
@@ -58,11 +56,7 @@ bool Command_Clear::undo(TaskList& tasklist, std::string& feedback){
 		undoCompletedTasks(tasklist,feedback);
 		break;
 	case SCREEN:
-		if(_displayScreen == COMPLETE){
-			undoCompletedTasks(tasklist,feedback);
-		} else {
-			undoUncompletedTasks(tasklist,feedback);
-		}
+		undoScreenTasks(tasklist,feedback);
 		break;
 	default:
 		return false;
@@ -85,11 +79,6 @@ void Command_Clear::clearUncompletedTasks(TaskList& tasklist){
 		for(int i = 0; i<tasklist.undoneSize(); i++){
 			_deletedUndoneTasks.push_back(tasklist.getTask(i));
 		}
-		if(_displayScreen == SEARCHED){
-			saveSearchedTasks(tasklist);
-		}else if(_displayScreen == FILTERED){
-			saveFilteredTasks(tasklist);
-		}
 	}
 	tasklist.clearTask();
 }
@@ -97,8 +86,8 @@ void Command_Clear::clearUncompletedTasks(TaskList& tasklist){
 void Command_Clear::clearAll(TaskList& tasklist){
 	clearCompletedTasks(tasklist);
 	clearUncompletedTasks(tasklist);
-	tasklist.clearSearchedTasks();
-	tasklist.clearFilteredTasks();
+	tasklist.resetSearchedTasks();
+	tasklist.resetFilteredTasks();
 }
 
 void Command_Clear::undoCompletedTasks(TaskList& tasklist, std::string& feedback){
@@ -113,19 +102,6 @@ void Command_Clear::undoUncompletedTasks(TaskList& tasklist, std::string& feedba
 		tasklist.addTask(*_deletedUndoneTasks[i]);
 		createFeedback(UNDO_CLEAR_UNCOMPLETED_SUCCESS,feedback);
 	}
-	if(_displayScreen == SEARCHED){
-		for(unsigned int i = 0;i < _deletedSearchedTasks.size();i++){
-			tasklist.addTask(*_deletedSearchedTasks[i]);
-		}
-		repopulateSearchList(tasklist);
-		feedback = UNDO_CLEAR_SEARCHED_SUCCESS;
-	} else if(_displayScreen ==  FILTERED){
-		for(unsigned int i = 0; i<_deletedFilteredTasks.size(); i++){
-			tasklist.addTask(*_deletedFilteredTasks[i]);
-		}
-		repopulateFilterList(tasklist);
-		feedback = UNDO_CLEAR_FILTERED_SUCCESS;
-	}
 }
 
 void Command_Clear::undoAll(TaskList& tasklist, std::string& feedback){
@@ -136,15 +112,15 @@ void Command_Clear::undoAll(TaskList& tasklist, std::string& feedback){
 	}else if(_displayScreen == FILTERED){
 		repopulateFilterList(tasklist);
 	}
-	feedback = UNDO_CLEAR_ALL_SUCCESS;
+	createFeedback(UNDO_CLEAR_ALL_SUCCESS,feedback);
 }
 
 void Command_Clear::clearScreen(TaskList& tasklist,std::string& feedback) {
 	if(_displayScreen == SEARCHED){
-		if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
+		if(!wasUndone()){
 			saveSearchedTasks(tasklist);
 		}
-		tasklist.deleteSearchedTasks(); 
+		tasklist.clearSearchedTasks(); 
 		createFeedback(CLEAR_SEARCHED_SUCCESS,feedback);
 	} else if(_displayScreen == COMPLETE){
 		clearCompletedTasks(tasklist);
@@ -156,7 +132,7 @@ void Command_Clear::clearScreen(TaskList& tasklist,std::string& feedback) {
 		if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
 			saveFilteredTasks(tasklist);
 		}
-		tasklist.deleteFilteredTasks();
+		tasklist.clearFilteredTasks();
 		createFeedback(CLEAR_FILTERED_SUCCESS,feedback);
 	}
 	return;
@@ -181,14 +157,14 @@ void Command_Clear::saveFilteredTasks(TaskList &tasklist) {
 }
 
 void Command_Clear::repopulateSearchList(TaskList &tasklist){
-	tasklist.clearSearchedTasks();
+	tasklist.resetSearchedTasks();
 	for(unsigned int i = 0; i < _deletedSearchedTasks.size(); i++){
 		tasklist.addTaskToSearchedList(*_deletedSearchedTasks[i]);
 	}
 }
 
 void Command_Clear::repopulateFilterList(TaskList &tasklist){
-	tasklist.clearFilteredTasks();
+	tasklist.resetFilteredTasks();
 	for(unsigned int i = 0; i < _deletedFilteredTasks.size(); i++){
 		tasklist.addTaskToFilteredList(*_deletedFilteredTasks[i]);
 	}
@@ -220,5 +196,41 @@ bool Command_Clear::wasUndone(){
 		return true;
 	}
 	return false;
+}
+
+void Command_Clear::undoFilteredTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i=0;i<_deletedFilteredTasks.size();i++){
+		if(_deletedFilteredTasks[i]->getTaskStatus()==COMPLETED){
+			tasklist.addTaskToDoneList(*_deletedFilteredTasks[i]);
+		}else{
+			tasklist.addTask(*_deletedFilteredTasks[i]);
+		}
+	}
+	repopulateFilterList(tasklist);
+	createFeedback(UNDO_CLEAR_FILTERED_SUCCESS,feedback);
+}
+
+void Command_Clear::undoSearchedTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i=0;i<_deletedSearchedTasks.size();i++){
+		if(_deletedSearchedTasks[i]->getTaskStatus()==COMPLETED){
+			tasklist.addTaskToDoneList(*_deletedSearchedTasks[i]);
+		}else{
+			tasklist.addTask(*_deletedSearchedTasks[i]);
+		}
+	}
+	repopulateSearchList(tasklist);
+	createFeedback(UNDO_CLEAR_SEARCHED_SUCCESS,feedback);
+}
+
+void Command_Clear::undoScreenTasks(TaskList& tasklist, std::string& feedback){
+	if(_displayScreen == COMPLETE){
+		undoCompletedTasks(tasklist,feedback);
+	} else if(_displayScreen==MAIN) {
+		undoUncompletedTasks(tasklist,feedback);
+	} else if(_displayScreen==FILTERED){
+		undoFilteredTasks(tasklist,feedback);
+	} else if(_displayScreen==SEARCHED){
+		undoSearchedTasks(tasklist,feedback);
+	}
 }
 

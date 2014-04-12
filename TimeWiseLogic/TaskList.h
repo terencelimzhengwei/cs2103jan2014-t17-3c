@@ -25,7 +25,7 @@ public:
 	bool deleteTaskFromUncompletedList(unsigned int& index);
 	bool deleteTaskFromCompletedList(unsigned int& index);
 	bool deleteTaskFromOverdueList(unsigned int&);
-	bool deleteTaskFromSearchList(unsigned int& index);
+	bool deleteTaskFromSearchList(unsigned int index);
 
 	int getTaskIndex(Task* task);
 	int getTaskIndexInCompletedList(Task* task);
@@ -51,17 +51,17 @@ public:
 	int searchedSize();
 	void updateClashStatus();
 	void resetClash();
-	void deleteSearchedTasks();
+	void resetSearchedTasks();
 	Task* deleteEditTask();
 	Task* deleteEditTaskFromSearch();
-	void deleteFilteredTasks();
-	void clearSearchedTasks();
 	void clearFilteredTasks();
+	void clearSearchedTasks();
+	void resetFilteredTasks();
 	void addTaskToFilteredList(Task& task);
 	Task* getFilteredTask(int index);
 	std::vector<Task*> getClashedTask();
 	void shiftTask(Task* task);
-	bool deleteTaskFromFilterList(unsigned int& index);
+	bool deleteTaskFromFilterList(unsigned int index);
 	Task* setFilteredTaskAsDone(unsigned int index);
 	unsigned int getLastTaskIndex();
 	void addLastTaskIndex(unsigned int index);

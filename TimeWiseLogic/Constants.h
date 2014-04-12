@@ -15,6 +15,7 @@ static const int DAYS_COUNT             = 19;
 static const int TIME_COUNT             = 2;
 static const int FILTER_COUNT           = 4;
 static const int SEARCH_COUNT           = 2;
+static const int ZERO					= 0;
 
 
 

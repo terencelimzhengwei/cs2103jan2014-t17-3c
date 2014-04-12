@@ -24,7 +24,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 	case MAIN:
 		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
 			for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-				taskList.deleteTask(_deletedTaskIndex[i]);
+				taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
 			}
 			_lastCmdCalled=EXECUTE;
 			return true;
@@ -32,7 +32,7 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
 				_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
-				taskList.deleteTask(_deletedTaskIndex[i]);
+				taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
 				_lastCmdCalled = EXECUTE;
 				feedback = DELETE_SUCCESS;
 			}
@@ -91,11 +91,10 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 }
 
 bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
-	int checkClash;
 	switch(_displayType){
 	case MAIN:
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 		}
 		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
 		feedback = UNDO_DELETE_SUCCESS;
@@ -109,7 +108,7 @@ bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 		break;
 	case SEARCHED:{
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToSearchedList(*_deletedTasks[i]);
 		}
 		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
@@ -118,7 +117,7 @@ bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 				  }
 	case FILTERED:{
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToFilteredList(*_deletedTasks[i]);
 		}
 		_lastCmdCalled = CMD_TYPE_STRING[UNDO];

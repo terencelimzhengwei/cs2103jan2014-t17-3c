@@ -21,5 +21,10 @@ private:
 	DISPLAY_TYPE* _currentScreen;
 	DISPLAY_TYPE  _previousScreen;
 	std::string   _lastCmdCalled;
+
+	bool checkDoneStatus();
+	void saveTasks(TaskList& taskList);
+	void setTasksAsDone(TaskList& tasklist);
+	void switchScreenTo(DISPLAY_TYPE screen);
 };
 

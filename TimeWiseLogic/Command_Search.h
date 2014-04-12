@@ -11,7 +11,7 @@ public:
 	bool undo(TaskList&, std::string&);
 	void setKeyword(std::string);
 	void setPreviousScreen(DISPLAY_TYPE*);
-
+	void switchScreenTo(DISPLAY_TYPE screen);
 private:
 	std::string _keyword;
 

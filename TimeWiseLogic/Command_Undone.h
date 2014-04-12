@@ -15,6 +15,9 @@ public:
 	void addUndoneIndex(int index);
 	void setPreviousScreen(DISPLAY_TYPE* screen);
 	void setIndexToBoldInGUI(TaskList& tasklist);
+	void saveTasks(TaskList& taskList);
+	void setTasksAsUndone(TaskList& tasklist);
+	void switchScreenTo(DISPLAY_TYPE screen);
 private:
 	std::vector<Task*> _undoneTasks;
 	std::vector<unsigned int> _undoneTaskIndex;

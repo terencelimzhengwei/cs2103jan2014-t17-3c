@@ -132,8 +132,6 @@ namespace TimeWiseUnitTest {
 
 			Command_Clear* clear = new Command_Clear;
 			clear->execute(_taskList, feedback);
-			Assert::AreEqual(0,_taskList.undoneSize());
-
 		}
 
 		TEST_METHOD(CommandEditTest) {

@@ -10,7 +10,7 @@ public:
 	TaskList(void);
 	~TaskList(void);
 
-	void addTask(Task&, int&);
+	void addTask(Task&);
 	void addTaskToDoneList(Task&);
 	void addTaskToSearchedList(Task&);
 	void addTaskToOverdueList(Task&);
@@ -22,7 +22,7 @@ public:
 	Task* getCompletedTask(unsigned int index);
 	Task* getSearchedTask(int);
 	Task* getOverdueTask(int);
-	bool deleteTask(unsigned int& index);
+	bool deleteTaskFromUncompletedList(unsigned int& index);
 	bool deleteTaskFromCompletedList(unsigned int& index);
 	bool deleteTaskFromOverdueList(unsigned int&);
 	bool deleteTaskFromSearchList(unsigned int& index);
@@ -31,7 +31,6 @@ public:
 	int getTaskIndexInCompletedList(Task* task);
 	int getTaskIndexInSearchedList(Task* task);
 	void clearTask();
-	Task* getTaskWithKeyword(std::string& keyWord);
 	void populateSearchList(std::string& keyword);
 	void populateFilterList(std::string& category);
 	void populateFilterList(Date* date);
@@ -41,14 +40,12 @@ public:
 	std::vector<Task*> getFilterResults();
 	std::vector<Task*> getCompletedTaskList();
 	std::vector<Task*> getUncompletedTaskList();
-	void updateCompletedTaskList();
 	bool updateOverdueTaskList();
 	bool checkNewOverdue();
 	void clearCompletedTasks();
-	void deleteOverdueTaskList();
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
-	int undoneSize();
+	unsigned int undoneSize();
 	int doneSize();
 	int filteredSize();
 	int searchedSize();
@@ -67,14 +64,20 @@ public:
 	bool deleteTaskFromFilterList(unsigned int& index);
 	Task* setFilteredTaskAsDone(unsigned int index);
 	unsigned int getLastTaskIndex();
-	void setLastTaskIndex(unsigned int index);
-	void resetLastTaskIndex();
 	void addLastTaskIndex(unsigned int index);
 	void resetLastTaskIndexList();
 	std::vector<int> getLastTaskIndexList();
 	int getTaskIndexInFilteredList(Task* task);
+	Task* setSearchedTaskAsUndone(unsigned int index);
+	Task* setFilteredTaskAsUndone(unsigned int index);
+	void clearClashedTaskList();
+	void checkClash(Task& task, Task& otherTask);
+	void addClashedTask(Task& task,Task& otherTask);
+	bool validIndex(unsigned int& index);
+	void removeTaskAtIndex(unsigned int& index);
+	void clearOverdueTaskList();
 private:
-	std::vector<Task*> _taskList;
+	std::vector<Task*> _uncompletedTaskList;
 	std::vector<Task*> _overdueTaskList;
 	std::vector<Task*> _completedTaskList;
 	std::vector<Task*> _searchedTaskList;

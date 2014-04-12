@@ -57,14 +57,14 @@ protected:
 	bool wasUndone();
 	bool wasExecuted();
 	//Creation of feedback
-	void createFeedback(int& checkClash,std::string& feedback);
+	void createFeedback(TaskList& taskList,std::string& feedback);
 	void createFeedback(std::string taskFeedback,std::string& feedback);
 	//Adding and Deletion of tasks
-	void redo(TaskList& tasklist, int& checkClash);
-	void createTask(TaskList& tasklist, int& checkClash);
+	void redo(TaskList& tasklist);
+	void createTask(TaskList& tasklist);
 	void removeAddedTask(TaskList& tasklist);
 	//Others
-	bool isClash(int& checkClash);
+	bool isClash(TaskList& tasklist);
 	void switchScreenTo(DISPLAY_TYPE screen);
 	void lastCmdCalledIs(std::string cmd);
 	void setIndexToBoldInGUI(TaskList& tasklist);

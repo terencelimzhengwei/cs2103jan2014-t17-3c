@@ -39,3 +39,7 @@ void Command_Search::setPreviousScreen(DISPLAY_TYPE* screen){
 	_previousScreen = *screen;
 	_currentScreen = screen;
 } 
+
+void Command_Search::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}

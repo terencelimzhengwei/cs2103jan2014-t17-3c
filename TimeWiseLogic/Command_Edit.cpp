@@ -56,7 +56,6 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	feedback = EDIT_SUCCESS;
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
-	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_editedTask));
 	setIndexToBoldInGUI(tasklist);
 	return true;
 }
@@ -210,7 +209,6 @@ void Command_Edit::editTaskWithNewParameters(){
 
 
 void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
-	//tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	if(!tasklist.getClashedTask().empty()){
 		std::vector<Task*> clashlist = tasklist.getClashedTask();
 		for(unsigned int i=0;i<clashlist.size();i++){

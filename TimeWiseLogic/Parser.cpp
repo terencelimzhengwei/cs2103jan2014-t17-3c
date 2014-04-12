@@ -263,7 +263,7 @@ string Parser::regexDateTime(string cmd) {
 	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\./]([01]?[0-9])[-\\./]([0-9]{2})($|[\\s,\\.])"), "$1 <date=$2/$3/" + strVal(currentYear/100) + "$4>$5");
 	
 	// 2-2 pattern
-	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])/([01]?[0-9])($|[\\s,\\.])"), "$1 <date=$2/$3/" + strVal(currentYear) + ">$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])/([01]?[0-9])($|[\\s,\\.])"), "$1 <date=$2/$3/" + strVal(currentYear) + ">$4");
 
 	// Remove leading 0 in day and month
 	cmd = regex_replace(cmd, regex("<date=0([0-9])/([0-9]{1,2})/([0-9]{2}|[0-9]{4})>($|[\\s,\\.])"), "<date=$1/$2/$3>$4");
@@ -294,6 +294,8 @@ string Parser::regexDateTime(string cmd) {
 	cmd = regex_replace(cmd, regex("(^|\\s)(<date=[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}> )(at|from|to)? ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1$2<time=$3:$4>$5");
 	cmd = regex_replace(cmd, regex("(^|\\s)([0-2][0-9])([0-5][0-9]) ?(at|from|to)? ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1<time=$2:$3> <time=$5:$6>$7");
 	cmd = regex_replace(cmd, regex("(^|\\s)(at|from|to) ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])"), "$1<time=$3:$4>$5");
+
+	cout << cmd << endl;
 
 	return strTruncate(cmd);
 }

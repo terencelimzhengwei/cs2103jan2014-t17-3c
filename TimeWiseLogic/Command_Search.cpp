@@ -19,7 +19,7 @@ void Command_Search::setKeyword(std::string keyword){
 }
 
 bool Command_Search::execute(TaskList& tasklist, std::string& feedback){
-	*_currentScreen = SEARCHED;
+	switchScreenTo(SEARCHED);
 	tasklist.populateSearchList(_keyword);
 	int size = tasklist.searchedSize();
 	if(size > 0) {
@@ -31,7 +31,7 @@ bool Command_Search::execute(TaskList& tasklist, std::string& feedback){
 }
 
 bool Command_Search::undo(TaskList& tasklist, std::string&){
-	*_currentScreen = _previousScreen;
+	switchScreenTo(_previousScreen);
 	return true;
 }
 

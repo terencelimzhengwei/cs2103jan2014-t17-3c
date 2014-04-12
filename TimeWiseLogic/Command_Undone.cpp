@@ -12,14 +12,14 @@ Command_Undone::~Command_Undone(void){
 }
 
 bool Command_Undone::execute(TaskList& tasklist, std::string& feedback){
-	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+	if(wasUndone()){
 		setTasksAsUndone(tasklist);
 	}else{
 		saveTasks(tasklist);
 		setTasksAsUndone(tasklist);
 	}
-	_lastCmdCalled=EXECUTE;
-	feedback = UNDONE_SUCCESS;
+	lastCmdCalledIs(EXECUTE);
+	createFeedback(UNDONE_SUCCESS,feedback);
 	setIndexToBoldInGUI(tasklist);
 	return true;
 }
@@ -29,9 +29,9 @@ bool Command_Undone::undo(TaskList& tasklist, std::string& feedback){
 		int index = tasklist.getTaskIndex(_undoneTasks[i]);
 		tasklist.setTaskAsDone(index);
 	}
-	_lastCmdCalled=CMD_TYPE_STRING[UNDO];
-	feedback = DONE_SUCCESS;
-	*_currentScreen=_previousScreen;
+	lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(DONE_SUCCESS,feedback);
+	switchScreenTo(_previousScreen);
 	setIndexToBoldInGUI(tasklist);
 	return true;
 }
@@ -129,3 +129,24 @@ void Command_Undone::switchScreenTo(DISPLAY_TYPE screen){
 	*_currentScreen = screen;
 }
 
+void Command_Undone::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Undone::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Undone::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Undone::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}

@@ -19,33 +19,21 @@
     <Filter Include="Source Files\Command Derived">
       <UniqueIdentifier>{24d0ee6a-98a0-414f-bfca-75372a641683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Commons">
+      <UniqueIdentifier>{6ce5ebd4-36ad-4c7f-bdec-9fe02240809d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commons">
+      <UniqueIdentifier>{aa3d2271-4840-49b7-81f1-9d761b22a09a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Task.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TaskList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TimeWiseLogic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Calendar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Date.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClockTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Command.h">
@@ -81,27 +69,42 @@
     <ClInclude Include="Command_Undo.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
-    <ClInclude Include="Exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CommandCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Command_Filter.h">
       <Filter>Header Files\Command Derived</Filter>
     </ClInclude>
+    <ClInclude Include="Calendar.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="ClockTime.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
     <ClInclude Include="Command_Display.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Date.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files\Commons</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Storage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Task.cpp">
@@ -111,15 +114,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TimeWiseLogic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Calendar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Date.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClockTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandManager.cpp">
@@ -152,23 +146,35 @@
     <ClCompile Include="Command_Undo.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
-    <ClCompile Include="Exceptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CommandCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Command_Filter.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
-    <ClCompile Include="Command_Display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Command_Undone.cpp">
       <Filter>Source Files\Command Derived</Filter>
     </ClCompile>
+    <ClCompile Include="Command_Display.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Calendar.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockTime.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Date.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Exceptions.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\Commons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

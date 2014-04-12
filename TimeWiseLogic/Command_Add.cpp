@@ -38,14 +38,13 @@ void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){
 	_currentScreen = screen;
 }
 bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
-	int checkClash;
 	switchScreenTo(MAIN);
 	if(wasUndone()){
-		redo(tasklist,checkClash);
+		redo(tasklist);
 	} else {
-		createTask(tasklist,checkClash);
+		createTask(tasklist);
 	}
-	createFeedback(checkClash,feedback);
+	createFeedback(tasklist,feedback);
 	lastCmdCalledIs(EXECUTE);
 	setIndexToBoldInGUI(tasklist);
 	return true;
@@ -127,9 +126,10 @@ void Command_Add::resetTask(){
 	_addedTask=NULL;
 }
 
-void Command_Add::redo(TaskList& tasklist, int& checkClash){
-	tasklist.addTask(*_addedTask, checkClash);
-	tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
+void Command_Add::redo(TaskList& tasklist)
+{
+	tasklist.addTask(*_addedTask);
+	setIndexToBoldInGUI(tasklist);
 }
 
 bool Command_Add::wasUndone(){
@@ -146,24 +146,25 @@ bool Command_Add::wasExecuted(){
 	return false;
 }
 
-void Command_Add::createTask(TaskList& tasklist, int& checkClash){
+void Command_Add::createTask(TaskList& tasklist)
+{
 	_addedTask = new Task;
 	_addedTask->setDescription(_taskDescription);
 	_addedTask->setCategory(_category);
 	_addedTask->setSchedule(_startDate,_endDate,_startTime,_endTime);
-	tasklist.addTask(*_addedTask, checkClash);
+	tasklist.addTask(*_addedTask);
 }
 
-bool Command_Add::isClash(int& checkClash){
-	if(checkClash==1){
-		return false;
+bool Command_Add::isClash(TaskList& tasklist){
+	if(!tasklist.getClashedTask().empty()){
+		return true;
 	}
 	return false;
 }
 
-void Command_Add::createFeedback(int& checkClash,std::string& feedback)
+void Command_Add::createFeedback(TaskList& tasklist,std::string& feedback)
 {
-	if(isClash(checkClash)){
+	if(isClash(tasklist)){
 		feedback = CLASH_EXIST;
 	}else{
 		feedback = ADD_SUCCESS;
@@ -174,8 +175,7 @@ void Command_Add::createFeedback(std::string taskFeedback,std::string& feedback)
 	feedback=taskFeedback;
 }
 
-void Command_Add::switchScreenTo(DISPLAY_TYPE screen)
-{
+void Command_Add::switchScreenTo(DISPLAY_TYPE screen){
 	*_currentScreen = screen;
 }
 
@@ -185,7 +185,6 @@ void Command_Add::lastCmdCalledIs(std::string cmd)
 }
 
 void Command_Add::setIndexToBoldInGUI(TaskList& tasklist){
-	//tasklist.setLastTaskIndex(tasklist.getTaskIndex(_addedTask));
 	if(!tasklist.getClashedTask().empty()){
 		std::vector<Task*> clashlist = tasklist.getClashedTask();
 		for(unsigned int i=0;i<clashlist.size();i++){
@@ -200,7 +199,7 @@ void Command_Add::setIndexToBoldInGUI(TaskList& tasklist){
 
 void Command_Add::removeAddedTask(TaskList& tasklist){
 	unsigned int index = tasklist.getTaskIndex(_addedTask);
-	tasklist.deleteTask(index);
+	tasklist.deleteTaskFromUncompletedList(index);
 }
 
 

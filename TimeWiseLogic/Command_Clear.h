@@ -35,7 +35,14 @@ private:
 
 	void undoAll(TaskList&, std::string&);
 	void saveFilteredTasks(TaskList&);
-
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	bool wasExecuted();
+	void permanantlyDeleteTasks();
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	void undoScreenTasks(TaskList& tasklist, std::string& feedback);
+	void undoFilteredTasks(TaskList& tasklist, std::string& feedback);
+	void undoSearchedTasks(TaskList& tasklist, std::string& feedback);
 	DISPLAY_TYPE _displayScreen;
 	CLEAR_TYPE _clearType;
 

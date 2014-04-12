@@ -60,4 +60,8 @@ void Command_Filter::setPreviousScreen(DISPLAY_TYPE* screen){
 	_previousScreen = *screen;
 	_currentScreen = screen;
 }
+
+void Command_Filter::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
  

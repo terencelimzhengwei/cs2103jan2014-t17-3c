@@ -61,5 +61,8 @@ private:
 	void getOriginalTask(TaskList& tasklist);
 	void editTaskWithNewParameters();
 	void setIndexToBoldInGUI(TaskList& tasklist);
+	void initialiseParameters();
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void revertParameters();
 };
 

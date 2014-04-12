@@ -18,6 +18,10 @@ public:
 	void saveTasks(TaskList& taskList);
 	void setTasksAsUndone(TaskList& tasklist);
 	void switchScreenTo(DISPLAY_TYPE screen);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	bool wasExecuted();
 private:
 	std::vector<Task*> _undoneTasks;
 	std::vector<unsigned int> _undoneTaskIndex;

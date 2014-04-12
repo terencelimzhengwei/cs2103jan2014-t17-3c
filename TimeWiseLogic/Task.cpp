@@ -154,10 +154,7 @@ void Task::setTime(){
 	}
 	if(hasStartTime()&&hasEndTime()){
 		if(*_startTime==*_endTime){
-			if(isDoubleDate()){
-				delete _endTime;
-				_endTime=NULL;
-			}else{
+			if(!isDoubleDate()){
 				delete _startTime;
 				_startTime=NULL;
 			}
@@ -247,7 +244,7 @@ bool Task::checkClash(Task* task){
 			}
 		}else if(*task->getEndDate()==*_endDate){
 			if(hasEndTime()&&task->isDoubleTime()){
-				if(*task->getEndTime()<*_endTime){
+				if(*task->getEndTime()>*_endTime){
 					clash = true;
 				}
 			}
@@ -257,7 +254,7 @@ bool Task::checkClash(Task* task){
 			clash = true;
 		}else if(*task->getStartDate()==*_endDate){
 			if(task->hasStartTime()&&isDoubleTime()){
-				if(*task->getStartTime()<*_startTime){
+				if(*task->getStartTime()>*_startTime){
 					clash = true;
 				}
 			}

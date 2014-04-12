@@ -78,7 +78,7 @@ bool Command_Edit::noDate(){
 }
 
 bool Command_Edit::noTime(){
-	if(noEndTime() && noEndDate()){
+	if(noEndTime() && noStartTime()){
 		return true;
 	}
 	return false;

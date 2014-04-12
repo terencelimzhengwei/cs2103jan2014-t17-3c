@@ -12,6 +12,7 @@
 #include <QLineEdit>
 #include <QKeyEvent>
 #include <string>
+#include <iostream>
 #include "ui_timewisegui.h"
 #include "Constants_ui.h"
 #include "TimeWiseClock.h"

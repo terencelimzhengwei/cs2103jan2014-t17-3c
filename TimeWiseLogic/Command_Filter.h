@@ -15,7 +15,7 @@ public:
 	void setCategory(std::string);
 	void setDate(Date*);
 	void setPreviousScreen(DISPLAY_TYPE*);
-
+	void switchScreenTo(DISPLAY_TYPE screen);
 private:
 	FILTER_TYPE _filterType;
 	std::string _category;

@@ -9,123 +9,58 @@ Command_Delete::Command_Delete() {
 }
 
 Command_Delete::~Command_Delete(){
-        if(_lastCmdCalled == EXECUTE){
-                for(unsigned int i=0;i<_deletedTasks.size();i++){
-					delete _deletedTasks[i];
-					_deletedTasks[i]=NULL;
-				}
-        }else{
-                _deletedTasks.clear();
-        }
+	if(wasExecuted()){
+		permanantlyDeleteTask();
+	}else{
+		_deletedTasks.clear();
+	}
 }
 
 bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
-	switch(_displayType){
-	case MAIN:
-		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
-			for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-				taskList.deleteTask(_deletedTaskIndex[i]);
-			}
-			_lastCmdCalled=EXECUTE;
-			return true;
-		}
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
-				taskList.deleteTask(_deletedTaskIndex[i]);
-				_lastCmdCalled = EXECUTE;
-				feedback = DELETE_SUCCESS;
-			}
-		}
+
+	if(wasUndone()){
+		redo(taskList);
+		lastCmdCalledIs(EXECUTE);
+		createFeedback(DELETE_SUCCESS,feedback);
 		return true;
-	case COMPLETE:
-		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
-			for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-				taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
-			}
-			_lastCmdCalled=EXECUTE;
-		}
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
-				_lastCmdCalled = EXECUTE;
-				feedback = DELETE_SUCCESS;
-			}
-		}
-		return true;
-	case SEARCHED:
-		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
-			for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-				taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
-			}
-			_lastCmdCalled=EXECUTE;
-		}
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
-				_lastCmdCalled = EXECUTE;
-				feedback = DELETE_SUCCESS;
-			}
-		}
-		return true;
-	case FILTERED:
-		if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
-			for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-				taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
-			}
-			_lastCmdCalled=EXECUTE;
-		}
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
-				_lastCmdCalled = EXECUTE;
-				feedback = DELETE_SUCCESS;
-			}
-		}
+	}else{
+		deleteTaskWithBackUp(taskList);
+		lastCmdCalledIs(EXECUTE);
+		createFeedback(DELETE_SUCCESS,feedback);
 		return true;
 	}
-	return false;
 }
 
 bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
-	int checkClash;
 	switch(_displayType){
 	case MAIN:
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 		}
-		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
-		feedback = UNDO_DELETE_SUCCESS;
 		break;
 	case COMPLETE:
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
 			taskList.addTaskToDoneList(*_deletedTasks[i]);
 		}
-		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
-		feedback = UNDO_DELETE_SUCCESS;
 		break;
-	case SEARCHED:{
+	case SEARCHED:
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToSearchedList(*_deletedTasks[i]);
 		}
-		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
-		feedback = UNDO_DELETE_SUCCESS;
 		break;
-				  }
-	case FILTERED:{
+	
+	case FILTERED:
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
-			taskList.addTask(*_deletedTasks[i],checkClash);
+			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToFilteredList(*_deletedTasks[i]);
 		}
-		_lastCmdCalled = CMD_TYPE_STRING[UNDO];
-		feedback = UNDO_DELETE_SUCCESS;
+		break;		
+	default:
 		break;
-				  }
 	}
+	lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(UNDO_DELETE_SUCCESS,feedback);
 	return true;
 }
 
@@ -135,4 +70,100 @@ void Command_Delete::setDisplayScreen(DISPLAY_TYPE display){
 
 void Command_Delete::addDeletionIndex(int index){
 	_deletedTaskIndex.push_back(index);
+}
+
+void Command_Delete::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Delete::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Delete::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+
+void Command_Delete::permanantlyDeleteTask(){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		delete _deletedTasks[i];
+		_deletedTasks[i]=NULL;
+	}
+}
+
+void Command_Delete::redo(TaskList& taskList){
+	switch(_displayType){
+	case MAIN:
+		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
+			taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
+		}
+		break;
+	case COMPLETE:
+		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
+			taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
+		}
+		break;
+	case SEARCHED:
+		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
+			taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
+		}
+		break;
+	case FILTERED:
+		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
+			taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
+		}
+		break;
+	default:
+		break;
+	}
+	lastCmdCalledIs(EXECUTE);
+}
+
+void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
+	switch(_displayType){
+	case MAIN:
+		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+				_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
+				taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
+			}
+		}
+		break;
+	case COMPLETE:
+		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+				_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
+				taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
+			}
+		}
+		break;
+	case SEARCHED:
+		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+				_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
+				taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
+			}
+		}
+		break;
+	case FILTERED:
+		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+				_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
+				taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
+			}
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void Command_Delete::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
 }

@@ -18,9 +18,6 @@ public:
 	TaskList getTaskList();
 	std::string processCommand(std::string commandLine);
 	DISPLAY_TYPE getScreenToDisplay();
-	void changeDisplay(DISPLAY_TYPE type);
-	std::string getUserInput();
-
 
 private:
 	CommandCreator _creator ;
@@ -36,9 +33,8 @@ private:
 	DISPLAY_TYPE _displayType;
 
 	void initLogic();
-	DISPLAY_TYPE setScreenToDisplay(Command* cmd);
 	bool parseCommand(std::string commandLine);
-
+	bool emptyCommandLine(std::string commandLine);
 
 };
 #endif

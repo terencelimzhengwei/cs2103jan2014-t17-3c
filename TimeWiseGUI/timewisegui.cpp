@@ -241,6 +241,8 @@ void TimeWiseGUI::setMainData() {
 void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(0, model->rowCount());
+	TaskList mainTaskList = _logic.getTaskList();
+	vector<int> latestIndices = mainTaskList.getLastTaskIndexList();
 
 	ui.emptyLogo->hide();
 
@@ -330,7 +332,22 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 			} else if (qStatus == DONE_STATUS) {
 				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
 			}
+
+			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
+			QFont font;
+			font.setBold(false);
+			for(int k = 0; k < latestIndices.size(); k++) {
+				if(i == latestIndices[k]) {
+					font.setWeight(99);
+					font.setPointSize(9);
+				} 
+			}
+			model->setData(model->index(i,j), font, Qt::FontRole);
 		}
+	}
+	//scrolls to latest task after all tasks have been set in table.
+	if(!latestIndices.empty()) {
+		ui.tableView->scrollTo(model->index(latestIndices[0],0));
 	}
 }
 

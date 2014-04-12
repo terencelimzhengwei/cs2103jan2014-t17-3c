@@ -12,27 +12,24 @@ Command_Done::~Command_Done(void){
 }
 
 bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
-	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+	if(wasUndone()){
 		setTasksAsDone(tasklist);
 	}else{
 		saveTasks(tasklist);
 		setTasksAsDone(tasklist);
 	}
-	feedback = DONE_SUCCESS;
-	_lastCmdCalled = EXECUTE;
+	createFeedback(DONE_SUCCESS,feedback);
+	lastCmdCalledIs(EXECUTE);
 	setIndexToBoldInGUI(tasklist);
 	return true;
 }
 
 bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
 
-	for(unsigned int i=0;i<_doneTasks.size();i++){
-		unsigned int index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
-		tasklist.setTaskAsUndone(index);
-	}
-    _lastCmdCalled = CMD_TYPE_STRING[UNDO];
-	feedback = UNDONE_SUCCESS;
-	*_currentScreen=_previousScreen;
+	setDoneTasksAsUndone(tasklist);
+    lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(UNDONE_SUCCESS,feedback);
+	switchScreenTo(_previousScreen);
 	setIndexToBoldInGUI(tasklist);
 	return true;
 }
@@ -80,6 +77,7 @@ void Command_Done::setIndexToBoldInGUI(TaskList& tasklist){
 
 void Command_Done::saveTasks(TaskList& taskList){
 	std::vector<Task*>& taskVector=taskList.getUncompletedTaskList();
+
 	switch(*_currentScreen){
 	case SEARCHED:
 		taskVector = taskList.getSearchResults();
@@ -128,4 +126,32 @@ void Command_Done::setTasksAsDone(TaskList& tasklist){
 
 void Command_Done::switchScreenTo(DISPLAY_TYPE screen){
 	*_currentScreen = screen;
+}
+
+void Command_Done::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Done::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Done::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Done::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+void Command_Done::setDoneTasksAsUndone(TaskList& tasklist){
+	for(unsigned int i=0;i<_doneTasks.size();i++){
+		unsigned int index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
+		tasklist.setTaskAsUndone(index);
+	}
 }

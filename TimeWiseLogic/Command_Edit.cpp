@@ -3,21 +3,7 @@
 
 Command_Edit::Command_Edit(void){
 	_type = EDIT;
-	_editedDescription = DEFAULT_EMPTY;
-	_editedCategory = DEFAULT_EMPTY;
-	_editedEndDate = NULL;
-	_editedStartDate = NULL;
-	_editedEndTime = NULL;
-	_editedStartTime = NULL;
-
-	_originalDescription = DEFAULT_EMPTY;
-	_originalCategory = DEFAULT_EMPTY;
-	_originalEndDate = NULL;
-	_originalStartDate = NULL;
-	_originalEndTime = NULL;
-	_originalStartTime = NULL;
-
-	_editedTask = NULL;
+	initialiseParameters();
 }
 
 
@@ -53,7 +39,7 @@ bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
 	getOriginalTask(tasklist);
 	saveOriginalTaskDetails();
 	editTaskWithNewParameters();
-	feedback = EDIT_SUCCESS;
+	createFeedback(EDIT_SUCCESS,feedback);
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
 	setIndexToBoldInGUI(tasklist);
@@ -69,16 +55,11 @@ void Command_Edit::setIndex(int index){
 }
 
 bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
-	_editedTask->setDescription(_originalDescription);
-	_editedTask->setCategory(_originalCategory);
-	_editedTask->setEndDate(_originalEndDate);
-	_editedTask->setEndTime(_originalEndTime);
-	_editedTask->setStartDate(_originalStartDate);
-	_editedTask->setStartTime(_originalStartTime);
+	revertParameters();
 	tasklist.updateClashStatus();
 	tasklist.shiftTask(_editedTask);
 	setIndexToBoldInGUI(tasklist);
-	feedback = UNDO_EDIT_SUCCESS;
+	createFeedback(UNDO_EDIT_SUCCESS,feedback);
 	return true;
 }
 
@@ -235,4 +216,35 @@ void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
 			break;
 		}
 	}
+}
+
+void Command_Edit::initialiseParameters(){
+	_editedDescription = DEFAULT_EMPTY;
+	_editedCategory = DEFAULT_EMPTY;
+	_editedEndDate = NULL;
+	_editedStartDate = NULL;
+	_editedEndTime = NULL;
+	_editedStartTime = NULL;
+
+	_originalDescription = DEFAULT_EMPTY;
+	_originalCategory = DEFAULT_EMPTY;
+	_originalEndDate = NULL;
+	_originalStartDate = NULL;
+	_originalEndTime = NULL;
+	_originalStartTime = NULL;
+
+	_editedTask = NULL;
+}
+
+void Command_Edit::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Edit::revertParameters(){
+	_editedTask->setDescription(_originalDescription);
+	_editedTask->setCategory(_originalCategory);
+	_editedTask->setEndDate(_originalEndDate);
+	_editedTask->setEndTime(_originalEndTime);
+	_editedTask->setStartDate(_originalStartDate);
+	_editedTask->setStartTime(_originalStartTime);
 }

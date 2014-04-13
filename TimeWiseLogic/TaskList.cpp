@@ -13,7 +13,7 @@ void TaskList::addTask(Task& task)
 {
 	clearClashedTaskList();
 	for(unsigned int i = 0;i <undoneSize();i++){
-		checkClash(*_uncompletedTaskList[i],task);
+		checkClash(task,*_uncompletedTaskList[i]);
 		if(!task.checkLater(_uncompletedTaskList[i])){
 			_uncompletedTaskList.insert(_uncompletedTaskList.begin()+i,&task);
 			updateClashStatus();

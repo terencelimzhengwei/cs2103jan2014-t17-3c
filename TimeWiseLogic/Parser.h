@@ -22,13 +22,8 @@ public:
 	static CMD_TYPE determineCommandType(std::string);
 	
 	// Parser functions
-	static vector<int> extractDate(string);
-	static vector<int> extractDate(string, int);
 	static void extractDateTime(string, string&, vector<Date>&, vector<ClockTime>&);
 
-	static vector<int> extractTime(string, int);
-	static bool isDateFormat(std::string);
-	static bool isTimeFormat(std::string);
 	static bool isCategory(std::string&);
 	static bool isPreposition(std::string);
 	static TASK_STATUS getTaskStatus(std::string);
@@ -58,7 +53,6 @@ public:
 	static vector<string> strReplace(string, string, vector<string>);
 	static string strReplace(vector<string>, string, string);
 	static string strReplace(vector<string>, vector<string>, string);
-	static vector<string> strReplace(vector<string>, vector<string>, vector<string>);
 
 	static int strSearch(string, string);
 	static int strSearch(string, string, int);
@@ -76,9 +70,6 @@ public:
 	static string removeFirstWord(string);
 	static string getLastWord(string);
 	static string removeLastWord(string);
-
-	// Deprecated string functions
-	static void removeWhiteSpaces(string&);
 	static vector<string> splitBySpace(string input);
 };
 

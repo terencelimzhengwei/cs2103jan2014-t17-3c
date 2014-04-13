@@ -103,8 +103,8 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 			}
 			Task* newTask = new Task;
 			while (userInput != SEPARATOR) {
-				std::string details = _parser.removeFirstWord(userInput);
-				_parser.removeWhiteSpaces(details);
+				std::string details = Parser::removeFirstWord(userInput);
+				details = Parser::trim(details);
 				switch(taskHeader) {
 				case HEADER_1: {
 					newTask->setDescription(details);
@@ -208,7 +208,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 
 			while (userInput != SEPARATOR) {
 				std::string details = _parser.removeFirstWord(userInput);
-				_parser.removeWhiteSpaces(details);
+				details = Parser::trim(details);
 
 				switch(taskHeader){
 				case HEADER_1 : {

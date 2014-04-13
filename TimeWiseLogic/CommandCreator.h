@@ -33,9 +33,9 @@ public:
 	bool isValidRemovalIndex(unsigned int,DISPLAY_TYPE*,TaskList&);
 	//the below methods are responsible for creating the derived commands
 	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&, TaskList&);
-	Command* createCommandAdd(std::string, int, vector<std::string>,DISPLAY_TYPE*);
+	Command* createCommandAdd(std::string, DISPLAY_TYPE*);
 	Command* createCommandDelete(vector<string>,DISPLAY_TYPE*, TaskList&);
-	Command* createCommandEdit(string, int, vector<string>, DISPLAY_TYPE*);
+	Command* createCommandEdit(string, DISPLAY_TYPE*);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
 	Command* createCommandDone(vector<string>,DISPLAY_TYPE*,TaskList&);
 	Command* createCommandUndone(vector<string>,DISPLAY_TYPE* type,TaskList&);

@@ -11,16 +11,30 @@
 #include "Constants.h"
 #include "TaskList.h"
 #include "Exceptions.h"
+// @author A0097277M
+/*
+ *=======================
+ 
+	Command Base class
+ 
+ *=======================
+ */
 
 class Command
 {
 public:
+	//Constructor & Destructor
 	Command(void);
 	virtual ~Command(void);
+
+	//Get the type of command
+	CMD_TYPE getType();
+
+	//virtual execute & undo methods for use as part of the command design pattern
 	virtual bool execute(TaskList& tasklist, std::string& feedback)=0;
 	virtual bool undo(TaskList& tasklist, std::string& feedback)=0;
-	CMD_TYPE getType();
 protected:
+	//Attributes
 	CMD_TYPE _type;
 };
 #endif

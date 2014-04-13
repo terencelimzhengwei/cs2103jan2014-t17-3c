@@ -81,7 +81,7 @@ static const char* TASK_NOT_COMPLETED_YET					= "This task has not been done yet
 
 //Feedback strings for successful execution of commands
 const std::string ADD_SUCCESS							    = "Task is successfully added.";
-const std::string CLASH_EXIST								= "Task is successfully added.\nNote: You have tasks that clash!";
+const std::string CLASH_EXIST								= "Task is successfully added.\nWARNING: You have tasks that clash!";
 const std::string CLEAR_ALL_SUCCESS							= "All tasks are successfully removed.";
 const std::string CLEAR_COMPLETED_SUCCESS					= "All completed tasks are successfully removed.";
 const std::string CLEAR_UNCOMPLETED_SUCCESS					= "All uncompleted tasks are successfully removed.";

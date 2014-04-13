@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QFontDatabase>
 #include "ui_timewisefeedback.h"
+#include "Constants_ui.h"
 
 class TimeWiseFeedback : public QWidget
 {

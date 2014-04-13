@@ -5,8 +5,7 @@ TimeWiseClock::TimeWiseClock() {
 	_time = QTime::currentTime();
 }
 
-TimeWiseClock::~TimeWiseClock()
-{
+TimeWiseClock::~TimeWiseClock() {
 }
 
 QString TimeWiseClock::dateToString(){

@@ -4,48 +4,40 @@ CommandManager::~CommandManager(void){
 	Clear();
 }
 
-bool CommandManager::CanUndo() const
-{
+bool CommandManager::CanUndo() const{
 	return (undoList.size() > 0);
 }
 
-bool CommandManager::CanRedo() const
-{
+bool CommandManager::CanRedo() const{
 	return (redoList.size() > 0);
 }
 
-int CommandManager::getUndoLevel() const
-{
+int CommandManager::getUndoLevel() const{
 	return allowableUndoLevel;
 }
 
-void CommandManager::setUndoLevel(int newValue)
-{
+void CommandManager::setUndoLevel(int newValue){
 	allowableUndoLevel = newValue;
 }
 
-bool CommandManager::IsDirty() const
-{
+bool CommandManager::IsDirty() const{
 	return (m_nCleanCount != 0);
 }
 
-Command* CommandManager::getLastUndoCommand() const
-{
+Command* CommandManager::getLastUndoCommand() const{
 	return undoList.back();
 }
 
-Command* CommandManager::getLastRedoCommand() const
-{
+Command* CommandManager::getLastRedoCommand() const{
 	return redoList.back();
 }
 
-void CommandManager::DoCommand(Command* pCommand, std::string& feedback)
-{
+void CommandManager::DoCommand(Command* pCommand, std::string& feedback){
 	if(pCommand->getType() == UNDO){
 		Undo(feedback);
-	}else if(pCommand->getType() == REDO){
+	} else if(pCommand->getType() == REDO){
 		Redo();
-	}else{
+	} else {
 		// Clear redo list
 		if(pCommand->getType() != DISPLAY){
 			ClearRedoList();
@@ -54,92 +46,82 @@ void CommandManager::DoCommand(Command* pCommand, std::string& feedback)
 		if (pCommand->execute(_taskList,feedback)){
 			if(undoable(pCommand)){
 				AddUndo(pCommand);
-			}else{
+			} else {
 				delete pCommand;
-				pCommand=NULL;
+				pCommand = NULL;
 			}
 		}
 	}
 }
 
-void CommandManager::Undo(std::string& feedback)
-{
-	if (CanUndo())
-	{
+void CommandManager::Undo(std::string& feedback){
+	if (CanUndo()){
 		m_nCleanCount--;
-		Command* pCommand = undoList.back();
+		Command* pCommand = getLastUndoCommand();
 		undoList.pop_back();
 		if (pCommand->undo(_taskList, feedback)){
 			AddRedo(pCommand);
-		}else{
-			delete pCommand;
-			pCommand=NULL;
-		}
-	}
-}
-
-void CommandManager::Redo()
-{
-	std::string feedback;
-	if (CanRedo())
-	{
-		m_nCleanCount++;
-		Command* pCommand = redoList.back();
-		redoList.pop_back();
-		if (pCommand->execute(_taskList,feedback)){
-			AddUndo(pCommand);
-		}else{
+		} else {
 			delete pCommand;
 			pCommand = NULL;
 		}
 	}
 }
 
-void CommandManager::Clear()
-{
+void CommandManager::Redo(){
+	std::string feedback;
+	if (CanRedo()){
+		m_nCleanCount++;
+		Command* pCommand = getLastRedoCommand();
+		redoList.pop_back();
+		if (pCommand->execute(_taskList,feedback)){
+			AddUndo(pCommand);
+		} else {
+			delete pCommand;
+			pCommand = NULL;
+		}
+	}
+}
+
+void CommandManager::Clear(){
 	ClearUndoList();
 	ClearRedoList();
 }
 
-void CommandManager::SetClean()
-{
+void CommandManager::SetClean(){
 	m_nCleanCount = 0;
 }
 
-void CommandManager::AddUndo(Command* pCommand)
-{
-	if (undoList.size() >= allowableUndoLevel)
-	{
+void CommandManager::AddUndo(Command* pCommand){
+	if (undoList.size() >= allowableUndoLevel){
 		delete undoList.front();
 		undoList.pop_front();
 	}
 	undoList.push_back(pCommand);
-	if (m_nCleanCount < 0 && redoList.size() > 0)
+	if (m_nCleanCount < 0 && redoList.size() > 0){
 		m_nCleanCount = undoList.size() + redoList.size() + 1;
-	else
+	} else {
 		m_nCleanCount++;
+	}
 }
 
-void CommandManager::AddRedo(Command* pCommand)
-{
+void CommandManager::AddRedo(Command* pCommand){
 	redoList.push_back(pCommand);
 }
 
-void CommandManager::ClearUndoList()
-{
+void CommandManager::ClearUndoList(){
 	ClearCommandList(&undoList);
 }
 
-void CommandManager::ClearRedoList()
-{
+void CommandManager::ClearRedoList(){
 	ClearCommandList(&redoList);
 }
 
-void CommandManager::ClearCommandList(std::list<Command*>* pList)
-{
+void CommandManager::ClearCommandList(std::list<Command*>* pList){
 	std::list<Command*>::iterator it;
-	for (it = pList->begin(); it != pList->end(); it++)
+	for (it = pList->begin(); it != pList->end(); it++) {
 		delete *it;
+	}
 	pList->erase(pList->begin(), pList->end());
 }
 

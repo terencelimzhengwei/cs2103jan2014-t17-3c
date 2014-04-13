@@ -44,3 +44,6 @@ const char* InvalidStartEndDateTime::what() const throw() {
 const char* InvalidFilterParameters::what() const throw() {
 	return INVALID_FILTER_INPUT;
 }
+const char* InvalidEditIndexMissing::what() const throw() {
+	return INVALID_EDIT_INDEX_MISSING;
+}

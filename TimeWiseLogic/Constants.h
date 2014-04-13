@@ -16,6 +16,8 @@ static const int TIME_COUNT             = 2;
 static const int FILTER_COUNT           = 4;
 static const int SEARCH_COUNT           = 2;
 static const int ZERO					= 0;
+static const int CLEAR_TYPE_COUNT       = 4;
+static const int DISPLAY_TYPE_COUNT     = 5;
 
 
 
@@ -24,13 +26,15 @@ enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, SEARCH, FILTER, UNDO, REDO, UND
 enum TIMEDATE_STATUS{EARLIER,SAME,LATER};
 enum FILTER_TYPE{CATEGORY, DATE};
 enum CLEAR_TYPE{ALL,UNCOMPLETED_TASKS,COMPLETED_TASKS,SCREEN};
-enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED};
+enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED, DONE_DISPLAY};
 enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, UNDEFINED_HEADER};
 enum LOG_TYPE{ INFOLOG, NOTICELOG, WARNINGLOG, ERRORLOG, FATALLOG };
 
 static const std::string LOG_TYPE_STRING[LOG_TYPE_COUNT]		=		{"INFOLOG","NOTICELOG","WARNINGLOG","ERRORLOG","FATALLOG"};
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT] =	
 { "add","delete","edit","clear","display", "search", "filter", "undo", "redo",  "undone", "done"};
+static const std::string CLEAR_TYPE_STRING[CLEAR_TYPE_COUNT] = {"all", "undone", "done", ""};
+static const std::string DISPLAY_TYPE_STRING[DISPLAY_TYPE_COUNT] = {"main", "", "completed", "", "done"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	=		{"undone","overdue","done"};
 static const std::string HEADER_STRING[HEADER_COUNT] = {"description", "startDate", "startTime","dueDate", "dueTime", "category"};
 static const std::string DAYS_IN_WEEK[DAYS_COUNT] = 
@@ -47,6 +51,8 @@ const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
 const int DEFAULT_INDEX = -1;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 const std::string DEFAULT_EMPTY = "";
+const std::string SPACE_IDENTFIER = " ";
+const std::string CATEGORY_SPECIFIER = "#";
 const std::string TODAY_DISPLAY ="Today";
 const std::string TMR_DISPLAY ="Tmrw";
 
@@ -66,6 +72,7 @@ static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 static const char* INVALID_FILTER_INPUT = "Error! Invalid filtering contents. Please check your date format and hash tag.";
+static const char* INVALID_EDIT_INDEX_MISSING = "Error! You have not entered any task index.";
 //Feedback strings
  
 const std::string ADD_SUCCESS = " Task is successfully added.";

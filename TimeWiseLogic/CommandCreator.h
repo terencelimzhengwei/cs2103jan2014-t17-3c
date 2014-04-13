@@ -14,8 +14,12 @@
 #include "Command_Display.h"
 #include "Exceptions.h"
 #include "Constants.h"
-class CommandCreator
-{
+
+//********************************************************************************
+// This class is responsible for instantiating command objects once it has
+// ascertained the command type (CMD_TYPE) and the validity of the input
+//********************************************************************************
+class CommandCreator{
 private:
 	std::string _feedbackExceptiontoUI;
 public:
@@ -24,17 +28,16 @@ public:
 	std::string getFeedback();
 	//flag functions
 	bool hasArg(std::string);
-	//void hasDescription(std::string);
 	bool isValidIndex(int);
+	
 	//the below methods are responsible for creating the derived commands
-
-	Command* interpretCommand(std::string userInput,DISPLAY_TYPE& displayType,std::string& commandLineInput, TaskList& tasklist);
-	Command* createCommandAdd(std::string parameter, int parameterNum, vector<std::string> parameters,DISPLAY_TYPE* screen);
-	Command* createCommandDelete(vector<string> prarameter ,DISPLAY_TYPE* type, TaskList& tasklist);
-	Command* createCommandEdit(string command, int parameterNum, vector<string> param, DISPLAY_TYPE* screen);
+	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&, TaskList&);
+	Command* createCommandAdd(std::string, int, vector<std::string>,DISPLAY_TYPE*);
+	Command* createCommandDelete(vector<string>,DISPLAY_TYPE*, TaskList&);
+	Command* createCommandEdit(string, int, vector<string>, DISPLAY_TYPE*);
 	Command* createCommandClear(std::string,DISPLAY_TYPE*);
-	Command* createCommandDone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist);
-	Command* createCommandUndone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist);
+	Command* createCommandDone(vector<string>,DISPLAY_TYPE*,TaskList&);
+	Command* createCommandUndone(vector<string>,DISPLAY_TYPE* type,TaskList&);
 	Command* createCommandSearch(std::string,DISPLAY_TYPE*);
 	Command* createCommandFilter(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndo();

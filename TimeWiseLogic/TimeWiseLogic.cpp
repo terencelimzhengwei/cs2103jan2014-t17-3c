@@ -49,7 +49,23 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 				delete _cmd;
 				_cmd = NULL;
 				return isedt.what();
-			}
+			} catch (NoArgumentException& nae) {
+				delete _cmd;
+				_cmd = NULL;
+				return nae.what();
+			} catch (InvalidAddCommandInputException& iacie) {
+				delete _cmd;
+				_cmd = NULL;
+				return iacie.what();
+			} catch (NotANumberException& nane) {
+				delete _cmd;
+				_cmd = NULL;
+				return nane.what();
+			} catch (InvalidFilterParameters& ifp) {
+				delete _cmd;
+				_cmd = NULL;
+				return ifp.what();
+			} 
 		}
 	}
 }

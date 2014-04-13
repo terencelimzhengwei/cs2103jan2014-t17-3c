@@ -343,7 +343,7 @@ Task* TaskList::setSearchedTaskAsDone(unsigned int index)
 	Task* task;
 	task=_searchedTaskList[index];
 	if(task->getTaskStatus()==DONE){
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 	}
 	task->setStatusAsDone();
 	addTaskToDoneList(*task);
@@ -357,7 +357,7 @@ Task* TaskList::setFilteredTaskAsDone(unsigned int index)
 	Task* task;
 	task=_filteredTaskList[index];
 	if(task->getTaskStatus()==DONE){
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 	}
 	task->setStatusAsDone();
 	addTaskToDoneList(*task);

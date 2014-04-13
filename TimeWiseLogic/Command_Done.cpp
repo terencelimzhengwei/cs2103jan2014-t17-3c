@@ -88,12 +88,12 @@ void Command_Done::saveTasks(TaskList& taskList){
 	case MAIN:
 		break;
 	default:
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 	}
 	for(unsigned int i=0;i<_doneTaskIndex.size();i++){
 		_doneTasks.push_back(taskVector[_doneTaskIndex[i]]);
 		if(_doneTasks[i]->getTaskStatus()==COMPLETED){
-			throw UnableTosetAsDone();
+			throw UnableToSetAsDone();
 		}
 	}
 }
@@ -120,7 +120,7 @@ void Command_Done::setTasksAsDone(TaskList& tasklist){
 		}
 		break;
 	default:
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 	}
 }
 

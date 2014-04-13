@@ -26,15 +26,17 @@ public:
 	TimeWiseGUI(QWidget *parent = 0);
 	~TimeWiseGUI();
 	QStandardItemModel *model;
-	void setupTable();
+	void configureTable();
 	void setupClock();
 	void setupFont();
 	void setupHotKeys();
 	
 	//These are the functions that sets the data from Logic into table
 	void displayTaskList(DISPLAY_TYPE displayType);
-	void setMainData();
-	void setData(std::vector<Task*>& taskList);
+	void createMainTable();
+	void createOtherTables(std::vector<Task*>& taskList);
+	void setMainData(TaskList& tasklist, vector<int>& latestIndices);
+	void setOtherData(std::vector<Task*>& otherTaskList, vector<int>& latestIndices);
 
 	//These are the functions that inform user of the number of overdue tasks.
 	void setOverdueMessage(int overdueCount);

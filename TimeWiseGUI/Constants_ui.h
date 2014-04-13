@@ -1,7 +1,6 @@
 #ifndef CONSTANTS_UI_H
 #define CONSTANTS_UI_H
 
-#include <QString>
 #include <string>
 
 namespace {
@@ -42,7 +41,7 @@ namespace {
 	const char* DISPLAY_MAIN = "display main";
 	const char* DISPLAY_DONE = "display done";
 
-	//Values pertaining to table model
+	//Values pertaining to table model configuration
 	const int COLUMN_1         = 0;
 	const int COLUMN_2		   = 1;
 	const int COLUMN_3		   = 2;
@@ -61,11 +60,19 @@ namespace {
 	const int TOTAL_WIDTH      = 535;
 	const int ROW_HEIGHT       = 27;
 
+	const char* DESCRIPTION_HEADER = "Description";
+	const char* DAY_HEADER         = "Day" ;
+	const char* START_DATE_HEADER  = "S. Date";
+	const char* START_TIME_HEADER  = "S. Time";
+	const char* END_DATE_HEADER    = "E. Date";
+	const char* END_TIME_HEADER    = "E. Time";
+	const char* CAT_HEADER         = "Category";
+
 	//Strings pertaining to Fonts
-	const QString FONT_CF_JACK_STORY = ":/TimeWiseGUI/CFJackStory-Regular.ttf";
-	const QString FONT_EHSMB         = ":/TimeWiseGUI/EHSMB.TTF";
-	const QString FONT_NEW_CICLE     = ":/TimeWiseGUI/New Cicle Semi.ttf";
-	const QString FONT_EHSMB_NAME    = "Electronic Highway Sign";
+	const char* FONT_CF_JACK_STORY = ":/TimeWiseGUI/CFJackStory-Regular.ttf";
+	const char* FONT_EHSMB         = ":/TimeWiseGUI/EHSMB.TTF";
+	const char* FONT_NEW_CICLE     = ":/TimeWiseGUI/New Cicle Semi.ttf";
+	const char* FONT_EHSMB_NAME    = "Electronic Highway Sign";
 
 	//Values Pertaining to Font Sizes and Boldness
 	const int DATE_SIZE        = 19;
@@ -75,10 +82,10 @@ namespace {
 	const int BOLDED_FONT_SIZE = 9;
 
 	//Hotkey strings
-	const QString HOTKEY_F1 = "F1";
-	const QString HOTKEY_F2 = "F2";
-	const QString HOTKEY_F3 = "F3";
-	const QString HOTKEY_F4 = "F4";
+	const char* HOTKEY_F1 = "F1";
+	const char* HOTKEY_F2 = "F2";
+	const char* HOTKEY_F3 = "F3";
+	const char* HOTKEY_F4 = "F4";
 
 	//Colour Indices for highlighting rows
 	const int OVERDUE_R_INDEX            = 255;
@@ -95,7 +102,7 @@ namespace {
 	//Miscellaneous
 	const int ADJUSTMENT_VALUE   = 1;
 	const int NOUGHT             = 0;
-	static const int MAX_LETTERS = 256;
+	const int MAX_LETTERS = 256;
 	char buffer[MAX_LETTERS];
 }
 

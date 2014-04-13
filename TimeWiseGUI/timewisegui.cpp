@@ -1,13 +1,12 @@
 #include "timewisegui.h"
 #include <stdio.h>
-#include <qdatetime.h>
 #include <QHeaderView>
 #include <QShortcut>
 
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
-	setupTable();
+	configureTable();
 	setupClock();
 	setupFont();
 	setupHotKeys();
@@ -34,7 +33,7 @@ TimeWiseGUI::~TimeWiseGUI() {
 //========================================================
 //       USER INPUT BOX - WHEN TEXT CHANGES [SLOT]
 //========================================================
-//As user types in user input box, guide changes to show command format
+//As user types in user input box, guide changes to show different command formats.
 void TimeWiseGUI::on_userInput_textChanged() {
 	if(ui.userInput->text() == ADD_COMMAND) {
 		ui.label_help->setText(ADD_FORMAT);
@@ -74,7 +73,7 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		emit lineExecuted(lines.back());
 		
 		std::string userCommand = input.toLocal8Bit().constData();   //converts QString to string type.
-		std::string messageLog = _logic.processCommand(userCommand); //sends user input to logic for processing.
+		std::string messageLog = _logic.processCommand(userCommand); //sends user input (string) to logic for processing.
 		QString outputMessage = QString::fromStdString(messageLog);  //converts string to QString type.
 		ui.label_mlog->setText(outputMessage);                       //displays feedback.
 
@@ -94,37 +93,41 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 	switch(displayType){
 	case MAIN: {
-		setMainData();
+		createMainTable();
 		ui.label_title->setText(MAIN_TITLE);
 		break;
 	}
 	case SEARCHED: {
 		vector<Task*> taskList = _logic.getTaskList().getSearchResults();
-		setData(taskList);
+		createOtherTables(taskList);
 		ui.label_title->setText(SEARCHED_TITLE);
 		break;
 	}
 	case COMPLETE:{
 		vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
-		setData(taskList);
+		createOtherTables(taskList);
 		ui.label_title->setText(COMPLETED_TITLE);
 		break;
 	}
 	case FILTERED:{
 		vector<Task*> taskList = _logic.getTaskList().getFilterResults();
-		setData(taskList);
+		createOtherTables(taskList);
 		ui.label_title->setText(FILTERED_TITLE);
 		break;
 	}
 	}
 }
 
-void TimeWiseGUI::setMainData() {
+//========================================================
+//			MANAGES DATA AND SET IT INTO TABLE 
+//						(MAIN PAGE)
+//========================================================
+void TimeWiseGUI::createMainTable() {
 	//clears the contents in the table before displaying updated taskList
 	model->removeRows(NOUGHT, model->rowCount());
 
 	TaskList taskList = _logic.getTaskList();
-	vector<int> latestIndices = taskList.getLastTaskIndexList();
+	vector<int> latestIndices;
 	
 	//displays an image if table is empty; else, conceal it.
 	if(taskList.undoneSize() == NOUGHT) {
@@ -133,6 +136,19 @@ void TimeWiseGUI::setMainData() {
 		ui.emptyLogo->hide();
 	}
 
+	setMainData(taskList, latestIndices);
+	
+	//scrolls to latest task after all tasks have been set in table.
+	if(!latestIndices.empty()) {
+		ui.tableView->scrollTo(model->index(latestIndices[NOUGHT], NOUGHT));
+	}
+}
+
+//puts the data in place in the table. Bolds/highlights rows, if necessary
+void TimeWiseGUI::setMainData(TaskList& taskList, vector<int>& latestIndices) {
+	
+	latestIndices = taskList.getLastTaskIndexList();
+	
 	//goes through each cell in the table and sets every attributes of every task into the respective cells.
 	for(int i = 0; i < taskList.undoneSize(); i++) {
 		for(int j = 0; j < COLUMN_COUNT; j++) {
@@ -206,7 +222,7 @@ void TimeWiseGUI::setMainData() {
 			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
 			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
 			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
-			
+
 			bool checkClash = taskList.getTask(i)->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
@@ -232,44 +248,53 @@ void TimeWiseGUI::setMainData() {
 			model->setData(model->index(i,j), font, Qt::FontRole);
 		}
 	}
+}
+
+//========================================================
+//			MANAGES DATA AND SET IT INTO TABLE
+//		(OTHER PAGES - Searched, Filtered, Completed)
+//========================================================
+void TimeWiseGUI::createOtherTables(std::vector<Task*>& otherTaskList) {
+	//clears the contents in the table before displaying updated taskList
+	model->removeRows(NOUGHT, model->rowCount());
+	ui.emptyLogo->hide();
+	
+	vector<int> latestIndices;
+	setOtherData(otherTaskList, latestIndices);
+
 	//scrolls to latest task after all tasks have been set in table.
 	if(!latestIndices.empty()) {
 		ui.tableView->scrollTo(model->index(latestIndices[NOUGHT], NOUGHT));
 	}
 }
 
-void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
-	//clears the contents in the table before displaying updated taskList
-	model->removeRows(NOUGHT, model->rowCount());
+void TimeWiseGUI::setOtherData(std::vector<Task*>& otherTaskList, vector<int>& latestIndices) {
+	TaskList taskList = _logic.getTaskList();
+	latestIndices = taskList.getLastTaskIndexList();
 
-	TaskList mainTaskList = _logic.getTaskList();
-	vector<int> latestIndices = mainTaskList.getLastTaskIndexList();
-
-	ui.emptyLogo->hide();
-
-	for(int i = 0; i < taskList.size(); i++) {
+	for(int i = 0; i < otherTaskList.size(); i++) {
 		for(int j = 0; j < COLUMN_COUNT; j++) {
 			//add row for every task in taskList dynamically
 			model->setRowCount(i+1);
 
 			switch (j) {
 			case COLUMN_1: {
-				std::string taskDescription = (taskList[i])->getDescription();
+				std::string taskDescription = (otherTaskList[i])->getDescription();
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
 				model->setItem(i, j, item);
 				break;
 			}
 			case COLUMN_2: {
-				std::string taskDay = taskList[i]->getDayString();
+				std::string taskDay = otherTaskList[i]->getDayString();
 				QString qDay = QString::fromStdString(taskDay);
 				QStandardItem* item = new QStandardItem(qDay);
 				model->setItem(i, j, item);
 				break;
 			}
 			case COLUMN_3: {			
-				if(taskList[i]->getStartDate()!=NULL){
-					std::string taskStartDate = taskList[i]->getStartDate()->toString();
+				if(otherTaskList[i]->getStartDate()!=NULL){
+					std::string taskStartDate = otherTaskList[i]->getStartDate()->toString();
 					QString qTask = QString::fromStdString(taskStartDate);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
@@ -277,8 +302,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 				break;
 			}
 			case COLUMN_4: {
-				if(taskList[i]->getStartTime()!=NULL){
-					std::string taskStartTime = taskList[i]->getStartTime()->toString();
+				if(otherTaskList[i]->getStartTime()!=NULL){
+					std::string taskStartTime = otherTaskList[i]->getStartTime()->toString();
 					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
@@ -286,8 +311,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 				break;
 			}
 			case COLUMN_5: {
-				if(taskList[i]->getEndDate()!=NULL){
-					std::string taskEndDate = taskList[i]->getEndDate()->toString();
+				if(otherTaskList[i]->getEndDate()!=NULL){
+					std::string taskEndDate = otherTaskList[i]->getEndDate()->toString();
 					QString qTask = QString::fromStdString(taskEndDate);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
@@ -295,8 +320,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 				break;
 			}
 			case COLUMN_6: {
-				if(taskList[i]->getEndTime()!=NULL){
-					std::string taskEndTime = taskList[i]->getEndTime()->toString();
+				if(otherTaskList[i]->getEndTime()!=NULL){
+					std::string taskEndTime = otherTaskList[i]->getEndTime()->toString();
 					QString qTask = QString::fromStdString(taskEndTime);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
@@ -304,8 +329,8 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 				break;
 			}
 			case COLUMN_7: {
-				if(taskList[i]->getTaskCategory()!=""){
-					std::string taskCategory= taskList[i]->getTaskCategory();
+				if(otherTaskList[i]->getTaskCategory()!=""){
+					std::string taskCategory= otherTaskList[i]->getTaskCategory();
 					QString qTask = QString::fromStdString(taskCategory);
 					QStandardItem* item = new QStandardItem(qTask);
 					model->setItem(i, j, item);
@@ -313,15 +338,14 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 				break;
 			}
 			}
-
 			//highlight row in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
-			TASK_STATUS taskStatus = taskList[i]->getTaskStatus();
+			TASK_STATUS taskStatus = otherTaskList[i]->getTaskStatus();
 			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
 			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
 			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
-			
-			bool checkClash = taskList[i]->isClash();
+
+			bool checkClash = otherTaskList[i]->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
 				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == DONE_STATUS && checkClash) {
@@ -346,27 +370,24 @@ void TimeWiseGUI::setData(std::vector<Task*>& taskList) {
 			model->setData(model->index(i,j), font, Qt::FontRole);
 		}
 	}
-	//scrolls to latest task after all tasks have been set in table.
-	if(!latestIndices.empty()) {
-		ui.tableView->scrollTo(model->index(latestIndices[NOUGHT], NOUGHT));
-	}
 }
 
+
 //=====================================================
-//                   TABLE SET-UP
+//             TABLE INITIAL CONFIGURATION
 //=====================================================
 
-void TimeWiseGUI::setupTable() {
+void TimeWiseGUI::configureTable() {
 	//creates model and names column header titles
 	model = new QStandardItemModel (NOUGHT, COLUMN_COUNT, this);
-	model->setHorizontalHeaderItem(COLUMN_1, new QStandardItem(QString("Description")));
-	model->setHorizontalHeaderItem(COLUMN_2, new QStandardItem(QString("Day")));
-	model->setHorizontalHeaderItem(COLUMN_3, new QStandardItem(QString("S. Date")));
-	model->setHorizontalHeaderItem(COLUMN_4, new QStandardItem(QString("S. Time")));
-	model->setHorizontalHeaderItem(COLUMN_5, new QStandardItem(QString("D. Date")));
-	model->setHorizontalHeaderItem(COLUMN_6, new QStandardItem(QString("D. Time")));
-	model->setHorizontalHeaderItem(COLUMN_7, new QStandardItem(QString("Category")));
-	setMainData();
+	model->setHorizontalHeaderItem(COLUMN_1, new QStandardItem(QString(DESCRIPTION_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_2, new QStandardItem(QString(DAY_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_3, new QStandardItem(QString(START_DATE_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_4, new QStandardItem(QString(START_TIME_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_5, new QStandardItem(QString(END_DATE_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_6, new QStandardItem(QString(END_TIME_HEADER)));
+	model->setHorizontalHeaderItem(COLUMN_7, new QStandardItem(QString(CAT_HEADER)));
+	createMainTable();
 	ui.tableView->setModel(model);
 
 	//allows long texts to be wrapped.
@@ -417,7 +438,7 @@ void TimeWiseGUI::updateTime() {
 	if(_logic.getTaskList().checkNewOverdue()){
 		_logic.getTaskList().updateOverdueTaskList();
 		if(_logic.getScreenToDisplay() == MAIN){
-			setMainData();
+			createMainTable();
 		}
 	}
 }
@@ -468,7 +489,7 @@ void TimeWiseGUI::redo(){
 //displayMain slot for shortcut to display main list
 void TimeWiseGUI::displayMain(){
     _logic.processCommand(DISPLAY_MAIN);
-	setMainData();
+	createMainTable();
 	ui.label_title->setText(MAIN_TITLE);
 }
 
@@ -476,7 +497,7 @@ void TimeWiseGUI::displayMain(){
 void TimeWiseGUI::displayDone(){
 	_logic.processCommand(DISPLAY_DONE);
 	vector<Task*> taskList = _logic.getTaskList().getCompletedTaskList();
-	setData(taskList);
+	createOtherTables(taskList);
 	ui.label_title->setText(COMPLETED_TITLE);
 }
 

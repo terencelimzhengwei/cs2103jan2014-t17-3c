@@ -26,7 +26,7 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 
 void Storage::saveUndoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_undoneFileName);
-	for(int i = 0; i < listOfTasks.undoneSize(); i++) { 
+	for(unsigned int i = 0; i < listOfTasks.undoneSize(); i++) { 
 		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n";
 		writeFile << "Start_Date: ";
 		if(listOfTasks.getTask(i)->getStartDate()!=NULL){

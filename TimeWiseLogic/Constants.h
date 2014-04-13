@@ -44,7 +44,7 @@ static const std::string TIME_INDICATOR[TIME_COUNT] = {"pm", "am"};
 
 const char TASK_SPECIFIER = '#';
 const char DATE_SEPARATOR = '-';
-
+const char SPACE_DELIMITER = ' ';
 const std::string PREPOSITION[MAX_PREPOSITION] = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in", "due"};
 
 const CMD_TYPE DEFAULT_COMMAND_TYPE = UNDEFINED;
@@ -67,12 +67,13 @@ static const char* NO_ARGUMENT_EXCEPTION = "Error! No input detected";
 static const char* USER_INPUT_NOT_A_NUMBER = "Error! The task index that you entered is not a number.";
 static const char* TASKLIST_EMPTY = "You have no tasks scheduled at this moment!";
 static const char* INVALID_USER_INPUT_DATE_TIME = "Error! The date or time that you entered has an invalid format";
-static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid parameters for Clear. Only accepts ALL,DONE,UNDONE";
+static const char* INVALID_USER_INPUT_COMMAND_CLEAR = "Error! Invalid input for CLEAR command.";
 static const char* TASK_ALREADY_COMPLETED = "This task has already been done!";
 static const char* TASK_NOT_COMPLETED_YET = "This task has not been done yet!";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 static const char* INVALID_FILTER_INPUT = "Error! Invalid filtering contents. Please check your date format and hash tag.";
 static const char* INVALID_EDIT_INDEX_MISSING = "Error! You have not entered any task index.";
+static const char* INVALID_DISPLAY_COMMAND = "Error! Invalid input for DISPLAY command.";
 //Feedback strings
  
 const std::string ADD_SUCCESS = " Task is successfully added.";

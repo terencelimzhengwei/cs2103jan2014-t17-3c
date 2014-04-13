@@ -99,40 +99,40 @@ bool Command_Edit::emptyParameters(){
 }
 
 bool Command_Edit::noDescription(){
-	if(_editedDescription==DEFAULT_EMPTY){
+	if(_editedDescription == DEFAULT_EMPTY){
 		return true;
 	}
 	return false;
 }
 
 bool Command_Edit::noCategory(){
-	if(_editedCategory==DEFAULT_EMPTY){
+	if(_editedCategory == DEFAULT_EMPTY){
 		return true;
 	}
 	return false;
 }
 bool Command_Edit::noEndDate(){
-	if(_editedEndDate==NULL){
+	if(_editedEndDate == NULL){
 		return true;
 	}
 	return false;
 }
 bool Command_Edit::noStartDate(){
-	if(_editedStartDate==NULL){
+	if(_editedStartDate == NULL){
 		return true;
 	}
 	return false;
 }
 
 bool Command_Edit::noStartTime(){
-	if(_editedStartTime==NULL){
+	if(_editedStartTime == NULL){
 		return true;
 	}
 	return false;
 }
 
 bool Command_Edit::noEndTime(){
-	if(_editedEndTime==NULL){
+	if(_editedEndTime == NULL){
 		return true;
 	}
 	return false;

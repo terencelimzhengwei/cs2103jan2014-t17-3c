@@ -273,7 +273,7 @@ bool TaskList::deleteTaskFromSearchList(unsigned int index){
 	Task* task=getSearchedTask(index);
 	unsigned int deletionIndex;
 	if(task->getTaskStatus()==COMPLETED) {
-		for(unsigned int i=0;i<doneSize();i++){
+		for(unsigned int i = 0; i < doneSize();i++){
 			if(_completedTaskList[i]==task){
 				deletionIndex=i;
 				break;

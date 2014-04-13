@@ -17,7 +17,7 @@
 
 //********************************************************************************
 // This class is responsible for instantiating command objects once it has
-// ascertained the command type (CMD_TYPE) and the validity of the input
+// ascertained the command type (CMD_TYPE) and the validity of the input.
 //********************************************************************************
 class CommandCreator{
 private:
@@ -29,7 +29,7 @@ public:
 	//flag functions
 	bool hasArg(std::string);
 	bool isValidIndex(int);
-	
+	bool isValidRemovalIndex(int,DISPLAY_TYPE*,TaskList&);
 	//the below methods are responsible for creating the derived commands
 	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&, TaskList&);
 	Command* createCommandAdd(std::string, int, vector<std::string>,DISPLAY_TYPE*);
@@ -42,7 +42,11 @@ public:
 	Command* createCommandFilter(std::string,DISPLAY_TYPE*);
 	Command* createCommandUndo();
 	Command* createCommandRedo();
-	Command* createCommandDisplay(string parameter, DISPLAY_TYPE* displayType);
-	bool isValidRemovalIndex(int id,DISPLAY_TYPE* type,TaskList& tasklist);
+	Command* createCommandDisplay(string, DISPLAY_TYPE*);
+	//Utility methods
+	void manipulateInputWithoutCommandWord(CMD_TYPE&, std::string&);
+	CMD_TYPE extractCommandType(std::string);
+	std::string extractUserInput(std::string);
+
 };
 

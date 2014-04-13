@@ -76,7 +76,7 @@ void Command_Clear::clearCompletedTasks(TaskList& tasklist){
 
 void Command_Clear::clearUncompletedTasks(TaskList& tasklist){
 	if(!wasUndone()){
-		for(int i = 0; i<tasklist.undoneSize(); i++){
+		for(unsigned int i = 0; i <tasklist.undoneSize(); i++){
 			_deletedUndoneTasks.push_back(tasklist.getTask(i));
 		}
 	}

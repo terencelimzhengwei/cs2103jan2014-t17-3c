@@ -18,7 +18,17 @@ static const int ZERO					= 0;
 static const int CLEAR_TYPE_COUNT       = 4;
 static const int DISPLAY_TYPE_COUNT     = 5;
 
-
+//Values used in Storage
+const int START_VALUE                   = 0;
+const int HEADER_1                      = 0;
+const int HEADER_2                      = 1;
+const int HEADER_3                      = 2;
+const int HEADER_4                      = 3;
+const int HEADER_5                      = 4;
+const int HEADER_6                      = 5;
+const int HEADER_7                      = 6;
+const int COLUMN_OUT_OF_BOUND           = 8;
+const int REDUCTION_VALUE              = 1;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
@@ -51,10 +61,9 @@ const std::string DEFAULT_EMPTY      = "";
 const std::string SPACE_PARAMETER    = " ";
 const std::string SLASH_PARAMETER    = "/";
 const std::string CATEGORY_SPECIFIER = "#";
+const std::string NEW_LINE           = "\n";
 const std::string TODAY_DISPLAY      = "Today";
 const std::string TMR_DISPLAY        = "Tmrw";
-
-
 
 // These strings store exception messages to be displayed by TiMEWiSE! in the CLI in case of user input errors.
 static const char* INVALID_USER_INPUT_DATE_TIME             = "Error! The date or time that you entered has an invalid format";
@@ -72,7 +81,7 @@ static const char* TASK_NOT_COMPLETED_YET					= "This task has not been done yet
 
 //Feedback strings for successful execution of commands
 const std::string ADD_SUCCESS							    = "Task is successfully added.";
-const std::string CLASH_EXIST								= "Task is successfully added. Note: Clash Exists.";
+const std::string CLASH_EXIST								= "Task is successfully added.\nNote: You have tasks that clash!";
 const std::string CLEAR_ALL_SUCCESS							= "All tasks are successfully removed.";
 const std::string CLEAR_COMPLETED_SUCCESS					= "All completed tasks are successfully removed.";
 const std::string CLEAR_UNCOMPLETED_SUCCESS					= "All uncompleted tasks are successfully removed.";
@@ -103,6 +112,20 @@ const std::string NO_COMMAND_LINE							= "Please key in your command...";
 const std::string EXECUTE									= "execute";
 const std::string EMPTY_TASKLIST                            = "Unable to undo! You have no more task in your schedule.";
 
+//Strings used for storage
+const std::string UNDONE_TASK_TEXTFILE                      = "undoneTasks.txt";
+const std::string DONE_TASK_TEXTFILE                        = "doneTasks.txt";
+const std::string LOG_MESSAGE_STORAGE                       = "Storage";
+const std::string LOG_MESSAGE_SAVING                        = "Saving Tasks to Text file";
+const std::string LOG_MESSAGE_RETRIEVAL                     = "Retrieving Tasks from Text file";
+const std::string DESCRIPTION_FIELD                         = "Description: ";
+const std::string START_DATE_FIELD                          = "Start_Date: ";
+const std::string END_DATE_FIELD                            = "End_Date:  ";
+const std::string START_TIME_FIELD                          = "Start_Time: ";
+const std::string END_TIME_FIELD                            = "End_Time: ";
+const std::string CATEGORY_FIELD                            = "Category: ";
+const std::string STATUS_FIELD                              = "Status: ";
+const std::string SEPARATOR                                 = "==========";
 
 //These are the constants used for dates
 const int PRECEDING_YEAR_OFFEST = -33;

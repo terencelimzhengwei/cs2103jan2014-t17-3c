@@ -1,284 +1,310 @@
 #include "Storage.h"
 
-
 Storage::Storage(void) {
 	_logger = Logger::getLogger();
-	_undoneFileName = "undoneTasks.txt";
-	_doneFileName = "doneTasks.txt";
-
+	_undoneFileName = UNDONE_TASK_TEXTFILE;
+	_doneFileName = DONE_TASK_TEXTFILE;
 }
 
-Storage::~Storage(void)
-{
+Storage::~Storage(void) {
 }
 
-void Storage::saveFile(TaskList& listOfTasks){ 
-	_logger->log("Storage","Saving Tasks to Text file");
+void Storage::saveFile(TaskList& listOfTasks) { 
+	_logger->log(LOG_MESSAGE_STORAGE, LOG_MESSAGE_SAVING);
 	saveUndoneTasks(listOfTasks);
 	saveDoneTasks(listOfTasks);
 }
 
 void Storage::retrieveFile(TaskList& listOfTasks) { 
-	_logger->log("Storage","Retrieving Tasks from Text file");
+	_logger->log(LOG_MESSAGE_STORAGE, LOG_MESSAGE_RETRIEVAL);
 	retrieveUndoneTasks(listOfTasks);
 	retrieveDoneTasks(listOfTasks);
 }
 
-void Storage::saveUndoneTasks(TaskList& listOfTasks){
+//Saves undone tasks into separate file.
+void Storage::saveUndoneTasks(TaskList& listOfTasks) {
 	std::ofstream writeFile(_undoneFileName);
 	for(unsigned int i = 0; i < listOfTasks.undoneSize(); i++) { 
-		writeFile << "Description: " << listOfTasks.getTask(i)->getDescription() << "\n";
-		writeFile << "Start_Date: ";
-		if(listOfTasks.getTask(i)->getStartDate()!=NULL){
+		writeFile << DESCRIPTION_FIELD << listOfTasks.getTask(i)->getDescription();
+		writeFile << NEW_LINE << START_DATE_FIELD;
+		if(listOfTasks.getTask(i)->getStartDate() != NULL) {
 			writeFile<< listOfTasks.getTask(i)->getStartDate()->toFormat();
 		}
+		writeFile << NEW_LINE << END_DATE_FIELD;
+		if(listOfTasks.getTask(i)->getEndDate() != NULL) {
+			writeFile << listOfTasks.getTask(i)->getEndDate()->toFormat();
+		}
+		writeFile << NEW_LINE << START_TIME_FIELD;
+		if(listOfTasks.getTask(i)->getStartTime() != NULL) {
+			writeFile << listOfTasks.getTask(i)->getStartTime()->toString();
+		}
+		writeFile << NEW_LINE << END_TIME_FIELD;
+		if(listOfTasks.getTask(i)->getEndTime() != NULL) {
+			writeFile << listOfTasks.getTask(i)->getEndTime()->toString();
+		}
+		writeFile << NEW_LINE
+			<< CATEGORY_FIELD << listOfTasks.getTask(i)->getTaskCategory()
+			<< NEW_LINE
+			<< STATUS_FIELD << TASK_STATUS_STRING[listOfTasks.getTask(i)->getTaskStatus()] 
+			<< NEW_LINE;
 
-		writeFile <<"\n"<< "End_Date: ";
-		if(listOfTasks.getTask(i)->getEndDate()!=NULL){
-			writeFile<< listOfTasks.getTask(i)->getEndDate()->toFormat();
-		}
-		writeFile <<"\n"<< "Start_Time: ";
-		if(listOfTasks.getTask(i)->getStartTime()!=NULL){
-			writeFile<< listOfTasks.getTask(i)->getStartTime()->toString();
-		}
-		writeFile<<"\n"<< "End_Time: ";
-		if(listOfTasks.getTask(i)->getEndTime()!=NULL){
-			writeFile<< listOfTasks.getTask(i)->getEndTime()->toString();
-		}
-		writeFile<<"\n"<< "Category: " << listOfTasks.getTask(i)->getTaskCategory() << "\n"
-			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getTask(i)->getTaskStatus()] << "\n";
-		if(i==listOfTasks.undoneSize()-1){
-			writeFile<< "==========";
-		}else{
-			writeFile<< "=========="<<std::endl;
+		if(i == listOfTasks.undoneSize() - REDUCTION_VALUE) {
+			writeFile << SEPARATOR;
+		} else{
+			writeFile << SEPARATOR << std::endl;
 		}
 	} 
 }
 
+//Saves done tasks into a separate file.
 void Storage::saveDoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_doneFileName);
 	for(int i = 0; i < listOfTasks.doneSize(); i++) { 
-		writeFile << "Description: " << listOfTasks.getCompletedTask(i)->getDescription() << "\n";
-		writeFile << "Start_Date: ";
-		if(listOfTasks.getCompletedTask(i)->getStartDate()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getStartDate()->toFormat();
+		writeFile << DESCRIPTION_FIELD << listOfTasks.getCompletedTask(i)->getDescription();
+		writeFile  << NEW_LINE << START_DATE_FIELD;
+		if(listOfTasks.getCompletedTask(i)->getStartDate() != NULL){
+			writeFile << listOfTasks.getCompletedTask(i)->getStartDate()->toFormat();
 		}
+		writeFile << NEW_LINE << END_DATE_FIELD;
+		if(listOfTasks.getCompletedTask(i)->getEndDate() != NULL){
+			writeFile << listOfTasks.getCompletedTask(i)->getEndDate()->toFormat();
+		}
+		writeFile << NEW_LINE <<  START_TIME_FIELD;
+		if(listOfTasks.getCompletedTask(i)->getStartTime() != NULL){
+			writeFile << listOfTasks.getCompletedTask(i)->getStartTime()->toString();
+		}
+		writeFile << NEW_LINE << END_TIME_FIELD;
+		if(listOfTasks.getCompletedTask(i)->getEndTime() != NULL){
+			writeFile << listOfTasks.getCompletedTask(i)->getEndTime()->toString();
+		}
+		writeFile << NEW_LINE 
+			<< CATEGORY_FIELD << listOfTasks.getCompletedTask(i)->getTaskCategory() 
+			<< NEW_LINE
+			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getCompletedTask(i)->getTaskStatus()] 
+			<< NEW_LINE;
 
-		writeFile <<"\n"<< "End_Date: ";
-		if(listOfTasks.getCompletedTask(i)->getEndDate()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getEndDate()->toFormat();
-		}
-		writeFile <<"\n"<< "Start_Time: ";
-		if(listOfTasks.getCompletedTask(i)->getStartTime()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getStartTime()->toString();
-		}
-		writeFile<<"\n"<< "End_Time: ";
-		if(listOfTasks.getCompletedTask(i)->getEndTime()!=NULL){
-			writeFile<< listOfTasks.getCompletedTask(i)->getEndTime()->toString();
-		}
-		writeFile<<"\n"<<"Category: " << listOfTasks.getCompletedTask(i)->getTaskCategory() << "\n"
-			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getCompletedTask(i)->getTaskStatus()] << "\n";
-		if(i==listOfTasks.undoneSize()-1){
-			writeFile<< "==========";
-		}else{
-			writeFile<< "=========="<<std::endl;
+		if(i == listOfTasks.undoneSize() - REDUCTION_VALUE) {
+			writeFile << SEPARATOR;
+		} else {
+			writeFile << SEPARATOR << std::endl;
 		}
 	} 
 }
 
-void Storage::retrieveDoneTasks(TaskList& listOfTasks){
-	std::string userInput="";
+//Retrieves information of done tasks.
+void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
+	std::string userInput = DEFAULT_EMPTY;
 	std::ifstream input(_doneFileName);
 	std::string temp;
 	int taskHeader;
 
 	if(input.is_open()) {
 		while(!input.eof()) {
-			taskHeader=0;
+			taskHeader = START_VALUE;
 			getline(input,userInput);
-			if(userInput==""){
+			if(userInput == DEFAULT_EMPTY) {
 				return;
 			}
 			Task* newTask = new Task;
-			while (userInput != "==========") {
+			while (userInput != SEPARATOR) {
 				std::string details = _parser.removeFirstWord(userInput);
 				_parser.removeWhiteSpaces(details);
-				switch(taskHeader){
-				case 0 :
+				switch(taskHeader) {
+				case HEADER_1: {
 					newTask->setDescription(details);
 					taskHeader++;
 					break;
-				case 1:
+				}
+				case HEADER_2: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
+					} else {
 						try{
 							newTask->setStartDate(_parser.createDate(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getStartDate();
 							newTask->setStartDate(NULL);
 							_corrupted=true;
 						}
-					}break;
-				case 2:
+					}
+					break;
+				}
+				case HEADER_3: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setEndDate(_parser.createDate(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getEndDate();
 							newTask->setEndDate(NULL);
 							_corrupted=true;
 						}					
-					}break;
-				case 3:
+					} break;
+				}
+				case HEADER_4: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setStartTime(_parser.createTime(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getStartTime();
 							newTask->setStartTime(NULL);
 							_corrupted=true;
 						}						
-					}break;
-				case 4:
+					}
+					break;
+				}
+				case HEADER_5: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setEndTime(_parser.createTime(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getEndTime();
 							newTask->setEndTime(NULL);
 							_corrupted=true;
 						}						
-					}break;
-				case 5:
+					} 
+					break;
+				}
+				case HEADER_6: {
 					taskHeader++;
 					newTask->setCategory(details);
 					break;
-				case 6:
+				}
+				case HEADER_7: {
 					taskHeader++;
-					TASK_STATUS status=_parser.getTaskStatus(details);
+					TASK_STATUS status = _parser.getTaskStatus(details);
 					newTask->setStatusAsDone();
+				}
 				}
 				getline(input, userInput);
 			} 
 			listOfTasks.addTaskToDoneList(*newTask);
 		} 
 	}
-
 	input.close();
 }
 
-void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
-	std::string userInput="";
+//Retrieves information of uncompleted tasks.
+void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
+	std::string userInput = DEFAULT_EMPTY;
 	std::ifstream input(_undoneFileName);
 	std::string temp;
 	int taskHeader;
 
 	if(input.is_open()) {
 		while(!input.eof()) {
-			taskHeader=0;
+			taskHeader = START_VALUE;
 			getline(input,userInput);
-			if(userInput==""){
+			if(userInput == DEFAULT_EMPTY) {
 				return;
 			}
 			Task* newTask = new Task;
 
-			while (userInput != "==========") {
+			while (userInput != SEPARATOR) {
 				std::string details = _parser.removeFirstWord(userInput);
 				_parser.removeWhiteSpaces(details);
 
 				switch(taskHeader){
-				case 0 :
+				case HEADER_1 : {
 					newTask->setDescription(details);
 					taskHeader++;
 					break;
-				case 1:
+				}
+				case HEADER_2: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setStartDate(_parser.createDate(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getStartDate();
 							newTask->setStartDate(NULL);
 							_corrupted=true;
 						}
-					}break;
-				case 2:
+					}
+					break;
+				}
+				case HEADER_3: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setEndDate(_parser.createDate(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getEndDate();
 							newTask->setEndDate(NULL);
 							_corrupted=true;
 						}					
-					}break;
-				case 3:
+					}
+					break;
+				}
+				case HEADER_4: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setStartTime(_parser.createTime(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getStartTime();
 							newTask->setStartTime(NULL);
 							_corrupted=true;
 						}						
-					}break;
-				case 4:
+					}
+					break;
+				}
+				case HEADER_5: {
 					taskHeader++;
-					if(details==""||details==" "){
+					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
-					}else{
-						try{
+					} else {
+						try {
 							newTask->setEndTime(_parser.createTime(details));
-						}catch(...){
+						} catch(...) {
 							delete newTask->getEndTime();
 							newTask->setEndTime(NULL);
 							_corrupted=true;
 						}						
-					}break;
-				case 5:
+					}
+					break;
+				}
+				case HEADER_6: {
 					taskHeader++;
 					newTask->setCategory(details);
 					break;
-				case 6:{
+				}
+				case HEADER_7: {
 					taskHeader++;
-					TASK_STATUS status=_parser.getTaskStatus(details);
-					if(status==DONE){
+					TASK_STATUS status =_parser.getTaskStatus(details);
+					if(status == DONE) {
 						newTask->setStatusAsDone();
 						break;
-					}else if(status==UNCOMPLETED){
+					} else if(status == UNCOMPLETED) {
 						newTask->setStatusasUndone();
 						break;
-					}else if(status==OVERDUE){
+					} else if(status == OVERDUE) {
 						newTask->setStatusAsOverdue();
 						break;
-					}else {
-						_corrupted=true;
+					} else {
+						_corrupted = true;
 						break;
 					}
 				}
 				default:
-					_corrupted=true;
+					_corrupted = true;
 				}
-				if(taskHeader>8){
+				if(taskHeader > COLUMN_OUT_OF_BOUND){
 					break;
 				}
 				getline(input, userInput);
@@ -286,6 +312,5 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks){
 			listOfTasks.addTask(*newTask);
 		} 
 	}
-
 	input.close();
 }

@@ -1,6 +1,6 @@
 #include "Exceptions.h"
 
-// This file stores the various exception classes that are required for TextBuddy.
+// This file stores the various exception classes that are required for TimeWise.
 const char* InvalidCommandWordException::what() const throw(){
 	return INVALID_USER_INPUT_COMMAND_WORD; 
 }
@@ -46,4 +46,7 @@ const char* InvalidFilterParameters::what() const throw() {
 }
 const char* InvalidEditIndexMissing::what() const throw() {
 	return INVALID_EDIT_INDEX_MISSING;
+}
+const char* InvalidDisplayCommandException::what() const throw() {
+	return INVALID_DISPLAY_COMMAND;
 }

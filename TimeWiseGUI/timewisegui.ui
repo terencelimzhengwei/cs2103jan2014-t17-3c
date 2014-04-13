@@ -299,10 +299,10 @@ color: rgb(0, 85, 255);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 10.5pt &quot;New Cicle&quot;;</string>
+     <string notr="true">font: 75 10pt &quot;New Cicle&quot;;</string>
     </property>
     <property name="text">
-     <string>You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit</string>
+     <string>You may: Add, Clear, Delete, Display, Done/Undone, Edit, Filter, Search, Undo/Redo, Help, Exit</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

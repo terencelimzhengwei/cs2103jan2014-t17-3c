@@ -17,8 +17,6 @@ public:
 	void addDoneIndex(int);
 	//Sets screen so that Command will know which tasklist to done task
 	void setPreviousScreen(DISPLAY_TYPE* screen);
-	//Sets Index of Done Task to bold
-	void setIndexToBoldInGUI(TaskList& tasklist);
 
 	bool execute(TaskList&, std::string&);
 	bool undo(TaskList&, std::string&);
@@ -41,5 +39,8 @@ private:
 	void lastCmdCalledIs(std::string cmd);
 	bool wasUndone();
 	bool wasExecuted();
+
+	//Sets Index of Done Task to bold
+	void setIndexToBoldInGUI(TaskList& tasklist);
 };
 #endif

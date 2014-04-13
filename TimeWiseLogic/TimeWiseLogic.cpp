@@ -33,7 +33,7 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 				delete _cmd;
 				_cmd = NULL;
 				return oore.what();
-			} catch (UnableTosetAsDone& usad) {
+			} catch (UnableToSetAsDone& usad) {
 				delete _cmd;
 				_cmd = NULL;
 				return usad.what();
@@ -61,7 +61,7 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 				delete _cmd;
 				_cmd = NULL;
 				return nane.what();
-			} catch (InvalidFilterParameters& ifp) {
+			} catch (InvalidFilterCommandInputException& ifp) {
 				delete _cmd;
 				_cmd = NULL;
 				return ifp.what();

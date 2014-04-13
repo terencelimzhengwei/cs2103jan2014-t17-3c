@@ -54,7 +54,7 @@ bool CommandCreator::isValidRemovalIndex(int id, DISPLAY_TYPE* type, TaskList& t
 	return true;
 }
 void CommandCreator::manipulateInputWithoutCommandWord(CMD_TYPE& commandType, std::string& userInput) {
-	userInput = CMD_TYPE_STRING[0] + SPACE_IDENTFIER + userInput;
+	userInput = CMD_TYPE_STRING[0] + SPACE_PARAMETER + userInput;
 	commandType = ADD;
 }
 CMD_TYPE CommandCreator::extractCommandType(std::string userInput) {
@@ -170,12 +170,12 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (InvalidDateTimeFormatException& idtfe) {
 		_feedbackExceptiontoUI = idtfe.what();
 		throw InvalidDateTimeFormatException();
-	} catch (InvalidFilterParameters& ifp) {
+	} catch (InvalidFilterCommandInputException& ifp) {
 		_feedbackExceptiontoUI = ifp.what();
-		throw InvalidFilterParameters();
-	} catch (UnableTosetAsDone& utsad){
+		throw InvalidFilterCommandInputException();
+	} catch (UnableToSetAsDone& utsad){
 		_feedbackExceptiontoUI = utsad.what();
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 	} catch (UnableToUndoneUncompletedTasks& utuuct){
 		_feedbackExceptiontoUI = utuuct.what();
 		throw UnableToUndoneUncompletedTasks();
@@ -281,7 +281,7 @@ Command* CommandCreator::createCommandDelete(vector<string> parameter,DISPLAY_TY
 
 Command* CommandCreator::createCommandDone(vector<string> parameter,DISPLAY_TYPE* type,TaskList& tasklist){
 	if(*type == COMPLETE){
-		throw UnableTosetAsDone();
+		throw UnableToSetAsDone();
 		return NULL;
 
 	}
@@ -394,7 +394,7 @@ Command* CommandCreator::createCommandFilter(std::string parameter,DISPLAY_TYPE*
 		commandFilter->setDate( tempDate );
 		return commandFilter;
 	} else {
-		throw InvalidFilterParameters();
+		throw InvalidFilterCommandInputException();
 	}
 	return NULL;
 }
@@ -436,10 +436,10 @@ Command* CommandCreator::createCommandEdit(string parameter, int parameterNum, v
 			throw NotANumberException();
 		}
 	} else {
-		throw NotANumberException();
+		throw InvalidEditCommandInputException();
 	}
 	if(index == DEFAULT_INDEX) {
-		throw InvalidEditIndexMissing();
+		throw InvalidEditCommandInputException();
 		
 	}
 

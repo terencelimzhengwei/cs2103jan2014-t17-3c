@@ -186,6 +186,9 @@ Command* CommandCreator::interpretCommand(std::string userInput,DISPLAY_TYPE& di
 	} catch (InvalidDisplayCommandException& idc) {
 		_feedbackExceptiontoUI = idc.what();
 		throw InvalidDisplayCommandException();
+	} catch (InvalidEditCommandInputException& iec) {
+		_feedbackExceptiontoUI = iec.what();
+		throw InvalidEditCommandInputException();
 	}
 
 }

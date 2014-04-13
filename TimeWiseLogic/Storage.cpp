@@ -48,10 +48,9 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks) {
 			<< STATUS_FIELD << TASK_STATUS_STRING[listOfTasks.getTask(i)->getTaskStatus()] 
 			<< NEW_LINE;
 
-		if(i == listOfTasks.undoneSize() - REDUCTION_VALUE) {
-			writeFile << SEPARATOR;
-		} else{
-			writeFile << SEPARATOR << std::endl;
+		writeFile << SEPARATOR;
+		if(i != listOfTasks.undoneSize() - REDUCTION_VALUE) {
+			writeFile << std::endl;
 		}
 	} 
 }
@@ -82,11 +81,10 @@ void Storage::saveDoneTasks(TaskList& listOfTasks){
 			<< NEW_LINE
 			<< "Status: " << TASK_STATUS_STRING[listOfTasks.getCompletedTask(i)->getTaskStatus()] 
 			<< NEW_LINE;
-
-		if(i == listOfTasks.undoneSize() - REDUCTION_VALUE) {
-			writeFile << SEPARATOR;
-		} else {
-			writeFile << SEPARATOR << std::endl;
+		
+		writeFile << SEPARATOR;
+		if(i != listOfTasks.undoneSize() - REDUCTION_VALUE) {
+			writeFile << std::endl;
 		}
 	} 
 }
@@ -183,6 +181,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					taskHeader++;
 					TASK_STATUS status = _parser.getTaskStatus(details);
 					newTask->setStatusAsDone();
+					break;
 				}
 				}
 				getline(input, userInput);
@@ -304,7 +303,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 				default:
 					_corrupted = true;
 				}
-				if(taskHeader > COLUMN_OUT_OF_BOUND){
+				if(taskHeader > COLUMN_OUT_OF_BOUND) {
 					break;
 				}
 				getline(input, userInput);

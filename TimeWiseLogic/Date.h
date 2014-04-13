@@ -9,7 +9,6 @@
 #include "Exceptions.h"
 #include "Calendar.h"
 #include "Constants.h"
-//#include "Parser.h"
 
 class Date
 {
@@ -36,7 +35,7 @@ public:
 	int leapYear();
 	std::string toFormat();
 	std::string toString();
-	
+
 	static bool isLeapYear(int);
 	static int getCurrentYear();
 	static int getCurrentMonth();
@@ -61,7 +60,6 @@ public:
 	void setNextDay();
 
 private:
-
 	int _dayNumber;
 	int _month;
 	int _year;

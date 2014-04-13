@@ -17,6 +17,8 @@ TimeWiseLogic::~TimeWiseLogic(void)
 
 std::string TimeWiseLogic::processCommand(std::string commandLine){
 	if (emptyCommandLine(commandLine)) {
+		_logger->log("TimeWiseLogic","Empty User Input");
+		Date date;
 		return NO_COMMAND_LINE;
 	} else {
 		_taskList.resetLastTaskIndexList();

@@ -47,120 +47,6 @@ CMD_TYPE Parser::determineCommandType(std::string commandTypeString) {
 	}
 }
 
-vector<int> Parser::extractDate(string command) {
-	return extractDate(command, splitBySpace(command).size() - 1);
-}
-
-vector<int> Parser::extractDate(string command, int pos) {
-	Date dateFunction;
-
-	bool dateFound = false;
-
-	command = strReplace(",", "", command);
-	command = strReplace(".", "", command);
-
-	vector<string> parameters = splitBySpace(command);
-	vector<int> output(4);	// output[0] = year, output[1] = month, output[2] = day, output[3] = number of words for date
-
-	int wordReading = pos;
-
-	if(wordReading>=0) {
-		vector<string> dateComponent;
-		dateComponent = explode('/',parameters[wordReading]);
-		if(dateComponent.size() == 2 || dateComponent.size() == 3) {
-			if(isAllNumbers(dateComponent[0]) && isAllNumbers(dateComponent[1])) {
-				if(dateComponent[0].length()<=2 && dateComponent[1].length()<=2) {
-					output[2] = toNum(dateComponent[0]);
-					output[1] = toNum(dateComponent[1]);
-
-					dateFunction.setDateAsToday();
-					if(dateComponent.size() == 3) {
-						output[0] = toNum(dateComponent[2]);
-						if(dateComponent[2].length()==2) {
-							output[0] += dateFunction.getCurrentYear() - (dateFunction.getCurrentYear()%100);	
-						}
-					} else {
-						output[0] += dateFunction.getCurrentYear();
-					}
-				}
-				output[3] = 1;
-				dateFound = true;
-			}
-		} else if(dateComponent.size() == 1) {
-			for(int i=0 ; i<DAY_WORD_NUM && !dateFound ; i++) {
-				if(strToLower(dateComponent[0]) == strToLower(DAY_WORD[i])) {
-					dateFunction.setDateAsToday();
-					dateFunction += DAY_WORD_OFFSET[i];
-					output[0] = dateFunction.getYear();
-					output[1] = dateFunction.getMonth();
-					output[2] = dateFunction.getDay();
-					output[3] = 1;
-					dateFound = true;
-				}
-			}
-			for(int i=0 ; i<WDAY_WORD_NUM && !dateFound; i++) {
-				if(strToLower(dateComponent[0])==strToLower(WDAY_WORD[i])) {
-					for(dateFunction.setDateAsToday() ; dateFunction.getWeekDay()!=WDAY_WORD_VALUE[i] ; dateFunction++);
-					output[0] = dateFunction.getYear();
-					output[1] = dateFunction.getMonth();
-					output[2] = dateFunction.getDay();
-					output[3] = 1;
-					dateFound = true;
-				}
-			}
-		}
-	}
-
-	if(wordReading>=1 && !dateFound) {
-		string dateCandidate = strToLower(parameters[wordReading]);
-		for(int i=0;i<12;i++) {
-			string monthInNumStr = strVal(i+1);
-			dateCandidate = strReplace(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
-			dateCandidate = strReplace(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
-		}
-		if(isAllNumbers(parameters[wordReading-1]) && isAllNumbers(dateCandidate)) {
-			dateCandidate = parameters[wordReading-1] + "/" + dateCandidate;
-			output = extractDate(dateCandidate,0);
-			if(output[0] && output[1] && output[2]) {
-				output[3] = 2;
-				dateFound = true;
-			}
-		}
-	}
-	
-	if(wordReading>=2 && !dateFound) {
-		string dateCandidate = strToLower(parameters[wordReading-1]);
-		
-		for(int i=0;i<12;i++) {
-			string monthInNumStr = strVal(i+1);
-			dateCandidate = strReplace(strToLower(MONTH[i]), monthInNumStr, dateCandidate);
-			dateCandidate = strReplace(strToLower(MONTH_ABBR[i]), monthInNumStr, dateCandidate);
-		}
-		
-		if(isAllNumbers(parameters[wordReading-2]) && isAllNumbers(dateCandidate) && isAllNumbers(parameters[wordReading])) {
-			dateCandidate = parameters[wordReading-2] + "/" + dateCandidate + "/" + parameters[wordReading];
-
-			output = extractDate(dateCandidate, 0);
-			if(output[0] && output[1] && output[2]) {
-				output[3] = 3;
-				dateFound = true;
-			}
-		}
-	}
-	
-	if(dateFound) {
-		if(output[1]>NUM_OF_MONTHS || output[2]>MAX_DAYS_IN_MONTH[dateFunction.isLeapYear(output[0])][output[1]-1]) {
-			output[3] = 0;
-			throw InvalidDateTimeFormatException();
-		}
-	} else {
-		output[3] = 0;
-	
-	}
-	return output;
-}
-
-// New version of extractDate and extractTime
 void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& dateResult, vector<ClockTime>& timeResult) {
 	string originalCommand = cmd;
 
@@ -218,6 +104,7 @@ void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& 
 	if(isPreposition(getLastWord(checkingSentence))) {
 		dateTimeRemoved = removeLastWord(checkingSentence) + " " + dateTimeRemoved;
 	} else {
+
 		dateTimeRemoved = checkingSentence + " " + dateTimeRemoved;
 	}
 	dateTimeRemoved = strTruncate(dateTimeRemoved);
@@ -300,98 +187,6 @@ string Parser::regexDateTime(string cmd) {
 	return strTruncate(cmd);
 }
 
-vector<int> Parser::extractTime(string command, int pos=-1) {
-	vector<int> timeArray;
-	bool colonExist = false;
-
-	command = strReplace(",", "", command);
-	command = strReplace(".", "", command);
-	vector<string> word = splitBySpace(command);
-	if(pos==-1) {
-		pos = word.size() - 1;
-	}
-	string wordChecking = word[pos];
-	int hour, min;
-
-	if(wordChecking != strReplace(":","",wordChecking)) {
-		colonExist = true;
-	}
-	wordChecking = strReplace(":","",wordChecking);
-		
-	if(wordChecking.length()>2 && stringExists("am",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
-		wordChecking = strReplace("am","",wordChecking);
-		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
-			if(wordChecking.length()<=2) {
-				hour = toNum(wordChecking);
-				min = 0;
-			} else {
-				hour = toNum(wordChecking)/100;
-				min = toNum(wordChecking)%100;
-			}
-
-			if(hour == 12) {
-				hour = 0;
-			}
-
-			if(hour < 12 && min < 60) {
-				timeArray.push_back(hour * 100 + min);
-			} else {
-				throw InvalidDateTimeFormatException();
-			}
-		}
-	} else if(wordChecking.length()>2 && stringExists("pm",wordChecking) && wordChecking[wordChecking.length()-1]=='m') {
-		wordChecking = strReplace("pm","",wordChecking);
-		if(isAllNumbers(wordChecking) && wordChecking.length()<=4) {
-			if(wordChecking.length()<=2) {
-				hour = toNum(wordChecking);
-				min = 0;
-			} else {
-				hour = toNum(wordChecking)/100;
-				min = toNum(wordChecking)%100;
-			}
-
-			if(hour == 12) {
-				hour = 0;
-			}
-
-			if(hour < 12 && min < 60) {
-				timeArray.push_back((hour+12) * 100 + min);
-			} else {
-				throw InvalidDateTimeFormatException();
-			}
-		}
-	} else if((colonExist && wordChecking.length()==3 || wordChecking.length()==4) && isAllNumbers(wordChecking)) {
-		hour = toNum(wordChecking)/100;
-		min = toNum(wordChecking)%100;
-		if(hour < 24 && min < 60) {
-			timeArray.push_back( hour * 100 + min);
-		} else {
-			throw InvalidDateTimeFormatException();
-		}
-	}
-	if(timeArray.size()==1) {
-		timeArray.push_back(1);
-	} else {
-		timeArray.push_back(0);
-		timeArray.push_back(0);	// Not redundant
-	}
-	return timeArray;
-}
-
-bool Parser::isDateFormat(string str) {
-	vector<int> dateData;
-	try {
-		dateData = extractDate(str, explode(' ', str).size()-1);
-	} catch(InvalidDateTimeFormatException&) {
-		return false;
-	}
-	if(dateData[3]!=0) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 // Check whether a word is a preposition, according to the preposition list in Constants.h
 bool Parser::isPreposition(string word) {
 	bool matchFound = false;
@@ -405,23 +200,17 @@ bool Parser::isPreposition(string word) {
 	return matchFound;
 }
 
-bool Parser::isTimeFormat(string time) {
-	vector<int> timeData;
-	try {
-		timeData = extractTime(time);
-	} catch(InvalidDateTimeFormatException&) {
-		return false;
-	}
-	if(timeData[1]!=0) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 Date* Parser::createDate(string date) {
-	vector<int> dateData = extractDate(date);
-	return new Date(dateData[2], dateData[1], dateData[0]);
+	vector<string> dateComponent = explode('/', date);
+	if(dateComponent.size() != 3) {
+		throw InvalidDateTimeFormatException();
+	}
+
+	int day = toNum(dateComponent[0]);
+	int month = toNum(dateComponent[1]);
+	int year = toNum(dateComponent[2]);
+
+	return new Date(day, month, year);
 }
 
 ClockTime* Parser::createTime(string time) {
@@ -440,7 +229,7 @@ TASK_STATUS Parser::getTaskStatus(std::string input) {
 }
 
 bool Parser::isCategory(std::string& input) {
-	if(input[0]=='#'){
+	if(input[0]=='#') {
 		return true;
 	}
 	return false;
@@ -527,14 +316,6 @@ string Parser::strReplace(vector<string> searchArray, vector<string> replaceArra
 		subject = strReplace(searchArray[i], replaceArray[i], subject);
 	}
 	return subject;
-}
-
-vector<string> Parser::strReplace(vector<string> searchArray, vector<string> replaceArray, vector<string> subjectArray) {
-	vector<string> outputArray;
-	for(string subject : subjectArray) {
-		outputArray.push_back(strReplace(searchArray, replaceArray, subject));
-	}
-	return outputArray;
 }
 
 int Parser::strSearch(string keyword, string subject) {
@@ -642,27 +423,19 @@ string Parser::getLastWord(string inputString) {
 	return lastWord;
 }
 
-string Parser::removeLastWord(string inputString) {
-	string str = inputString;
-	while(str.back() == ' ') {
+string Parser::removeLastWord(string str) {
+	while(str.empty()==false && str.back() == ' ') {
 		str.pop_back();
 	}
-	while(str.back() != ' ') {
+	while(str.empty()==false && str.back() != ' ') {
 		str.pop_back();
 	}
-	while(str.back() == ' ') {
+	while(str.empty()==false && str.back() == ' ') {
 		str.pop_back();
 	}
 	return str;
 }
 
-// Deprecated string functions
-// Please use trim(string) instead of removeWhiteSpaces(string&).
-void Parser::removeWhiteSpaces(string& str){
-	str = trim(str);
-}
-
-// Please use explode(char, string); instead of splitBySpace(string).
 vector<string> Parser::splitBySpace(string input) {
 	vector<string> tokens;
 	istringstream iss(input);

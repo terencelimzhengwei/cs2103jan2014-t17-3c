@@ -1,3 +1,4 @@
+//@Gian Jian Xiang A0097330H
 #ifndef CONSTANTS_UI_H
 #define CONSTANTS_UI_H
 
@@ -14,18 +15,20 @@ namespace {
 	const char* FILTER_COMMAND         = "filter";
 	const char* HELP_COMMAND           = "help";
 	const char* SEARCH_COMMAND         = "search";
+	const char* UNDONE_COMMAND		   = "undone";
 	const char* UNDO_COMMAND           = "undo";
 	const char* REDO_COMMAND           = "redo";
 
-	const char* ADD_FORMAT             = "add <description> <start date> <due date> <start time> <due time> <#category>";
-	const char* CLEAR_FORMAT           = "clear all or done or undone";
-	const char* DELETE_FORMAT          = "delete <ID> or multiple <IDs>";
-	const char* DISPLAY_FORMAT         = "display main or done";
-	const char* DONE_FORMAT            = "done <IDs> or multiple <IDs>";
+	const char* ADD_FORMAT             = "add <description> <start date> <start time> <end date> <end time> <#category>";
+	const char* CLEAR_FORMAT           = "clear or clear all / main / completed";
+	const char* DELETE_FORMAT          = "delete <ID> / multiple <IDs>";
+	const char* DISPLAY_FORMAT         = "display main / done";
+	const char* DONE_FORMAT            = "done <IDs> / multiple <IDs>";
 	const char* EDIT_FORMAT            = "edit <ID> <contents>";
-	const char* FILTER_FORMAT          = "filter <dates> or <#category>";
+	const char* FILTER_FORMAT          = "filter <dates> / <#category>";
 	const char* SEARCH_FORMAT          = "search <keywords>";
-	const char* DEFAULT_DISPLAY        = "You may: Add, Clear, Delete, Display, Done, Edit, Filter, Search, Undo, Redo, Help, Exit";
+	const char* UNDONE_FORMAT		   = "undone <IDs> / multiple <IDs>";
+	const char* DEFAULT_DISPLAY        = "You may: Add, Clear, Delete, Display, Done/Undone, Edit, Filter, Search, Undo/Redo, Help, Exit";
 	const std::string OVERDUE_REMINDER = "Reminder! You have %d overdue task(s).";
 
 	const char* BLANK                  = "";
@@ -40,6 +43,10 @@ namespace {
 
 	const char* DISPLAY_MAIN           = "display main";
 	const char* DISPLAY_DONE           = "display done";
+
+	const char* CLEAR_ALL			   = "clear all";
+	const char* CLEAR_MAIN			   = "clear main";
+	const char* CLEAR_COMPLETED		   = "clear completed";
 
 	//Values pertaining to table model configuration
 	const int COLUMN_1         = 0;

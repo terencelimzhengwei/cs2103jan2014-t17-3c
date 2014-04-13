@@ -1,3 +1,4 @@
+//@Gian Jian Xiang A0097330H
 #include "timewiseclock.h"
 
 TimeWiseClock::TimeWiseClock() {

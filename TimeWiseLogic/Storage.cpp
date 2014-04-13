@@ -21,7 +21,6 @@ void Storage::retrieveFile(TaskList& listOfTasks) {
 	retrieveDoneTasks(listOfTasks);
 }
 
-//Saves undone tasks into separate file.
 void Storage::saveUndoneTasks(TaskList& listOfTasks) {
 	std::ofstream writeFile(_undoneFileName);
 	for(unsigned int i = 0; i < listOfTasks.undoneSize(); i++) { 
@@ -55,7 +54,6 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks) {
 	} 
 }
 
-//Saves done tasks into a separate file.
 void Storage::saveDoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_doneFileName);
 	for(int i = 0; i < listOfTasks.doneSize(); i++) { 

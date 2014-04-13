@@ -150,102 +150,102 @@ void TimeWiseGUI::setMainData(TaskList& taskList, vector<int>& latestIndices) {
 	latestIndices = taskList.getLastTaskIndexList();
 	
 	//goes through each cell in the table and sets every attributes of every task into the respective cells.
-	for(int i = 0; i < taskList.undoneSize(); i++) {
-		for(int j = 0; j < COLUMN_COUNT; j++) {
+	for(int row = 0; row < taskList.undoneSize(); row++) {
+		for(int column = 0; column < COLUMN_COUNT; column++) {
 			//add row for every task in taskList dynamically
-			model->setRowCount(i + ADJUSTMENT_VALUE);
+			model->setRowCount(row + ADJUSTMENT_VALUE);
 
-			switch (j) {
+			switch (column) {
 			case COLUMN_1: {
-				std::string taskDescription = (taskList.getTask(i))->getDescription();
+				std::string taskDescription = (taskList.getTask(row))->getDescription();
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				model->setItem(row, column, item);
 				break;
 			}
 			case COLUMN_2: {
-				std::string taskDay = taskList.getTask(i)->getDayString();
+				std::string taskDay = taskList.getTask(row)->getDayString();
 				QString qDay = QString::fromStdString(taskDay);
 				QStandardItem* item = new QStandardItem(qDay);
-				model->setItem(i, j, item);
+				model->setItem(row, column, item);
 				break;
 			}
 			case COLUMN_3: {
-				if(taskList.getTask(i)->getStartDate()!=NULL){
-					std::string taskStartDate = taskList.getTask(i)->getStartDate()->toString();
+				if(taskList.getTask(row)->getStartDate()!=NULL){
+					std::string taskStartDate = taskList.getTask(row)->getStartDate()->toString();
 					QString qTask = QString::fromStdString(taskStartDate);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_4: {
-				if(taskList.getTask(i)->getStartTime()!=NULL){
-					std::string taskStartTime = taskList.getTask(i)->getStartTime()->toString();
+				if(taskList.getTask(row)->getStartTime()!=NULL){
+					std::string taskStartTime = taskList.getTask(row)->getStartTime()->toString();
 					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_5: {
-				if(taskList.getTask(i)->getEndDate()!=NULL){
-					std::string taskEndDate = taskList.getTask(i)->getEndDate()->toString();
+				if(taskList.getTask(row)->getEndDate()!=NULL){
+					std::string taskEndDate = taskList.getTask(row)->getEndDate()->toString();
 					QString qTask = QString::fromStdString(taskEndDate);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_6: {
-				if(taskList.getTask(i)->getEndTime()!=NULL){
-					std::string taskEndTime = taskList.getTask(i)->getEndTime()->toString();
+				if(taskList.getTask(row)->getEndTime()!=NULL){
+					std::string taskEndTime = taskList.getTask(row)->getEndTime()->toString();
 					QString qTask = QString::fromStdString(taskEndTime);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_7: {
-				if(taskList.getTask(i)->getTaskCategory()!=""){
-					std::string taskCategory= taskList.getTask(i)->getTaskCategory();
+				if(taskList.getTask(row)->getTaskCategory()!= BLANK){
+					std::string taskCategory= taskList.getTask(row)->getTaskCategory();
 					QString qTask = QString::fromStdString(taskCategory);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			}
 			//highlight description in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
-			TASK_STATUS taskStatus = taskList.getTask(i)->getTaskStatus();
+			TASK_STATUS taskStatus = taskList.getTask(row)->getTaskStatus();
 			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
 			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
 			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
 
-			bool checkClash = taskList.getTask(i)->isClash();
+			bool checkClash = taskList.getTask(row)->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
-				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == DONE_STATUS && checkClash) {
-				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
-				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
 			} else if(qStatus == OVERDUE_STATUS) {
-				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == DONE_STATUS) {
-				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
 			}
 
 			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
 			QFont font;
 			font.setBold(false);
-			for(int k = 0; k < latestIndices.size(); k++) {
-				if(i == latestIndices[k]) {
+			for(int i = 0; i < latestIndices.size(); i++) {
+				if(row == latestIndices[i]) {
 					font.setWeight(BOLDEST);
 					font.setPointSize(BOLDED_FONT_SIZE);
 				} 
 			}
-			model->setData(model->index(i,j), font, Qt::FontRole);
+			model->setData(model->index(row,column), font, Qt::FontRole);
 		}
 	}
 }
@@ -272,102 +272,102 @@ void TimeWiseGUI::setOtherData(std::vector<Task*>& otherTaskList, vector<int>& l
 	TaskList taskList = _logic.getTaskList();
 	latestIndices = taskList.getLastTaskIndexList();
 
-	for(int i = 0; i < otherTaskList.size(); i++) {
-		for(int j = 0; j < COLUMN_COUNT; j++) {
+	for(int row = 0; row < otherTaskList.size(); row++) {
+		for(int column = 0; column < COLUMN_COUNT; column++) {
 			//add row for every task in taskList dynamically
-			model->setRowCount(i+1);
+			model->setRowCount(row+1);
 
-			switch (j) {
+			switch (column) {
 			case COLUMN_1: {
-				std::string taskDescription = (otherTaskList[i])->getDescription();
+				std::string taskDescription = (otherTaskList[row])->getDescription();
 				QString qTask = QString::fromStdString(taskDescription);
 				QStandardItem* item = new QStandardItem(qTask);
-				model->setItem(i, j, item);
+				model->setItem(row, column, item);
 				break;
 			}
 			case COLUMN_2: {
-				std::string taskDay = otherTaskList[i]->getDayString();
+				std::string taskDay = otherTaskList[row]->getDayString();
 				QString qDay = QString::fromStdString(taskDay);
 				QStandardItem* item = new QStandardItem(qDay);
-				model->setItem(i, j, item);
+				model->setItem(row, column, item);
 				break;
 			}
 			case COLUMN_3: {			
-				if(otherTaskList[i]->getStartDate()!=NULL){
-					std::string taskStartDate = otherTaskList[i]->getStartDate()->toString();
+				if(otherTaskList[row]->getStartDate()!=NULL){
+					std::string taskStartDate = otherTaskList[row]->getStartDate()->toString();
 					QString qTask = QString::fromStdString(taskStartDate);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_4: {
-				if(otherTaskList[i]->getStartTime()!=NULL){
-					std::string taskStartTime = otherTaskList[i]->getStartTime()->toString();
+				if(otherTaskList[row]->getStartTime()!=NULL){
+					std::string taskStartTime = otherTaskList[row]->getStartTime()->toString();
 					QString qTask = QString::fromStdString(taskStartTime);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_5: {
-				if(otherTaskList[i]->getEndDate()!=NULL){
-					std::string taskEndDate = otherTaskList[i]->getEndDate()->toString();
+				if(otherTaskList[row]->getEndDate()!=NULL){
+					std::string taskEndDate = otherTaskList[row]->getEndDate()->toString();
 					QString qTask = QString::fromStdString(taskEndDate);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_6: {
-				if(otherTaskList[i]->getEndTime()!=NULL){
-					std::string taskEndTime = otherTaskList[i]->getEndTime()->toString();
+				if(otherTaskList[row]->getEndTime()!=NULL){
+					std::string taskEndTime = otherTaskList[row]->getEndTime()->toString();
 					QString qTask = QString::fromStdString(taskEndTime);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			case COLUMN_7: {
-				if(otherTaskList[i]->getTaskCategory()!=""){
-					std::string taskCategory= otherTaskList[i]->getTaskCategory();
+				if(otherTaskList[row]->getTaskCategory()!=""){
+					std::string taskCategory= otherTaskList[row]->getTaskCategory();
 					QString qTask = QString::fromStdString(taskCategory);
 					QStandardItem* item = new QStandardItem(qTask);
-					model->setItem(i, j, item);
+					model->setItem(row, column, item);
 				}
 				break;
 			}
 			}
 			//highlight row in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
-			TASK_STATUS taskStatus = otherTaskList[i]->getTaskStatus();
+			TASK_STATUS taskStatus = otherTaskList[row]->getTaskStatus();
 			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
 			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
 			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
 			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
 
-			bool checkClash = otherTaskList[i]->isClash();
+			bool checkClash = otherTaskList[row]->isClash();
 			if(qStatus == OVERDUE_STATUS && checkClash) {
-				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == DONE_STATUS && checkClash) {
-				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
 			} else if (checkClash) {
-				model->setData(model->index(i, j), rowColorClash, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
 			} else if(qStatus == OVERDUE_STATUS) {
-				model->setData(model->index(i, j), rowColorOverdue, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
 			} else if (qStatus == DONE_STATUS) {
-				model->setData(model->index(i, j), rowColorComplete, Qt::BackgroundRole);
+				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
 			}
 
 			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
 			QFont font;
 			font.setBold(false);
-			for(int k = 0; k < latestIndices.size(); k++) {
-				if(i == latestIndices[k]) {
+			for(int i = 0; i < latestIndices.size(); i++) {
+				if(row == latestIndices[i]) {
 					font.setWeight(BOLDEST);
 					font.setPointSize(BOLDED_FONT_SIZE);
 				} 
 			}
-			model->setData(model->index(i,j), font, Qt::FontRole);
+			model->setData(model->index(row,column), font, Qt::FontRole);
 		}
 	}
 }

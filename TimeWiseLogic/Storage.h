@@ -5,6 +5,7 @@
 #include "TaskList.h"
 #include "Parser.h"
 #include "Logger.h"
+#include "Constants.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>

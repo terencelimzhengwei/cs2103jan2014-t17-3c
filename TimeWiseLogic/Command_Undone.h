@@ -1,9 +1,14 @@
+#ifndef COMMAND_UNDONE_H
+#define COMMAND_UNDONE_H
+
 #pragma once
+
 #include "command.h"
 //**********************************************************************
 // This class is responsible for changing the status  an individual task
 // specified by its index.
 //**********************************************************************
+// @author A0097277M
 class Command_Undone :
 	public Command
 {
@@ -14,6 +19,14 @@ public:
 	bool undo(TaskList&, std::string&);
 	void addUndoneIndex(int index);
 	void setPreviousScreen(DISPLAY_TYPE* screen);
+
+private:
+	std::vector<Task*> _undoneTasks;
+	std::vector<unsigned int> _undoneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+	std::string _lastCmdCalled;
+
 	void setIndexToBoldInGUI(TaskList& tasklist);
 	void saveTasks(TaskList& taskList);
 	void setTasksAsUndone(TaskList& tasklist);
@@ -22,11 +35,5 @@ public:
 	void lastCmdCalledIs(std::string cmd);
 	bool wasUndone();
 	bool wasExecuted();
-private:
-	std::vector<Task*> _undoneTasks;
-	std::vector<unsigned int> _undoneTaskIndex;
-	DISPLAY_TYPE* _currentScreen;
-	DISPLAY_TYPE _previousScreen;
-	std::string _lastCmdCalled;
 };
-
+#endif

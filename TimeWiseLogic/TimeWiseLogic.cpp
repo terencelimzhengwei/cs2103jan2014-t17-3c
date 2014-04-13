@@ -11,8 +11,7 @@ TimeWiseLogic::TimeWiseLogic(void){
 }
 
 
-TimeWiseLogic::~TimeWiseLogic(void)
-{
+TimeWiseLogic::~TimeWiseLogic(void){
 }
 
 std::string TimeWiseLogic::processCommand(std::string commandLine){
@@ -21,7 +20,7 @@ std::string TimeWiseLogic::processCommand(std::string commandLine){
 		Date date;
 		return NO_COMMAND_LINE;
 	} else {
-		_taskList.resetLastTaskIndexList();
+		_taskList.resetBoldIndexList();
 
 		if(!parseCommand(commandLine)){
 			return _creator.getFeedback();

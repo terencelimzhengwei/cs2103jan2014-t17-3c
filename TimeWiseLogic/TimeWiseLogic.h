@@ -1,14 +1,22 @@
-#pragma once
 #ifndef TIMEWISELOGIC_H
 #define TIMEWISELOGIC_H
 
-#include "Constants.h"
-#include "TaskList.h"
-#include "Logger.h"
-#include "Storage.h"
+#pragma once
+
 #include "CommandCreator.h"
 #include "CommandManager.h"
+#include "Constants.h"
+#include "Logger.h"
+#include "Storage.h"
+#include "TaskList.h"
 
+//********************************************************************************
+// This class acts as the facade class linking GUI to the rest of the other components.
+// Its main usage is to take in input from the user from the GUI and processing the command
+// It also returns a tasklist for the GUI to populate the display screen depending on the
+// screen to display.
+//********************************************************************************
+// @author A0097277M
 class TimeWiseLogic
 {
 public:

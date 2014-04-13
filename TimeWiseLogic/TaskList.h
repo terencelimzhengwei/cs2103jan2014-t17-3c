@@ -1,9 +1,21 @@
+#ifndef TASKLIST_H
+#define TASKLIST_H
+
 #pragma once
 
 #include <vector>
-#include "Task.h"
 #include "Exceptions.h"
+#include "Task.h"
 
+//********************************************************************************
+// This class acts as the datastore for the programme storing the Task in virtual
+// memory. There are 2 main tasklist vectors, the completed and uncompleted tasklist
+// which will be used to store and display completed and uncompleted task.
+// There are also 4 other tasklist vectors. Searched and filter will be populated
+// when their commands are called. Overdue and Clash will be updated when there is
+// an instance of overdue or clash.
+//********************************************************************************
+// @author A0097277M
 class TaskList
 {
 public:
@@ -46,9 +58,9 @@ public:
 	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
 	bool isEmpty();
 	unsigned int undoneSize();
-	int doneSize();
-	int filteredSize();
-	int searchedSize();
+	unsigned int doneSize();
+	unsigned int filteredSize();
+	unsigned int searchedSize();
 	void updateClashStatus();
 	void resetClash();
 	void resetSearchedTasks();
@@ -63,10 +75,9 @@ public:
 	void shiftTask(Task* task);
 	bool deleteTaskFromFilterList(unsigned int index);
 	Task* setFilteredTaskAsDone(unsigned int index);
-	unsigned int getLastTaskIndex();
-	void addLastTaskIndex(unsigned int index);
-	void resetLastTaskIndexList();
-	std::vector<int> getLastTaskIndexList();
+	void addBoldIndex(unsigned int index);
+	void resetBoldIndexList();
+	std::vector<int> getBoldIndexList();
 	int getTaskIndexInFilteredList(Task* task);
 	Task* setSearchedTaskAsUndone(unsigned int index);
 	Task* setFilteredTaskAsUndone(unsigned int index);
@@ -84,5 +95,6 @@ private:
 	std::vector<Task*> _filteredTaskList;
 	std::vector<Task*> _clashedTask;
 	int _lastTaskIndex;
-	std::vector<int> _lastTaskIndexList;
+	std::vector<int> _boldIndexList;
 };
+#endif

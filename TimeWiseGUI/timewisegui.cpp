@@ -147,7 +147,7 @@ void TimeWiseGUI::createMainTable() {
 //puts the data in place in the table. Bolds/highlights rows, if necessary
 void TimeWiseGUI::setMainData(TaskList& taskList, vector<int>& latestIndices) {
 	
-	latestIndices = taskList.getLastTaskIndexList();
+	latestIndices = taskList.getBoldIndexList();
 	
 	//goes through each cell in the table and sets every attributes of every task into the respective cells.
 	for(int row = 0; row < taskList.undoneSize(); row++) {
@@ -270,7 +270,7 @@ void TimeWiseGUI::createOtherTables(std::vector<Task*>& otherTaskList) {
 
 void TimeWiseGUI::setOtherData(std::vector<Task*>& otherTaskList, vector<int>& latestIndices) {
 	TaskList taskList = _logic.getTaskList();
-	latestIndices = taskList.getLastTaskIndexList();
+	latestIndices = taskList.getBoldIndexList();
 
 	for(int row = 0; row < otherTaskList.size(); row++) {
 		for(int column = 0; column < COLUMN_COUNT; column++) {

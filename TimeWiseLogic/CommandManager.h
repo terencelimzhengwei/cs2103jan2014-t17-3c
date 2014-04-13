@@ -1,3 +1,6 @@
+#ifndef COMMAND_MANAGER_H
+#define COMMAND_MANAGER_H
+
 #pragma once
 
 #include <list>
@@ -7,8 +10,7 @@
 // This class is responsible for managing the undoing and redoing of the
 // abstract commands and execution of the commands
 //***************************************************************************
-class CommandManager
-{
+class CommandManager{
 public: 
 	//in the constructor, the allowableUndoLevel is set to 10, which means that 
 	//the users can undo a maximum number of 10 times
@@ -60,4 +62,4 @@ private:
 	unsigned int allowableUndoLevel;
 	int m_nCleanCount;
 };
-
+#endif

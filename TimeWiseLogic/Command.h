@@ -1,25 +1,23 @@
-#pragma once
-
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#pragma once
+
+#include <assert.h>
 #include <list>
 #include <string>
-#include <assert.h>
-#include "Date.h"
 #include "ClockTime.h"
 #include "Constants.h"
-#include "TaskList.h"
+#include "Date.h"
 #include "Exceptions.h"
-// @author A0097277M
-/*
- *=======================
- 
-	Command Base class
- 
- *=======================
- */
+#include "TaskList.h"
 
+//***************************************************************************
+//
+// Command Base Class
+//
+//***************************************************************************
+// @author A0097277M
 class Command
 {
 public:

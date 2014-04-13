@@ -194,24 +194,24 @@ void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
 		std::vector<Task*> clashlist = tasklist.getClashedTask();
 		for(unsigned int i=0;i<clashlist.size();i++){
 			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 	}else{
 		unsigned int index;
 		switch(_displayScreen){
 		case MAIN:
 			index = tasklist.getTaskIndex(_editedTask);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 			break;
 		case SEARCHED:
 			index = tasklist.getTaskIndexInSearchedList(_editedTask);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		case FILTERED:
 			index = tasklist.getTaskIndexInFilteredList(_editedTask);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		case COMPLETED:
 			index = tasklist.getTaskIndexInCompletedList(_editedTask);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		default:
 			break;
 		}

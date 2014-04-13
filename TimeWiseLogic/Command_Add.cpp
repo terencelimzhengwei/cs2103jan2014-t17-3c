@@ -189,11 +189,11 @@ void Command_Add::setIndexToBoldInGUI(TaskList& tasklist){
 		std::vector<Task*> clashlist = tasklist.getClashedTask();
 		for(unsigned int i=0;i<clashlist.size();i++){
 			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 	}else{
 		unsigned int index = tasklist.getTaskIndex(_addedTask);
-		tasklist.addLastTaskIndex(index);
+		tasklist.addBoldIndex(index);
 	}
 }
 

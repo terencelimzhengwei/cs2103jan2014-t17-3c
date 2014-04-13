@@ -9,14 +9,16 @@
 #include "Constants.h"
 
 //a singleton for the whole program
+// @author A0097277M - reused
 class Logger {
 public:
 	void setMinLevelToLog		(LOG_TYPE);
 
 	static	Logger*	getLogger	();
 	void	log			(std::string  callingClass, 
-		std::string  message, 
-		LOG_TYPE logType = DEFAULT_LOGTYPE_TO_USE);
+	std::string  message, 
+	LOG_TYPE logType = DEFAULT_LOGTYPE_TO_USE);
+
 private:
 	std::ofstream _logWriter;
 	LOG_TYPE  _minLevelToLog;
@@ -39,7 +41,7 @@ private:
 	static const std::string  DEFAULT_WARNING_LOG_IDENTIFIER;
 	static const std::string  DEFAULT_ERROR_LOG_IDENTIFIER;
 	static const std::string  DEFAULT_FATAL_LOG_IDENTIFIER;
-	static const LOG_TYPE DEFAULT_LOGTYPE_TO_USE;
+	static const LOG_TYPE	  DEFAULT_LOGTYPE_TO_USE;
 
 	static const std::string  MESSAGE_ERROR_FATAL_LOG;
 	static const std::string  MESSAGE_START_LOG;
@@ -49,7 +51,7 @@ private:
 	static const int		  CLASS_TO_MONITOR;
 	static const int		  MIN_LEVEL_TO_LOG;
 
-	// initialisation functions
+	// initialization functions
 	static void initialiseLogger	();
 	static void createLogger		();
 

@@ -1,6 +1,6 @@
 #include "TaskList.h"
-#include <iterator>
 
+// @author A0097277M
 TaskList::TaskList(void){
 }
 
@@ -9,8 +9,7 @@ TaskList::~TaskList(void){
 	_uncompletedTaskList.clear();
 }
 
-void TaskList::addTask(Task& task)
-{
+void TaskList::addTask(Task& task){
 	clearClashedTaskList();
 	for(unsigned int i = 0;i <undoneSize();i++){
 		checkClash(task,*_uncompletedTaskList[i]);
@@ -169,8 +168,7 @@ Task* TaskList::setFilteredTaskAsUndone(unsigned int index){
 	}
 }
 
-bool TaskList::deleteTaskFromCompletedList(unsigned int& index)
-{
+bool TaskList::deleteTaskFromCompletedList(unsigned int& index){
 	if (index <_completedTaskList.size()) {
 		_completedTaskList.erase(_completedTaskList.begin() + index);
 		return true;
@@ -190,8 +188,7 @@ int TaskList::getTaskIndexInCompletedList(Task* task){
 	return DEFAULT_INDEX;
 }
 
-Task* TaskList::getCompletedTask(unsigned int index)
-{
+Task* TaskList::getCompletedTask(unsigned int index){
 	if(index < _completedTaskList.size()) {
 		return _completedTaskList[index];
 	}
@@ -201,14 +198,15 @@ Task* TaskList::getCompletedTask(unsigned int index)
 	}
 }
 
-int TaskList::doneSize(){
+unsigned int TaskList::doneSize(){
 	return _completedTaskList.size();
 }
 
-int TaskList::filteredSize(){
+unsigned int TaskList::filteredSize(){
 	return _filteredTaskList.size();
 }
-int TaskList::searchedSize(){
+
+unsigned int TaskList::searchedSize(){
 	return _searchedTaskList.size();
 
 }
@@ -249,8 +247,7 @@ void TaskList::clearFilteredTasks(){
 	}
 }
 
-bool TaskList::deleteTaskFromOverdueList(unsigned int& index)
-{
+bool TaskList::deleteTaskFromOverdueList(unsigned int& index){
 	if (index < _overdueTaskList.size()) {
 		Task* task=_overdueTaskList[index];
 		unsigned int deletionIndex;
@@ -293,8 +290,7 @@ bool TaskList::deleteTaskFromSearchList(unsigned int index){
 	return true;
 }
 
-bool TaskList::deleteTaskFromFilterList(unsigned int index)
-{
+bool TaskList::deleteTaskFromFilterList(unsigned int index){
 	Task* task=_filteredTaskList[index];
 	unsigned int deletionIndex;
 	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
@@ -328,8 +324,7 @@ std::vector<Task*> TaskList::getUncompletedTaskList(){
 	return _uncompletedTaskList;
 }
 
-Task* TaskList::setOverdueTaskAsDone(unsigned int index)
-{
+Task* TaskList::setOverdueTaskAsDone(unsigned int index){
 	Task* task;
 	task=_overdueTaskList[index];
 	task->setStatusAsDone();
@@ -338,8 +333,7 @@ Task* TaskList::setOverdueTaskAsDone(unsigned int index)
 	return task;
 }
 
-Task* TaskList::setSearchedTaskAsDone(unsigned int index)
-{
+Task* TaskList::setSearchedTaskAsDone(unsigned int index){
 	Task* task;
 	task=_searchedTaskList[index];
 	if(task->getTaskStatus()==DONE){
@@ -352,8 +346,7 @@ Task* TaskList::setSearchedTaskAsDone(unsigned int index)
 	return task;
 }
 
-Task* TaskList::setFilteredTaskAsDone(unsigned int index)
-{
+Task* TaskList::setFilteredTaskAsDone(unsigned int index){
 	Task* task;
 	task=_filteredTaskList[index];
 	if(task->getTaskStatus()==DONE){
@@ -433,8 +426,7 @@ void TaskList::resetClash(){
 	}
 }
 
-void TaskList::updateClashStatus()
-{
+void TaskList::updateClashStatus(){
 	if(_uncompletedTaskList.empty()){
 		return;
 	}
@@ -459,16 +451,16 @@ void TaskList::shiftTask(Task* task){
 	addTask(*task);
 }
 
-void TaskList::resetLastTaskIndexList(){
-	_lastTaskIndexList.clear();
+void TaskList::resetBoldIndexList(){
+	_boldIndexList.clear();
 }
 
-void TaskList::addLastTaskIndex(unsigned int index){
-	_lastTaskIndexList.push_back(index);
+void TaskList::addBoldIndex(unsigned int index){
+	_boldIndexList.push_back(index);
 }
 
-std::vector<int> TaskList::getLastTaskIndexList(){
-	return _lastTaskIndexList;
+std::vector<int> TaskList::getBoldIndexList(){
+	return _boldIndexList;
 }
 
 void TaskList::clearClashedTaskList(){
@@ -479,16 +471,14 @@ void TaskList::clearOverdueTaskList(){
 	_overdueTaskList.clear();
 }
 
-void TaskList::addClashedTask(Task& task,Task& otherTask)
-{
+void TaskList::addClashedTask(Task& task,Task& otherTask){
 	if(_clashedTask.empty()){
 		_clashedTask.push_back(&task);
 	}
 	_clashedTask.push_back(&otherTask);
 }
 
-void TaskList::checkClash(Task& task, Task& otherTask)
-{
+void TaskList::checkClash(Task& task, Task& otherTask){
 	if(task.checkClash(&otherTask)){
 		addClashedTask(task,otherTask);
 	}

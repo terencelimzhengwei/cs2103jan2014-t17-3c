@@ -1,11 +1,22 @@
+#ifndef COMMAND_ADD_H
+#define COMMAND_ADD_H
+
 #pragma once
 #include "Command.h"
 
+//************************************************************
+// This class is responsible getting the attribute to be added
+// to a task. It will set the attributes to the task before
+// adding it to the tasklist. By default task will be set as
+// floating task with no date and time parameters.
+//************************************************************
+// @author A0097277M
 class Command_Add: public Command {
 public:
 	Command_Add();
 	~Command_Add(void);
 
+	//Set attributes to be included into the new task
 	void setDescription(std::string);
 	void setCategory(std::string);
 	void setEndDate(Date&);
@@ -14,9 +25,13 @@ public:
 	void setEndTime(ClockTime&);
 	void setPreviousScreen(DISPLAY_TYPE*);
 
+	//adds the task into the tasklist and returns the feedback
 	virtual bool execute(TaskList&,std::string&);
+
+	//Undo the task by deleting the task
 	virtual bool undo(TaskList&, std::string&);
-protected:
+
+private:
 	//These are the attributes for Command_Add
 	//These 2 strings hold the task description and category of the task to be added
 	std::string _taskDescription;
@@ -69,3 +84,4 @@ protected:
 	void lastCmdCalledIs(std::string cmd);
 	void setIndexToBoldInGUI(TaskList& tasklist);
 };
+#endif

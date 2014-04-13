@@ -3,15 +3,14 @@
 
 #pragma once
 
-#include <string>
 #include <ctime>
 #include <sstream>
-#include "Exceptions.h"
+#include <string>
 #include "Calendar.h"
 #include "Constants.h"
+#include "Exceptions.h"
 
-class Date
-{
+class Date{
 public:
 	Date(void);
 	Date(Date& date);

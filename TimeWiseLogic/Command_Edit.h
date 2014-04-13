@@ -1,3 +1,6 @@
+#ifndef COMMAND_EDIT_H
+#define COMMAND_EDIT_H
+
 #pragma once
 #include "command.h"
 //********************************************************************************
@@ -6,11 +9,13 @@
 // working with. Regardless of the display screen, it is always possible to edit a
 // task.
 //********************************************************************************
+// @author A0097277M
 class Command_Edit :public Command
 {
 public:
 	Command_Edit(void);
 	~Command_Edit(void);
+
 	// setter methods for fields. They take in the new content for each field 
 	// from the user and reset the task accordingly.
 	void setIndex(int);
@@ -23,10 +28,8 @@ public:
 	void setDisplayScreen(DISPLAY_TYPE);
 
 	bool execute(TaskList&, std::string&);
-
-	void saveOriginalTaskDetails();
-
 	bool undo(TaskList&, std::string&);
+
 private:
 	int _editIndex;
 	std::string _editedDescription;
@@ -47,10 +50,22 @@ private:
 
 	DISPLAY_TYPE _displayScreen;
 
+	//For initialization
+	void initialiseParameters();
+
+	//For undoing of task
+	void saveOriginalTaskDetails();
+	void getOriginalTask(TaskList& tasklist);
+	void revertParameters();
+	
+	//For execution of task
+	void resetTimeAndDate();
+	void editTaskWithNewParameters();
+
+	//check for missing parameters
 	bool noDateAndTime();
 	bool noDate();
 	bool noTime();
-	void resetTimeAndDate();
 	bool emptyParameters();
 	bool noCategory();
 	bool noDescription();
@@ -58,11 +73,9 @@ private:
 	bool noStartTime();
 	bool noStartDate();
 	bool noEndDate();
-	void getOriginalTask(TaskList& tasklist);
-	void editTaskWithNewParameters();
-	void setIndexToBoldInGUI(TaskList& tasklist);
-	void initialiseParameters();
-	void createFeedback(std::string taskFeedback,std::string& feedback);
-	void revertParameters();
-};
 
+	//Helper Functions
+	void setIndexToBoldInGUI(TaskList& tasklist);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+};
+#endif

@@ -24,7 +24,8 @@ bool CommandCreator::isValidIndex(int id) {
 	return true;
 }
 
-bool CommandCreator::isValidRemovalIndex(int id, DISPLAY_TYPE* type, TaskList& tasklist){
+bool CommandCreator::isValidRemovalIndex(unsigned int id,DISPLAY_TYPE* type,TaskList& tasklist)
+{
 	switch(*type){
 	case MAIN:
 		if(id > tasklist.undoneSize()){
@@ -37,14 +38,14 @@ bool CommandCreator::isValidRemovalIndex(int id, DISPLAY_TYPE* type, TaskList& t
 		}
 		break;
 	case SEARCH:{
-		int size = tasklist.getSearchResults().size();
+		unsigned int size = tasklist.searchedSize();
 		if(id > size){
 			return false;
 		}
 		break;
 				}
 	case FILTERED:{
-		int size = tasklist.getFilterResults().size();
+		unsigned int size = tasklist.filteredSize();
 		if(id > size){
 			return false;
 		}

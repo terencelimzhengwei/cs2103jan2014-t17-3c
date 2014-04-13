@@ -1,18 +1,18 @@
-#pragma once
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#include "TaskList.h"
-#include "Parser.h"
-#include "Logger.h"
-#include "Constants.h"
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
+#pragma once
 
-class Storage
-{
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include "Constants.h"
+#include "Logger.h"
+#include "Parser.h"
+#include "TaskList.h"
+
+class Storage{
 private:
 	std::string _undoneFileName;
 	std::string _doneFileName;

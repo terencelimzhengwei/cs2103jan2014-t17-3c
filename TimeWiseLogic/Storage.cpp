@@ -58,7 +58,7 @@ void Storage::saveUndoneTasks(TaskList& listOfTasks) {
 //Saves done tasks into a separate file.
 void Storage::saveDoneTasks(TaskList& listOfTasks){
 	std::ofstream writeFile(_doneFileName);
-	for(int i = 0; i < listOfTasks.doneSize(); i++) { 
+	for(unsigned int i = 0; i < listOfTasks.doneSize(); i++) { 
 		writeFile << DESCRIPTION_FIELD << listOfTasks.getCompletedTask(i)->getDescription();
 		writeFile  << NEW_LINE << START_DATE_FIELD;
 		if(listOfTasks.getCompletedTask(i)->getStartDate() != NULL){

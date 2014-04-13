@@ -1,3 +1,6 @@
+#ifndef COMMAND_CLEAR_H
+#define COMMAND_CLEAR_H
+
 #pragma once
 #include "Command.h"
 //********************************************************************************
@@ -10,6 +13,7 @@
 // 4. all tasks that contain the same search key word.
 // 5. all tasks that are in the same filtered list
 //********************************************************************************
+// @author A0097277M
 class Command_Clear:public Command{
 public:
 	Command_Clear(void);
@@ -20,6 +24,11 @@ public:
 	bool undo(TaskList&, std::string&);
 	void setDisplayScreen(DISPLAY_TYPE);
 private:
+
+	void saveSearchedTasks(TaskList&);
+	void saveFilteredTasks(TaskList&);
+
+	void clearScreen(TaskList&, std::string&);
 	void clearCompletedTasks(TaskList&);
 	void clearUncompletedTasks(TaskList&);
 	void clearAll(TaskList&);
@@ -30,26 +39,27 @@ private:
 	void repopulateFilterList(TaskList&);
 	void repopulateSearchList(TaskList&);
 
-	void clearScreen(TaskList&, std::string&);
-	void saveSearchedTasks(TaskList&);
-
-	void undoAll(TaskList&, std::string&);
-	void saveFilteredTasks(TaskList&);
-	void createFeedback(std::string taskFeedback,std::string& feedback);
-	bool wasExecuted();
-	void permanantlyDeleteTasks();
-	void lastCmdCalledIs(std::string cmd);
-	bool wasUndone();
 	void undoScreenTasks(TaskList& tasklist, std::string& feedback);
 	void undoFilteredTasks(TaskList& tasklist, std::string& feedback);
 	void undoSearchedTasks(TaskList& tasklist, std::string& feedback);
+	void undoAll(TaskList&, std::string&);
+
+	//Helper Functions
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void permanantlyDeleteTasks();
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	bool wasExecuted();
+
+	//Attributes
 	DISPLAY_TYPE _displayScreen;
 	CLEAR_TYPE _clearType;
 
+	//Vector to store pointers of deletedTasks so that command can be undone
 	std::vector<Task*> _deletedUndoneTasks;
 	std::vector<Task*> _deletedDoneTasks;
 	std::vector<Task*> _deletedSearchedTasks;
 	std::vector<Task*> _deletedFilteredTasks;
 	std::string _lastCmdCalled;
 };
-
+#endif

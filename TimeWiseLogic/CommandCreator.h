@@ -1,5 +1,5 @@
 #pragma once
-#include "Parser.h"
+
 #include "Command.h"
 #include "Command_Add.h"
 #include "Command_Delete.h"
@@ -12,8 +12,9 @@
 #include "Command_Undo.h"
 #include "Command_Redo.h"
 #include "Command_Display.h"
-#include "Exceptions.h"
 #include "Constants.h"
+#include "Exceptions.h"
+#include "Parser.h"
 
 //********************************************************************************
 // This class is responsible for instantiating command objects once it has
@@ -29,7 +30,7 @@ public:
 	//flag functions
 	bool hasArg(std::string);
 	bool isValidIndex(int);
-	bool isValidRemovalIndex(int,DISPLAY_TYPE*,TaskList&);
+	bool isValidRemovalIndex(unsigned int,DISPLAY_TYPE*,TaskList&);
 	//the below methods are responsible for creating the derived commands
 	Command* interpretCommand(std::string,DISPLAY_TYPE&,std::string&, TaskList&);
 	Command* createCommandAdd(std::string, int, vector<std::string>,DISPLAY_TYPE*);

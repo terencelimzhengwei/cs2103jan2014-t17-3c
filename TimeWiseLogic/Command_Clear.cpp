@@ -67,7 +67,7 @@ bool Command_Clear::undo(TaskList& tasklist, std::string& feedback){
 
 void Command_Clear::clearCompletedTasks(TaskList& tasklist){
 	if(!wasUndone()){
-		for(int i = 0; i < tasklist.doneSize(); i++){
+		for(unsigned int i = 0; i < tasklist.doneSize(); i++){
 			_deletedDoneTasks.push_back(tasklist.getCompletedTask(i));
 		} 
 	}

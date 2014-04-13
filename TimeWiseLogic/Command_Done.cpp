@@ -49,25 +49,25 @@ void Command_Done::setIndexToBoldInGUI(TaskList& tasklist){
 	case MAIN:
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndex(_doneTasks[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 		break;
 	case SEARCHED:
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInSearchedList(_doneTasks[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 		break;
 	case FILTERED:
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInFilteredList(_doneTasks[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 		break;
 	case COMPLETED:
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
-			tasklist.addLastTaskIndex(index);
+			tasklist.addBoldIndex(index);
 		}
 		break;
 	default:

@@ -1,3 +1,4 @@
+//@Gian Jian Xiang A0097330H
 #ifndef TIMEWISECLOCK_H
 #define TIMEWISECLOCK_H
 

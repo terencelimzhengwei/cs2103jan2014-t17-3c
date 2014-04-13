@@ -1,3 +1,4 @@
+//@Gian Jian Xiang A0097330H
 #include "timewisegui.h"
 #include <stdio.h>
 #include <QHeaderView>
@@ -51,6 +52,8 @@ void TimeWiseGUI::on_userInput_textChanged() {
 		ui.label_help->setText(FILTER_FORMAT);
 	} else if(ui.userInput->text() == SEARCH_COMMAND) {
 		ui.label_help->setText(SEARCH_FORMAT);
+	} else if(ui.userInput->text() == UNDONE_COMMAND) {
+		ui.label_help->setText(UNDONE_FORMAT);
 	} else if(ui.userInput->text() == BLANK) {
 		ui.label_help->setText(DEFAULT_DISPLAY);
 	}
@@ -534,6 +537,9 @@ void TimeWiseGUI::autoComplete() {
 
 	//for display function
 	descList << DISPLAY_DONE << DISPLAY_MAIN;
+
+	//for clear function
+	descList << CLEAR_COMMAND << CLEAR_ALL << CLEAR_MAIN << CLEAR_COMPLETED;
 
 	_descCompleter = new QCompleter(descList, this);
 	_descCompleter->setCaseSensitivity(Qt::CaseInsensitive);

@@ -1,7 +1,7 @@
+//@author A0097277M
 #ifndef TASK_H
 #define TASK_H
 
-// @author A0097277M
 #pragma once
 
 #include <string>

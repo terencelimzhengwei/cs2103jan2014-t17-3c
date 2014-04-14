@@ -1,7 +1,8 @@
+//@author A0097277M
 #ifndef COMMAND_DONE_H
 #define COMMAND_DONE_H
-// @author A0097277M
 #pragma once
+
 #include "command.h"
 //********************************************************************************
 // This class contains methods which are responsible for changing the status of

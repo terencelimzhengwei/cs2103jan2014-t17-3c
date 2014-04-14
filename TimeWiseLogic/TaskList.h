@@ -1,12 +1,12 @@
+//@author A0097277M
 #ifndef TASKLIST_H
 #define TASKLIST_H
-// @author A0097277M
+
 #pragma once
 
 #include <vector>
 #include "Exceptions.h"
 #include "Task.h"
-
 //********************************************************************************
 // This class acts as the datastore for the programme storing the Task in virtual
 // memory. There are 2 main tasklist vectors, the completed and uncompleted tasklist

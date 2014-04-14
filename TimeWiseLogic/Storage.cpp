@@ -1,5 +1,6 @@
-#include "Storage.h"
 //@author A0097330H
+#include "Storage.h"
+
 Storage::Storage(void) {
 	_logger = Logger::getLogger();
 	_undoneFileName = UNDONE_TASK_TEXTFILE;

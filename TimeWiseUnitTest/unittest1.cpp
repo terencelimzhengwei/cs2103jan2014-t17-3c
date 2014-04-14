@@ -1,3 +1,4 @@
+//@author A0099938B
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #define combineVectorString(target, source) for(unsigned int i=0;i<source.size();target+=source[i++]) { if(i) target += " "; }

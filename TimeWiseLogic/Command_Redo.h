@@ -1,15 +1,15 @@
+//@author A0097277M
 #ifndef COMMAND_REDO_H
 #define COMMAND_REDO_H
-// @author A0097277M
-#pragma once
 
+#pragma once
+#include "command.h"
 //********************************************************************************
 // This class calls for Redo in Command Manger to execute redo in previously
 // undone command
 //********************************************************************************
-#include "command.h"
-class Command_Redo :public Command
-{
+
+class Command_Redo :public Command{
 public:
 	Command_Redo(void);
 	~Command_Redo(void);

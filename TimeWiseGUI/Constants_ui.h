@@ -1,7 +1,7 @@
+//@author A0097330H
 #ifndef CONSTANTS_UI_H
 #define CONSTANTS_UI_H
 
-//@author A0097330H
 #include <string>
 
 namespace {
@@ -30,6 +30,7 @@ namespace {
 	const char* UNDONE_FORMAT		   = "undone <IDs> / multiple <IDs>";
 	const char* DEFAULT_DISPLAY        = "You may: Add, Clear, Delete, Display, Done/Undone, Edit, Filter, Search, Undo/Redo, Help, Exit";
 	const std::string OVERDUE_REMINDER = "Reminder! You have %d overdue task(s).";
+	const char* EMPTY_INPUT			   = "Please enter a command.";
 	const char* OUT_OF_BOUNDS          = "Out of bounds";
 
 	const char* BLANK                  = "";

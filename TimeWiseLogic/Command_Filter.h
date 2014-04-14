@@ -1,6 +1,6 @@
+//@author A0097277M
 #ifndef COMMAND_FILTER_H
 #define COMMAND_FILTER_H
-// @author A0097277M
 #pragma once
 
 #include "command.h"
@@ -8,8 +8,7 @@
 // This class is responsible for filtering out tasks which are scheduled on the 
 // same dates (due dates or end dates) or belong to the same category
 //********************************************************************************
-class Command_Filter :public Command
-{
+class Command_Filter :public Command{
 public:
 	Command_Filter(void);
 	~Command_Filter(void);

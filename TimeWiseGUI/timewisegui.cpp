@@ -1,9 +1,6 @@
-#include "timewisegui.h"
-#include <stdio.h>
-#include <QHeaderView>
-#include <QShortcut>
-
 //@author A0097330H
+#include "timewisegui.h"
+
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
@@ -75,15 +72,22 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 		current_line = lines.size();
 		emit lineExecuted(lines.back());
 		
-		std::string userCommand = input.toLocal8Bit().constData();   //converts QString to string type.
-		std::string messageLog = _logic.processCommand(userCommand); //sends user input (string) to logic for processing.
-		QString outputMessage = QString::fromStdString(messageLog);  //converts string to QString type.
-		ui.label_mlog->setText(outputMessage);                       //displays feedback.
+		try {
+			checkEmpty(input);
 
-		autoComplete();
+		    std::string userCommand = input.toLocal8Bit().constData();   //converts QString to string type.
+			std::string messageLog = _logic.processCommand(userCommand); //sends user input (string) to logic for processing.
+			QString outputMessage = QString::fromStdString(messageLog);  //converts string to QString type.
+			ui.label_mlog->setText(outputMessage);                       //displays feedback.
 
-		DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
-		displayTaskList(displayType);
+			autoComplete();
+
+			DISPLAY_TYPE displayType = _logic.getScreenToDisplay();
+			displayTaskList(displayType);
+		}
+		catch(const std::invalid_argument& e) {
+			ui.label_mlog->setText(e.what());
+		}
 	}
 	ui.userInput->setText(BLANK);
 }
@@ -631,3 +635,12 @@ void TimeWiseGUI::showHelp() {
 	_helpScreen->show();
 }
 
+//=====================================================
+//                OTHER FUNCTION
+//=====================================================
+//Throws exception if user does not key in anything into command input box
+int TimeWiseGUI::checkEmpty(QString input) {
+	if(input.size() == NOUGHT) {
+		throw std::invalid_argument(EMPTY_INPUT);
+	}
+}

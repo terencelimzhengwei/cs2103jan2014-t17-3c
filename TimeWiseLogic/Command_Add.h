@@ -1,6 +1,7 @@
+//@author A0097277M
 #ifndef COMMAND_ADD_H
 #define COMMAND_ADD_H
-// @author A0097277M
+
 #pragma once
 #include "Command.h"
 

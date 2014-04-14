@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Task.h"
 
-//@author A0097277M
 Task::Task(void){
 	initializeTask();
 }

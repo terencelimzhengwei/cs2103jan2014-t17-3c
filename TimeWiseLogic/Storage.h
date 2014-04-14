@@ -1,6 +1,7 @@
+//@author A0097330H
 #ifndef STORAGE_H
 #define STORAGE_H
-//@author A0097330H
+
 #pragma once
 
 #include <iostream>

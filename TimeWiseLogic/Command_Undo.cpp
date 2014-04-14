@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Undo.h"
 
-//@author A0097277M
 Command_Undo::Command_Undo(void){
 	_type = UNDO;
 }

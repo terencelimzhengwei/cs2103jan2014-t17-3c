@@ -1,6 +1,7 @@
+//@author A0097277M
 #ifndef COMMAND_DELETE_H
 #define COMMAND_DELETE_H
-// @author A0097277M
+
 #pragma once
 
 #include "Command.h"

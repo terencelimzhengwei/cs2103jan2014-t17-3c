@@ -1,7 +1,6 @@
 //@author A0099938B
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#define combineVectorString(target, source) for(unsigned int i=0;i<source.size();target+=source[i++]) { if(i) target += " "; }
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -304,37 +303,30 @@ namespace TimeWiseUnitTest {
 		TEST_METHOD(ParserTest_SplitBySpace) {
 			//vector to be converted to string for comparison
 			std:: string word = "add";
-			Parser _parser;
 
-			std::vector<string> validInput1 = _parser.splitBySpace("go to the zoo on 21/05/2014 at 7pm !H #leisure");
+			std::vector<string> validInput1 = Parser::splitBySpace("go to the zoo on 21/05/2014 at 7pm !H #leisure");
 			std::string expectedCase1 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
-			std::string convertedCase1 = "";
-			combineVectorString(convertedCase1, validInput1);
+			std::string convertedCase1 = Parser::strConcat(validInput1);
 
-			std::vector<string> validInput2 = _parser.splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
+			std::vector<string> validInput2 = Parser::splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
 			std::string expectedCase2 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
-			std::string convertedCase2 = "";
-			combineVectorString(convertedCase2, validInput2);
+			std::string convertedCase2 = Parser::strConcat(validInput2);
 
-			std::vector<string> validInput3= _parser.splitBySpace("go to the zoo          on 21/05/2014 at 7pm !H #leisure");
+			std::vector<string> validInput3= Parser::splitBySpace("go to the zoo          on 21/05/2014 at 7pm !H #leisure");
 			std::string expectedCase3 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
-			std::string convertedCase3 = "";
-			combineVectorString(convertedCase3, validInput3);
+			std::string convertedCase3 = Parser::strConcat(validInput3);
 
-			std::vector<string> invalidInput4 = _parser.splitBySpace("");
+			std::vector<string> invalidInput4 = Parser::splitBySpace("");
 			std::string expectedCase4 = "";
-			std::string convertedCase4 = "";
-			combineVectorString(convertedCase4, invalidInput4);
+			std::string convertedCase4 = Parser::strConcat(invalidInput4);
 
-			std::vector<string> validInput5 = _parser.splitBySpace("go to the zoo on 21 May 2014 at 7pm !H #leisure");
+			std::vector<string> validInput5 = Parser::splitBySpace("go to the zoo on 21 May 2014 at 7pm !H #leisure");
 			std::string expectedCase5 = "go to the zoo on 21 May 2014 at 7pm !H #leisure";
-			std::string convertedCase5 = "";
-			combineVectorString(convertedCase5, validInput5);
+			std::string convertedCase5 = Parser::strConcat(validInput5);
 
-			std::vector<string> validInput6 = _parser.splitBySpace("go to the zoo on 21 May at 7pm !H #leisure");
+			std::vector<string> validInput6 = Parser::splitBySpace("go to the zoo on 21 May at 7pm !H #leisure");
 			std::string expectedCase6 = "go to the zoo on 21 May at 7pm !H #leisure";
-			std::string convertedCase6 = "";
-			combineVectorString(convertedCase6, validInput6);
+			std::string convertedCase6 = Parser::strConcat(validInput6);
 			
 			Assert::AreEqual(convertedCase1, expectedCase1);
 			Assert::AreEqual(convertedCase2, expectedCase2);
@@ -353,7 +345,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreNotEqual(expectedCase2, validInput2);
 		}
 
-		TEST_METHOD(ParserTest_IsTimeFormat) {
+		TEST_METHOD(ParserTest_IsTime) {
 			bool validInput1 = Parser::isTime("8pm");
 			bool expectedCase1 = true;
 			bool validInput2= Parser::isTime("16:00");
@@ -388,229 +380,126 @@ namespace TimeWiseUnitTest {
 		}
 
 		TEST_METHOD(ParserTest_IsPreposition) {
-			Parser _parser;
-			bool validInput1 = _parser.isPreposition("on");
+			bool validInput1 = Parser::isPreposition("on");
 			bool expectedCase1 = true;
-			bool invalidInput2 = _parser.isPreposition("");
+			bool invalidInput2 = Parser::isPreposition("");
 			bool expectedCase2 = false;
-			bool invalidInput3 = _parser.isPreposition("10");
+			bool invalidInput3 = Parser::isPreposition("onn");
 			bool expectedCase3 = false;
+			bool invalidInput4 = Parser::isPreposition("10");
+			bool expectedCase4 = false;
 
 			Assert::AreEqual(expectedCase1, validInput1);
 			Assert::AreEqual(expectedCase2, invalidInput2);
-			Assert::AreEqual(expectedCase3,invalidInput3);
+			Assert::AreEqual(expectedCase3, invalidInput3);
+			Assert::AreEqual(expectedCase3, invalidInput4);
 		}
 
-	    TEST_METHOD(ParserTest_IsDateFormat) {
-			/* bool validInput1 = Parser::isDateFormat("22/12/2013");
+	    TEST_METHOD(ParserTest_IsDate) {
+			bool input1 = Parser::isDate("22/12/2013");
 			bool expectedCase1 = true;
-			bool validInput2= Parser::isDateFormat("22/12");
+			bool input2 = Parser::isDate("22/12");
 			bool expectedCase2 = true;
-			//bool validInput3= Parser::isDateFormat("22-07-2013");
+			bool input3 = Parser::isDate("22-07-2013");
 			bool expectedCase3 = true;
-			//bool validInput4= Parser::isDateFormat("22-12");
-			bool expectedCase4 = true;
-			//bool validInput5= Parser::isDateFormat("22.12.2013");
+			bool input4 = Parser::isDate("22-12");
+			bool expectedCase4 = false;
+			bool input5 = Parser::isDate("22.12.2013");
 			bool expectedCase5 = true;
-			//bool validInput6= Parser::isDateFormat("22.12");
-			bool expectedCase6 = true;
-			bool validInput7= Parser::isDateFormat("tomorrow");
+			bool input6 = Parser::isDate("22.12");
+			bool expectedCase6 = false;
+			bool input7 = Parser::isDate("tomorrow");
 			bool expectedCase7 = true;
-			bool validInput8= Parser::isDateFormat("today");
+			bool input8 = Parser::isDate("today");
 			bool expectedCase8 = true;
-			bool validInput9= Parser::isDateFormat("tmr");
+			bool input9 = Parser::isDate("tmr");
 			bool expectedCase9 = true;
-			//bool invalidInput10 = Parser::isDateFormat("tonight");
+			bool input10 = Parser::isDate("tmrw");
 			bool expectedCase10 = true;
-			//bool invalidInput11 = Parser::isDateFormat("2day");
-			bool expectedCase11 = true;
-			bool invalidInput12 = Parser::isDateFormat("22,12,2013");
+			bool input11 = Parser::isDate("today2");
+			bool expectedCase11 = false;
+			bool input12 = Parser::isDate("22,12,2013");
 			bool expectedCase12 = false;
-			bool invalidInput13 = Parser::isDateFormat("22,12");
+			bool input13 = Parser::isDate("22,12");
 			bool expectedCase13 = false;
-			bool invalidInput14 = Parser::isDateFormat("45/07/2013");
+			bool input14 = Parser::isDate("45/07/2013");
 			bool expectedCase14 = false;
-			bool invalidInput15 = Parser::isDateFormat("15/15/2013");
+			bool input15 = Parser::isDate("15/15/2013");
 			bool expectedCase15 = false;
-			//bool invalidInput16 = Parser::isDateFormat("15/07/403");
+			bool input16 = Parser::isDate("15/07/403");
 			bool expectedCase16 = false;
-			bool invalidInput17 = Parser::isDateFormat("15/07/13");
+			bool input17 = Parser::isDate("15/07/13");
 			bool expectedCase17 = true;
-			bool invalidInput18 = Parser::isDateFormat("hello/hello/2013");
+			bool input18 = Parser::isDate("hello/hello/2013");
 			bool expectedCase18 = false;
-			bool invalidInput19 = Parser::isDateFormat("hello");
+			bool input19 = Parser::isDate("hello");
 			bool expectedCase19 = false;
-			bool validInput20 = Parser::isDateFormat("22 March 2013");
+			bool input20 = Parser::isDate("22 March 2013");
 			bool expectedCase20 = true;
-			bool validInput21= Parser::isDateFormat("22 March");
+			bool input21= Parser::isDate("22 March");
 			bool expectedCase21 = true;
+			bool input22 = Parser::isDate("22 Mar");
+			bool expectedCase22 = true;
+			bool input23 = Parser::isDate("22 March, 2013");
+			bool expectedCase23 = true;
+			bool input24 = Parser::isDate("Mar 22");
+			bool expectedCase24 = true;
+			bool input25 = Parser::isDate("Mar 22 2013");
+			bool expectedCase25 = true;
+			bool input26 = Parser::isDate("March 22 2013");
+			bool expectedCase26 = true;
+			bool input27 = Parser::isDate("Mar 22, 2013");
+			bool expectedCase27 = true;
+			bool input28 = Parser::isDate("March 22, 2013");
+			bool expectedCase28 = true;
+			bool input29 = Parser::isDate("22nd Mar");
+			bool expectedCase29 = true;
+			bool input30 = Parser::isDate("22nd March");
+			bool expectedCase30 = true;
+			bool input31 = Parser::isDate("22nd Mar 2013");
+			bool expectedCase31 = true;
+			bool input32 = Parser::isDate("22nd March 2013");
+			bool expectedCase32 = true;
+			bool input33 = Parser::isDate("22nd Mar, 2013");
+			bool expectedCase33 = true;
+			bool input34 = Parser::isDate("22nd March, 2013");
+			bool expectedCase34 = true;
 			
 
-			Assert::AreEqual(expectedCase1, validInput1);
-			Assert::AreEqual(expectedCase2, validInput2);
-			//Assert::AreEqual(expectedCase3, validInput3);
-			//Assert::AreEqual(expectedCase4, validInput4);
-			//Assert::AreEqual(expectedCase5, validInput5);
-			//Assert::AreEqual(expectedCase6, validInput6);
-			Assert::AreEqual(expectedCase7, validInput7);
-			Assert::AreEqual(expectedCase8, validInput8);
-			Assert::AreEqual(expectedCase9, validInput9);
-			//Assert::AreEqual(expectedCase10, invalidInput10);
-			//Assert::AreEqual(expectedCase11, invalidInput11);
-			Assert::AreEqual(expectedCase12, invalidInput12);
-			Assert::AreEqual(expectedCase13, invalidInput13);
-			Assert::AreEqual(expectedCase14, invalidInput14);
-			Assert::AreEqual(expectedCase15, invalidInput15);
-			//sAssert::AreEqual(expectedCase16, invalidInput16);
-			Assert::AreEqual(expectedCase17, invalidInput17);
-			Assert::AreEqual(expectedCase18, invalidInput18);
-			Assert::AreEqual(expectedCase19, invalidInput19);
-			Assert::AreEqual(expectedCase20, validInput20);
-			Assert::AreEqual(expectedCase21, validInput21); */
-		}
-
-		TEST_METHOD(ParserTest_CreateDate) {
-			/* Date* validInput1 = Parser::createDate("21/03/2013");
-			int  expectedCase1[3] = {21,3,2013};
-			int  outputCase1[3] = {validInput1->getDay(), validInput1->getMonth(), validInput1->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase1[i], outputCase1[i]);
-			}
-
-			Date* validInput2 = Parser::createDate("21/03");
-			int  expectedCase2[3] = {21,3,2014};
-			int  outputCase2[3] = {validInput2->getDay(), validInput2->getMonth(), validInput2->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase2[i], outputCase2[i]);
-			}
-
-			Date* validInput3 = Parser::createDate("21/03/13");
-			int  expectedCase3[3] = {21,3,2013};
-			int  outputCase3[3] = {validInput3->getDay(), validInput3->getMonth(), validInput3->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase3[i], outputCase3[i]);
-			}
-
-			/* Date* validInput4 = Parser::createDate("21-03-2013");
-			int  expectedCase4[3] = {21,3,2013};
-			int  outputCase4[3] = {validInput4->getDay(), validInput4->getMonth(), validInput4->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase4[i], outputCase4[i]);
-			}
-			Date* validInput5 = Parser::createDate("21-03");
-			int  expectedCase5[3] = {21,3,2014};
-			int  outputCase5[3] = {validInput5->getDay(), validInput5->getMonth(), validInput5->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase5[i], outputCase5[i]);
-			}
-			Date* validInput6 = Parser::createDate("21-03-13");
-			int  expectedCase6[3] = {21,3,2013};
-			int  outputCase6[3] = {validInput6->getDay(), validInput6->getMonth(), validInput6->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase6[i], outputCase6[i]);
-			}
-			Date* invalidInput7 = Parser::createDate("21*03*13");
-			int  expectedCase7[3] = {NULL,NULL,NULL};
-			int  outputCase7[3] = {invalidInput7->getDay(), invalidInput7->getMonth(), invalidInput7->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase7[i], outputCase7[i]);
-			}
-			Date* invalidInput8 = _parser.createDate("21/03*13");
-			int  expectedCase8[3] = {21,NULL,2013};
-			int  outputCase8[3] = {invalidInput8->getDay(), invalidInput8->getMonth(), invalidInput8->getYear()};
-			for (int i = 0; i <3; i++) {
-				Assert::AreEqual(expectedCase8[i], outputCase8[i]);
-			}*/
-		}
-		
-		TEST_METHOD(ParserTest_ExtractDate) {
-			Parser parser;
-			vector<int> dateData;
-
-			/* dateData = parser.extractDate("15/3", 0);
-			Assert::AreEqual(1,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15/3/2014", 0);
-			Assert::AreEqual(1,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 mar", 1);
-			Assert::AreEqual(2,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 Mar", 1);
-			Assert::AreEqual(2,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 MAR", 1);
-			Assert::AreEqual(2,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 mar 2014", 2);
-			Assert::AreEqual(3,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 Mar 2014", 2);
-			Assert::AreEqual(3,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]);
-
-			dateData = parser.extractDate("15 MAR 2014", 2);
-			Assert::AreEqual(3,dateData[3]);
-			Assert::AreEqual(2014,dateData[0]);
-			Assert::AreEqual(3,dateData[1]);
-			Assert::AreEqual(15,dateData[2]); */
-		}
-
-		TEST_METHOD(ParserTest_ExtractTime) {
-			Parser parser;
-			vector<int> timeData;
-
-			/* timeData = parser.extractTime("15:30", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1530, timeData[0]);
-
-			timeData = parser.extractTime("330pm", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1530, timeData[0]);
-
-			timeData = parser.extractTime("15:00", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1500, timeData[0]);
-
-			timeData = parser.extractTime("3pm", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1500, timeData[0]);
-
-			timeData = parser.extractTime("00:30", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(30, timeData[0]);
-
-			timeData = parser.extractTime("1230am", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(30, timeData[0]);
-
-			timeData = parser.extractTime("12:30", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1230, timeData[0]);
-
-			timeData = parser.extractTime("1230pm", 0);
-			Assert::AreEqual(1, timeData[1]);
-			Assert::AreEqual(1230, timeData[0]); */
+			Assert::AreEqual(expectedCase1, input1);
+			Assert::AreEqual(expectedCase2, input2);
+			Assert::AreEqual(expectedCase3, input3);
+			Assert::AreEqual(expectedCase4, input4);
+			Assert::AreEqual(expectedCase5, input5);
+			Assert::AreEqual(expectedCase6, input6);
+			Assert::AreEqual(expectedCase7, input7);
+			Assert::AreEqual(expectedCase8, input8);
+			Assert::AreEqual(expectedCase9, input9);
+			Assert::AreEqual(expectedCase10, input10);
+			Assert::AreEqual(expectedCase11, input11);
+			Assert::AreEqual(expectedCase12, input12);
+			Assert::AreEqual(expectedCase13, input13);
+			Assert::AreEqual(expectedCase14, input14);
+			Assert::AreEqual(expectedCase15, input15);
+			Assert::AreEqual(expectedCase16, input16);
+			Assert::AreEqual(expectedCase17, input17);
+			Assert::AreEqual(expectedCase18, input18);
+			Assert::AreEqual(expectedCase19, input19);
+			Assert::AreEqual(expectedCase20, input20);
+			Assert::AreEqual(expectedCase21, input21);
+			Assert::AreEqual(expectedCase22, input22);
+			Assert::AreEqual(expectedCase23, input23);
+			Assert::AreEqual(expectedCase24, input24);
+			Assert::AreEqual(expectedCase25, input25);
+			Assert::AreEqual(expectedCase26, input26);
+			Assert::AreEqual(expectedCase27, input27);
+			Assert::AreEqual(expectedCase28, input28);
+			Assert::AreEqual(expectedCase29, input29);
+			Assert::AreEqual(expectedCase30, input30);
+			Assert::AreEqual(expectedCase31, input31);
+			Assert::AreEqual(expectedCase32, input32);
+			Assert::AreEqual(expectedCase33, input33);
+			Assert::AreEqual(expectedCase34, input34);
 		}
 
 		TEST_METHOD(DateTest_Operators1) {

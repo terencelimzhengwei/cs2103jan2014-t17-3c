@@ -307,7 +307,7 @@ string Parser::markupDateTime(string cmd) {
 	string rgx;		// Temporary string variable for storing the regular expression.
 
 	// Ensure the occurance of a space character after each punctuation. 
-	cmd = strReplace(",", "," + SPACE_DELIMITER, cmd);
+	cmd = strReplace(",", "," + SPACE_PARAMETER, cmd);
 	cmd = strTruncate(cmd);
 
 	// Change the command to lowercases for easier checking.
@@ -330,7 +330,7 @@ string Parser::markupDateTime(string cmd) {
 		cmd = strIReplace(MONTH_WORD[i], markupMonthStart + strVal(MONTH_WORD_VALUE[i]) + markupEnd, cmd);
 	}
 	// For month-in-word with year
-	rgx = "(^|\\s)" + markupMonthStart + "([1]?[0-9])" + markupEnd + "([0123]?[0-9])(st|nd|rd|th)?,? ([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])"; 
+	rgx = "(^|\\s)" + markupMonthStart + "([1]?[0-9])" + markupEnd + "\\s?([0123]?[0-9])(st|nd|rd|th)?,? ([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])"; 
 	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$3" + dateDelim + "$2" + dateDelim + "$5" + markupEnd + "$6");
 	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?" + markupMonthStart + "([1]?[0-9])" + markupEnd + ",? ?([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])";
 	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$2" + dateDelim + "$4" + dateDelim + "$5" + markupEnd + "$6");
@@ -339,7 +339,7 @@ string Parser::markupDateTime(string cmd) {
 	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$3" + dateDelim + "$2" + dateDelim + strVal(currentYear) + markupEnd + "$5");
 	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?" + markupMonthStart + "([0-9])" + markupEnd + "($|[\\s,\\.])";
 	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$2" + dateDelim + "$4" + dateDelim + strVal(currentYear) + markupEnd + "$5");
-	
+
 	// For d--m--yyyy and yyyy--m--d
 	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])[-\\./]([01]?[0-9])[-\\./]([1-9][0-9]{3})($|[\\s,\\.])"), "$1 " + markupDateStart + "$2" + dateDelim + "$3" + dateDelim + "$4" + markupEnd + "$5");
 	cmd = regex_replace(cmd, regex("(^|\\s)([1-9][0-9]{3})[-\\.]([01]?[0-9])[-\\.]([0123]?[0-9])($|[\\s,\\.])"), "$1 " + markupDateStart + "$4" + dateDelim + "$3" + dateDelim + "$2" + markupEnd + "$5");
@@ -404,6 +404,7 @@ string Parser::markupDateTime(string cmd) {
 	// For hhmm with a preposition before the time.
 	rgx = "(^|\\s)(" + regexPreposition + ") ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])";
 	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimeStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+
 	return strTruncate(cmd);
 }
 
@@ -493,10 +494,12 @@ string Parser::strReplace(string search, string replace, string subject) {
 	int lastPos = 0, pos;
 	do {
 		pos = subject.find(search, lastPos);
+
 		if(pos!=string::npos) {
 			subject.replace(pos, search.length(), replace);
 		}
 		lastPos = pos - search.length() + replace.length() + 1;
+
 	} while(pos!=string::npos);
 	return subject;
 }
@@ -614,5 +617,6 @@ string Parser::removeLastWord(string str) {
 }
 
 vector<string> Parser::splitBySpace(string input) {
+	input = strTruncate(input);
 	return explode(' ', input);
 }

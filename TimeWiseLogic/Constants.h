@@ -208,7 +208,7 @@ const int MONTH_WORD_VALUE[] = {
 	12,	//"Dec"
 };
 
-const int DAY_WORD_NUM = 5;
+const int DAY_WORD_NUM = 6;
 const std::string DAY_WORD[] = {
 	"yesterday",
 	"ytd",

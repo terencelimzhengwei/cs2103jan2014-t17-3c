@@ -27,7 +27,7 @@ public:
 	static string removePunctuation(string);
 
 	// Date and time related functions
-	static Date* Parser::createDate(string);
+	static Date* createDate(string);
 	static ClockTime* createTime(string);
 	static void extractDateTime(string, string&, vector<Date>&, vector<ClockTime>&);
 	static bool isDate(string);

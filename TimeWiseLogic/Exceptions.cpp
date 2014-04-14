@@ -1,5 +1,5 @@
 #include "Exceptions.h"
-//@Tran Hue Mai A0099938B
+//@author A0099938B
 
 // This file stores the various exception classes that are required for TimeWise.
 

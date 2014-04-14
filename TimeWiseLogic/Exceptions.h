@@ -3,7 +3,7 @@
 #define EXCEPTIONS_H
 #include <exception> 
 #include "Constants.h"
-//@Tran Hue Mai A0099938B
+//@author A0099938B
 /******************************************************************************************
 //This class is responsible for giving feedback to user with regard to command format only
 // will prompt users of the wrong format that they have keyed in.

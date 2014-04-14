@@ -1,9 +1,8 @@
+//@author A0099938B
 #ifndef _CONSTANTS_H
 #define _CONSTANTS_H
 #include <string>
 #include <ctime>
-
-//@author A0099938B
 
 /******************************************************************************************
 //This class is responsible for storing all the constants that would be used across all

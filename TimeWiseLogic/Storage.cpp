@@ -4,6 +4,7 @@ Storage::Storage(void) {
 	_logger = Logger::getLogger();
 	_undoneFileName = UNDONE_TASK_TEXTFILE;
 	_doneFileName = DONE_TASK_TEXTFILE;
+	_corrupted=false;
 }
 
 Storage::~Storage(void) {
@@ -300,6 +301,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 				}
 				default:
 					_corrupted = true;
+					break;
 				}
 				if(taskHeader > COLUMN_OUT_OF_BOUND) {
 					break;
@@ -310,4 +312,8 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 		} 
 	}
 	input.close();
+}
+
+bool Storage::isCorrupted(){
+	return _corrupted;
 }

@@ -13,6 +13,14 @@
 #include "TaskList.h"
 
 class Storage{
+public:
+	Storage(void);
+	~Storage(void);
+
+	void retrieveFile(TaskList&);
+	void saveFile(TaskList&);
+	bool isCorrupted();
+
 private:
 	std::string _undoneFileName;
 	std::string _doneFileName;
@@ -24,15 +32,6 @@ private:
 	void saveDoneTasks(TaskList&);
 	void retrieveDoneTasks(TaskList&);
 	void retrieveUndoneTasks(TaskList&);
-	bool isCorrupted();
 
-public:
-	Storage(void);
-	~Storage(void);
-
-	void retrieveFile(TaskList&);
-	void saveFile(TaskList&);
-
-	std::string removeFirstWord(std::string);
 };
 #endif

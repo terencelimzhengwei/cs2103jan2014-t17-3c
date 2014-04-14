@@ -25,7 +25,7 @@ public:
 	TaskList getTaskList();
 	std::string processCommand(std::string commandLine);
 	DISPLAY_TYPE getScreenToDisplay();
-
+	bool isCorruptedStorage();
 private:
 	CommandCreator _creator ;
 	TaskList _taskList;

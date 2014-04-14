@@ -95,3 +95,7 @@ DISPLAY_TYPE TimeWiseLogic::getScreenToDisplay(){
 bool TimeWiseLogic::emptyCommandLine(std::string commandLine){
 	return (commandLine==DEFAULT_EMPTY);
 }
+
+bool TimeWiseLogic::isCorruptedStorage(){
+	return _storage.isCorrupted();
+}

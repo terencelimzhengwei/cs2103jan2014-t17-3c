@@ -8,6 +8,9 @@
 #include "Exceptions.h"
 #include "Constants.h"
 
+#define hour(time) time / TIME_DIVISOR
+#define minute(time) time % TIME_DIVISOR
+
 //@author A0121023H
 class ClockTime{
 public:

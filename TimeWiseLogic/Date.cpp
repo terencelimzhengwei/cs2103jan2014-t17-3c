@@ -1,6 +1,8 @@
 #include "Date.h"
 //@author A0121023H
+
 // Constructors
+
 Date::Date() {
 	this->setDateAsToday();
 }
@@ -14,10 +16,10 @@ Date::Date(Date& src) {
 }
 
 // Destructors
+
 Date::~Date() {
 }
 
-// Get & "Set by input" functions
 int Date::getDay() {
 	return _day;
 }
@@ -30,7 +32,7 @@ int Date::getYear() {
 	return _year;
 }
 
-int Date::getWeekDay() {
+int Date::getWeekday() {
 	return _weekday;
 }
 
@@ -202,6 +204,18 @@ int Date::getCurrentDay() {
 	int thisDay = _timeNow.tm_mday;
 
 	return thisDay;
+}
+
+int Date::getCurrentWeekday() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisWeekday = _timeNow.tm_wday;
+
+	return thisWeekday;
 }
 
 bool Date::isLeapYear(int year) {

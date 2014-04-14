@@ -20,7 +20,7 @@ public:
 	int getDay();
 	int getMonth();
 	int getYear();
-	int getWeekDay();
+	int getWeekday();
 	string getDayOfTheWeek();
 	void setDate(int day, int month, int year);
 
@@ -39,7 +39,8 @@ public:
 	static int getCurrentYear();
 	static int getCurrentMonth();
 	static int getCurrentDay();
-	int getDayFromDate(int,int,int);
+	static int getCurrentWeekday();
+	static int getDayFromDate(int,int,int);
 
 	Date operator+(int);
 	Date operator-(int);

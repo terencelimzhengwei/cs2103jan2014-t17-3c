@@ -1,9 +1,9 @@
-//@Gian Jian Xiang A0097330H
 #ifndef TIMEWISECLOCK_H
 #define TIMEWISECLOCK_H
 
-#include <QString>
+//@author A0097330H
 #include <QDate>
+#include <QString>
 #include <QTime>
 
 class TimeWiseClock {
@@ -17,6 +17,5 @@ private:
 	QDate _date;
 	QTime _time;
 };
-
 #endif
 

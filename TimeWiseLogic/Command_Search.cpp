@@ -10,7 +10,6 @@ Command_Search::Command_Search(void){
 	_currentScreen = NULL;
 }
 
-
 Command_Search::~Command_Search(void){
 }
 
@@ -22,10 +21,10 @@ bool Command_Search::execute(TaskList& tasklist, std::string& feedback){
 	switchScreenTo(SEARCHED);
 	tasklist.populateSearchList(_keyword);
 	int size = tasklist.searchedSize();
-	if(size > 0) {
-		feedback = SEARCH_RESULTS[0] + _keyword + CLOSING_BRACKET;
+	if(size > ZERO) {
+		feedback = SEARCH_RESULTS[ALL_TASK] + _keyword + CLOSING_BRACKET;
 	} else {
-		feedback = SEARCH_RESULTS[1] + _keyword + CLOSING_BRACKET;
+		feedback = SEARCH_RESULTS[NO_TASK] + _keyword + CLOSING_BRACKET;
 	}
 	return true;
 }

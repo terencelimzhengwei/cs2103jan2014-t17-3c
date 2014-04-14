@@ -5,11 +5,11 @@ CommandManager::~CommandManager(void){
 }
 
 bool CommandManager::CanUndo() const{
-	return (undoList.size() > 0);
+	return (undoList.size() > ZERO);
 }
 
 bool CommandManager::CanRedo() const{
-	return (redoList.size() > 0);
+	return (redoList.size() > ZERO);
 }
 
 int CommandManager::getUndoLevel() const{
@@ -21,7 +21,7 @@ void CommandManager::setUndoLevel(int newValue){
 }
 
 bool CommandManager::IsDirty() const{
-	return (m_nCleanCount != 0);
+	return (m_nCleanCount != ZERO);
 }
 
 Command* CommandManager::getLastUndoCommand() const{
@@ -89,7 +89,7 @@ void CommandManager::Clear(){
 }
 
 void CommandManager::SetClean(){
-	m_nCleanCount = 0;
+	m_nCleanCount = ZERO;
 }
 
 void CommandManager::AddUndo(Command* pCommand){
@@ -98,8 +98,8 @@ void CommandManager::AddUndo(Command* pCommand){
 		undoList.pop_front();
 	}
 	undoList.push_back(pCommand);
-	if (m_nCleanCount < 0 && redoList.size() > 0){
-		m_nCleanCount = undoList.size() + redoList.size() + 1;
+	if (m_nCleanCount < 0 && redoList.size() > ZERO){
+		m_nCleanCount = undoList.size() + redoList.size() + INCREMENT_VALUE;
 	} else {
 		m_nCleanCount++;
 	}

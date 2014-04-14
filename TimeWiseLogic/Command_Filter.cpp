@@ -6,39 +6,35 @@ Command_Filter::Command_Filter(void){
 	_category = DEFAULT_EMPTY;
 	_date = NULL;
 }
-
-
 Command_Filter::~Command_Filter(void){
 }
 
 bool Command_Filter::execute(TaskList& tasklist, std::string& feedback){
 	*_currentScreen = FILTERED;
 	switch(_filterType){
-	case CATEGORY: {
+	case CATEGORY:{
 		tasklist.populateFilterList(_category);
 		int size = tasklist.filteredSize();
-		if (size > 0){
-			feedback = FILTER_CATEGORY_RESULTS[0] + _category + CATEGORY_STRING;
+		if (size > ZERO){
+			feedback = FILTER_CATEGORY_RESULTS[ALL_TASK_CATEGORY] + _category + CATEGORY_STRING;
 		} else {
-			feedback = FILTER_CATEGORY_RESULTS[1] + _category + CATEGORY_STRING;
+			feedback = FILTER_CATEGORY_RESULTS[NO_TASK_CATEGORY] + _category + CATEGORY_STRING;
 		}
 		return true;
 	}
-	case DATE: {
+	case DATE:{
 		tasklist.populateFilterList(_date);
 		int size = tasklist.filteredSize();
-		if (size > 0){
-			feedback = FILTER_CATEGORY_RESULTS[2] + _date->toString();
+		if (size > ZERO){
+			feedback = FILTER_CATEGORY_RESULTS[ALL_TASK_DATE] + _date->toString();
 		} else {
-			feedback = FILTER_CATEGORY_RESULTS[3] + _date->toString();
+			feedback = FILTER_CATEGORY_RESULTS[NO_TASK_CATEGORY] + _date->toString();
 		}
 		return true;
-		
 	}
 	default:
 		return false;
 	}
-	
 }
 
 bool Command_Filter::undo(TaskList& tasklist, std::string& feedback){

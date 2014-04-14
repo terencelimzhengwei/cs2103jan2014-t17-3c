@@ -1,10 +1,8 @@
 #include "Command_Display.h"
 
-
 Command_Display::Command_Display(void){
 	_type = DISPLAY;
 }
-
 
 Command_Display::~Command_Display(void){
 }

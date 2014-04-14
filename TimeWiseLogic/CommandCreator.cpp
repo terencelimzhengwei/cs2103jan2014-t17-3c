@@ -7,14 +7,14 @@ CommandCreator::~CommandCreator(void) {
 }
 
 bool CommandCreator::hasArg(std::string input) {
-	if (input.length() == 0) {
+	if (input.length() == ZERO) {
 		return false;
 	}
 	return true;
 }
 
 bool CommandCreator::isValidIndex(int id) {
-	if (id < 0 || id == 0) {
+	if (id < ZERO || id == ZERO) {
 		return false;
 	}
 	return true;
@@ -22,30 +22,32 @@ bool CommandCreator::isValidIndex(int id) {
 
 bool CommandCreator::isValidRemovalIndex(unsigned int id, DISPLAY_TYPE* type,TaskList& tasklist) {
 	switch(*type) {
-	case MAIN:
+	case MAIN:{
 		if(id > tasklist.undoneSize()) {
 			return false;
 		} 
 		break;
-	case COMPLETE:
+	}
+	case COMPLETE:{
 		if(id > tasklist.doneSize()) {
 			return false;
 		}
 		break;
-	case SEARCH: {
-			unsigned int size = tasklist.searchedSize();
-			if(id > size) {
-				return false;
-			}
-			break;
+	}
+	case SEARCH:{
+		unsigned int size = tasklist.searchedSize();
+		if(id > size) {
+			return false;
 		}
-	case FILTERED: {
-			unsigned int size = tasklist.filteredSize();
-			if(id > size) {
-				return false;
-			}
-			break;
+		break;
+	}
+	case FILTERED:{
+		unsigned int size = tasklist.filteredSize();
+		if(id > size) {
+			return false;
 		}
+		break;
+	}
 	}
 	return true;
 }
@@ -80,77 +82,77 @@ Command* CommandCreator::interpretCommand(std::string userInput, DISPLAY_TYPE& d
 		int parameterNum = parameterArray.size();
 
 		switch (commandType) {
-		case ADD: {
+		case ADD:{
 			if(hasArg(parameter)) {
 				return createCommandAdd(parameter, &displayType);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-				  }
-		case DELETE: {
+		}
+		case DELETE:{
 			if(hasArg(parameter)) {
 				return createCommandDelete(parameterArray, &displayType, tasklist);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-					 }
-		case EDIT: {
+		}
+		case EDIT:{
 			if(hasArg(parameter)) {
 				return createCommandEdit(parameter, &displayType);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-				   }
-		case DONE: {
+		}
+		case DONE:{
 			if(hasArg(parameter)) {
 				return createCommandDone(parameterArray, &displayType, tasklist);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-				   }
-		case FILTER: {
+		}
+		case FILTER:{
 			if(hasArg(parameter)) {
 				return createCommandFilter(parameter, &displayType);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-					 }
-		case UNDONE: {
+		}
+		case UNDONE:{
 			if(hasArg(parameter)) {
 				return createCommandUndone(parameterArray, &displayType, tasklist);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-					 }
-		case CLEAR: {
+		}
+		case CLEAR:{
 			return createCommandClear(parameter, &displayType);
-					}
-		case UNDO: {
+		}
+		case UNDO:{
 			return createCommandUndo();
-				   }
-		case REDO: {
+		}
+		case REDO:{
 			return createCommandRedo();
-				   }
-		case SEARCH: {
+		}
+		case SEARCH:{
 			if (hasArg(parameter)) {
 				return createCommandSearch(parameter, &displayType);
 			} else {
 				throw NoArgumentException();
 				return NULL;
 			}
-
-					 }
-		case DISPLAY:
+		}
+		case DISPLAY:{
 			return createCommandDisplay(parameter, &displayType);
+		}
 		default: {
 			return NULL;
-				 }
+		}
 		} // All exceptions are caught here
 	} catch (NoArgumentException& nae) {
 		_feedbackExceptiontoUI = nae.what();
@@ -186,7 +188,6 @@ Command* CommandCreator::interpretCommand(std::string userInput, DISPLAY_TYPE& d
 		_feedbackExceptiontoUI = iec.what();
 		throw InvalidEditCommandInputException();
 	}
-
 }
 
 Command* CommandCreator::createCommandAdd(string command, DISPLAY_TYPE* screen) {
@@ -198,7 +199,7 @@ Command* CommandCreator::createCommandAdd(string command, DISPLAY_TYPE* screen) 
 	Parser::extractDateTime(command, description, dates, times);
 
 	vector<string> descriptionWord = Parser::splitBySpace(description);
-	for(int pos = descriptionWord.size()-1 ; category.empty() && pos>=0 ; pos--) {
+	for(int pos = descriptionWord.size()-REDUCTION_VALUE ; category.empty() && pos>=0 ; pos--) {
 		if(Parser::isCategory(descriptionWord[pos])) {
 			category = Parser::strReplace(CATEGORY_SPECIFIER, DEFAULT_EMPTY, descriptionWord[pos]);
 			description = Parser::strReplace(descriptionWord[pos], DEFAULT_EMPTY, description);
@@ -259,7 +260,7 @@ Command* CommandCreator::createCommandDelete(vector<string> parameter, DISPLAY_T
 		if(Parser::isAllNumbers(parameter.back())) {
 			int id = Parser::toNum(parameter.back());
 			if(isValidIndex(id) && isValidRemovalIndex(id,type,tasklist)){
-				id = id - 1;
+				id = id - REDUCTION_VALUE;
 				commandDelete->addDeletionIndex(id);
 				commandDelete->setDisplayScreen(*type);
 			} else {
@@ -427,7 +428,7 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 
 	if( regex_match(parameter, sm, regex("^\\s*([0-9]*)\\s?(.*)\\s*$")) ) {
 		if( isValidIndex(Parser::toNum(sm[1])) ) {
-			index = Parser::toNum(sm[1]) - 1;
+			index = Parser::toNum(sm[1]) - REDUCTION_VALUE;
 			parameter = sm[2];
 		} else {
 			throw NotANumberException();
@@ -442,13 +443,12 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 	Parser::extractDateTime(parameter, description, dates, times);
 
 	vector<string> descriptionWord = Parser::explode(SPACE_DELIMITER, description);
-	for(int pos = descriptionWord.size() - 1 ; category.empty() && pos >= 0 ; pos--) {
+	for(int pos = descriptionWord.size() - REDUCTION_VALUE ; category.empty() && pos >= 0 ; pos--) {
 		if(Parser::isCategory(descriptionWord[pos])) {
 			category = Parser::strReplace(CATEGORY_SPECIFIER, DEFAULT_EMPTY, descriptionWord[pos]);
 			description = Parser::strReplace(descriptionWord[pos], DEFAULT_EMPTY, description);
 		}
 	}
-
 	description = Parser::trim(description);
 
 	Command_Edit* commandEdit = new Command_Edit();
@@ -480,8 +480,8 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 				tempTime = new ClockTime( times[0] );
 				commandEdit->setEndTime( tempTime );
 				break;
-					}
-			case 2:
+			}
+			case 2:{
 				tempTime = new ClockTime( times[1] );
 				commandEdit->setStartTime( tempTime );
 				times.pop_back();
@@ -489,8 +489,8 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 				commandEdit->setEndTime( tempTime );
 				break;
 			}
+			}
 		}
-	
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;

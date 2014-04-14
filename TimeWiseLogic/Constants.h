@@ -17,18 +17,23 @@ static const int SEARCH_COUNT           = 2;
 static const int ZERO					= 0;
 static const int CLEAR_TYPE_COUNT       = 4;
 static const int DISPLAY_TYPE_COUNT     = 5;
+const int MAX_HOUR						= 23;
+const int MAX_MINUTE					= 59;
+const int TIME_DIVISOR					= 100;
+const int LOG_TIME_SIZE					= 40;
 
 //Values used in Storage
 const int START_VALUE                   = 0;
-const int HEADER_1                      = 0;
-const int HEADER_2                      = 1;
-const int HEADER_3                      = 2;
-const int HEADER_4                      = 3;
-const int HEADER_5                      = 4;
-const int HEADER_6                      = 5;
-const int HEADER_7                      = 6;
+const int HEADER_DESCRIPTION                      = 0;
+const int HEADER_START_DATE                      = 1;
+const int HEADER_END_DATE                      = 2;
+const int HEADER_START_TIME                      = 3;
+const int HEADER_END_TIME                      = 4;
+const int HEADER_CATEGORY                      = 5;
+const int HEADER_STATUS                      = 6;
 const int COLUMN_OUT_OF_BOUND           = 8;
-const int REDUCTION_VALUE              = 1;
+const int REDUCTION_VALUE               = 1;
+const int INCREMENT_VALUE				= 1;
 
 enum TASK_STATUS{UNCOMPLETED, OVERDUE, COMPLETED};
 enum CMD_TYPE{ADD, DELETE, EDIT, CLEAR, DISPLAY, SEARCH, FILTER, UNDO, REDO, UNDONE, DONE, UNDEFINED};
@@ -38,10 +43,12 @@ enum CLEAR_TYPE{ALL,UNCOMPLETED_TASKS,COMPLETED_TASKS,SCREEN};
 enum DISPLAY_TYPE{MAIN,SEARCHED,COMPLETE,FILTERED, DONE_DISPLAY};
 enum HEADER {DESCRIPTION, START_DATE, START_TIME, DUE_DATE, DUE_TIME, CATEGORY_HEADER, UNDEFINED_HEADER};
 enum LOG_TYPE{ INFOLOG, NOTICELOG, WARNINGLOG, ERRORLOG, FATALLOG };
+enum FILTER_RESULTS {ALL_TASK_CATEGORY, NO_TASK_CATEGORY,ALL_TASK_DATE, NO_TASK_DATE };
+enum SEARCH_RESULTS {ALL_TASK, NO_TASK};
 
 static const std::string LOG_TYPE_STRING[LOG_TYPE_COUNT]         = {"INFOLOG","NOTICELOG","WARNINGLOG","ERRORLOG","FATALLOG"};
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT]         = {"add","delete","edit","clear","display", "search", "filter", "undo", "redo",  "undone", "done"};
-static const std::string CLEAR_TYPE_STRING[CLEAR_TYPE_COUNT]     = {"all", "undone", "done", ""};
+static const std::string CLEAR_TYPE_STRING[CLEAR_TYPE_COUNT]     = {"all", "main", "completed", ""};
 static const std::string DISPLAY_TYPE_STRING[DISPLAY_TYPE_COUNT] = {"main", "", "completed", "", "done"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	 = {"undone","overdue","done"};
 static const std::string HEADER_STRING[HEADER_COUNT]             = {"description", "startDate", "startTime","dueDate", "dueTime", "category"};
@@ -66,15 +73,15 @@ const std::string TODAY_DISPLAY      = "Today";
 const std::string TMR_DISPLAY        = "Tmrw";
 
 // These strings store exception messages to be displayed by TiMEWiSE! in the CLI in case of user input errors.
-static const char* INVALID_USER_INPUT_DATE_TIME             = "Error! The date or time that you entered has an invalid format";
+static const char* INVALID_USER_INPUT_DATE_TIME             = "Error! The date or time that you entered has an invalid format.";
 static const char* INVALID_USER_INPUT_COMMAND_CLEAR			= "Error! Invalid input for CLEAR command.";
 static const char* INVALID_USER_INPUT_FILTER_COMMAND		= "Error! Invalid filtering contents. Please check your date format and hash tag.";
 static const char* INVALID_USER_INPUT_EDIT_COMMAND			= "Error! Invalid input for EDIT Command.";
 static const char* INVALID_USER_INPUT_DISPLAY_COMMAND		= "Error! Invalid input for DISPLAY command.";
 static const char* USER_INPUT_INDEX_OUT_OF_RANGE			= "Error! The task index that you entered is out of range.";
 static const char* USER_INPUT_NOT_A_NUMBER					= "Error! The task index that you entered is not a number.";
-static const char* MISSING_TASK_DESCRIPTION					= "Error! You have not entered any task description";
-static const char* NO_ARGUMENT_EXCEPTION					= "Error! No input detected";
+static const char* MISSING_TASK_DESCRIPTION					= "Error! You have not entered any task description.";
+static const char* NO_ARGUMENT_EXCEPTION					= "Error! No input detected.";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 static const char* TASK_ALREADY_COMPLETED					= "This task has already been done!";
 static const char* TASK_NOT_COMPLETED_YET					= "This task has not been done yet!";

@@ -21,6 +21,7 @@ const char* UnableToSetAsDone::what() const throw() {
 const char* UnableToUndoneUncompletedTasks::what() const throw() {
 	return TASK_NOT_COMPLETED_YET;
 }
+
 const char* InvalidAddCommandInputException::what() const throw(){
 	return MISSING_TASK_DESCRIPTION; 
 }
@@ -28,18 +29,23 @@ const char* InvalidAddCommandInputException::what() const throw(){
 const char* InvalidStartEndDateTime::what() const throw() {
 	return START_DATE_TIME_LATER_THAN_END_DATE_TIME;
 }
+
 const char* InvalidFilterCommandInputException::what() const throw() {
 	return INVALID_USER_INPUT_FILTER_COMMAND;
 }
+
 const char* InvalidEditCommandInputException::what() const throw() {
 	return INVALID_USER_INPUT_EDIT_COMMAND;
 }
+
 const char* InvalidDisplayCommandException::what() const throw() {
 	return INVALID_USER_INPUT_DISPLAY_COMMAND;
 }
+
 const char* InvalidDateTimeFormatException::what() const throw(){
 	return INVALID_USER_INPUT_DATE_TIME;
 }
+
 const char* InvalidClearCommandInputException::what() const throw(){
 	return INVALID_USER_INPUT_COMMAND_CLEAR;
 }

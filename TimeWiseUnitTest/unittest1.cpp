@@ -68,6 +68,7 @@ namespace TimeWiseUnitTest {
 		}
 
 		TEST_METHOD(CommandDeleteTest) {
+			
 			TaskList _taskList;
 			std::string feedback;
 			for(int i=0;i<10;i++){
@@ -93,6 +94,7 @@ namespace TimeWiseUnitTest {
 		}
 
 		TEST_METHOD(CommandClearTest) {
+			//Equivalence partitioning: Clear from Screen, Clear from Main, Clear from Completed, Clear All
 			TaskList _taskList;
 			std::string feedback;
 			for(int i=0;i<10;i++){
@@ -103,9 +105,20 @@ namespace TimeWiseUnitTest {
 			Command_Clear* clear = new Command_Clear(ALL);
 			clear->execute(_taskList, feedback);
 			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
+			clear->undo(_taskList,feedback);
+			Assert::AreEqual(10,static_cast<int>(_taskList.undoneSize()));
+			Command_Clear* clear1 = new Command_Clear(UNCOMPLETED_TASKS);
+			clear1->execute(_taskList,feedback);
+			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
+			clear1->undo(_taskList,feedback);
+			Command_Clear* clear2 = new Command_Clear(SCREEN);
+			clear2->setDisplayScreen(MAIN);
+			clear->execute(_taskList,feedback);
+			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
 		}
 
 		TEST_METHOD(CommandEditTest) {
+			//Equivalence Partition: Edit Description, Edit Schedule
 			TaskList _taskList;
 			std::string feedback;
 			Task* task=new Task;
@@ -163,7 +176,27 @@ namespace TimeWiseUnitTest {
 		}
 
 		TEST_METHOD(CommandSearchKeywordTest) {
-			
+			TaskList _taskList;
+			std::string feedback;
+			DISPLAY_TYPE type = MAIN;
+			for(int i=0;i<5;i++){
+				Task* task = new Task();
+				task->setDescription("Hello");
+				_taskList.addTask(*task);
+			}
+			for(int i=0;i<5;i++){
+				Task* task = new Task();
+				task->setDescription("Bingo");
+				_taskList.addTask(*task);
+			}
+			Command_Search* cmd = new Command_Search;
+			cmd->setKeyword("hel");
+			cmd->setPreviousScreen(&type);
+			cmd->execute(_taskList,feedback);
+			Assert::AreEqual(5,static_cast<int>(_taskList.searchedSize()));
+			for(int i=0;i<5;i++){
+				Assert::AreEqual("Hello",_taskList.getSearchedTask(i)->getDescription().c_str());
+			}
 		}
 		TEST_METHOD(ClockTimeTest) {
 			//equivalence partition: set time as negative, set time as positive and below 2359, set time above 2359

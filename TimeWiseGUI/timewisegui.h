@@ -49,7 +49,7 @@ public:
 	void highlightOthers( std::vector<Task*>& otherTaskList, int row, int column);
 
 	//These are the functions that inform user of the number of overdue tasks.
-	void setOverdueMessage(int overdueCount);
+	void setOverdueMessage();
 	int countNumberOfOverdues();
 
 	//These are the functions that allow lineEdit to retrieve previous user actions
@@ -59,6 +59,7 @@ public:
 
 	//other functions
 	void autoComplete();
+	void checkCorrupted();
 	int checkEmpty(QString input);
 	void showHelp();
 

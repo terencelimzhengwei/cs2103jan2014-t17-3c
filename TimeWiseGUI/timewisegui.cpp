@@ -19,14 +19,11 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.userInput->installEventFilter(this);
 
 	//displays number of overdue tasks (if any) as soon as program is opened.
-	int overdues = countNumberOfOverdues();
-	if(overdues > 0) {
-		setOverdueMessage(overdues);
-	}
+	setOverdueMessage();
+
 	//informs user if text file is tampered.
-	if(_logic.isCorruptedStorage()) {
-		ui.label_mlog->setText(CORRUPTED_MESSAGE);
-	}
+	checkCorrupted();
+
 }
 
 TimeWiseGUI::~TimeWiseGUI() {
@@ -530,10 +527,13 @@ void TimeWiseGUI::displayDone() {
 //=====================================================
 //            OVERDUE TASKS COUNT REMINDER
 //=====================================================
-void TimeWiseGUI::setOverdueMessage(int overdueCount) {
-	sprintf_s(buffer, OVERDUE_REMINDER.c_str(), overdueCount);
-	QString qOverdue = QString::fromStdString(buffer);
-	ui.label_mlog->setText(qOverdue);
+void TimeWiseGUI::setOverdueMessage() {
+	int overdues = countNumberOfOverdues();
+	if(overdues > 0) {
+		sprintf_s(buffer, OVERDUE_REMINDER.c_str(), overdues);
+		QString qOverdue = QString::fromStdString(buffer);
+		ui.label_mlog->setText(qOverdue);
+	}
 }
 
 int TimeWiseGUI::countNumberOfOverdues() {
@@ -640,11 +640,18 @@ void TimeWiseGUI::showHelp() {
 }
 
 //=====================================================
-//                OTHER FUNCTION
+//                OTHER FUNCTIONS
 //=====================================================
+void TimeWiseGUI::checkCorrupted() {
+	if(_logic.isCorruptedStorage()) {
+		ui.label_mlog->setText(CORRUPTED_MESSAGE);
+	}
+}
+
 //Throws exception if user does not key in anything into command input box
 int TimeWiseGUI::checkEmpty(QString input) {
 	if(input.size() == NOUGHT) {
 		throw std::invalid_argument(EMPTY_INPUT);
 	}
 }
+

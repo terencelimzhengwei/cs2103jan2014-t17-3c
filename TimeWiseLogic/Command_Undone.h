@@ -20,12 +20,6 @@ public:
 	void setPreviousScreen(DISPLAY_TYPE* screen);
 
 private:
-	std::vector<Task*> _undoneTasks;
-	std::vector<unsigned int> _undoneTaskIndex;
-	DISPLAY_TYPE* _currentScreen;
-	DISPLAY_TYPE _previousScreen;
-	std::string _lastCmdCalled;
-
 	void setIndexToBoldInGUI(TaskList& tasklist);
 	void saveTasks(TaskList& taskList);
 	void setTasksAsUndone(TaskList& tasklist);
@@ -34,5 +28,12 @@ private:
 	void lastCmdCalledIs(std::string cmd);
 	bool wasUndone();
 	bool wasExecuted();
+
+	//Attributes
+	std::vector<Task*> _undoneTasks;
+	std::vector<unsigned int> _undoneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+	std::string _lastCmdCalled;
 };
 #endif

@@ -53,7 +53,6 @@ private:
 	//Attributes
 	DISPLAY_TYPE _displayScreen;
 	CLEAR_TYPE _clearType;
-
 	//Vector to store pointers of deletedTasks so that command can be undone
 	std::vector<Task*> _deletedUndoneTasks;
 	std::vector<Task*> _deletedDoneTasks;

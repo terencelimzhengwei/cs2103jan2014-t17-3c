@@ -112,5 +112,15 @@ protected:
 	void checkInvalidDate();
 	void setDateBasedOnTime();
 
+	void setDateForDeadlineTaskAccordingToTime();
+
+	void setDateForFloatingTask();
+
+	void setEndDateAccordingToStartTime();
+
+	void setStartAndEndDateAcordingToTime();
+
+	bool startTimeLaterThanEndTime();
+	void setEndDateAccordingToEndTime();
 };
 #endif

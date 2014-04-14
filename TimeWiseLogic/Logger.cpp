@@ -115,20 +115,18 @@ void Logger::saveExtractedInfo	(const string& configLabel, const string& configD
 	}
 }
 
-void Logger::setDefaultValues()
-{
+void Logger::setDefaultValues(){
 	//set the default values for those which are still empty strings
 	for(int i=0; i<CONFIG_DETAILS_SIZE;i++) {
 		if(_configDetailList[i] == DEFAULT_UNCONFIGURED_VALUE) {
 			_configDetailList[i] = CONFIG_DEFAULT_VALUES_LIST[i];
 		}
 	}
-
 	return;
 }
 
 void Logger::extractMinLevelToMonitor() {
-	for (LOG_TYPE logType = INFOLOG; logType < LOG_TYPE_COUNT; logType = static_cast<LOG_TYPE>(logType + 1)) {
+	for (LOG_TYPE logType = INFOLOG; logType < LOG_TYPE_COUNT; logType = static_cast<LOG_TYPE>(logType + INCREMENT_VALUE)) {
 		if(LOG_TYPE_STRING[logType] == _configDetailList[MIN_LEVEL_TO_LOG]) {
 			_minLevelToLog = logType;
 			break;
@@ -150,18 +148,18 @@ string Logger::getNewData(string newLine) {
 	int pos = newLine.find_first_of(DEFAULT_KEY_VALUE_DELIMITER);
 
 	if(pos != string::npos) {
-		newData = newLine.substr(pos+1);
+		newData = newLine.substr(pos+INCREMENT_VALUE);
 	}
 
 	return newData;
 }
 
 string Logger::getCurTime()	{
-	char logTime[40];
+	char logTime[LOG_TIME_SIZE];
 	time_t rawTime = time(0);
 	tm curTimeTm;
 	localtime_s(&curTimeTm, &rawTime);
-	strftime(logTime, 40, "%d-%m-%Y",&curTimeTm);
+	strftime(logTime, LOG_TIME_SIZE, "%d-%m-%Y",&curTimeTm);
 
 	return logTime;
 }
@@ -171,7 +169,6 @@ void Logger::log (string callingClass, string message, LOG_TYPE logType) {
 		string completeMessage = callingClass + DEFAULT_LOG_MESSAGE_LINKER + message;
 		logTheMessage(completeMessage, logType);
 	}
-
 	return;
 }
 
@@ -184,22 +181,27 @@ bool Logger::isToBeLogged(string callingClass, LOG_TYPE logType) {
 
 void Logger::logTheMessage(string message, LOG_TYPE logType) {
 	switch(logType) {
-	case INFOLOG:
+	case INFOLOG:{
 		logInfo(message);
 		break;
-	case NOTICELOG:
+	}
+	case NOTICELOG:{
 		logNotice(message);
 		break;
-	case WARNINGLOG:
+	}
+	case WARNINGLOG:{
 		logWarning(message);
 		break;
-	case ERRORLOG:
+	}
+	case ERRORLOG:{
 		logError(message);
 		break;
-	case FATALLOG:
+	}
+	case FATALLOG:{
 		logFatal(message);
 		//throw FatalLogException(MESSAGE_ERROR_FATAL_LOG);
 		break;
+	}
 	}
 }
 

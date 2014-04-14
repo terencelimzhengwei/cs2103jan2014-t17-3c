@@ -18,7 +18,7 @@
 #include "Constants_ui.h"
 #include "TimeWiseClock.h"
 #include "TimeWiseLogic.h"
-#include "timewisefeedback.h"
+#include "timewisehelp.h"
 
 class TimeWiseGUI : public QMainWindow {
 	Q_OBJECT
@@ -69,7 +69,7 @@ private:
 	TimeWiseLogic _logic;
 	QCompleter *_descCompleter;
 	TimeWiseClock *_clock;
-	TimeWiseFeedback *_helpScreen;
+	TimeWiseHelp *_helpScreen;
 
 	//these are for the history retrieval used in line Edit
 	int current_line;

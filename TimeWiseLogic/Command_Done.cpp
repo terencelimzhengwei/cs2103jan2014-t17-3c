@@ -25,7 +25,6 @@ bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
 }
 
 bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
-
 	setDoneTasksAsUndone(tasklist);
     lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
 	createFeedback(UNDONE_SUCCESS,feedback);
@@ -46,30 +45,34 @@ void Command_Done::addDoneIndex(int index){
 void Command_Done::setIndexToBoldInGUI(TaskList& tasklist){
 	unsigned int index;
 	switch(*_currentScreen){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndex(_doneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInSearchedList(_doneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInFilteredList(_doneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case COMPLETED:
+	}
+	case COMPLETED:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
+	}
 	default:
 		break;
 	}
@@ -79,17 +82,21 @@ void Command_Done::saveTasks(TaskList& taskList){
 	std::vector<Task*>& taskVector=taskList.getUncompletedTaskList();
 
 	switch(*_currentScreen){
-	case SEARCHED:
+	case SEARCHED:{
 		taskVector = taskList.getSearchResults();
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		taskVector = taskList.getFilterResults();
 		break;
-	case MAIN:
+	}
+	case MAIN: {
 		break;
+	}
 	default:
 		throw UnableToSetAsDone();
 	}
+
 	for(unsigned int i=0;i<_doneTaskIndex.size();i++){
 		_doneTasks.push_back(taskVector[_doneTaskIndex[i]]);
 		if(_doneTasks[i]->getTaskStatus()==COMPLETED){
@@ -100,25 +107,28 @@ void Command_Done::saveTasks(TaskList& taskList){
 
 void Command_Done::setTasksAsDone(TaskList& tasklist){
 	switch(*_currentScreen){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			int index = tasklist.getTaskIndex(_doneTasks[i]);
 			tasklist.setTaskAsDone(index);
 		}
 		*_currentScreen=COMPLETE;
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			int index = tasklist.getTaskIndexInSearchedList(_doneTasks[i]);
 			tasklist.setSearchedTaskAsDone(index);
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i=0;i<_doneTasks.size();i++){
 			int index = tasklist.getTaskIndexInFilteredList(_doneTasks[i]);
 			tasklist.setFilteredTaskAsDone(index);
 		}
 		break;
+	}
 	default:
 		throw UnableToSetAsDone();
 	}

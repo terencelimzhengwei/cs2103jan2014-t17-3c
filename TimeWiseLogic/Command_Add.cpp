@@ -126,8 +126,7 @@ void Command_Add::resetTask(){
 	_addedTask=NULL;
 }
 
-void Command_Add::redo(TaskList& tasklist)
-{
+void Command_Add::redo(TaskList& tasklist){
 	tasklist.addTask(*_addedTask);
 	setIndexToBoldInGUI(tasklist);
 }
@@ -146,8 +145,7 @@ bool Command_Add::wasExecuted(){
 	return false;
 }
 
-void Command_Add::createTask(TaskList& tasklist)
-{
+void Command_Add::createTask(TaskList& tasklist){
 	_addedTask = new Task;
 	_addedTask->setDescription(_taskDescription);
 	_addedTask->setCategory(_category);
@@ -162,12 +160,11 @@ bool Command_Add::isClash(TaskList& tasklist){
 	return false;
 }
 
-void Command_Add::createFeedback(TaskList& tasklist,std::string& feedback)
-{
+void Command_Add::createFeedback(TaskList& tasklist,std::string& feedback){
 	if(isClash(tasklist)){
-		feedback = CLASH_EXIST;
+		createFeedback(CLASH_EXIST, feedback);
 	}else{
-		feedback = ADD_SUCCESS;
+		createFeedback(ADD_SUCCESS, feedback);
 	}
 }
 
@@ -179,8 +176,7 @@ void Command_Add::switchScreenTo(DISPLAY_TYPE screen){
 	*_currentScreen = screen;
 }
 
-void Command_Add::lastCmdCalledIs(std::string cmd)
-{
+void Command_Add::lastCmdCalledIs(std::string cmd){
 	_lastCmdCalled=cmd;
 }
 

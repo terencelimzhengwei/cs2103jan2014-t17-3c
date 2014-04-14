@@ -50,17 +50,17 @@
     <ClCompile Include="GeneratedFiles\qrc_timewisegui.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="timewisefeedback.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_timewisefeedback.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_timewisefeedback.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="timewiseClock.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timewisehelp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_timewisehelp.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_timewisehelp.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,18 +73,15 @@
     <CustomBuild Include="timewisegui.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="timewisefeedback.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="timewisefeedback.ui">
+    <CustomBuild Include="timewisehelp.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="timewisehelp.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_timewisegui.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_timewisefeedback.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -95,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="timewiseClock.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_timewisehelp.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

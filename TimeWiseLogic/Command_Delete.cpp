@@ -2,10 +2,10 @@
 #include "Command_Delete.h"
 
 Command_Delete::Command_Delete() {
-        _type = DELETE;
-        _deletionString = DEFAULT_EMPTY;
-        //The default index is set to -1 when a new Command_Delete is dynamically created
-        //so that it will not clash with any other task index
+	_type = DELETE;
+    _deletionString = DEFAULT_EMPTY;
+    //The default index is set to -1 when a new Command_Delete is dynamically created
+    //so that it will not clash with any other task index
 }
 
 Command_Delete::~Command_Delete(){
@@ -17,45 +17,44 @@ Command_Delete::~Command_Delete(){
 }
 
 bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
-
 	if(wasUndone()){
 		redo(taskList);
-		lastCmdCalledIs(EXECUTE);
-		createFeedback(DELETE_SUCCESS,feedback);
-		return true;
 	}else{
 		deleteTaskWithBackUp(taskList);
-		lastCmdCalledIs(EXECUTE);
-		createFeedback(DELETE_SUCCESS,feedback);
-		return true;
 	}
+	lastCmdCalledIs(EXECUTE);
+	createFeedback(DELETE_SUCCESS,feedback);
+	return true;
 }
 
 bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 	switch(_displayType){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
 			taskList.addTask(*_deletedTasks[i]);
 		}
 		break;
-	case COMPLETE:
+	}
+	case COMPLETE:{
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
 			taskList.addTaskToDoneList(*_deletedTasks[i]);
 		}
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED: {
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
 			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToSearchedList(*_deletedTasks[i]);
 		}
 		break;
-	
-	case FILTERED:
+	}
+	case FILTERED: {
 		for(unsigned int i=0;i<_deletedTasks.size();i++){
 			taskList.addTask(*_deletedTasks[i]);
 			taskList.addTaskToFilteredList(*_deletedTasks[i]);
 		}
-		break;		
+		break;
+	}
 	default:
 		break;
 	}
@@ -65,7 +64,7 @@ bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
 }
 
 void Command_Delete::setDisplayScreen(DISPLAY_TYPE display){
-        _displayType = display;
+    _displayType=display;
 }
 
 void Command_Delete::addDeletionIndex(int index){
@@ -99,26 +98,30 @@ void Command_Delete::permanantlyDeleteTask(){
 
 void Command_Delete::redo(TaskList& taskList){
 	switch(_displayType){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
 			taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
 		}
 		break;
-	case COMPLETE:
+	}
+	case COMPLETE:{
 		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
 			taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
 		}
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
 			taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
 			taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
 		}
 		break;
+	}
 	default:
 		break;
 	}
@@ -127,7 +130,7 @@ void Command_Delete::redo(TaskList& taskList){
 
 void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
 	switch(_displayType){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
 				_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
@@ -135,7 +138,8 @@ void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
 			}
 		}
 		break;
-	case COMPLETE:
+	}
+	case COMPLETE:{
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
 				_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
@@ -143,7 +147,8 @@ void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
 			}
 		}
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
 				_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
@@ -151,7 +156,8 @@ void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
 			}
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
 			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
 				_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
@@ -159,6 +165,7 @@ void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
 			}
 		}
 		break;
+	}
 	default:
 		break;
 	}

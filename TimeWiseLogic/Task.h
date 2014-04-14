@@ -64,8 +64,7 @@ public:
 	void setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime);
 	void editSchedule(ClockTime* sTime,ClockTime* eTime);
 
-	//Get Task Description and Task Day in String
-	std::string toString();
+	//Get Task Day in String
 	std::string getDayString();
 
 protected:
@@ -99,11 +98,14 @@ protected:
 	bool isFloating();
 	bool isSingleDate();
 	bool isDoubleDate();
+	void checkClashSingleDateDoubleDate(Task* task, bool& clash);
+	void checkClashDoubleDateSingleDate(Task* task, bool& clash);
+	void checkClashForSingleDate(Task* task, bool& clash);
+	void checkClashForDoubleDate(Task* task, bool& clash);
 
 	//Helper functions to help in search
 	void convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase);
 	unsigned int findIndexOfKeywordInString(std::string taskInLowerCase, std::string keywordInLowerCase);
-
 	bool isValidIndex(unsigned int index);
 
 	//Assist in adding schedule
@@ -111,15 +113,10 @@ protected:
 	bool withTime();
 	void checkInvalidDate();
 	void setDateBasedOnTime();
-
 	void setDateForDeadlineTaskAccordingToTime();
-
 	void setDateForFloatingTask();
-
 	void setEndDateAccordingToStartTime();
-
 	void setStartAndEndDateAcordingToTime();
-
 	bool startTimeLaterThanEndTime();
 	void setEndDateAccordingToEndTime();
 };

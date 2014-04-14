@@ -41,12 +41,12 @@ public:
 
 	//These are the functions that inform user of the number of overdue tasks.
 	void setOverdueMessage(int overdueCount);
-	int numberOfOverdues();
+	int countNumberOfOverdues();
 
 	//These are the functions that allow lineEdit to retrieve previous user actions
 	bool eventFilter(QObject* obj, QEvent *event);
-	void previous_line();
-	void next_line();
+	void goToPreviousLine();
+	void goToNextLine();
 
 	//other functions
 	void autoComplete();

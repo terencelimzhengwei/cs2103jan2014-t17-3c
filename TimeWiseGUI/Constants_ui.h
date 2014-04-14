@@ -30,6 +30,7 @@ namespace {
 	const char* UNDONE_FORMAT		   = "undone <IDs> / multiple <IDs>";
 	const char* DEFAULT_DISPLAY        = "You may: Add, Clear, Delete, Display, Done/Undone, Edit, Filter, Search, Undo/Redo, Help, Exit";
 	const std::string OVERDUE_REMINDER = "Reminder! You have %d overdue task(s).";
+	const char* OUT_OF_BOUNDS          = "Out of bounds";
 
 	const char* BLANK                  = "";
 	const char* SPACE                  = " ";
@@ -49,23 +50,23 @@ namespace {
 	const char* CLEAR_COMPLETED		   = "clear completed";
 
 	//Values pertaining to table model configuration
-	const int COLUMN_1         = 0;
-	const int COLUMN_2		   = 1;
-	const int COLUMN_3		   = 2;
-	const int COLUMN_4         = 3;
-	const int COLUMN_5         = 4;
-	const int COLUMN_6         = 5;
-	const int COLUMN_7         = 6;
-	const int COLUMN_COUNT     = 7;
-	const int COLUMN_1_WIDTH   = 190;
-	const int COLUMN_2_WIDTH   = 40;
-	const int COLUMN_3_WIDTH   = 55;
-	const int COLUMN_4_WIDTH   = 48;
-	const int COLUMN_5_WIDTH   = 55;
-	const int COLUMN_6_WIDTH   = 48;
-	const int COLUMN_7_WIDTH   = 55;
-	const int TOTAL_WIDTH      = 535;
-	const int ROW_HEIGHT       = 27;
+	const int COLUMN_DESCRIPTION        = 0;
+	const int COLUMN_DAY		        = 1;
+	const int COLUMN_START_DATE		    = 2;
+	const int COLUMN_START_TIME         = 3;
+	const int COLUMN_END_DATE           = 4;
+	const int COLUMN_END_TIME           = 5;
+	const int COLUMN_CATEGORY           = 6;
+	const int COLUMN_COUNT              = 7;
+	const int COLUMN_DESC_WIDTH         = 185;
+	const int COLUMN_DAY_WIDTH          = 45;
+	const int COLUMN_START_DATE_WIDTH   = 55;
+	const int COLUMN_START_TIME_WIDTH   = 48;
+	const int COLUMN_END_DATE_WIDTH     = 55;
+	const int COLUMN_END_TIME_WIDTH     = 48;
+	const int COLUMN_CATEGORY_WIDTH     = 55;
+	const int TOTAL_WIDTH               = 535;
+	const int ROW_HEIGHT                = 27;
 
 	const char* DESCRIPTION_HEADER = "Description";
 	const char* DAY_HEADER         = "Day" ;

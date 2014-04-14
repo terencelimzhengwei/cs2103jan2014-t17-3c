@@ -1,6 +1,6 @@
-//@author A0097330H
 #include "timewisehelp.h"
 
+//@author A0097330H
 TimeWiseHelp::TimeWiseHelp(QWidget *parent) : QWidget(parent) {
 	ui.setupUi(this);
 	this->setWindowFlags(Qt::CustomizeWindowHint); //remove title header of help window

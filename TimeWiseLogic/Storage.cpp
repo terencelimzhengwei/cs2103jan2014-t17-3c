@@ -183,6 +183,10 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					newTask->setStatusAsDone();
 					break;
 				}
+				default: {
+					_corrupted = true;
+					break;
+				}
 				}
 				getline(input, userInput);
 			} 

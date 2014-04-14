@@ -31,6 +31,7 @@ namespace {
 	const char* DEFAULT_DISPLAY        = "You may: Add, Clear, Delete, Display, Done/Undone, Edit, Filter, Search, Undo/Redo, Help, Exit";
 	const std::string OVERDUE_REMINDER = "Reminder! You have %d overdue task(s).";
 	const char* EMPTY_INPUT			   = "Please enter a command.";
+	const char* CORRUPTED_MESSAGE      = "<font color='red'>Error! Task details may have been lost/altered due to tampering of the text file!</font>";
 	const char* OUT_OF_BOUNDS          = "Out of bounds";
 
 	const char* BLANK                  = "";

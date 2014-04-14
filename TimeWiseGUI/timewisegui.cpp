@@ -23,6 +23,10 @@ TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	if(overdues > 0) {
 		setOverdueMessage(overdues);
 	}
+	//informs user if text file is tampered.
+	if(_logic.isCorruptedStorage()) {
+		ui.label_mlog->setText(CORRUPTED_MESSAGE);
+	}
 }
 
 TimeWiseGUI::~TimeWiseGUI() {

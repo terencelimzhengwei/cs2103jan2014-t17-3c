@@ -3,6 +3,8 @@
 #include <string>
 #include <ctime>
 
+//@Tran Hue Mai A0099938B
+
 /******************************************************************************************
 //This class is responsible for storing all the constants that would be used across all
 //components.
@@ -27,13 +29,13 @@ const int LOG_TIME_SIZE					= 40;
 
 //Values used in Storage
 const int START_VALUE                   = 0;
-const int HEADER_DESCRIPTION                      = 0;
-const int HEADER_START_DATE                      = 1;
-const int HEADER_END_DATE                      = 2;
-const int HEADER_START_TIME                      = 3;
-const int HEADER_END_TIME                      = 4;
-const int HEADER_CATEGORY                      = 5;
-const int HEADER_STATUS                      = 6;
+const int HEADER_DESCRIPTION            = 0;
+const int HEADER_START_DATE             = 1;
+const int HEADER_END_DATE               = 2;
+const int HEADER_START_TIME             = 3;
+const int HEADER_END_TIME               = 4;
+const int HEADER_CATEGORY               = 5;
+const int HEADER_STATUS                 = 6;
 const int COLUMN_OUT_OF_BOUND           = 8;
 const int REDUCTION_VALUE               = 1;
 const int INCREMENT_VALUE				= 1;

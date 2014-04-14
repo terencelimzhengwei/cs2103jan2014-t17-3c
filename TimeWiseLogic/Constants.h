@@ -1,10 +1,13 @@
 #ifndef _CONSTANTS_H
 #define _CONSTANTS_H
-
-
-
 #include <string>
 #include <ctime>
+
+/******************************************************************************************
+//This class is responsible for storing all the constants that would be used across all
+//components.
+//*****************************************************************************************/
+
 
 static const int CMD_TYPE_COUNT		    = 13;
 static const int LOG_TYPE_COUNT			= 5;

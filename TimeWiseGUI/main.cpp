@@ -1,9 +1,8 @@
-//@Gian Jian Xiang A0097330H
-#include "timewisegui.h"
+//@author A0097330H
 #include <QtWidgets/QApplication>
+#include "timewisegui.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	TimeWiseGUI w;
 	w.show();

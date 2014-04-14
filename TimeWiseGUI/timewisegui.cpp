@@ -1,9 +1,9 @@
-//@Gian Jian Xiang A0097330H
 #include "timewisegui.h"
 #include <stdio.h>
 #include <QHeaderView>
 #include <QShortcut>
 
+//@author A0097330H
 TimeWiseGUI::TimeWiseGUI(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
 
@@ -92,7 +92,6 @@ void TimeWiseGUI::on_userInput_returnPressed() {
 //				MANAGE PAGE TO DISPLAY
 //		[Main, Search, Filtered, Completed]
 //========================================================
-
 void TimeWiseGUI::displayTaskList(DISPLAY_TYPE displayType) {
 	switch(displayType){
 	case MAIN: {
@@ -149,7 +148,6 @@ void TimeWiseGUI::createMainTable() {
 
 //puts the data in place in the table. Bolds/highlights rows, if necessary
 void TimeWiseGUI::setMainData(TaskList& taskList, vector<int>& boldedIndices) {
-	
 	boldedIndices = taskList.getBoldIndexList();
 	
 	//goes through each cell in the table and sets every attributes of every task into the respective cells.
@@ -218,38 +216,45 @@ void TimeWiseGUI::setMainData(TaskList& taskList, vector<int>& boldedIndices) {
 			}
 			model->setItem(row, column, item);
 
-			//highlight description in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
-			TASK_STATUS taskStatus = taskList.getTask(row)->getTaskStatus();
-			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
-			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
-			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
-
-			bool checkClash = taskList.getTask(row)->isClash();
-			if(qStatus == OVERDUE_STATUS && checkClash) {
-				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == DONE_STATUS && checkClash) {
-				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
-			} else if (checkClash) {
-				model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
-			} else if(qStatus == OVERDUE_STATUS) {
-				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == DONE_STATUS) {
-				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
-			}
-
-			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
-			QFont font;
-			font.setBold(false);
-			for(int i = 0; i < boldedIndices.size(); i++) {
-				if(row == boldedIndices[i]) {
-					font.setWeight(BOLDEST);
-					font.setPointSize(BOLDED_FONT_SIZE);
-				} 
-			}
-			model->setData(model->index(row,column), font, Qt::FontRole);
+			highlightMain(taskList, row, column, boldedIndices);
+			boldMain(boldedIndices, row, column);
 		}
 	}
+}
+
+//highlight description in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
+void TimeWiseGUI::highlightMain(TaskList &taskList, int row, int column, vector<int> &boldedIndices) {
+	TASK_STATUS taskStatus = taskList.getTask(row)->getTaskStatus();
+	QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+	QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
+	QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
+	QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
+
+	bool checkClash = taskList.getTask(row)->isClash();
+	if(qStatus == OVERDUE_STATUS && checkClash) {
+		model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
+	} else if (qStatus == DONE_STATUS && checkClash) {
+		model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
+	} else if (checkClash) {
+		model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
+	} else if(qStatus == OVERDUE_STATUS) {
+		model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
+	} else if (qStatus == DONE_STATUS) {
+		model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
+	}	
+}
+
+//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
+void TimeWiseGUI::boldMain(vector<int> &boldedIndices, int row, int column) {
+	QFont font;
+	font.setBold(false);
+	for(int i = 0; i < boldedIndices.size(); i++) {
+		if(row == boldedIndices[i]) {
+			font.setWeight(BOLDEST);
+			font.setPointSize(BOLDED_FONT_SIZE);
+		} 
+	}
+	model->setData(model->index(row,column), font, Qt::FontRole);
 }
 
 //========================================================
@@ -277,7 +282,7 @@ void TimeWiseGUI::setOtherData(std::vector<Task*>& otherTaskList, vector<int>& b
 	for(int row = 0; row < otherTaskList.size(); row++) {
 		for(int column = 0; column < COLUMN_COUNT; column++) {
 			//add row for every task in taskList dynamically
-			model->setRowCount(row+1);
+			model->setRowCount(row + ADJUSTMENT_VALUE);
 
 			QStandardItem* item;
 			switch (column) {
@@ -339,38 +344,47 @@ void TimeWiseGUI::setOtherData(std::vector<Task*>& otherTaskList, vector<int>& b
 			}
 			model->setItem(row, column, item);
 
-			//highlight row in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
-			TASK_STATUS taskStatus = otherTaskList[row]->getTaskStatus();
-			QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
-			QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
-			QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
-			QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
-
-			bool checkClash = otherTaskList[row]->isClash();
-			if(qStatus == OVERDUE_STATUS && checkClash) {
-				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == DONE_STATUS && checkClash) {
-				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
-			} else if (checkClash) {
-				model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
-			} else if (qStatus == OVERDUE_STATUS) {
-				model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
-			} else if (qStatus == DONE_STATUS) {
-				model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
-			}
-
-			//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
-			QFont font;
-			font.setBold(false);
-			for(int i = 0; i < boldedIndices.size(); i++) {
-				if(row == boldedIndices[i]) {
-					font.setWeight(BOLDEST);
-					font.setPointSize(BOLDED_FONT_SIZE);
-				} 
-			}
-			model->setData(model->index(row,column), font, Qt::FontRole);
+			highlightOthers(otherTaskList, row, column);
+			boldOthers(boldedIndices, row, column);
 		}
 	}
+}
+
+//highlight rows in red if status of that task is overdue, in green is status is done, and in yellow if status is clashed.
+void TimeWiseGUI::highlightOthers(std::vector<Task*>& otherTaskList, int row, int column) {
+	TASK_STATUS taskStatus = otherTaskList[row]->getTaskStatus();
+	QString qStatus = QString::fromStdString(TASK_STATUS_STRING[taskStatus]);
+	QColor rowColorOverdue(OVERDUE_R_INDEX, OVERDUE_G_INDEX, OVERDUE_B_INDEX, OVERDUE_TRANSPARENCY_INDEX);
+	QColor rowColorComplete(COMPLETED_R_INDEX, COMPLETED_G_INDEX, COMPLETED_B_INDEX);
+	QColor rowColorClash(CLASH_R_INDEX, CLASH_G_INDEX, CLASH_B_INDEX); 
+
+	//Overdue and Completed status take precedence over Clash status
+	//(i.e. if a task is overdue and clashed, highlight it red)
+	bool checkClash = otherTaskList[row]->isClash();
+	if(qStatus == OVERDUE_STATUS && checkClash) {
+		model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
+	} else if (qStatus == DONE_STATUS && checkClash) {
+		model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
+	} else if (checkClash) {
+		model->setData(model->index(row, column), rowColorClash, Qt::BackgroundRole);
+	} else if (qStatus == OVERDUE_STATUS) {
+		model->setData(model->index(row, column), rowColorOverdue, Qt::BackgroundRole);
+	} else if (qStatus == DONE_STATUS) {
+		model->setData(model->index(row, column), rowColorComplete, Qt::BackgroundRole);
+	}
+}
+
+//bolds entire task if it is the latest task added/edited. Also bolds existing task(s) that clashes with new task added/edited.
+void TimeWiseGUI::boldOthers(vector<int> &boldedIndices, int row, int column) {
+	QFont font;
+	font.setBold(false);
+	for(int i = 0; i < boldedIndices.size(); i++) {
+		if(row == boldedIndices[i]) {
+			font.setWeight(BOLDEST);
+			font.setPointSize(BOLDED_FONT_SIZE);
+		} 
+	}
+	model->setData(model->index(row,column), font, Qt::FontRole);
 }
 
 //=====================================================
@@ -525,7 +539,7 @@ int TimeWiseGUI::countNumberOfOverdues() {
 //                 AUTO-COMPLETER
 //=====================================================
 void TimeWiseGUI::autoComplete() {
-	QStringList descList;
+	QStringList autocompleteList;
 	TaskList taskList = _logic.getTaskList();
 
 	//for search function
@@ -533,18 +547,18 @@ void TimeWiseGUI::autoComplete() {
 		ostringstream outstrDesc;
 		outstrDesc << SEARCH_COMMAND << SPACE << taskList.getTask(i)->getDescription();
 		QString qDesc = QString::fromStdString(outstrDesc.str());
-		descList << qDesc;
+		autocompleteList << qDesc;
 	}
 
 	//for display function
-	descList << DISPLAY_DONE << DISPLAY_MAIN;
+	autocompleteList << DISPLAY_DONE << DISPLAY_MAIN;
 
 	//for clear function
-	descList << CLEAR_COMMAND << CLEAR_ALL << CLEAR_MAIN << CLEAR_COMPLETED;
+	autocompleteList << CLEAR_COMMAND << CLEAR_ALL << CLEAR_MAIN << CLEAR_COMPLETED;
 
-	_descCompleter = new QCompleter(descList, this);
-	_descCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-	ui.userInput->setCompleter(_descCompleter);
+	_autoCompleter = new QCompleter(autocompleteList, this);
+	_autoCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+	ui.userInput->setCompleter(_autoCompleter);
 }
 
 //=====================================================
@@ -616,3 +630,4 @@ void TimeWiseGUI::showHelp() {
 	_helpScreen = new TimeWiseHelp();
 	_helpScreen->show();
 }
+

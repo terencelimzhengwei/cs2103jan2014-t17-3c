@@ -1,6 +1,6 @@
 #include "Command_Edit.h"
 
-
+//@author A0097277M
 Command_Edit::Command_Edit(void){
 	_type = EDIT;
 	initialiseParameters();

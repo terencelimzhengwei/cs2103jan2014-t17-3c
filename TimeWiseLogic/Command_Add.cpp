@@ -1,12 +1,7 @@
 #pragma once
 #include "Command_Add.h"
 
-//***************************************************************************************
-//When a new Command_Add object is dynamically created, it will set _taskType to FLOATING 
-//and _category to "". 
-//This means that, when a task with only description is entered, it's type and
-//category will be set to these default values.
-//***************************************************************************************
+//@author A0097277M
 Command_Add::Command_Add() {
 	initDefaultValues();
 }

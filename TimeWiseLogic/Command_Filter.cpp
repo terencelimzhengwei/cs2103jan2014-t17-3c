@@ -1,5 +1,6 @@
 #include "Command_Filter.h"
 
+//@author A0097277M
 Command_Filter::Command_Filter(void){
 	_type = FILTER;
 	_filterType = CATEGORY;

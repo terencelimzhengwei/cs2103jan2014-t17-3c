@@ -26,7 +26,17 @@ public:
 private:
 	//Functions to assist in executing/undoing/redoing
 	void redo(TaskList& taskList);
-	void deleteTaskWithBackUp(TaskList& taskList);
+	void deleteTasks(TaskList& taskList);
+
+	void backUpTasks(TaskList &taskList);
+
+	void backUpFilteredTasks(TaskList &taskList);
+
+	void backUpSearchedTasks(TaskList &taskList);
+
+	void backUpCompletedTasks(TaskList &taskList);
+
+	void backUpMainTasks(TaskList &taskList);
 
 	//For destruction of tasks. Task will only be destructed in either commandDelete or commandClear
 	void permanantlyDeleteTask();
@@ -36,7 +46,10 @@ private:
 	bool wasExecuted();
 	void lastCmdCalledIs(std::string cmd);
 	void createFeedback(std::string taskFeedback,std::string& feedback);
-
+	void deleteMainTasks(TaskList& taskList);
+	void deleteCompletedTasks(TaskList& taskList);
+	void deleteSearchedTasks(TaskList& taskList);
+	void deleteFilterTasks(TaskList& taskList);
 	std::string _deletionString;
 	std::string _lastCmdCalled;
 	DISPLAY_TYPE _displayType;

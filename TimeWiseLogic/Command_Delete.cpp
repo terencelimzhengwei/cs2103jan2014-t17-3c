@@ -24,7 +24,8 @@ bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
 		createFeedback(DELETE_SUCCESS,feedback);
 		return true;
 	}else{
-		deleteTaskWithBackUp(taskList);
+		backUpTasks(taskList);
+		deleteTasks(taskList);
 		lastCmdCalledIs(EXECUTE);
 		createFeedback(DELETE_SUCCESS,feedback);
 		return true;
@@ -98,72 +99,106 @@ void Command_Delete::permanantlyDeleteTask(){
 }
 
 void Command_Delete::redo(TaskList& taskList){
-	switch(_displayType){
-	case MAIN:
-		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-			taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
-		}
-		break;
-	case COMPLETE:
-		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-			taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
-		}
-		break;
-	case SEARCHED:
-		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-			taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
-		}
-		break;
-	case FILTERED:
-		for(unsigned int i=0;i<_deletedTaskIndex.size();i++){
-			taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
-		}
-		break;
-	default:
-		break;
-	}
+	deleteTasks(taskList);
 	lastCmdCalledIs(EXECUTE);
 }
 
-void Command_Delete::deleteTaskWithBackUp(TaskList& taskList){
+void Command_Delete::deleteTasks(TaskList& taskList){
 	switch(_displayType){
 	case MAIN:
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromUncompletedList(_deletedTaskIndex[i]);
-			}
-		}
+		deleteMainTasks(taskList);
 		break;
 	case COMPLETE:
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromCompletedList(_deletedTaskIndex[i]);
-			}
-		}
+		deleteCompletedTasks(taskList);
 		break;
 	case SEARCHED:
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromSearchList(_deletedTaskIndex[i]);
-			}
-		}
+		deleteSearchedTasks(taskList);
 		break;
 	case FILTERED:
-		for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
-			if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
-				_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
-				taskList.deleteTaskFromFilterList(_deletedTaskIndex[i]);
-			}
-		}
+		deleteFilterTasks(taskList);
 		break;
 	default:
 		break;
 	}
+
 }
 
 void Command_Delete::createFeedback(std::string taskFeedback,std::string& feedback){
 	feedback=taskFeedback;
+}
+
+void Command_Delete::backUpTasks(TaskList &taskList){
+	switch(_displayType){
+	case MAIN:
+		backUpMainTasks(taskList);
+		break;
+	case COMPLETE:
+		backUpCompletedTasks(taskList);
+		break;
+	case SEARCHED:
+		backUpSearchedTasks(taskList);
+		break;
+	case FILTERED:
+		backUpFilteredTasks(taskList);
+		break;
+	default:
+		break;
+	}
+}
+
+void Command_Delete::backUpMainTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::backUpCompletedTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::backUpSearchedTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::deleteMainTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndex(_deletedTasks[i]);
+		taskList.deleteTaskFromUncompletedList(index);
+	}
+}
+void Command_Delete::deleteCompletedTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInCompletedList(_deletedTasks[i]);
+		taskList.deleteTaskFromCompletedList(index);
+	}
+}
+void Command_Delete::deleteSearchedTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInSearchedList(_deletedTasks[i]);
+		taskList.deleteTaskFromSearchList(index);
+	}
+}
+void Command_Delete::deleteFilterTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInFilteredList(_deletedTasks[i]);
+		taskList.deleteTaskFromFilterList(index);
+	}
+}
+
+void Command_Delete::backUpFilteredTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
+		}
+	}
 }

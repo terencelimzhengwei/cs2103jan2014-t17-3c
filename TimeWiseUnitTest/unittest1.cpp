@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-
 #define combineVectorString(target, source) for(unsigned int i=0;i<source.size();target+=source[i++]) { if(i) target += " "; }
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -243,19 +242,19 @@ namespace TimeWiseUnitTest {
 		TEST_METHOD(ParserTest_RemoveFirstWord) {
 			Parser _parser;
 			std::string validInput1 = _parser.removeFirstWord("edit 1");
-			std::string expectedCase1 = "1";
+			std::string expectedCase1 = " 1";
 			std::string validInput2= _parser.removeFirstWord("clear");
 			std::string expectedCase2 = "";
 			std::string validInput3 = _parser.removeFirstWord(" add do homework");
-			std::string expectedCase3 = "do homework";
+			std::string expectedCase3 = " do homework";
 			std::string validInput4= _parser.removeFirstWord("       add do homework");
-			std::string expectedCase4 = "do homework";
+			std::string expectedCase4 = " do homework";
 			std::string validInput5 = _parser.removeFirstWord("undone 1   ");
-			std::string expectedCase5 = "1";
+			std::string expectedCase5 = " 1";
 			std::string validInput6 = _parser.removeFirstWord("add   hello kitty");
-			std::string expectedCase6 = "hello kitty";
+			std::string expectedCase6 = "   hello kitty";
 			std::string validInput7 = _parser.removeFirstWord("  add   do homework");
-			std::string expectedCase7 = "do homework";
+			std::string expectedCase7 = "   do homework";
 			std::string invalidInput8 = _parser.removeFirstWord("");
 			std::string expectedCase8 = "";
 			Assert::AreEqual(expectedCase1, validInput1);
@@ -326,11 +325,11 @@ namespace TimeWiseUnitTest {
 			bool validInput2= Parser::isTime("16:00");
 			bool expectedCase2 = true;
 			bool validInput3= Parser::isTime("1630");
-			bool expectedCase3 = true;
+			bool expectedCase3 = false;
 			bool validInput4= Parser::isTime("8.30am");
 			bool expectedCase4 = true;
 			bool validInput5= Parser::isTime("0000");
-			bool expectedCase5 = true;
+			bool expectedCase5 = false;
 			bool invalidInput6= Parser::isTime("am");
 			bool expectedCase6 = false;
 			bool invalidInput7= Parser::isTime("2400");
@@ -625,47 +624,57 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(true,  Date(11,12,1908) <= Date(12,12,1908));	// Different day 1
 			Assert::AreEqual(false, Date(12,12,1908) <= Date(11,12,1908));	// Different day 2
 		}
-
-		TEST_METHOD(System_Test1) {
-			// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users
+		// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users
+		TEST_METHOD(System_Test_Float_Task) {
+		// Test for float task
 			TimeWiseLogic _logic;
 			std::string feedback1 = _logic.processCommand("add do laundry");
-			std::string expected1 = "Task: 'do laundry !low' has been successfully added to your schedule.";
+			std::string expected1 = ADD_SUCCESS;
 			Assert::AreEqual(feedback1,expected1);
-			/*whether this test case passes or not depends on the current day.
-			before testing, we need to change the current day in the expected output string to make it pass
+		}
+		TEST_METHOD(System_Test_Timed_Task){
+		// Test for timed task
+			TimeWiseLogic _logic;
 			std::string feedback2 = _logic.processCommand("add do laundry from 9am to 10am");
-			std::string expected2 = "Task: 'do laundry on 5/4/2014 from 0900 to 1000 !low' has been successfully added to your schedule.";
-			Assert::AreEqual(feedback2,expected2);*/
+			std::string expected2 = ADD_SUCCESS;
+			Assert::AreEqual(feedback2,expected2);
+		}
+		TEST_METHOD(System_Test_Deadline_Task) {
+		// Test for deadline task
+			TimeWiseLogic _logic;
 			std::string feedback3 = _logic.processCommand("add do laundry by 21/05");
-			std::string expected3 = "Task: 'do laundry on 21/5/2014 !low' has been successfully added to your schedule.";
+			std::string expected3 = ADD_SUCCESS;
 			Assert::AreEqual(feedback3,expected3);
-			/*Whether this test case passes depend on what date tomorrow would be
-			We have to change the tomorrow date for it to pass
-			std::string feedback4 = _logic.processCommand("add do laundry tomorrow at 9pm");
-			std::string expected4 = "Task: 'do laundry on 5/4/2014 at 2100 !low' has been successfully added to your schedule.";
-			Assert::AreEqual(feedback4,expected4);*/
+		}
+		// Other Test Cases  which could be used for deadline tasks and timed tasks
+			/*std::string feedback4 = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string expected4 = ADD_SUCCESS;
+			Assert::AreEqual(feedback4,expected4);
 			std::string feedback5 = _logic.processCommand("add do laundry from 21/5 to 22/5");
-			std::string expected5 = "Task: 'do laundry on 21/5/2014 to 22/5/2014 !low' has been successfully added to your schedule.";
+			std::string expected5 = ADD_SUCCESS;
 			Assert::AreEqual(feedback5,expected5);
 			std::string feedback6 = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
-			std::string expected6 = "Task: 'do laundry on 21/5/2014 to 22/5/2014 from 2100 to 2200 !low' has been successfully added to your schedule.";
+			std::string expected6 = ADD_SUCCESS;
 			Assert::AreEqual(feedback6,expected6);
 			std::string feedback7 = _logic.processCommand("add do laundry !high #household");
-			std::string expected7 = "Task: 'do laundry !high #household' has been successfully added to your schedule.";
-			Assert::AreEqual(feedback7,expected7);
-			std::string feedback8 = _logic.processCommand("do laundry !high #household");
-			std::string expected8 = "Task: 'do laundry !high #household' has been successfully added to your schedule.";
-			Assert::AreEqual(feedback8,expected8);
+			std::string expected7 = ADD_SUCCESS;
+			Assert::AreEqual(feedback7,expected7);*/
+		//Test for possible exceptions and errors for add command
+		
+		TEST_METHOD(System_Test_No_Argument) {
+			TimeWiseLogic _logic;
 			std::string feedback9 = _logic.processCommand("add");
-			std::string expected9 = "Error! No input detected";
+			std::string expected9 = NO_ARGUMENT_EXCEPTION;
 			Assert::AreEqual(feedback9,expected9);
-			/*std::string feedback10 = _logic.processCommand("");
-			std::string expected10 = "cannot enter empty input!";
-			Assert::AreEqual(feedback10,expected10);*/
+		}
+		TEST_METHOD(System_Test_Empty_Input) {
+			TimeWiseLogic _logic;
+			std::string feedback10 = _logic.processCommand("");
+			std::string expected10 = NO_COMMAND_LINE;
+			Assert::AreEqual(feedback10,expected10);
 		}
 
-		TEST_METHOD(System_Test2) {
+		TEST_METHOD(System_Test_Delete_Command) {
 			TimeWiseLogic _logic;
 			//Test for command delete and the feedback that the system return to user
 			std::string cmd1 = _logic.processCommand("add do laundry");
@@ -673,106 +682,74 @@ namespace TimeWiseUnitTest {
 			std::string cmd3 = _logic.processCommand("add do laundry from 21/5 to 22/5");
 			std::string cmd4 = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
 			std::string cmd5 = _logic.processCommand("add do laundry #chores");
-			//std::string cmd6 = _logic.processCommand("add do laundry tomorrow at 9pm");
-			//std::string cmd7 = _logic.processCommand("add do laundry from 9 am to 10 am");
+			std::string cmd6 = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string cmd7 = _logic.processCommand("add do laundry from 9 am to 10 am");
 			std::string cmd8 = _logic.processCommand("delete 1");
-			std::string expected8 = "Task: 'do laundry !low #chores' has been successfully removed from your schedule.";
+			std::string expected8 = DELETE_SUCCESS;
 			Assert::AreEqual(cmd8,expected8);
 			std::string cmd9 = _logic.processCommand("delete");
-			std::string expected9 = "Error! No input detected";
-			/*Assert::AreEqual(cmd9,expected9);
-			std::string cmd10 = _logic.processCommand("delete 56");
-			std::string expected10 = "Error! The task index that you entered is out of range.";
-			Assert::AreEqual(cmd10,expected10);*/
-			std::string cmd11 = _logic.processCommand("delete -3");
-			std::string expected12 = "Error! The task index that you entered is not a number.";
+			std::string expected9 = NO_ARGUMENT_EXCEPTION;// Test for input without any index.
 			Assert::AreEqual(cmd9,expected9);
-		    /*int _size = _logic.getTaskList().undoneSize();
-			int expectedSize = -1;
-			Assert::AreEqual(_size, expectedSize);*/
+		}
+
+		TEST_METHOD(System_Test_Delete_Negative_Index) {
+			TimeWiseLogic _logic;
+			//Test for command delete and the feedback that the system return to user when the index is out of range.
+			std::string cmd1  = _logic.processCommand("add do laundry");
+			std::string cmd2  = _logic.processCommand("add do laundry by 21/05");
+			std::string cmd3  = _logic.processCommand("add do laundry from 21/5 to 22/5");
+			std::string cmd4  = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
+			std::string cmd5  = _logic.processCommand("add do laundry #chores");
+			std::string cmd6  = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string cmd7  = _logic.processCommand("add do laundry from 9am to 10am");
+			std::string cmd9 = _logic.processCommand("delete -3");
+			std::string expected9 = USER_INPUT_NOT_A_NUMBER;
+			Assert::AreEqual(expected9, cmd9);
 
 		}
-		TEST_METHOD(System_Test3) {
+
+		TEST_METHOD(System_Test_Done_Command) {
 			//test for command done/undone and the feedback that the system is going to return
 			TimeWiseLogic _logic;
 			std::string cmd1 = _logic.processCommand("add do laundry");
-			//std::string cmd7 = _logic.processCommand("add do laundry from 9 am to 10 am");
+			std::string cmd7 = _logic.processCommand("add do laundry from 9am to 10am");
 			std::string cmd2 = _logic.processCommand("add do laundry by 21/05");
-			//std::string cmd8 = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string cmd8 = _logic.processCommand("add do laundry tomorrow at 9pm");
 			std::string cmd3 = _logic.processCommand("add do laundry from 21/5 to 22/5");
 			std::string cmd4 = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
 			std::string cmd5 = _logic.processCommand("add do laundry #chores");
 			std::string cmd6 = _logic.processCommand("done 1");
-			std::string expected6 = "Task: 'do laundry !low #chores' has been successfully marked as completed.";
+			std::string expected6 = DONE_SUCCESS;
 			Assert::AreEqual(cmd6, expected6);
-			/*int _undoneSize = _logic.getTaskList().doneSize();
-			int expectedUndoneSize = 1;
-			Assert::AreEqual(_undoneSize, expectedUndoneSize);
-			int _doneSize = _logic.getTaskList().doneSize();
-			int expectedDoneSize = 1;
-			Assert::AreEqual(_doneSize, expectedDoneSize);*/
-			std::string cmd9 = _logic.processCommand("done");
-			std::string expected9 = "Error! No input detected";
-			Assert::AreEqual(cmd9,expected9);
-			std::string cmd10 = _logic.processCommand("done 12");
-			std::string expected10 = "Error! The task index that you entered is out of range.";
-			Assert::AreEqual(cmd10,expected10);
-			std::string cmd11 = _logic.processCommand("done -3");
-			std::string expected11 = "Error! The task index that you entered is not a number.";
-			Assert::AreEqual(cmd11,expected11);
-			std::string cmd12 = _logic.processCommand("undone 1");
-			std::string expected12 = "Task: 'do laudry on 21/4/2014 to 22/4/2014 !low' has been successfully marked as uncompleted.";
-			Assert::AreEqual(cmd12,expected12);
-
 		}
-		TEST_METHOD(System_Test4) {
+		TEST_METHOD(System_Test_Undone_Command) {
+			//test for command undone command and the feedback that the system is going to return
+			TimeWiseLogic _logic;
+			std::string cmd1 = _logic.processCommand("add do laundry");
+			std::string cmd7 = _logic.processCommand("add do laundry from 9 am to 10 am");
+			std::string cmd2 = _logic.processCommand("add do laundry by 21/05");
+			std::string cmd8 = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string cmd3 = _logic.processCommand("add do laundry from 21/5 to 22/5");
+			std::string cmd4 = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
+			std::string cmd5 = _logic.processCommand("add do laundry #chores");
+			std::string cmd6 = _logic.processCommand("undone 1");
+			std::string expected6 = TASK_NOT_COMPLETED_YET;
+			Assert::AreEqual(expected6, cmd6);
+		}
+	
+		TEST_METHOD(System_Test_Clear_All) {
 			TimeWiseLogic _logic;
 		    //test for command clear and the feedback that the system is going to return to user
-			std::string cmd1 = _logic.processCommand("add do laudry");
-			std::string cmd2 = _logic.processCommand("add do laudry from 9 am to 10 am");
-			std::string cmd3 = _logic.processCommand("add do laudry by 21/05");
-			std::string cmd4 = _logic.processCommand("add do laudry tomorrow at 9pm");
-			std::string cmd5 = _logic.processCommand("add do laudry from 21/4 to 22/4");
-			std::string cmd6 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
-			std::string cmd7 = _logic.processCommand("add do laudry !high #household");
-			std::string cmd8 = _logic.processCommand("done 5");
-			std::string cmd9 = _logic.processCommand("done 6");
-			
-			int _undoneSize1 = _logic.getTaskList().undoneSize();
-			int expectedUndoneSize1 = 5;
-			Assert::AreEqual(_undoneSize1,expectedUndoneSize1);
-			std::string cmd10 = _logic.processCommand("clear undone");
-			std::string expected10 = "All uncompleted tasks are removed from your schedule!";
-			Assert::AreEqual(cmd10,expected10);
-			int _undoneSize2 = _logic.getTaskList().undoneSize();
-			int expectedUndoneSize2 = 0;
-			Assert::AreEqual(_undoneSize2,expectedUndoneSize2);
-
-			int _doneSize1 = _logic.getTaskList().doneSize();
-			int expectedDoneSize1 = 2;
-			Assert::AreEqual(_doneSize1, expectedDoneSize1);
-			std::string cmd11 = _logic.processCommand("clear done");
-			std::string expected11 = "All completed tasks are removed from your schedule!";
-			Assert::AreEqual(cmd11,expected11);
-			int _doneSize2 = _logic.getTaskList().doneSize();
-			int expectedDoneSize2 = 0;
-			Assert::AreEqual(_doneSize2, expectedDoneSize2);
-			std::string cmd12 = _logic.processCommand("add do laudry");
-			std::string cmd13 = _logic.processCommand("add do laudry from 9 am to 10 am");
-			std::string cmd14 = _logic.processCommand("add do laudry by 21/05");
-			std::string cmd15 = _logic.processCommand("add do laudry tomorrow at 9pm");
-			std::string cmd16 = _logic.processCommand("add do laudry from 21/4 to 22/4");
-			std::string cmd17 = _logic.processCommand("add do laudry from 21/4 to 22/4 9pm to 10 pm");
-			std::string cmd18 = _logic.processCommand("add do laudry !high #household");
-			std::string cmd19 = _logic.processCommand("done 5");
-			std::string cmd20 = _logic.processCommand("done 6");
-			std::string cmd21 = _logic.processCommand("clear all");
-			std::string expected21 = "All tasks are removed from your schedule!";
-			Assert::AreEqual(cmd21, expected21);
-			int overallSize = _logic.getTaskList().doneSize() + _logic.getTaskList().undoneSize();
-			Assert::AreEqual(0, overallSize);
-			
-
+			std::string cmd1 = _logic.processCommand("add do laundry");
+			std::string cmd2 = _logic.processCommand("add do laundry from 9 am to 10 am");
+			std::string cmd3 = _logic.processCommand("add do laundry by 21/05");
+			std::string cmd4 = _logic.processCommand("add do laundry tomorrow at 9pm");
+			std::string cmd5 = _logic.processCommand("add do laundry from 21/4 to 22/4");
+			std::string cmd6 = _logic.processCommand("add do laundry from 21/4 to 22/4 9pm to 10 pm");
+			std::string cmd7 = _logic.processCommand("add do laundry !high #household");
+			std::string cmd8 = _logic.processCommand("clear all");
+			std::string expected8 = CLEAR_ALL_SUCCESS;
+			Assert::AreEqual(expected8, cmd8);
 		}
 
 };

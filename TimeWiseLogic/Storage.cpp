@@ -188,6 +188,9 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					break;
 				}
 				}
+				if(taskHeader > COLUMN_OUT_OF_BOUND) {
+					break;
+				}
 				getline(input, userInput);
 			} 
 			listOfTasks.addTaskToDoneList(*newTask);

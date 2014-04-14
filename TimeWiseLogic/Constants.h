@@ -35,7 +35,7 @@ const int HEADER_START_TIME             = 3;
 const int HEADER_END_TIME               = 4;
 const int HEADER_CATEGORY               = 5;
 const int HEADER_STATUS                 = 6;
-const int COLUMN_OUT_OF_BOUND           = 8;
+const int COLUMN_OUT_OF_BOUND           = 6;
 const int REDUCTION_VALUE               = 1;
 const int INCREMENT_VALUE				= 1;
 

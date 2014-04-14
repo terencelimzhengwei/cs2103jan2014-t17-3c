@@ -649,7 +649,7 @@ void TimeWiseGUI::checkCorrupted() {
 }
 
 //Throws exception if user does not key in anything into command input box
-int TimeWiseGUI::checkEmpty(QString input) {
+void TimeWiseGUI::checkEmpty(QString input){
 	if(input.size() == NOUGHT) {
 		throw std::invalid_argument(EMPTY_INPUT);
 	}

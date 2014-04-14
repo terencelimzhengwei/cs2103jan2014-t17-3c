@@ -1,0 +1,2278 @@
+//@author: a0121023h
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\ClockTime.cpp
+	 */
+
+#include "ClockTime.h"
+
+ClockTime::ClockTime() {
+}
+
+ClockTime::ClockTime(int time) {
+	this->setTime(time);
+}
+
+ClockTime::ClockTime(ClockTime& src) {
+	this->setTime(src._time);
+}
+
+ClockTime::~ClockTime() {
+}
+
+void ClockTime::setTime(int time) {
+	if(time<ZERO || hour(time)>MAX_HOUR || minute(time)>MAX_MINUTE) {
+		throw InvalidDateTimeFormatException();
+	}
+	_time = time;
+}
+
+bool ClockTime::checkOverdueTime() {
+	bool hasElapsed;
+	struct tm today;
+	time_t currentTime = time(ZERO);	// get local time
+	int hr  = _time / TIME_DIVISOR,
+		min = _time % TIME_DIVISOR;
+
+	localtime_s( &today, &currentTime); // update tm struct to be local date and time
+
+	if( hr < today.tm_hour ) {
+		hasElapsed = true;
+	} else if ( hr == today.tm_hour && min <= today.tm_min) {
+		hasElapsed = true; 
+	} else{
+		hasElapsed = false;
+	}
+	return hasElapsed;
+}
+
+std::string ClockTime::toString() {
+	std::ostringstream stream;
+	int timeInt = _time;
+	stream<<_time;
+	std::string timeInString;
+	timeInString = stream.str();
+
+	switch(timeInString.size()) {
+	case 1:
+		if(timeInString[ZERO]=='0') {
+			return "0000";
+		} else {
+			return "000"+timeInString;
+		}
+		break;
+	case 2:
+		return "00" + timeInString;
+	case 3:
+		return "0" + timeInString;
+	default:
+		return timeInString;
+	}
+}
+
+TIMEDATE_STATUS ClockTime::isLater(ClockTime* otherTime) {
+	if(otherTime==NULL) {
+		return LATER;
+	} else if(_time>otherTime->getTime()) {
+		return LATER;
+	} else if(_time==otherTime->getTime()) {
+		return SAME;
+	}
+	return EARLIER;
+}
+
+int ClockTime::getTime() {
+	return _time;
+}
+
+// Operators
+
+bool ClockTime::operator==(ClockTime b) {
+	return this->_time == b._time;
+}
+
+bool ClockTime::operator>(ClockTime b) {
+	return this->_time > b._time;
+}
+
+bool ClockTime::operator<(ClockTime b) {
+	return this->_time < b._time;
+}
+
+bool ClockTime::operator>=(ClockTime b) {
+	return this->_time >= b._time;
+}
+
+bool ClockTime::operator<=(ClockTime b) {
+	return this->_time <= b._time;
+}
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\ClockTime.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\ClockTime.h
+	 */
+
+#pragma once
+
+#include <string>
+#include <assert.h>
+#include <ctime>
+#include <sstream>
+#include <exception>
+#include "Exceptions.h"
+#include "Constants.h"
+
+#define hour(time) time / TIME_DIVISOR
+#define minute(time) time % TIME_DIVISOR
+
+class ClockTime{
+public:
+	ClockTime();
+	ClockTime(int time);
+	ClockTime(ClockTime& _time);
+
+	~ClockTime();
+
+	void setTime(int time);
+	int getTime();
+
+	std::string toString();
+
+	bool checkOverdueTime();
+	TIMEDATE_STATUS isLater(ClockTime* otherTime);
+	
+	bool operator==(ClockTime);
+	bool operator>(ClockTime);
+	bool operator<(ClockTime);
+	bool operator>=(ClockTime);
+	bool operator<=(ClockTime);
+
+private:
+	int _time;
+};
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\ClockTime.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\CommandCreator.cpp
+	 */
+
+#include "CommandCreator.h"
+
+CommandCreator::CommandCreator(void) {
+}
+
+CommandCreator::~CommandCreator(void) {
+}
+
+bool CommandCreator::hasArg(string input) {
+	if(input.length() == 0) {
+		return false;
+	}
+	return true;
+}
+
+bool CommandCreator::isValidIndex(int id) {
+	if (id < 0 || id == 0) {
+		return false;
+	}
+	return true;
+}
+
+bool CommandCreator::isValidRemovalIndex(unsigned int id, DISPLAY_TYPE* type, TaskList& tasklist) {
+	switch(*type) {
+	case MAIN:
+		if(id > tasklist.undoneSize()) {
+			return false;
+		}
+		break;
+	case COMPLETE:
+		if(id > tasklist.doneSize()) {
+			return false;
+		}
+		break;
+	case SEARCH:
+		if( id > tasklist.searchedSize() ) {
+			return false;
+		}
+		break;
+	case FILTERED:
+		if( id > tasklist.filteredSize() ) {
+			return false;
+		}
+		break;
+	}
+	return true;
+}
+
+void CommandCreator::manipulateInputWithoutCommandWord(CMD_TYPE& commandType, string& userInput) {
+	userInput = CMD_TYPE_STRING[0] + SPACE_PARAMETER + userInput;
+	commandType = ADD;
+}
+
+CMD_TYPE CommandCreator::extractCommandType(string userInput) {
+	string commandTypeString = Parser::getFirstWord(userInput);
+	CMD_TYPE type = Parser::determineCommandType(commandTypeString); 
+	return type;
+}
+
+string CommandCreator::extractUserInput(string userInput) {
+	string parameter = Parser::removeFirstWord(userInput);
+	parameter = Parser::trim(parameter);
+	return parameter;
+}
+
+// Below methods are responsible for creating the derived commands
+
+Command* CommandCreator::interpretCommand(string userInput, DISPLAY_TYPE& displayType, string& commandLineInput, TaskList& tasklist) {
+	try {
+		CMD_TYPE commandType = extractCommandType(userInput);
+		
+		// Assume all other commands are adding event
+		if(commandType == UNDEFINED) {
+			manipulateInputWithoutCommandWord(commandType, userInput);
+		}
+		string parameter = extractUserInput(userInput);
+		vector<string> parameterArray = Parser::splitBySpace(parameter);
+		int parameterNum = parameterArray.size();
+
+		switch (commandType) {
+		case ADD:
+			if(hasArg(parameter)) {
+				return createCommandAdd(parameter, &displayType);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case DELETE:
+			if(hasArg(parameter)) {
+				return createCommandDelete(parameterArray, &displayType, tasklist);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case EDIT:
+			if(hasArg(parameter)) {
+				return createCommandEdit(parameter, &displayType);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case DONE:
+			if(hasArg(parameter)) {
+				return createCommandDone(parameterArray, &displayType, tasklist);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case FILTER:
+			if(hasArg(parameter)) {
+				return createCommandFilter(parameter, &displayType);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case UNDONE:
+			if(hasArg(parameter)) {
+				return createCommandUndone(parameterArray, &displayType, tasklist);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case CLEAR:
+			return createCommandClear(parameter, &displayType);
+		case UNDO:
+			return createCommandUndo();
+		case REDO:
+			return createCommandRedo();
+		case SEARCH:
+			if (hasArg(parameter)) {
+				return createCommandSearch(parameter, &displayType);
+			} else {
+				throw NoArgumentException();
+				return NULL;
+			}
+		case DISPLAY:
+			return createCommandDisplay(parameter, &displayType);
+		default:
+			return NULL;
+		}
+	// All exceptions are caught here
+	} catch (NoArgumentException& nae) {
+		_feedbackExceptiontoUI = nae.what();
+		throw NoArgumentException();
+	} catch (InvalidAddCommandInputException& iacie) {
+		_feedbackExceptiontoUI = iacie.what();
+		throw InvalidAddCommandInputException();
+	} catch (OutOfRangeException& oore) {
+		_feedbackExceptiontoUI = oore.what();
+		throw OutOfRangeException();
+	} catch (NotANumberException& nane) {
+		_feedbackExceptiontoUI = nane.what();
+		throw NotANumberException();
+	} catch (InvalidDateTimeFormatException& idtfe) {
+		_feedbackExceptiontoUI = idtfe.what();
+		throw InvalidDateTimeFormatException();
+	} catch (InvalidFilterCommandInputException& ifp) {
+		_feedbackExceptiontoUI = ifp.what();
+		throw InvalidFilterCommandInputException();
+	} catch (UnableToSetAsDone& utsad) {
+		_feedbackExceptiontoUI = utsad.what();
+		throw UnableToSetAsDone();
+	} catch (UnableToUndoneUncompletedTasks& utuuct) {
+		_feedbackExceptiontoUI = utuuct.what();
+		throw UnableToUndoneUncompletedTasks();
+	} catch (InvalidClearCommandInputException& icie) {
+		_feedbackExceptiontoUI = icie.what();
+		throw InvalidClearCommandInputException();
+	} catch (InvalidDisplayCommandException& idc) {
+		_feedbackExceptiontoUI = idc.what();
+		throw InvalidDisplayCommandException();
+	} catch (InvalidEditCommandInputException& iec) {
+		_feedbackExceptiontoUI = iec.what();
+		throw InvalidEditCommandInputException();
+	}
+}
+
+Command* CommandCreator::createCommandAdd(string command, DISPLAY_TYPE* screen) {
+	string category;
+	string description;
+
+	vector<Date> dates;
+	vector<ClockTime> times;
+	Parser::extractDateTime(command, description, dates, times);
+
+	vector<string> descriptionWord = Parser::splitBySpace(description);
+	for(int pos = descriptionWord.size()-1 ; category.empty() && pos>=0 ; pos--) {
+		if(Parser::isCategory(descriptionWord[pos])) {
+			category = Parser::strReplace(CATEGORY_SPECIFIER, DEFAULT_EMPTY, descriptionWord[pos]);
+			description = Parser::strReplace(descriptionWord[pos], DEFAULT_EMPTY, description);
+		}
+	}
+
+	// If there is a task description
+	if(hasArg(description)) {
+		Command_Add* commandAdd = new Command_Add;
+
+		if(!category.empty()) {
+			commandAdd->setCategory(category);
+		}
+
+		commandAdd->setDescription(description);
+
+		if(!dates.empty()) {
+			switch(dates.size()) {
+			case 1:
+				commandAdd->setEndDate(dates[0]);
+				break;
+			case 2:
+				commandAdd->setStartDate(dates[1]);
+				commandAdd->setEndDate(dates[0]);
+				break;
+			default:
+				delete commandAdd;
+				commandAdd = NULL;
+				throw InvalidDateTimeFormatException();
+			}
+		}
+
+		if(!times.empty()) {
+			switch(times.size()) {
+			case 1:
+				commandAdd->setEndTime(times[0]);
+				break;
+			case 2:
+				commandAdd->setStartTime(times[1]);
+				commandAdd->setEndTime(times[0]);
+				break;
+			default:
+				delete commandAdd;
+				commandAdd = NULL;
+				throw InvalidDateTimeFormatException();
+			}
+		}
+		commandAdd->setPreviousScreen(screen);
+		return commandAdd;
+	} else {
+		throw InvalidAddCommandInputException();
+		return NULL;
+	}
+}
+
+Command* CommandCreator::createCommandDelete(vector<string> parameter, DISPLAY_TYPE* type, TaskList& tasklist) {
+	Command_Delete* commandDelete = new Command_Delete;
+	while(!parameter.empty()) {
+		if(Parser::isAllDigit(parameter.back())) {
+			int id = Parser::toInt(parameter.back());
+			if(isValidIndex(id) && isValidRemovalIndex(id, type, tasklist)) {
+				id = id - 1;
+				commandDelete->addDeletionIndex(id);
+				commandDelete->setDisplayScreen(*type);
+			} else {
+				delete commandDelete;
+				commandDelete = NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
+		} else {
+			delete commandDelete;
+			commandDelete = NULL;
+			throw NotANumberException();
+			return NULL;
+		}
+		parameter.pop_back();
+	}
+	return commandDelete;
+}
+
+Command* CommandCreator::createCommandDone(vector<string> parameter, DISPLAY_TYPE* type, TaskList& tasklist) {
+	if(*type == COMPLETE) {
+		throw UnableToSetAsDone();
+		return NULL;
+	}
+
+	Command_Done* commandDone = new Command_Done;
+	while(!parameter.empty()) {
+		if( Parser::isAllDigit(parameter.back()) ) {
+			int id = Parser::toInt(parameter.back());
+			if(isValidIndex(id) && isValidRemovalIndex(id, type, tasklist)) {
+				id--;
+				commandDone->addDoneIndex(id);
+				parameter.pop_back();
+			} else {
+				delete commandDone;
+				commandDone = NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
+		} else {
+			delete commandDone;
+			commandDone = NULL;
+			throw NotANumberException();
+			return NULL;
+		} 
+	}
+	commandDone->setPreviousScreen(type);
+	return commandDone;
+}
+
+Command* CommandCreator::createCommandUndone(vector<string> parameter, DISPLAY_TYPE* type, TaskList& tasklist) {
+	Command_Undone* commandUndone = new Command_Undone;
+	while(!parameter.empty()) {
+		if(Parser::isAllDigit(parameter.back())) {
+			int id = Parser::toInt(parameter.back());
+			if(isValidIndex(id)&&isValidRemovalIndex(id, type, tasklist)) {
+				id--;
+				commandUndone->addUndoneIndex(id);
+				parameter.pop_back();
+			} else {
+				delete commandUndone;
+				commandUndone = NULL;
+				throw OutOfRangeException();
+				return NULL;
+			}
+		}
+		else {
+			delete commandUndone;
+			commandUndone = NULL;
+			throw NotANumberException();
+			return NULL;
+		} 
+	}
+	commandUndone->setPreviousScreen(type);
+	return commandUndone;
+}
+
+Command* CommandCreator::createCommandUndo() {
+	Command_Undo* newCommand = new Command_Undo;
+	return newCommand;
+}
+
+Command* CommandCreator::createCommandRedo() {
+	Command_Redo* newCommand = new Command_Redo;
+	return newCommand;
+}
+
+Command* CommandCreator::createCommandClear(string parameter, DISPLAY_TYPE* type) {
+	if(parameter == CLEAR_TYPE_STRING[ALL]) {
+		Command_Clear* newCommand=new Command_Clear(ALL);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	} else if(parameter == CLEAR_TYPE_STRING[COMPLETED_TASKS]) {
+		Command_Clear* newCommand = new Command_Clear(COMPLETED_TASKS);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	} else if(parameter == CLEAR_TYPE_STRING[UNCOMPLETED_TASKS]) {
+		Command_Clear* newCommand = new Command_Clear(UNCOMPLETED_TASKS);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	} else if(parameter == CLEAR_TYPE_STRING[SCREEN]) {
+		Command_Clear* newCommand = new Command_Clear(SCREEN);
+		newCommand->setDisplayScreen(*type);
+		return newCommand;
+	} else {
+		throw InvalidClearCommandInputException();
+		return NULL;
+	}
+	return NULL;
+}
+
+Command* CommandCreator::createCommandSearch(string parameter, DISPLAY_TYPE* type) {
+	Command_Search* commandSearch = new Command_Search;
+	parameter = Parser::trim(parameter);
+	commandSearch->setKeyword(parameter);
+	commandSearch->setPreviousScreen(type);
+	return commandSearch;
+}
+
+Command* CommandCreator::createCommandFilter(string parameter, DISPLAY_TYPE* screen) {
+	Command_Filter* commandFilter= new Command_Filter();
+	commandFilter->setPreviousScreen(screen);
+	if(parameter[0] == TASK_SPECIFIER) {
+		commandFilter->setCategory(parameter.substr(1));
+		return commandFilter;
+	}
+	Date date;
+	if(Parser::isDate(parameter, date)) {
+		Date* tempDate = new Date(date);
+		commandFilter->setDate( tempDate );
+		return commandFilter;
+	} else {
+		throw InvalidFilterCommandInputException();
+	}
+	return NULL;
+}
+
+string CommandCreator::getFeedback() {
+	return _feedbackExceptiontoUI;
+}
+
+Command* CommandCreator::createCommandDisplay(string parameter, DISPLAY_TYPE* displayType) {
+	Command_Display* newCommand = new Command_Display();
+	newCommand->setCurrentScreen(displayType);
+	if(parameter == DISPLAY_TYPE_STRING[MAIN]) {
+		newCommand->setNextScreen(MAIN);
+	}else if(parameter == DISPLAY_TYPE_STRING[COMPLETED] || parameter == DISPLAY_TYPE_STRING[DONE_DISPLAY]) {
+		newCommand->setNextScreen(COMPLETE);
+	}else{
+		delete newCommand;
+		newCommand = NULL;
+		throw InvalidDisplayCommandException();
+	}
+	return newCommand;
+}
+
+Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* screen) {
+	string category;
+	string description;
+	int index = DEFAULT_INDEX;
+	vector<Date> dates;
+	vector<ClockTime> times;
+	smatch sm;
+
+	if( regex_match(parameter, sm, regex("^\\s*([0-9]*)\\s?(.*)\\s*$")) ) {
+		if( isValidIndex(Parser::toInt(sm[1])) ) {
+			index = Parser::toInt(sm[1]) - 1;
+			parameter = sm[2];
+		} else {
+			throw NotANumberException();
+		}
+	} else {
+		throw InvalidEditCommandInputException();
+	}
+	if(index == DEFAULT_INDEX) {
+		throw InvalidEditCommandInputException();
+	}
+
+	Parser::extractDateTime(parameter, description, dates, times);
+
+	vector<string> descriptionWord = Parser::explode(SPACE_DELIMITER, description);
+	for(int pos = descriptionWord.size() - 1 ; category.empty() && pos >= 0 ; pos--) {
+		if(Parser::isCategory(descriptionWord[pos])) {
+			category = Parser::strReplace(CATEGORY_SPECIFIER, DEFAULT_EMPTY, descriptionWord[pos]);
+			description = Parser::strReplace(descriptionWord[pos], DEFAULT_EMPTY, description);
+		}
+	}
+
+	description = Parser::trim(description);
+
+	Command_Edit* commandEdit = new Command_Edit();
+	if( !description.empty() ) {
+		commandEdit->setDescription(description);
+	}
+	if( !category.empty() ) {
+		commandEdit->setCategory(category);
+	}
+	if( !dates.empty() ) {
+		Date* tempDate;
+		switch(dates.size()) {
+		case 1:
+			tempDate = new Date( dates[0] );
+			commandEdit->setEndDate( tempDate );
+			break;
+		case 2:
+			tempDate = new Date( dates[1] );
+			commandEdit->setStartDate( tempDate );
+			tempDate = new Date( dates[0] );
+			commandEdit->setEndDate( tempDate );
+			break;
+		}
+	}
+	if(!times.empty()) {
+		ClockTime* tempTime;
+		switch(times.size()) {
+		case 1:
+			tempTime = new ClockTime( times[0] );
+			commandEdit->setEndTime( tempTime );
+			break;
+		case 2:
+			tempTime = new ClockTime( times[1] );
+			commandEdit->setStartTime( tempTime );
+			times.pop_back();
+			tempTime = new ClockTime( times[0] );
+			commandEdit->setEndTime( tempTime );
+			break;
+		}
+	}
+	
+	commandEdit->setIndex(index);
+	commandEdit->setDisplayScreen(*screen);
+	return commandEdit;
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\CommandCreator.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\CommandCreator.h
+	 */
+
+#pragma once
+
+#include "Command.h"
+#include "Command_Add.h"
+#include "Command_Delete.h"
+#include "Command_Clear.h"
+#include "Command_Done.h"
+#include "Command_Undone.h"
+#include "Command_Search.h"
+#include "Command_Edit.h"
+#include "Command_Filter.h"
+#include "Command_Undo.h"
+#include "Command_Redo.h"
+#include "Command_Display.h"
+#include "Constants.h"
+#include "Exceptions.h"
+#include "Parser.h"
+
+//********************************************************************************
+// This class is responsible for instantiating command objects once it has
+// ascertained the command type (CMD_TYPE) and the validity of the input.
+//********************************************************************************
+class CommandCreator {
+private:
+	string _feedbackExceptiontoUI;
+public:
+	CommandCreator(void);
+	~CommandCreator(void);
+	string getFeedback();
+
+	//flag functions
+	bool hasArg(string);
+	bool isValidIndex(int);
+	bool isValidRemovalIndex(unsigned int, DISPLAY_TYPE*, TaskList&);
+
+	// Below methods are responsible for creating the derived commands
+	Command* interpretCommand(string, DISPLAY_TYPE&, string&, TaskList&);
+	Command* createCommandAdd(string, DISPLAY_TYPE*);
+	Command* createCommandDelete(vector<string>, DISPLAY_TYPE*, TaskList&);
+	Command* createCommandEdit(string, DISPLAY_TYPE*);
+	Command* createCommandClear(string, DISPLAY_TYPE*);
+	Command* createCommandDone(vector<string>, DISPLAY_TYPE*, TaskList&);
+	Command* createCommandUndone(vector<string>, DISPLAY_TYPE* type, TaskList&);
+	Command* createCommandSearch(string, DISPLAY_TYPE*);
+	Command* createCommandFilter(string, DISPLAY_TYPE*);
+	Command* createCommandUndo();
+	Command* createCommandRedo();
+	Command* createCommandDisplay(string, DISPLAY_TYPE*);
+
+	// Utility methods
+	void manipulateInputWithoutCommandWord(CMD_TYPE&, string&);
+	CMD_TYPE extractCommandType(string);
+	string extractUserInput(string);
+
+};
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\CommandCreator.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Date.cpp
+	 */
+
+#include "Date.h"
+
+// Constructor
+Date::Date() {
+	this->setDateAsToday();
+}
+
+Date::Date(int day, int month, int year) {
+	this->setDate(day, month, year);
+}
+
+Date::Date(Date& src) {
+	this->setDate(src._day, src._month, src._year);
+}
+
+// Destructors
+
+Date::~Date() {
+}
+
+int Date::getDay() {
+	return _day;
+}
+
+int Date::getMonth(){
+	return _month;
+}
+
+int Date::getYear() {
+	return _year;
+}
+
+int Date::getWeekday() {
+	return _weekday;
+}
+
+string Date::getDayOfTheWeek() {
+	return DAY_ABBR[_weekday];
+}
+
+void Date::setDate(int day, int month, int year) {
+	if(month<1 || month>NUM_OF_MONTHS || year<1 || day<1) {
+		throw InvalidDateTimeFormatException();
+	} else {
+		if(isLeapYear(year) == true && day > MAX_DAYS_IN_MONTH[LEAP_YEAR][month-1]) {
+			throw InvalidDateTimeFormatException();
+		} else if(isLeapYear(year)==false && day > MAX_DAYS_IN_MONTH[NOT_LEAP_YEAR][month-1]) {
+			throw InvalidDateTimeFormatException();
+		}
+	}
+	_day = day;
+	_month = month;
+	_year = year;
+	_weekday = getDayFromDate(day,month,year);
+}
+
+// Set functions without input parameters
+void Date::setDateAsToday() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s(&_timeNow,&_currentTime);
+
+	_day = _timeNow.tm_mday;
+	_month = _timeNow.tm_mon + 1;
+	_year = _timeNow.tm_year + 1900;
+	_weekday = _timeNow.tm_wday;
+}
+
+void Date::setDateAsTomorrow() {
+	setDateAsToday();
+	(*this)++;
+}
+
+void Date::setDateAsDayAfterTomorrow() {
+	setDateAsTomorrow();
+	(*this)++;
+}
+
+// Normal member functions
+TIMEDATE_STATUS Date::checkOverdue() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisYear = _timeNow.tm_year + 1900;
+	int thisMonth = _timeNow.tm_mon + 1;
+	int todayDate = _timeNow.tm_mday;
+
+	if(_year>thisYear) {
+		return EARLIER;
+	} else if(_year<thisYear) {
+		return LATER;
+	} else {
+		if(_month>thisMonth) {
+			return EARLIER;
+		} else if(_month<thisMonth) {
+			return LATER;
+		} else {
+			if(_day>todayDate) {
+				return EARLIER;
+			} else if(_day<todayDate) {
+				return LATER;
+			} else {
+				return SAME;
+			}
+		}
+	}
+}
+
+bool Date::compare(Date* date) {
+	return (*this) == (*date);
+}
+
+TIMEDATE_STATUS Date::isLater(Date* otherDate) {
+	if(otherDate==NULL) {
+		return LATER;
+	}
+	if(_year>otherDate->_year) {
+		return LATER;
+	} else if(_year<otherDate->_year) {
+		return EARLIER;
+	} else {
+		if(_month>otherDate->_month) {
+			return LATER;
+		} else if(_month<otherDate->_month) {
+			return EARLIER;
+		} else {
+			if(_day>otherDate->_day) {
+				return LATER;
+			} else if(_day<otherDate->_day) {
+				return EARLIER;
+			} else {
+				return SAME;
+			}
+		}
+	}
+}
+
+int Date::leapYear() {
+	return isLeapYear(_year);
+}
+
+string Date::toFormat() {
+	ostringstream convert;
+	string slash = "/";
+	string dateInString;
+	convert << _day << slash << _month << slash << _year;
+	dateInString = convert.str();
+	return dateInString;
+}
+
+string Date::toString() {
+	ostringstream convert;
+	string space = " ";
+	convert << _year;
+	string year=convert.str();
+	year = year.substr(2);
+	convert.str(string());
+	string dateInString;
+	convert << _day << space << MONTH_ABBR[_month-1];
+
+	dateInString = convert.str();
+	return dateInString;
+}
+
+// "Global" functions (Functions not related to objects)
+int Date::getCurrentYear() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisYear = _timeNow.tm_year + 1900;
+
+	return thisYear;
+}
+
+int Date::getCurrentMonth() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisMonth = _timeNow.tm_mon + 1;
+
+	return thisMonth;
+}
+
+int Date::getCurrentDay() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisDay = _timeNow.tm_mday;
+
+	return thisDay;
+}
+
+int Date::getCurrentWeekday() {
+	time_t _currentTime;
+	struct tm _timeNow ;
+
+	_currentTime = time(0);   
+	localtime_s( &_timeNow, &_currentTime ); // get local PC time
+
+	int thisWeekday = _timeNow.tm_wday;
+
+	return thisWeekday;
+}
+
+bool Date::isLeapYear(int year) {
+	bool leapYear = false;
+
+	if(year % 400 == 0) {
+		leapYear = true;
+	} else if(year % 100 == 0) {
+		leapYear = false;
+	} else if(year % 4 == 0) {
+		leapYear = true;
+	}
+	return leapYear;
+}
+
+// Operators
+Date Date::operator+(int num) {
+	if(num<0) {
+		return (*this) - (-num);
+	}
+	for(int i=0 ; i<num ; i++) {
+		(*this)++;
+	}
+	return *this;
+}
+
+Date Date::operator-(int num) {
+	if(num<0) {
+		return (*this) + (-num);
+	}
+	for(int i=0 ; i<num ; i++) {
+		(*this)--;
+	}
+	return *this;
+}
+
+Date& Date::operator++() {
+	if(_day == MAX_DAYS_IN_MONTH[this->leapYear()][_month-1]) {
+		_day = 1;
+		if(_month == 12) {
+			_month = 1;
+			_year += 1;
+		} else {
+			_month += 1;
+		}
+	} else {
+		_day += 1;
+	}
+	_weekday = (_weekday + 1) % 7;
+	return *this;
+}
+
+Date Date::operator++(int) {
+	Date original(*this);
+	++(*this);
+	return original;
+}
+
+Date& Date::operator--() {
+	_day -= 1;
+	if(_day == 0) {
+		if(_month > 1) {
+			_month -= 1;
+			_day = MAX_DAYS_IN_MONTH[this->leapYear()][_month-1];
+		} else {
+			_year -= 1;
+			_month = NUM_OF_MONTHS;
+			_day = MAX_DAYS_IN_MONTH[this->leapYear()][11];
+		}
+	}
+	_weekday = _weekday - 1;
+	while(_weekday < 0) {
+		_weekday += 7;
+	}
+	return *this;
+}
+
+Date Date::operator--(int) {
+	Date original(*this);
+	--(*this);
+	return original;
+}
+
+bool Date::operator==(Date b) {
+	bool same = false;
+
+	if( this->_year == b._year && this->_month == b._month && this->_day == b._day) {
+		same = true;
+	}
+
+	return same;
+}
+
+bool Date::operator>(Date b) {
+	bool larger = false;
+
+	if( this->_year > b._year ||
+		this->_year == b._year && this->_month > b._month || 
+		this->_year == b._year && this->_month == b._month && this->_day > b._day) {
+			larger = true;
+	}
+
+	return larger;
+}
+
+bool Date::operator<(Date b) {
+	bool smaller = false;
+
+	if( this->_year < b._year ||
+		this->_year == b._year && this->_month < b._month || 
+		this->_year == b._year && this->_month == b._month && this->_day < b._day) {
+			smaller = true;
+	}
+
+	return smaller;
+}
+
+bool Date::operator>=(Date b) {
+	return ( *this > b || *this == b );
+}
+
+bool Date::operator<=(Date b) {
+	return ( *this < b || *this == b );
+}
+
+Date Date::operator+=(int num) {
+	*this = *this + num;
+	return *this;
+}
+
+Date Date::operator-=(int num) {
+	*this = *this - num;
+	return *this;
+}
+
+int Date::getDayFromDate(int day, int month, int year) {
+	tm timeStruct = {};
+	timeStruct.tm_year = year - 1900;
+	timeStruct.tm_mon = month - 1;
+	timeStruct.tm_mday = day;
+	timeStruct.tm_hour = 12;    //  To avoid any doubts about summer time, etc.
+	mktime( &timeStruct );
+	return timeStruct.tm_wday;  //  0...6 for Sunday...Saturday
+}
+
+bool Date::isToday() {
+	if(_day==getCurrentDay() && _month==getCurrentMonth() && _year==getCurrentYear()){
+		return true;
+	}
+	return false;
+}
+
+bool Date::isTomorrow() {
+	time_t tomorrow = time(0) + 24*60*60;
+	struct tm _timeNow ;
+
+	localtime_s( &_timeNow, &tomorrow);
+	int day = _timeNow.tm_mday;
+	int month = _timeNow.tm_mon + 1;
+	int year = _timeNow.tm_year + 1900;
+	if(_day == day && _month==month && _year==year){
+		return true;
+	}
+	return false;
+}
+
+void Date::setNextDay() {
+	(*this)++;
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Date.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Date.h
+	 */
+
+#ifndef DATE_H
+#define DATE_H
+
+#pragma once
+
+#include <ctime>
+#include <sstream>
+#include <string>
+#include "Calendar.h"
+#include "Constants.h"
+#include "Exceptions.h"
+
+class Date{
+public:
+	Date(void);
+	Date(Date& date);
+	Date(int day, int month, int year);
+	~Date(void);
+
+	int getDay();
+	int getMonth();
+	int getYear();
+	int getWeekday();
+	string getDayOfTheWeek();
+	void setDate(int day, int month, int year);
+
+	void setDateAsToday();
+	void setDateAsTomorrow();
+
+	TIMEDATE_STATUS checkOverdue();
+	bool compare(Date* date);
+	bool isToday();
+	TIMEDATE_STATUS isLater(Date* otherDate);
+	int leapYear();
+	std::string toFormat();
+	std::string toString();
+
+	static bool isLeapYear(int);
+	static int getCurrentYear();
+	static int getCurrentMonth();
+	static int getCurrentDay();
+	static int getCurrentWeekday();
+	static int getDayFromDate(int,int,int);
+
+	Date operator+(int);
+	Date operator-(int);
+	Date& operator++();
+	Date operator++(int);
+	Date& operator--();
+	Date operator--(int);
+	bool operator==(Date);
+	bool operator>(Date);
+	bool operator<(Date);
+	bool operator>=(Date);
+	bool operator<=(Date);
+	Date operator+=(int);
+	Date operator-=(int);
+	bool isTomorrow();
+	void setDateAsDayAfterTomorrow();
+	void setNextDay();
+
+private:
+	int _day;
+	int _month;
+	int _year;
+	int _weekday;
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Date.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Parser.cpp
+	 */
+
+#include "Parser.h"
+
+Parser::Parser(void) {
+}
+
+Parser::~Parser(void) {
+}
+
+CMD_TYPE Parser::determineCommandType(string commandTypeString) {
+	commandTypeString = strToLower(commandTypeString);
+
+	if(commandTypeString == CMD_TYPE_STRING[ADD]) {
+		return ADD;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[DELETE]) {
+		return DELETE;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[EDIT]) {
+		return EDIT;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[CLEAR]) {
+		return CLEAR;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[DISPLAY]) {
+		return DISPLAY;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[DONE]) {
+		return DONE;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[UNDONE]) {
+		return UNDONE;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[UNDO]) {
+		return UNDO;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[REDO]) {
+		return REDO;
+	}
+	else if(commandTypeString == CMD_TYPE_STRING[SEARCH]) {
+		return SEARCH;
+	} 
+	else if(commandTypeString == CMD_TYPE_STRING[FILTER]) {
+		return FILTER;
+	}
+	else {
+		return UNDEFINED;
+	}
+}
+
+TASK_STATUS Parser::getTaskStatus(string input) {
+	if(input == TASK_STATUS_STRING[0]){
+		return UNCOMPLETED;
+	} else if(input == TASK_STATUS_STRING[1])  {
+		return COMPLETED;
+	} else if(input == TASK_STATUS_STRING[2]) {
+		return OVERDUE;
+	}
+	return UNCOMPLETED;
+}
+
+// Check whether a string is a category parameters in a command.
+bool Parser::isCategory(string input) {
+	for(unsigned int i=0; i<input.length() && i<CATEGORY_SPECIFIER.length(); i++) {
+		if(input[i]!=CATEGORY_SPECIFIER[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// Check whether a word is a preposition, according to the preposition defined in Constants.h
+bool Parser::isPreposition(string word) {
+	bool matchFound = false;
+
+	// Remove punctuation (e.g. ",", ".") from the words for checking.
+	word = removePunctuation(word);
+
+	for(string preposition : PREPOSITION) {
+		if(strToLower(word) == strToLower(preposition)) {
+			matchFound = true;
+			break;
+		}
+	}
+	return matchFound;
+}
+
+string Parser::removePunctuation(string input) {
+	string output = input;
+	for(string punctuation : PUNCTUATION) {
+		output = strReplace(punctuation, DEFAULT_EMPTY, input);
+	}
+	return output;
+}
+
+// Date and time related functions
+
+// Create Date object from a dd/mm/yyyy format string.
+Date* Parser::createDate(string date) {
+	vector<string> dateComponent = explode('/', date);
+	if(dateComponent.size() != 3) {
+		throw InvalidDateTimeFormatException();
+	}
+
+	int day = toInt(dateComponent[0]);
+	int month = toInt(dateComponent[1]);
+	int year = toInt(dateComponent[2]);
+
+	return new Date(day, month, year);
+}
+
+// Create ClockTime object from a hhmm format time.
+ClockTime* Parser::createTime(string time) {
+	return new ClockTime(toInt(time));
+}
+
+// Parse the date and time in user command and move them to Date and ClockTime objects.
+void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& dateResult, vector<ClockTime>& timeResult) {
+	vector<string> word = splitBySpace(cmd);
+	int wordNum = word.size();
+
+	string checkingSentence;
+	string checkingSentenceMarkup;
+	dateTimeRemoved.clear();
+
+	int concatStartPos;
+	int concatEndPos;
+	vector<string> checkingResultArray;
+	int nonDateTimeWordNum;
+	int checkingWordEndingPos;
+	Date dateGot;
+	ClockTime timeGot;
+	int dateCount = 0;
+	int timeCount = 0;
+	vector<Date> dateArray;
+	vector<ClockTime> timeArray;
+	string nonDateTimeWord;
+	string dateTimeCandidate;
+
+	// Check the existence of date and time starting from the last word in the command
+	for(int wordPos=wordNum-1 ; wordPos>=0 ; wordPos--) {
+		// Put the last non-checked word into checkingSentence, and try to find the existence of date and time by markupDateTime. 
+		if(checkingSentence.empty()) {
+			checkingWordEndingPos = wordPos;
+			checkingSentence = word[wordPos];
+		} else {
+			checkingSentence = word[wordPos] + SPACE_PARAMETER + checkingSentence;
+		}
+		checkingSentenceMarkup = markupDateTime(checkingSentence);
+		dateTimeCandidate = getFirstWord(checkingSentenceMarkup);			// If a date/time is marked-up, it will be the first word in the marked-up sentence.
+		
+		if( dateCount<MAX_DATE_NUM_IN_CMD && isValidConvertedDate(dateTimeCandidate) ||
+			timeCount<MAX_TIME_NUM_IN_CMD && isValidConvertedTime(dateTimeCandidate) ) {
+
+			nonDateTimeWordNum = checkingResultArray.size() - 1;				// Once a date/time is marked-up, the remaining words are not date and time.
+
+			// Once a date or time is marked-up, we put the non-date/time part into "dateTimeRemoved".
+			concatStartPos = checkingWordEndingPos - nonDateTimeWordNum + 1;	// concatStartPos: the start position of non-date/time part.
+			concatEndPos = checkingWordEndingPos;								// concatEndPos:   the end poisiton of non-date/time part.
+			nonDateTimeWord = strConcat(word, concatStartPos, concatEndPos);	// get the non-date/time part by strConcat.
+
+			// If a date/time is found before, the last word will be deleted from the non-date/time part if it is a preposition word.
+			if( !dateTimeRemoved.empty() && isPreposition(word[concatEndPos]) ) {
+				nonDateTimeWord = removeLastWord(nonDateTimeWord);
+			}
+			dateTimeRemoved = nonDateTimeWord + SPACE_PARAMETER + dateTimeRemoved;
+			
+			if( isValidConvertedDate(dateTimeCandidate, dateGot) ) {
+				dateCount++;
+				dateArray.push_back(Date(dateGot));
+			} else if( isValidConvertedTime(dateTimeCandidate, timeGot) ) {
+				timeCount++;
+				timeArray.push_back(ClockTime(timeGot));
+			}
+
+			// Clear the checking sentence as the original non-date/time part has been moved to "dateTimeRemoved".
+			checkingSentence.clear();
+		}
+	}
+	
+	// Move the remaining non-date/time part to "dateTimeRemoved" after all words have been searched.
+	if( (dateCount>0 || timeCount>0) && isPreposition(getLastWord(checkingSentence)) ) {
+		// If date or time has been found in the command, remove the last word of remaining part if it is a preposition.
+		dateTimeRemoved = removeLastWord(checkingSentence) + SPACE_PARAMETER + dateTimeRemoved;
+	} else {
+		dateTimeRemoved = checkingSentence + SPACE_PARAMETER + dateTimeRemoved;
+	}
+
+	dateTimeRemoved = strTruncate(dateTimeRemoved);
+
+	dateResult = dateArray;
+	timeResult = timeArray;
+}
+
+// Try to mark-up the date from string and check whether it ONLY contains a valid date.
+bool Parser::isDate(string input) {
+	return isValidConvertedDate(markupDateTime(input));
+}
+
+// Try to mark-up the date from string and check whether it ONLY contains a valid date. (with Date object returned)
+bool Parser::isDate(string input, Date& outputDate) {
+	return isValidConvertedDate(markupDateTime(input), outputDate);
+}
+
+// Try to mark-up the timefrom string and check whether it ONLY contains a valid time.
+bool Parser::isTime(string input) {
+	return isValidConvertedTime(markupDateTime(input));
+}
+
+// Try to mark-up the date from string and check whether it ONLY contains a valid date. (with ClockTime object returned)
+bool Parser::isTime(string input, ClockTime& outputTime) {
+	return isValidConvertedTime(markupDateTime(input), outputTime);
+}
+
+// Validate the marked-up date without Date object returned.
+bool Parser::isValidConvertedDate(string& input) {
+	Date temp;
+	return isValidConvertedDate(input, temp);
+}
+
+// Validate the marked-up date with Date object returned.
+bool Parser::isValidConvertedDate(string& input, Date& outputDate) {
+	input = getFirstWord(input);
+	input = removePunctuation(input);
+	smatch sm;
+
+	string markupDateStart = MARKUP_START + MARKUP_DATE + MARKUP_ATTRB;
+	string dateDelim       = MARKUP_DATE_DELIM;
+	string markupEnd       = MARKUP_END;
+
+	if(regex_match(input, sm, regex("^" + markupDateStart + "([0-9]{1,2})" + dateDelim + "([0-9]{1,2})" + dateDelim + "([0-9]{4})" + markupEnd + "$"))) {
+		try {
+			outputDate = Date(toInt(sm[1]), toInt(sm[2]), toInt(sm[3]));
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+// Validate the marked-up time without ClockTime object returned.
+bool Parser::isValidConvertedTime(string& input) {
+	ClockTime temp;
+	return isValidConvertedTime(input, temp);
+}
+
+// Validate the marked-up time with ClockTime object returned.
+bool Parser::isValidConvertedTime(string& input, ClockTime& outputTime) {
+
+	input = getFirstWord(input);
+	input = removePunctuation(input);
+	smatch sm;
+	
+	string markupTimeStart   = MARKUP_START + MARKUP_TIME_24HR + MARKUP_ATTRB;
+	string markupTimeAmStart = MARKUP_START + MARKUP_TIME_AM + MARKUP_ATTRB;
+	string markupTimePmStart = MARKUP_START + MARKUP_TIME_PM + MARKUP_ATTRB;
+	string markupEnd         = MARKUP_END;
+	string timeDelim         = MARKUP_TIME_DELIM;
+
+	if(regex_match(input, sm, regex("^" + markupTimeStart + "([0-9]{1,2})" + timeDelim + "([0-9]{2})" + markupEnd + "$"))) {
+		try {
+			outputTime = ClockTime( toInt(sm[1])*100 + toInt(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	} else if(regex_match(input, sm, regex("^" + markupTimeAmStart + "([0-9]{1,2})" + timeDelim + "([0-9]{2})" + markupEnd + "$"))) {
+		int hour = toInt(sm[1]);
+
+		if(hour==0 || hour>12) {
+			return false;
+		}
+
+		try {
+			outputTime = ClockTime( (hour%12) * 100 + toInt(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	} else if(regex_match(input, sm, regex("^" + markupTimePmStart + "([0-9]{1,2})" + timeDelim + "([0-9]{2})" + markupEnd + "$"))) {
+		int hour = toInt(sm[1]);
+
+		if(hour==0 || hour>12) {
+			return false;
+		}
+
+		try {
+			outputTime = ClockTime( (hour%12 + 12) * 100 + toInt(sm[2]) );
+		} catch (InvalidDateTimeFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+// Mark-up the possible date and time in the string by using regular expression. 
+string Parser::markupDateTime(string cmd) {
+	vector<string> weekdayDate(DAY_PER_WEEK);
+	Date tempDate;
+	int currentYear    = Date::getCurrentYear();
+	int currentMonth   = Date::getCurrentMonth();
+	int currentDay     = Date::getCurrentDay();
+	int currentWeekday = Date::getCurrentWeekday();
+	
+	string rgx;		// Temporary string variable for storing the regular expression.
+
+	// Ensure the occurance of a space character after each punctuation. 
+	cmd = strReplace(",", "," + SPACE_PARAMETER, cmd);
+	cmd = strTruncate(cmd);
+
+	// Change the command to lowercases for easier checking.
+	cmd = strToLower(cmd);
+
+	string markupMonthStart  = MARKUP_START + MARKUP_MONTH + MARKUP_ATTRB;
+	string markupDateStart   = MARKUP_START + MARKUP_DATE + MARKUP_ATTRB;
+	string markupTimeStart   = MARKUP_START + MARKUP_TIME_24HR + MARKUP_ATTRB; 
+	string markupTimeAmStart = MARKUP_START + MARKUP_TIME_AM + MARKUP_ATTRB; 
+	string markupTimePmStart = MARKUP_START + MARKUP_TIME_PM + MARKUP_ATTRB; 
+	string markupEnd         = MARKUP_END;
+	string dateDelim         = MARKUP_DATE_DELIM;
+	string timeDelim         = MARKUP_TIME_DELIM;
+
+	// Converting Date
+
+	// Month-in-word pattern
+	// Convert the month in words into <month=X>" where X is the digit(s) of the month.
+	for(int i=0 ; i<MONTH_WORD_NUM ; i++) {
+		cmd = strIReplace(MONTH_WORD[i], markupMonthStart + strVal(MONTH_WORD_VALUE[i]) + markupEnd, cmd);
+	}
+	// For month-in-word with year
+	rgx = "(^|\\s)" + markupMonthStart + "([1]?[0-9])" + markupEnd + "\\s?([0123]?[0-9])(st|nd|rd|th)?,? ([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])"; 
+	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$3" + dateDelim + "$2" + dateDelim + "$5" + markupEnd + "$6");
+	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?" + markupMonthStart + "([1]?[0-9])" + markupEnd + ",? ?([0-9]{2}|[1-9][0-9]{3})($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$2" + dateDelim + "$4" + dateDelim + "$5" + markupEnd + "$6");
+	// For month-in-word without year
+	rgx = "(^|\\s)" + markupMonthStart + "([1]?[0-9])" + markupEnd + " ([0123]?[0-9])(st|nd|rd|th)?($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$3" + dateDelim + "$2" + dateDelim + strVal(currentYear) + markupEnd + "$5");
+	rgx = "(^|\\s)([0123]?[0-9])(st|nd|rd|th)? ?" + markupMonthStart + "([0-9])" + markupEnd + "($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1 " + markupDateStart + "$2" + dateDelim + "$4" + dateDelim + strVal(currentYear) + markupEnd + "$5");
+
+	// For d--m--yyyy and yyyy--m--d
+	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])[-\\./]([01]?[0-9])[-\\./]([1-9][0-9]{3})($|[\\s,\\.])"), "$1 " + markupDateStart + "$2" + dateDelim + "$3" + dateDelim + "$4" + markupEnd + "$5");
+	cmd = regex_replace(cmd, regex("(^|\\s)([1-9][0-9]{3})[-\\.]([01]?[0-9])[-\\.]([0123]?[0-9])($|[\\s,\\.])"), "$1 " + markupDateStart + "$4" + dateDelim + "$3" + dateDelim + "$2" + markupEnd + "$5");
+
+	// For d--m--yy
+	cmd = regex_replace(cmd, regex("(^|\\s)([0-9]{1,2})[-\\./]([01]?[0-9])[-\\./]([0-9]{2})($|[\\s,\\.])"), "$1 " + markupDateStart + "$2" + dateDelim + "$3" + dateDelim + strVal(currentYear/100) + "$4" + markupEnd + "$5");
+	
+	// For d--m
+	cmd = regex_replace(cmd, regex("(^|\\s)([0123]?[0-9])/([01]?[0-9])($|[\\s,\\.])"), "$1 " + markupDateStart + "$2" + dateDelim + "$3" + dateDelim + strVal(currentYear) + markupEnd + "$4");
+
+	// Remove leading 0 in day and month
+	cmd = regex_replace(cmd, regex(markupDateStart + "0([0-9])" + dateDelim + "([0-9]{1,2})" + dateDelim + "([0-9]{2}|[0-9]{4})" + markupEnd + "($|[\\s,\\.])"), markupDateStart + "$1" + dateDelim + "$2" + dateDelim + "$3" + markupEnd + "$4");
+	cmd = regex_replace(cmd, regex(markupDateStart + "([0-9]{1,2})" + dateDelim + "0([0-9])" + dateDelim + "([0-9]{2}|[0-9]{4})" + markupEnd + "($|[\\s,\\.])"), markupDateStart + "$1" + dateDelim + "$2" + dateDelim + "$3" + markupEnd + "$4");
+
+	// Change the 2-digit year to 4-digit
+	cmd = regex_replace(cmd, regex(markupDateStart + "([0-9]{1,2})" + dateDelim + "([0-9]{1,2})" + dateDelim + "([0-9]{2})" + markupEnd + "($|[\\s,\\.])"), markupDateStart + "$1" + dateDelim + "$2" + dateDelim + strVal(currentYear/100) + "$3" + markupEnd + "$4");
+
+	// Change day-in-word (e.g. Today, Tomorrow) into date in digits
+	for(int i=0 ; i<DAY_WORD_NUM ; i++) {
+		cmd = strIReplace(DAY_WORD[i], markupDateStart + (Date()+DAY_WORD_OFFSET[i]).toFormat() + markupEnd, cmd);
+	}
+
+	// Calculate the date of weekdays within coming 7 days
+	tempDate.setDateAsToday();
+	for(int wd=currentWeekday, i=0 ; i==0 || wd!=((currentWeekday+DAY_PER_WEEK)%DAY_PER_WEEK) ; i++, tempDate++) {
+		weekdayDate[wd] = tempDate.toFormat();
+		wd = (wd + 1) % DAY_PER_WEEK;
+	}
+
+	// Change weekday-in-word into date in digits
+	for(int i=0 ; i<WDAY_WORD_NUM ; i++) {
+		cmd = strIReplace(WDAY_WORD[i], markupDateStart + weekdayDate[WDAY_WORD_VALUE[i]] + markupEnd, cmd);
+	}
+
+	// Converting Time
+	
+	// Generate a regular expression containing the preposition.
+	string regexPreposition;
+	for(string preposition : PREPOSITION) {
+		regexPreposition = regexPreposition + "|" + preposition;
+	}
+	regexPreposition.erase(0,1);	// Remove the prceeding '|'.
+
+	// For h:mm
+	rgx = "(^|\\s)(" + regexPreposition + ")? ?([0-2]?[0-9])[:\\.]([0-5][0-9])($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimeStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+	// For h am
+	rgx = "(^|\\s)(" + regexPreposition + ")? ?([01]?[0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimeAmStart + "$3" + timeDelim + "00" + markupEnd + "$4");
+	// For h pm
+	rgx = "(^|\\s)(" + regexPreposition + ")? ?([01]?[0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimePmStart + "$3" + timeDelim + "00" + markupEnd + "$4");
+	// For h:mm am
+	rgx = "(^|\\s)(" + regexPreposition + ")? ?([01]?[0-9])[:\\.]?([0-5][0-9])[aA]\\.?[mM]\\.?($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimeAmStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+	rgx = "(^|\\s)(" + regexPreposition + ")? ?([01]?[0-9])[:\\.]?([0-5][0-9])[pP]\\.?[mM]\\.?($|[\\s,\\.])";
+	// For h:mm pm
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimePmStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+	// For hhmm with a date candidate before the time.
+	rgx = "(^|\\s)(" + markupDateStart + "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}" + markupEnd + " )(" + regexPreposition + ")? ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1$2" + markupTimeStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+	// For hhmm with a preposition before the time.
+	rgx = "(^|\\s)(" + regexPreposition + ") ?([0-2][0-9])([0-5][0-9])($|[\\s,\\.])";
+	cmd = regex_replace(cmd, regex(rgx), "$1" + markupTimeStart + "$3" + timeDelim + "$4" + markupEnd + "$5");
+
+	return strTruncate(cmd);
+}
+
+// String processing functions
+
+// Split a string by a 'char' delimiter
+vector<string> Parser::explode(char delim, string s) {
+	vector<string> result;
+    istringstream iss(s);
+
+    for(string token ; std::getline(iss, token, delim) ; ) {
+        result.push_back(std::move(token));
+    }
+    return result;
+}
+
+bool Parser::isAllDigit(string str) {
+	if(str.empty()) {
+		return false;
+	}
+
+	for(char c : str) {
+		if(c < '0' || c > '9') {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// Concatenate a string vector into a single string
+string Parser::strConcat(vector<string> wordArray) {
+	if(wordArray.size() == 0) {
+		return DEFAULT_EMPTY;
+	}
+
+	string output;
+	for(string word : wordArray) {
+		output = output + SPACE_PARAMETER + word;
+	}
+	output.erase(0,1);	// Remove the first char which must be a space.
+	return output;
+}
+
+// Concatenate part of a string vector into a single string
+string Parser::strConcat(vector<string> wordArray, unsigned int start, unsigned int end) {
+	unsigned int wordNum = wordArray.size();
+	if(wordNum==0 || start > end || start >= wordArray.size()) {
+		return DEFAULT_EMPTY;
+	}
+	string output = wordArray[start];
+	for(unsigned int pos = start+1 ; pos<=end && pos<=wordNum-1 ; pos++) {
+		output = output + SPACE_PARAMETER + wordArray[pos];
+	}
+	return output;
+}
+
+// Case-insensitive string replace.
+string Parser::strIReplace(string search, string replace, string subject) {
+	int lastPos = 0, pos;
+	do {
+		pos = strSearch(search, subject, lastPos);
+		if(pos!=-1) {
+			subject.replace(pos, search.length(), replace);
+		}
+		lastPos = pos - search.length() + replace.length() + 1;
+	} while(pos!=-1);
+	return subject;
+}
+
+// Convert the whole string into lowercases.
+string Parser::strToLower(string input) {
+	string str = input;
+
+	for(unsigned int i = 0; i < str.length(); i++) {
+		// convert ONLY the upper case
+		if(str[i] >= 'A' && str[i] <= 'Z') { 
+			str[i] += 32;   // convert to small case by adding the number difference as in ASCII 
+		}
+	}
+
+	return str;
+}
+
+// Case-sensitive string replace.
+string Parser::strReplace(string search, string replace, string subject) {
+	int lastPos = 0, pos;
+	do {
+		pos = subject.find(search, lastPos);
+
+		if(pos!=string::npos) {
+			subject.replace(pos, search.length(), replace);
+		}
+		lastPos = pos - search.length() + replace.length() + 1;
+
+	} while(pos!=string::npos);
+	return subject;
+}
+
+// Case-sensitive string replace with vector<string> input and output.
+vector<string> Parser::strReplace(string search, string replace, vector<string> subjectArray) {
+	vector<string> outputArray;
+	for(string subject : subjectArray) {
+		outputArray.push_back(strReplace(search, replace, subject));
+	}
+	return outputArray;
+}
+
+int Parser::strSearch(string keyword, string subject) {
+	subject = strToLower(subject);
+	keyword = strToLower(keyword);
+	return subject.find(keyword);
+}
+
+int Parser::strSearch(string keyword, string subject, int pos) {
+	subject = strToLower(subject);
+	keyword = strToLower(keyword);
+	return subject.find(keyword, pos);
+}
+
+string Parser::strTruncate(string input) {
+	int pos;
+	do {
+		pos = input.find(SPACE_PARAMETER + SPACE_PARAMETER);
+		if(pos!=string::npos) {
+			input.replace(pos, 2, SPACE_PARAMETER);
+		}
+	} while(pos!=string::npos);
+	return trim(input);
+}
+
+string Parser::strVal(int in) {
+	ostringstream os;
+	os << in;
+	return os.str();
+}
+
+vector<string> Parser::strVal(vector<int> inputArray) {
+	vector<string> outputArray;
+	for(int input : inputArray) {
+		outputArray.push_back(strVal(input));
+	}
+	return outputArray;
+}
+
+int Parser::toInt(string str) {
+	return stoi(str);
+}
+
+string Parser::trim(string str) {
+	// Removing the preceding white space
+	while(!str.empty() && str[0]==' ') {
+		str.erase(0,1);		// Remove the first char in string
+	}
+
+	// Removing the trailing white space
+	while(!str.empty() && str.back()==' ') {
+		str.pop_back();
+	}
+
+	return str;
+}
+
+string Parser::getFirstWord(string inputString) {
+	string firstWord;
+	inputString = trim(inputString);
+	vector<string> wordArray = splitBySpace(inputString);
+
+	if(wordArray.size()>0) {
+		firstWord = wordArray[0];
+		firstWord = removePunctuation(firstWord);
+	}
+	return firstWord;
+}
+
+string Parser::removeFirstWord(string inputString) {
+	string first;
+	istringstream iss(trim(inputString));
+	iss >> first;
+
+	std::ostringstream oss;
+	oss << iss.rdbuf();
+
+	return oss.str();
+}
+
+string Parser::getLastWord(string inputString) {
+	string lastWord;
+	inputString = trim(inputString);
+	vector<string> wordArray = splitBySpace(inputString);
+
+	if(wordArray.size()>0) {
+		lastWord = wordArray[wordArray.size()-1];
+		lastWord = removePunctuation(lastWord);
+	}
+	return lastWord;
+}
+
+string Parser::removeLastWord(string str) {
+	while(str.empty()==false && str.back() == ' ') {
+		str.pop_back();
+	}
+	while(str.empty()==false && str.back() != ' ') {
+		str.pop_back();
+	}
+	while(str.empty()==false && str.back() == ' ') {
+		str.pop_back();
+	}
+	return str;
+}
+
+vector<string> Parser::splitBySpace(string input) {
+	input = strTruncate(input);
+	return explode(' ', input);
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Parser.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Parser.h
+	 */
+
+#ifndef PARSER_H
+#define PARSER_H
+
+#pragma once
+
+#include <string>
+#include <stack>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <utility>
+#include <regex>
+#include "ClockTime.h"
+#include "Date.h"
+#include "Calendar.h"
+using namespace std;
+class Parser {
+public:
+	Parser();
+	~Parser();
+
+	static CMD_TYPE determineCommandType(string);
+	static TASK_STATUS getTaskStatus(string);
+	static bool isCategory(string);
+	static bool isPreposition(string);
+	static string removePunctuation(string);
+
+	// Date and time related functions
+	static Date* Parser::createDate(string);
+	static ClockTime* createTime(string);
+	static void extractDateTime(string, string&, vector<Date>&, vector<ClockTime>&);
+	static bool isDate(string);
+	static bool isDate(string, Date&);
+	static bool isTime(string);
+	static bool isTime(string, ClockTime&);
+	static bool isValidConvertedDate(string&);
+	static bool isValidConvertedDate(string&, Date&);
+	static bool isValidConvertedTime(string&);
+	static bool isValidConvertedTime(string&, ClockTime&);
+	static string markupDateTime(string);
+	
+	// String processing functions
+	static vector<string> explode(char, string);
+	static bool isAllDigit(string);
+	static string strConcat(vector<string>);
+	static string strConcat(vector<string>, unsigned int, unsigned int);
+	static string strIReplace(string, string, string);
+	static string strToLower(string);
+	static string strReplace(string, string, string);
+	static vector<string> strReplace(string, string, vector<string>);
+	static int strSearch(string, string);
+	static int strSearch(string, string, int);
+	static string strTruncate(string);
+	static string strVal(int);
+	static vector<string> strVal(vector<int>);
+	static int toInt(string);
+	static string trim(string);
+
+	static string getFirstWord(string);
+	static string removeFirstWord(string);
+	static string getLastWord(string);
+	static string removeLastWord(string);
+	static vector<string> splitBySpace(string);
+};
+
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Parser.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ParserTest_GetFirstWord) {
+			Parser _parser;
+			std::string expectedCase1 = "add";
+			std::string validInput1 = _parser.getFirstWord("add dinner with Mai");
+			std::string expectedCase2 = "";
+			std::string invalidInput2 = _parser.getFirstWord("");
+			std::string validInput3 = _parser.getFirstWord("  add do homework");
+			std::string expectedCase3 = "add";
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, invalidInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ParserTest_RemoveFirstWord) {
+			Parser _parser;
+			std::string validInput1 = _parser.removeFirstWord("edit 1");
+			std::string expectedCase1 = " 1";
+			std::string validInput2= _parser.removeFirstWord("clear");
+			std::string expectedCase2 = "";
+			std::string validInput3 = _parser.removeFirstWord(" add do homework");
+			std::string expectedCase3 = " do homework";
+			std::string validInput4= _parser.removeFirstWord("       add do homework");
+			std::string expectedCase4 = " do homework";
+			std::string validInput5 = _parser.removeFirstWord("undone 1   ");
+			std::string expectedCase5 = " 1";
+			std::string validInput6 = _parser.removeFirstWord("add   hello kitty");
+			std::string expectedCase6 = "   hello kitty";
+			std::string validInput7 = _parser.removeFirstWord("  add   do homework");
+			std::string expectedCase7 = "   do homework";
+			std::string invalidInput8 = _parser.removeFirstWord("");
+			std::string expectedCase8 = "";
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, validInput4);
+			Assert::AreEqual(expectedCase5, validInput5);
+			Assert::AreEqual(expectedCase6, validInput6);
+			Assert::AreEqual(expectedCase7, validInput7);
+			Assert::AreEqual(expectedCase8, invalidInput8);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ParserTest_SplitBySpace) {
+			//vector to be converted to string for comparison
+			std:: string word = "add";
+
+			std::vector<string> validInput1 = Parser::splitBySpace("go to the zoo on 21/05/2014 at 7pm !H #leisure");
+			std::string expectedCase1 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase1 = Parser::strConcat(validInput1);
+
+			std::vector<string> validInput2 = Parser::splitBySpace("  go to the zoo on 21/05/2014 at 7pm !H #leisure  ");
+			std::string expectedCase2 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase2 = Parser::strConcat(validInput2);
+
+			std::vector<string> validInput3= Parser::splitBySpace("go to the zoo          on 21/05/2014 at 7pm !H #leisure");
+			std::string expectedCase3 = "go to the zoo on 21/05/2014 at 7pm !H #leisure";
+			std::string convertedCase3 = Parser::strConcat(validInput3);
+
+			std::vector<string> invalidInput4 = Parser::splitBySpace("");
+			std::string expectedCase4 = "";
+			std::string convertedCase4 = Parser::strConcat(invalidInput4);
+
+			std::vector<string> validInput5 = Parser::splitBySpace("go to the zoo on 21 May 2014 at 7pm !H #leisure");
+			std::string expectedCase5 = "go to the zoo on 21 May 2014 at 7pm !H #leisure";
+			std::string convertedCase5 = Parser::strConcat(validInput5);
+
+			std::vector<string> validInput6 = Parser::splitBySpace("go to the zoo on 21 May at 7pm !H #leisure");
+			std::string expectedCase6 = "go to the zoo on 21 May at 7pm !H #leisure";
+			std::string convertedCase6 = Parser::strConcat(validInput6);
+			
+			Assert::AreEqual(convertedCase1, expectedCase1);
+			Assert::AreEqual(convertedCase2, expectedCase2);
+			Assert::AreEqual(convertedCase3, expectedCase3);
+			Assert::AreEqual(convertedCase4, expectedCase4);
+			Assert::AreEqual(convertedCase5, expectedCase5);
+			Assert::AreEqual(convertedCase6, expectedCase6);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD (ParserTest_StrReplace) {
+			string validInput1 = Parser::strReplace("!", "", "!low");
+			string expectedCase1 = "low";
+			string validInput2= Parser::strReplace("!", "", "#personal");
+			string expectedCase2 = "personal";
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreNotEqual(expectedCase2, validInput2);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ParserTest_IsTime) {
+			bool validInput1 = Parser::isTime("8pm");
+			bool expectedCase1 = true;
+			bool validInput2= Parser::isTime("16:00");
+			bool expectedCase2 = true;
+			bool validInput3= Parser::isTime("1630");
+			bool expectedCase3 = false;
+			bool validInput4= Parser::isTime("8.30am");
+			bool expectedCase4 = true;
+			bool validInput5= Parser::isTime("0000");
+			bool expectedCase5 = false;
+			bool invalidInput6= Parser::isTime("am");
+			bool expectedCase6 = false;
+			bool invalidInput7= Parser::isTime("2400");
+			bool expectedCase7 = false;
+			bool invalidInput8= Parser::isTime("4/03");
+			bool expectedCase8 = false;
+			bool invalidInput9= Parser::isTime("430");
+			bool expectedCase9 = false;
+			bool invalidInput10 = Parser::isTime("hello");
+			bool expectedCase10 = false;
+
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, validInput2);
+			Assert::AreEqual(expectedCase3, validInput3);
+			Assert::AreEqual(expectedCase4, validInput4);
+			Assert::AreEqual(expectedCase5, validInput5);
+			Assert::AreEqual(expectedCase6, invalidInput6);
+			Assert::AreEqual(expectedCase7, invalidInput7);
+			Assert::AreEqual(expectedCase8, invalidInput8);
+			Assert::AreEqual(expectedCase9, invalidInput9);
+			Assert::AreEqual(expectedCase10, invalidInput10);
+		}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ParserTest_IsPreposition) {
+			bool validInput1 = Parser::isPreposition("on");
+			bool expectedCase1 = true;
+			bool invalidInput2 = Parser::isPreposition("");
+			bool expectedCase2 = false;
+			bool invalidInput3 = Parser::isPreposition("onn");
+			bool expectedCase3 = false;
+			bool invalidInput4 = Parser::isPreposition("10");
+			bool expectedCase4 = false;
+
+			Assert::AreEqual(expectedCase1, validInput1);
+			Assert::AreEqual(expectedCase2, invalidInput2);
+			Assert::AreEqual(expectedCase3, invalidInput3);
+			Assert::AreEqual(expectedCase3, invalidInput4);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+	    TEST_METHOD(ParserTest_IsDate) {
+			bool input1 = Parser::isDate("22/12/2013");
+			bool expectedCase1 = true;
+			bool input2 = Parser::isDate("22/12");
+			bool expectedCase2 = true;
+			bool input3 = Parser::isDate("22-07-2013");
+			bool expectedCase3 = true;
+			bool input4 = Parser::isDate("22-12");
+			bool expectedCase4 = false;
+			bool input5 = Parser::isDate("22.12.2013");
+			bool expectedCase5 = true;
+			bool input6 = Parser::isDate("22.12");
+			bool expectedCase6 = false;
+			bool input7 = Parser::isDate("tomorrow");
+			bool expectedCase7 = true;
+			bool input8 = Parser::isDate("today");
+			bool expectedCase8 = true;
+			bool input9 = Parser::isDate("tmr");
+			bool expectedCase9 = true;
+			bool input10 = Parser::isDate("tmrw");
+			bool expectedCase10 = true;
+			bool input11 = Parser::isDate("today2");
+			bool expectedCase11 = false;
+			bool input12 = Parser::isDate("22,12,2013");
+			bool expectedCase12 = false;
+			bool input13 = Parser::isDate("22,12");
+			bool expectedCase13 = false;
+			bool input14 = Parser::isDate("45/07/2013");
+			bool expectedCase14 = false;
+			bool input15 = Parser::isDate("15/15/2013");
+			bool expectedCase15 = false;
+			bool input16 = Parser::isDate("15/07/403");
+			bool expectedCase16 = false;
+			bool input17 = Parser::isDate("15/07/13");
+			bool expectedCase17 = true;
+			bool input18 = Parser::isDate("hello/hello/2013");
+			bool expectedCase18 = false;
+			bool input19 = Parser::isDate("hello");
+			bool expectedCase19 = false;
+			bool input20 = Parser::isDate("22 March 2013");
+			bool expectedCase20 = true;
+			bool input21= Parser::isDate("22 March");
+			bool expectedCase21 = true;
+			bool input22 = Parser::isDate("22 Mar");
+			bool expectedCase22 = true;
+			bool input23 = Parser::isDate("22 March, 2013");
+			bool expectedCase23 = true;
+			bool input24 = Parser::isDate("Mar 22");
+			bool expectedCase24 = true;
+			bool input25 = Parser::isDate("Mar 22 2013");
+			bool expectedCase25 = true;
+			bool input26 = Parser::isDate("March 22 2013");
+			bool expectedCase26 = true;
+			bool input27 = Parser::isDate("Mar 22, 2013");
+			bool expectedCase27 = true;
+			bool input28 = Parser::isDate("March 22, 2013");
+			bool expectedCase28 = true;
+			bool input29 = Parser::isDate("22nd Mar");
+			bool expectedCase29 = true;
+			bool input30 = Parser::isDate("22nd March");
+			bool expectedCase30 = true;
+			bool input31 = Parser::isDate("22nd Mar 2013");
+			bool expectedCase31 = true;
+			bool input32 = Parser::isDate("22nd March 2013");
+			bool expectedCase32 = true;
+			bool input33 = Parser::isDate("22nd Mar, 2013");
+			bool expectedCase33 = true;
+			bool input34 = Parser::isDate("22nd March, 2013");
+			bool expectedCase34 = true;
+			
+
+			Assert::AreEqual(expectedCase1, input1);
+			Assert::AreEqual(expectedCase2, input2);
+			Assert::AreEqual(expectedCase3, input3);
+			Assert::AreEqual(expectedCase4, input4);
+			Assert::AreEqual(expectedCase5, input5);
+			Assert::AreEqual(expectedCase6, input6);
+			Assert::AreEqual(expectedCase7, input7);
+			Assert::AreEqual(expectedCase8, input8);
+			Assert::AreEqual(expectedCase9, input9);
+			Assert::AreEqual(expectedCase10, input10);
+			Assert::AreEqual(expectedCase11, input11);
+			Assert::AreEqual(expectedCase12, input12);
+			Assert::AreEqual(expectedCase13, input13);
+			Assert::AreEqual(expectedCase14, input14);
+			Assert::AreEqual(expectedCase15, input15);
+			Assert::AreEqual(expectedCase16, input16);
+			Assert::AreEqual(expectedCase17, input17);
+			Assert::AreEqual(expectedCase18, input18);
+			Assert::AreEqual(expectedCase19, input19);
+			Assert::AreEqual(expectedCase20, input20);
+			Assert::AreEqual(expectedCase21, input21);
+			Assert::AreEqual(expectedCase22, input22);
+			Assert::AreEqual(expectedCase23, input23);
+			Assert::AreEqual(expectedCase24, input24);
+			Assert::AreEqual(expectedCase25, input25);
+			Assert::AreEqual(expectedCase26, input26);
+			Assert::AreEqual(expectedCase27, input27);
+			Assert::AreEqual(expectedCase28, input28);
+			Assert::AreEqual(expectedCase29, input29);
+			Assert::AreEqual(expectedCase30, input30);
+			Assert::AreEqual(expectedCase31, input31);
+			Assert::AreEqual(expectedCase32, input32);
+			Assert::AreEqual(expectedCase33, input33);
+			Assert::AreEqual(expectedCase34, input34);
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(DateTest_Operators1) {
+			// operator==(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) == Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) == Date(12,12,1909));	// Different year
+			Assert::AreEqual(false, Date(12,12,1908) == Date(12,11,1908));	// Different month
+			Assert::AreEqual(false, Date(12,12,1908) == Date(11,12,1908));	// Different day
+
+			// operator>(Date)
+			Assert::AreEqual(false, Date(12,12,1908) > Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) > Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(true,  Date(12,12,1909) > Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(true,  Date(12,12,1908) > Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(false, Date(12,11,1908) > Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(false, Date(11,12,1908) > Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(true,  Date(12,12,1908) > Date(12,11,1908));	// Different day 2
+
+			// operator<(Date)
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,12,1908));	// All same
+			Assert::AreEqual(true,  Date(12,12,1908) < Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(false, Date(12,12,1909) < Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(true,  Date(12,11,1908) < Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(true,  Date(11,12,1908) < Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(false, Date(12,12,1908) < Date(12,11,1908));	// Different day 2
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(DateTest_Operators2) {
+			// operator>=(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,12,1908));	// All same
+			Assert::AreEqual(false, Date(12,12,1908) >= Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(true,  Date(12,12,1909) >= Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(false, Date(12,11,1908) >= Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(false, Date(11,12,1908) >= Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,11,1908));	// Different day 2
+
+			// operator<=(Date)
+			Assert::AreEqual(true,  Date(12,12,1908) <= Date(12,12,1908));	// All same
+			Assert::AreEqual(true,  Date(12,12,1908) <= Date(12,12,1909));	// Different year 1
+			Assert::AreEqual(false, Date(12,12,1909) <= Date(12,12,1908));	// Different year 2
+			Assert::AreEqual(false, Date(12,12,1908) <= Date(12,11,1908));	// Different month 1
+			Assert::AreEqual(true,  Date(12,11,1908) <= Date(12,12,1908));	// Different month 2
+			Assert::AreEqual(true,  Date(11,12,1908) <= Date(12,12,1908));	// Different day 1
+			Assert::AreEqual(false, Date(12,12,1908) <= Date(11,12,1908));	// Different day 2
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+

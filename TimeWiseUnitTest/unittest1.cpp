@@ -1,4 +1,3 @@
-//@author A0099938B
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
@@ -7,6 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace TimeWiseUnitTest {		
 	TEST_CLASS(UnitTest1) {
 	public:
+		//@author A0097277M
 		TEST_METHOD(CommandAddTest) {
 			//equivalence partition: floating task, timed task, deadline task
 			TaskList _taskList;
@@ -65,7 +65,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual("10 Mar",_taskList.getTask(3)->getStartDate()->toString().c_str());
 			
 		}
-
+		//@author A0097277M
 		TEST_METHOD(CommandDeleteTest) {
 			
 			TaskList _taskList;
@@ -91,7 +91,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(6,static_cast<int>(_taskList.undoneSize()));
 			
 		}
-
+		//@author A0097277M
 		TEST_METHOD(CommandClearTest) {
 			//Equivalence partitioning: Clear from Screen, Clear from Main, Clear from Completed, Clear All
 			TaskList _taskList;
@@ -115,7 +115,7 @@ namespace TimeWiseUnitTest {
 			clear->execute(_taskList,feedback);
 			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
 		}
-
+		//@author A0097277M
 		TEST_METHOD(CommandEditTest) {
 			//Equivalence Partition: Edit Description, Edit Schedule
 			TaskList _taskList;
@@ -144,7 +144,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual("1200",_taskList.getTask(0)->getStartTime()->toString().c_str());
 			Assert::AreEqual("1300",_taskList.getTask(0)->getEndTime()->toString().c_str());
 		}
-
+		//@author A0097277M
 		TEST_METHOD(CommandDoneUndoneTest) {
 			TaskList _taskList;
 			std::string feedback;
@@ -173,7 +173,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(0,static_cast<int>(_taskList.doneSize()));
 
 		}
-
+		//@author A0097277M
 		TEST_METHOD(CommandSearchKeywordTest) {
 			TaskList _taskList;
 			std::string feedback;
@@ -197,6 +197,7 @@ namespace TimeWiseUnitTest {
 				Assert::AreEqual("Hello",_taskList.getSearchedTask(i)->getDescription().c_str());
 			}
 		}
+		//@author A0097277M
 		TEST_METHOD(ClockTimeTest) {
 			//equivalence partition: set time as negative, set time as positive and below 2359, set time above 2359
 			//Boundary Value analysis: set time as -1, set time as 0000, set time as 2400,set time as 2359, set time as 2360
@@ -223,6 +224,7 @@ namespace TimeWiseUnitTest {
 			delete newTime;
 			delete otherTime;
 		}
+		//@author A0097277M
 		TEST_METHOD(DateTest) {
 			//equivalence partition: negative day month year, positive day month year=> leapYear, nonleapYEar=>validDayMonthYear InvalidDayMonthYear
 			//Boundary Value analysis: set day month year as negative or zero, set month above 12, set day above valid day
@@ -259,6 +261,7 @@ namespace TimeWiseUnitTest {
 			delete otherDate;
 		}
 
+		//@author A0121023H
 		TEST_METHOD(ParserTest_GetFirstWord) {
 			Parser _parser;
 			std::string expectedCase1 = "add";
@@ -271,7 +274,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase2, invalidInput2);
 			Assert::AreEqual(expectedCase3, validInput3);
 		}
-
+		//@author A0121023H
 		TEST_METHOD(ParserTest_RemoveFirstWord) {
 			Parser _parser;
 			std::string validInput1 = _parser.removeFirstWord("edit 1");
@@ -299,7 +302,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase7, validInput7);
 			Assert::AreEqual(expectedCase8, invalidInput8);
 		}
-
+		//@author A0121023H
 		TEST_METHOD(ParserTest_SplitBySpace) {
 			//vector to be converted to string for comparison
 			std:: string word = "add";
@@ -335,7 +338,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(convertedCase5, expectedCase5);
 			Assert::AreEqual(convertedCase6, expectedCase6);
 		}
-		
+		//@author A0121023H
 		TEST_METHOD (ParserTest_StrReplace) {
 			string validInput1 = Parser::strReplace("!", "", "!low");
 			string expectedCase1 = "low";
@@ -344,7 +347,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase1, validInput1);
 			Assert::AreNotEqual(expectedCase2, validInput2);
 		}
-
+		//@author A0121023H
 		TEST_METHOD(ParserTest_IsTime) {
 			bool validInput1 = Parser::isTime("8pm");
 			bool expectedCase1 = true;
@@ -379,6 +382,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase10, invalidInput10);
 		}
 
+		//@author A0121023H
 		TEST_METHOD(ParserTest_IsPreposition) {
 			bool validInput1 = Parser::isPreposition("on");
 			bool expectedCase1 = true;
@@ -394,7 +398,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase3, invalidInput3);
 			Assert::AreEqual(expectedCase3, invalidInput4);
 		}
-
+		//@author A0121023H
 	    TEST_METHOD(ParserTest_IsDate) {
 			bool input1 = Parser::isDate("22/12/2013");
 			bool expectedCase1 = true;
@@ -501,7 +505,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expectedCase33, input33);
 			Assert::AreEqual(expectedCase34, input34);
 		}
-
+		//@author A0121023H
 		TEST_METHOD(DateTest_Operators1) {
 			// operator==(Date)
 			Assert::AreEqual(true,  Date(12,12,1908) == Date(12,12,1908));	// All same
@@ -527,8 +531,8 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(true,  Date(11,12,1908) < Date(12,12,1908));	// Different day 1
 			Assert::AreEqual(false, Date(12,12,1908) < Date(12,11,1908));	// Different day 2
 		}
-
-		TEST_METHOD(DateTest_Opeartors2) {
+		//@author A0121023H
+		TEST_METHOD(DateTest_Operators2) {
 			// operator>=(Date)
 			Assert::AreEqual(true,  Date(12,12,1908) >= Date(12,12,1908));	// All same
 			Assert::AreEqual(false, Date(12,12,1908) >= Date(12,12,1909));	// Different year 1
@@ -547,6 +551,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(true,  Date(11,12,1908) <= Date(12,12,1908));	// Different day 1
 			Assert::AreEqual(false, Date(12,12,1908) <= Date(11,12,1908));	// Different day 2
 		}
+		//@author A0099938B
 		// test for command add (float, deadline, timed tasks) and the feedback that the system is going to return to the users
 		TEST_METHOD(System_Test_Float_Task) {
 		// Test for float task
@@ -555,6 +560,7 @@ namespace TimeWiseUnitTest {
 			std::string expected1 = ADD_SUCCESS;
 			Assert::AreEqual(feedback1,expected1);
 		}
+		//@author A0099938B
 		TEST_METHOD(System_Test_Timed_Task){
 		// Test for timed task
 			TimeWiseLogic _logic;
@@ -562,6 +568,7 @@ namespace TimeWiseUnitTest {
 			std::string expected2 = ADD_SUCCESS;
 			Assert::AreEqual(feedback2,expected2);
 		}
+		//@author A0099938B
 		TEST_METHOD(System_Test_Deadline_Task) {
 		// Test for deadline task
 			TimeWiseLogic _logic;
@@ -569,34 +576,22 @@ namespace TimeWiseUnitTest {
 			std::string expected3 = ADD_SUCCESS;
 			Assert::AreEqual(feedback3,expected3);
 		}
-		// Other Test Cases  which could be used for deadline tasks and timed tasks
-			/*std::string feedback4 = _logic.processCommand("add do laundry tomorrow at 9pm");
-			std::string expected4 = ADD_SUCCESS;
-			Assert::AreEqual(feedback4,expected4);
-			std::string feedback5 = _logic.processCommand("add do laundry from 21/5 to 22/5");
-			std::string expected5 = ADD_SUCCESS;
-			Assert::AreEqual(feedback5,expected5);
-			std::string feedback6 = _logic.processCommand("add do laundry from 21/5 to 22/5 from 9pm to 10pm");
-			std::string expected6 = ADD_SUCCESS;
-			Assert::AreEqual(feedback6,expected6);
-			std::string feedback7 = _logic.processCommand("add do laundry !high #household");
-			std::string expected7 = ADD_SUCCESS;
-			Assert::AreEqual(feedback7,expected7);*/
-		//Test for possible exceptions and errors for add command
-		
+
+		//@author A0099938B
 		TEST_METHOD(System_Test_No_Argument) {
 			TimeWiseLogic _logic;
 			std::string feedback9 = _logic.processCommand("add");
 			std::string expected9 = NO_ARGUMENT_EXCEPTION;
 			Assert::AreEqual(feedback9,expected9);
 		}
+		//@author A0099938B
 		TEST_METHOD(System_Test_Empty_Input) {
 			TimeWiseLogic _logic;
 			std::string feedback10 = _logic.processCommand("");
 			std::string expected10 = NO_COMMAND_LINE;
 			Assert::AreEqual(feedback10,expected10);
 		}
-
+		//@author A0099938B
 		TEST_METHOD(System_Test_Delete_Command) {
 			TimeWiseLogic _logic;
 			//Test for command delete and the feedback that the system return to user
@@ -614,7 +609,7 @@ namespace TimeWiseUnitTest {
 			std::string expected9 = NO_ARGUMENT_EXCEPTION;// Test for input without any index.
 			Assert::AreEqual(cmd9,expected9);
 		}
-
+		//@author A0099938B
 		TEST_METHOD(System_Test_Delete_Negative_Index) {
 			TimeWiseLogic _logic;
 			//Test for command delete and the feedback that the system return to user when the index is out of range.
@@ -630,7 +625,7 @@ namespace TimeWiseUnitTest {
 			Assert::AreEqual(expected9, cmd9);
 
 		}
-
+		//@author A0099938B
 		TEST_METHOD(System_Test_Done_Command) {
 			//test for command done/undone and the feedback that the system is going to return
 			TimeWiseLogic _logic;
@@ -645,6 +640,7 @@ namespace TimeWiseUnitTest {
 			std::string expected6 = DONE_SUCCESS;
 			Assert::AreEqual(cmd6, expected6);
 		}
+		//@author A0099938B
 		TEST_METHOD(System_Test_Undone_Command) {
 			//test for command undone command and the feedback that the system is going to return
 			TimeWiseLogic _logic;
@@ -659,7 +655,7 @@ namespace TimeWiseUnitTest {
 			std::string expected6 = TASK_NOT_COMPLETED_YET;
 			Assert::AreEqual(expected6, cmd6);
 		}
-	
+		//@author A0099938B
 		TEST_METHOD(System_Test_Clear_All) {
 			TimeWiseLogic _logic;
 		    //test for command clear and the feedback that the system is going to return to user

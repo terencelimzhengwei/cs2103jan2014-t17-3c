@@ -60,7 +60,7 @@ public:
 	//other functions
 	void autoComplete();
 	void checkCorrupted();
-	int checkEmpty(QString input);
+	void checkEmpty(QString input);
 	void showHelp();
 
 private slots:

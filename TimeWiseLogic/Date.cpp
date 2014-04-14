@@ -10,7 +10,7 @@ Date::Date(int day, int month, int year) {
 }
 
 Date::Date(Date& src) {
-	this->setDate(src._dayNumber, src._month, src._year);
+	this->setDate(src._day, src._month, src._year);
 }
 
 // Destructors
@@ -19,7 +19,7 @@ Date::~Date() {
 
 // Get & "Set by input" functions
 int Date::getDay() {
-	return _dayNumber;
+	return _day;
 }
 
 int Date::getMonth(){
@@ -31,11 +31,11 @@ int Date::getYear() {
 }
 
 int Date::getWeekDay() {
-	return _day;
+	return _weekday;
 }
 
 string Date::getDayOfTheWeek() {
-	return DAY_ABBR[_day];
+	return DAY_ABBR[_weekday];
 }
 
 void Date::setDate(int day, int month, int year) {
@@ -48,10 +48,10 @@ void Date::setDate(int day, int month, int year) {
 			throw InvalidDateTimeFormatException();
 		}
 	}
-	_dayNumber = day;
+	_day = day;
 	_month = month;
 	_year = year;
-	_day=getDayFromDate(day,month,year);
+	_weekday = getDayFromDate(day,month,year);
 }
 
 // Set functions without input parameters
@@ -62,10 +62,10 @@ void Date::setDateAsToday() {
 	_currentTime = time(0);   
 	localtime_s(&_timeNow,&_currentTime);
 
-	_dayNumber = _timeNow.tm_mday;
+	_day = _timeNow.tm_mday;
 	_month = _timeNow.tm_mon + 1;
 	_year = _timeNow.tm_year + 1900;
-	_day = _timeNow.tm_wday;
+	_weekday = _timeNow.tm_wday;
 }
 
 void Date::setDateAsTomorrow() {
@@ -100,9 +100,9 @@ TIMEDATE_STATUS Date::checkOverdue() {
 		} else if(_month<thisMonth) {
 			return LATER;
 		} else {
-			if(_dayNumber>todayDate) {
+			if(_day>todayDate) {
 				return EARLIER;
-			} else if(_dayNumber<todayDate) {
+			} else if(_day<todayDate) {
 				return LATER;
 			} else {
 				return SAME;
@@ -129,9 +129,9 @@ TIMEDATE_STATUS Date::isLater(Date* otherDate) {
 		} else if(_month<otherDate->_month) {
 			return EARLIER;
 		} else {
-			if(_dayNumber>otherDate->_dayNumber) {
+			if(_day>otherDate->_day) {
 				return LATER;
-			} else if(_dayNumber<otherDate->_dayNumber) {
+			} else if(_day<otherDate->_day) {
 				return EARLIER;
 			} else {
 				return SAME;
@@ -148,7 +148,7 @@ string Date::toFormat() {
 	ostringstream convert;
 	string slash = "/";
 	string dateInString;
-	convert << _dayNumber << slash << _month << slash << _year;
+	convert << _day << slash << _month << slash << _year;
 	dateInString = convert.str();
 	return dateInString;
 }
@@ -161,7 +161,7 @@ string Date::toString() {
 	year = year.substr(2);
 	convert.str(string());
 	string dateInString;
-	convert << _dayNumber << space << MONTH_ABBR[_month-1];
+	convert << _day << space << MONTH_ABBR[_month-1];
 
 	dateInString = convert.str();
 	return dateInString;
@@ -239,8 +239,8 @@ Date Date::operator-(int num) {
 }
 
 Date& Date::operator++() {
-	if(_dayNumber == MAX_DAYS_IN_MONTH[this->leapYear()][_month-1]) {
-		_dayNumber = 1;
+	if(_day == MAX_DAYS_IN_MONTH[this->leapYear()][_month-1]) {
+		_day = 1;
 		if(_month == 12) {
 			_month = 1;
 			_year += 1;
@@ -248,9 +248,9 @@ Date& Date::operator++() {
 			_month += 1;
 		}
 	} else {
-		_dayNumber += 1;
+		_day += 1;
 	}
-	_day = (_day + 1) % 7;
+	_weekday = (_weekday + 1) % 7;
 	return *this;
 }
 
@@ -261,20 +261,20 @@ Date Date::operator++(int) {
 }
 
 Date& Date::operator--() {
-	_dayNumber -= 1;
-	if(_dayNumber == 0) {
+	_day -= 1;
+	if(_day == 0) {
 		if(_month > 1) {
 			_month -= 1;
-			_dayNumber = MAX_DAYS_IN_MONTH[this->leapYear()][_month-1];
+			_day = MAX_DAYS_IN_MONTH[this->leapYear()][_month-1];
 		} else {
 			_year -= 1;
 			_month = NUM_OF_MONTHS;
-			_dayNumber = MAX_DAYS_IN_MONTH[this->leapYear()][11];
+			_day = MAX_DAYS_IN_MONTH[this->leapYear()][11];
 		}
 	}
-	_day = _day - 1;
-	while(_day < 0) {
-		_day += 7;
+	_weekday = _weekday - 1;
+	while(_weekday < 0) {
+		_weekday += 7;
 	}
 	return *this;
 }
@@ -288,7 +288,7 @@ Date Date::operator--(int) {
 bool Date::operator==(Date b) {
 	bool same = false;
 
-	if( this->_year == b._year && this->_month == b._month && this->_dayNumber == b._dayNumber) {
+	if( this->_year == b._year && this->_month == b._month && this->_day == b._day) {
 		same = true;
 	}
 
@@ -300,7 +300,7 @@ bool Date::operator>(Date b) {
 
 	if( this->_year > b._year ||
 		this->_year == b._year && this->_month > b._month || 
-		this->_year == b._year && this->_month == b._month && this->_dayNumber > b._dayNumber) {
+		this->_year == b._year && this->_month == b._month && this->_day > b._day) {
 			larger = true;
 	}
 
@@ -312,7 +312,7 @@ bool Date::operator<(Date b) {
 
 	if( this->_year < b._year ||
 		this->_year == b._year && this->_month < b._month || 
-		this->_year == b._year && this->_month == b._month && this->_dayNumber < b._dayNumber) {
+		this->_year == b._year && this->_month == b._month && this->_day < b._day) {
 			smaller = true;
 	}
 
@@ -337,8 +337,7 @@ Date Date::operator-=(int num) {
 	return *this;
 }
 
-int Date::getDayFromDate(int day,int month,int year)
-{
+int Date::getDayFromDate(int day, int month, int year) {
 	tm timeStruct = {};
 	timeStruct.tm_year = year - 1900;
 	timeStruct.tm_mon = month - 1;
@@ -348,14 +347,14 @@ int Date::getDayFromDate(int day,int month,int year)
 	return timeStruct.tm_wday;  //  0...6 for Sunday...Saturday
 }
 
-bool Date::isToday(){
-	if(_dayNumber==getCurrentDay()&&_month==getCurrentMonth()&&_year==getCurrentYear()){
+bool Date::isToday() {
+	if(_day==getCurrentDay() && _month==getCurrentMonth() && _year==getCurrentYear()){
 		return true;
 	}
 	return false;
 }
 
-bool Date::isTomorrow(){
+bool Date::isTomorrow() {
 	time_t tomorrow = time(0) + 24*60*60;
 	struct tm _timeNow ;
 
@@ -363,12 +362,12 @@ bool Date::isTomorrow(){
 	int day = _timeNow.tm_mday;
 	int month = _timeNow.tm_mon + 1;
 	int year = _timeNow.tm_year + 1900;
-	if(_dayNumber==day&&_month==month&&_year==year){
+	if(_day == day && _month==month && _year==year){
 		return true;
 	}
 	return false;
 }
 
-void Date::setNextDay(){
+void Date::setNextDay() {
 	(*this)++;
 }

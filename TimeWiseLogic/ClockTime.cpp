@@ -18,8 +18,6 @@ ClockTime::~ClockTime() {
 }
 
 void ClockTime::setTime(int time) {
-	// if(time<0||time/100<0||time/100>23||time%100>59||time%100<0) {
-
 	if(time<0 || hour(time)>23 || minute(time)>59) {
 		throw InvalidDateTimeFormatException();
 	}
@@ -54,18 +52,18 @@ std::string ClockTime::toString() {
 	std::string timeInString;
 	timeInString = stream.str();
 
-	switch(timeInString.size()){
+	switch(timeInString.size()) {
 	case 1:
-		if(timeInString[0]=='0'){
+		if(timeInString[0]=='0') {
 			return "0000";
 		}else{
 			return "000"+timeInString;
 		}
 		break;
 	case 2:
-		return "00"+timeInString;
+		return "00" + timeInString;
 	case 3:
-		return "0"+timeInString;
+		return "0" + timeInString;
 	default:
 		return timeInString;
 	}

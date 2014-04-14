@@ -425,7 +425,7 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 	vector<ClockTime> times;
 	smatch sm;
 
-	if( regex_match(parameter, sm, regex("^\\s*([0-9]*) (.+)\\s*$")) ) {
+	if( regex_match(parameter, sm, regex("^\\s*([0-9]*)\\s?(.*)\\s*$")) ) {
 		if( isValidIndex(Parser::toNum(sm[1])) ) {
 			index = Parser::toNum(sm[1]) - 1;
 			parameter = sm[2];
@@ -437,7 +437,6 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 	}
 	if(index == DEFAULT_INDEX) {
 		throw InvalidEditCommandInputException();
-		
 	}
 
 	Parser::extractDateTime(parameter, description, dates, times);
@@ -453,53 +452,45 @@ Command* CommandCreator::createCommandEdit(string parameter, DISPLAY_TYPE* scree
 	description = Parser::trim(description);
 
 	Command_Edit* commandEdit = new Command_Edit();
-	if( !description.empty() ){
-		commandEdit->setDescription(description);
-	}
-	if( !category.empty() ) {
-		commandEdit->setCategory(category);
-	}
-	if( !dates.empty() ) {
-		Date* tempDate;
-		switch(dates.size()) {
-		case 1:
-			tempDate = new Date( dates[0] );
-			commandEdit->setEndDate( tempDate );
-			break;
-		case 2:
-			tempDate = new Date( dates[1] );
-			commandEdit->setStartDate( tempDate );
-			tempDate = new Date( dates[0] );
-			commandEdit->setEndDate( tempDate );
-			break;
-		default:
-			delete commandEdit;
-			commandEdit = NULL;
-			throw InvalidDateTimeFormatException();
+		if( !description.empty() ){
+			commandEdit->setDescription(description);
 		}
-	}
-	if(!times.empty()) {
-		ClockTime* tempTime;
-		switch(times.size()) {
-		case 1: {
-			tempTime = new ClockTime( times[0] );
-			commandEdit->setEndTime( tempTime );
-			break;
-				}
-		case 2:
-			tempTime = new ClockTime( times[1] );
-			commandEdit->setStartTime( tempTime );
-			times.pop_back();
-			tempTime = new ClockTime( times[0] );
-			commandEdit->setEndTime( tempTime );
-			break;
-		default:
-			delete commandEdit;
-			commandEdit = NULL;
-			throw InvalidDateTimeFormatException();
+		if( !category.empty() ) {
+			commandEdit->setCategory(category);
 		}
-	}
-
+		if( !dates.empty() ) {
+			Date* tempDate;
+			switch(dates.size()) {
+			case 1:
+				tempDate = new Date( dates[0] );
+				commandEdit->setEndDate( tempDate );
+				break;
+			case 2:
+				tempDate = new Date( dates[1] );
+				commandEdit->setStartDate( tempDate );
+				tempDate = new Date( dates[0] );
+				commandEdit->setEndDate( tempDate );
+				break;
+			}
+		}
+		if(!times.empty()) {
+			ClockTime* tempTime;
+			switch(times.size()) {
+			case 1: {
+				tempTime = new ClockTime( times[0] );
+				commandEdit->setEndTime( tempTime );
+				break;
+					}
+			case 2:
+				tempTime = new ClockTime( times[1] );
+				commandEdit->setStartTime( tempTime );
+				times.pop_back();
+				tempTime = new ClockTime( times[0] );
+				commandEdit->setEndTime( tempTime );
+				break;
+			}
+		}
+	
 	commandEdit->setIndex(index);
 	commandEdit->setDisplayScreen(*screen);
 	return commandEdit;

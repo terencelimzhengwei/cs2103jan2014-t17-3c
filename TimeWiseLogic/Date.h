@@ -59,9 +59,9 @@ public:
 	void setNextDay();
 
 private:
-	int _dayNumber;
+	int _day;
 	int _month;
 	int _year;
-	int _day;
+	int _weekday;
 };
 #endif

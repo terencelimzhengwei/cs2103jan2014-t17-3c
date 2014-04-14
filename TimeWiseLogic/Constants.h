@@ -253,33 +253,4 @@ const int WDAY_WORD_VALUE[] = {
 	6,	// Sat
 };
 
-const std::string PRECEDING_WORD_NEUTRAL[] = {
-	"at",
-	"on",
-	"between",
-	"by",
-	"before",
-	"in",
-	"due"
-};
-const std::string PRECEDING_WORD_START[] = {
-	"start from",
-	"from"
-};
-const std::string PRECEDING_WORD_END[] = {
-	"to",
-	"until",
-	"till"
-};
-const std::string PRECEDING_WORD_REPEAT[] = {
-	"every",
-	"repeat on",
-};
-const std::string PRECEDING_WORD_LAST[] = {
-	"last"
-};
-const std::string PRECEDING_WORD_NEXT[] = {
-	"next"
-};
-
 #endif // !_CONSTANTS_H

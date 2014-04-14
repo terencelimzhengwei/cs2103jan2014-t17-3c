@@ -101,7 +101,7 @@ void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& 
 		}
 	}
 
-	if(isPreposition(getLastWord(checkingSentence))) {
+	if(dateCount && timeCount && isPreposition(getLastWord(checkingSentence))) {
 		dateTimeRemoved = removeLastWord(checkingSentence) + " " + dateTimeRemoved;
 	} else {
 

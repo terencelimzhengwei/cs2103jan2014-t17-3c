@@ -1,3 +1,4 @@
+//@author A0121023H
 #pragma once
 
 #include <string>
@@ -8,7 +9,9 @@
 #include "Exceptions.h"
 #include "Constants.h"
 
-//@author A0121023H
+#define hour(time) time / TIME_DIVISOR
+#define minute(time) time % TIME_DIVISOR
+
 class ClockTime{
 public:
 	ClockTime();

@@ -1,7 +1,11 @@
+//@author A0097330H
 #ifndef TIMEWISECLOCK_H
 #define TIMEWISECLOCK_H
 
-//@author A0097330H
+//============================================================
+// This class is responsible for configuring a clock object
+// whose date and time will be displayed in the main ui.
+//============================================================
 #include <QDate>
 #include <QString>
 #include <QTime>

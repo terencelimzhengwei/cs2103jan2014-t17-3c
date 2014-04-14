@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Command Derived">
+      <UniqueIdentifier>{75434b0f-bbdd-4a60-a3a5-b86ad545c954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Command Derived">
+      <UniqueIdentifier>{24d0ee6a-98a0-414f-bfca-75372a641683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Commons">
+      <UniqueIdentifier>{6ce5ebd4-36ad-4c7f-bdec-9fe02240809d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commons">
+      <UniqueIdentifier>{aa3d2271-4840-49b7-81f1-9d761b22a09a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Storage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeWiseLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Add.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Clear.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Delete.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Edit.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Search.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Done.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Undone.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Redo.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Undo.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandCreator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Filter.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Calendar.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="ClockTime.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Command_Display.h">
+      <Filter>Header Files\Command Derived</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Date.h">
+      <Filter>Header Files\Commons</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeWiseLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Clear.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Delete.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Edit.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Done.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Search.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Add.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Redo.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Undo.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandCreator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Filter.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Undone.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Command_Display.cpp">
+      <Filter>Source Files\Command Derived</Filter>
+    </ClCompile>
+    <ClCompile Include="Calendar.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockTime.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Exceptions.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>

@@ -49,6 +49,8 @@ private:
 	void deleteCompletedTasks(TaskList& taskList);
 	void deleteSearchedTasks(TaskList& taskList);
 	void deleteFilterTasks(TaskList& taskList);
+
+	//Attributes
 	std::string _deletionString;
 	std::string _lastCmdCalled;
 	DISPLAY_TYPE _displayType;

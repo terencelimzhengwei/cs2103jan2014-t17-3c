@@ -20,12 +20,13 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
+	void switchScreenTo(DISPLAY_TYPE screen);
+
+	//Attributes
 	std::string _keyword;
 
 	DISPLAY_TYPE _previousScreen;
 	DISPLAY_TYPE* _currentScreen;
-
-	void switchScreenTo(DISPLAY_TYPE screen);
 };
 #endif
 

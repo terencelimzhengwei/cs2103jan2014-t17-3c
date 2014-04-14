@@ -22,14 +22,15 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
+	void switchScreenTo(DISPLAY_TYPE screen);
+
+	//Attributes
 	FILTER_TYPE _filterType;
 	std::string _category;
 	Date* _date;
-	
+
 	DISPLAY_TYPE _previousScreen;
 	DISPLAY_TYPE* _currentScreen;
-
-	void switchScreenTo(DISPLAY_TYPE screen);
 
 };
 #endif

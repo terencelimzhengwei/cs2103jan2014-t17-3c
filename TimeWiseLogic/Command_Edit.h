@@ -30,25 +30,6 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
-	int _editIndex;
-	std::string _editedDescription;
-	std::string _editedCategory;
-	Date* _editedEndDate;
-	Date* _editedStartDate;
-	ClockTime* _editedEndTime;
-	ClockTime* _editedStartTime;
-
-	std::string _originalDescription;
-	std::string _originalCategory;
-	Date* _originalEndDate;
-	Date* _originalStartDate;
-	ClockTime* _originalEndTime;
-	ClockTime* _originalStartTime;
-
-	Task* _editedTask;
-
-	DISPLAY_TYPE _displayScreen;
-
 	//For initialization
 	void initialiseParameters();
 
@@ -76,5 +57,25 @@ private:
 	//Helper Functions
 	void setIndexToBoldInGUI(TaskList& tasklist);
 	void createFeedback(std::string taskFeedback,std::string& feedback);
+
+	//Attributes
+	int _editIndex;
+	std::string _editedDescription;
+	std::string _editedCategory;
+	Date* _editedEndDate;
+	Date* _editedStartDate;
+	ClockTime* _editedEndTime;
+	ClockTime* _editedStartTime;
+
+	std::string _originalDescription;
+	std::string _originalCategory;
+	Date* _originalEndDate;
+	Date* _originalStartDate;
+	ClockTime* _originalEndTime;
+	ClockTime* _originalStartTime;
+
+	Task* _editedTask;
+
+	DISPLAY_TYPE _displayScreen;
 };
 #endif

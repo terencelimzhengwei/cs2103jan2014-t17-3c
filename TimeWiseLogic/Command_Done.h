@@ -21,11 +21,6 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
-	std::vector<Task*> _doneTasks;
-	std::vector<unsigned int> _doneTaskIndex;
-	DISPLAY_TYPE* _currentScreen;
-	DISPLAY_TYPE  _previousScreen;
-	std::string   _lastCmdCalled;
 
 	void saveTasks(TaskList& taskList);
 	void setTasksAsDone(TaskList& tasklist);
@@ -41,5 +36,12 @@ private:
 
 	//Sets Index of Done Task to bold
 	void setIndexToBoldInGUI(TaskList& tasklist);
+
+	//Attributes
+	std::vector<Task*> _doneTasks;
+	std::vector<unsigned int> _doneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE  _previousScreen;
+	std::string   _lastCmdCalled;
 };
 #endif

@@ -60,6 +60,6 @@ private:
 	std::list<Command*>	undoList;
 	std::list<Command*>	redoList;
 	unsigned int allowableUndoLevel;
-	int m_nCleanCount;
+	int UndoRedoCount;
 };
 #endif

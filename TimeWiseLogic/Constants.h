@@ -1,7 +1,7 @@
 #ifndef _CONSTANTS_H
 #define _CONSTANTS_H
 
-//For everyone to use, if you have constants to define, define it here
+
 
 #include <string>
 #include <ctime>
@@ -41,7 +41,7 @@ enum LOG_TYPE{ INFOLOG, NOTICELOG, WARNINGLOG, ERRORLOG, FATALLOG };
 
 static const std::string LOG_TYPE_STRING[LOG_TYPE_COUNT]         = {"INFOLOG","NOTICELOG","WARNINGLOG","ERRORLOG","FATALLOG"};
 static const std::string CMD_TYPE_STRING[CMD_TYPE_COUNT]         = {"add","delete","edit","clear","display", "search", "filter", "undo", "redo",  "undone", "done"};
-static const std::string CLEAR_TYPE_STRING[CLEAR_TYPE_COUNT]     = {"all", "undone", "done", ""};
+static const std::string CLEAR_TYPE_STRING[CLEAR_TYPE_COUNT]     = {"all", "main", "completed", ""};
 static const std::string DISPLAY_TYPE_STRING[DISPLAY_TYPE_COUNT] = {"main", "", "completed", "", "done"};
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	 = {"undone","overdue","done"};
 static const std::string HEADER_STRING[HEADER_COUNT]             = {"description", "startDate", "startTime","dueDate", "dueTime", "category"};
@@ -73,8 +73,8 @@ static const char* INVALID_USER_INPUT_EDIT_COMMAND			= "Error! Invalid input for
 static const char* INVALID_USER_INPUT_DISPLAY_COMMAND		= "Error! Invalid input for DISPLAY command.";
 static const char* USER_INPUT_INDEX_OUT_OF_RANGE			= "Error! The task index that you entered is out of range.";
 static const char* USER_INPUT_NOT_A_NUMBER					= "Error! The task index that you entered is not a number.";
-static const char* MISSING_TASK_DESCRIPTION					= "Error! You have not entered any task description";
-static const char* NO_ARGUMENT_EXCEPTION					= "Error! No input detected";
+static const char* MISSING_TASK_DESCRIPTION					= "Error! You have not entered any task description.";
+static const char* NO_ARGUMENT_EXCEPTION					= "Error! No input detected.";
 static const char* START_DATE_TIME_LATER_THAN_END_DATE_TIME = "Error! Start date/time cannot be later than due date/time.";
 static const char* TASK_ALREADY_COMPLETED					= "This task has already been done!";
 static const char* TASK_NOT_COMPLETED_YET					= "This task has not been done yet!";

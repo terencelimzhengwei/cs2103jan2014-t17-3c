@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Add.h"
 
-//@author A0097277M
 Command_Add::Command_Add() {
 	initDefaultValues();
 }

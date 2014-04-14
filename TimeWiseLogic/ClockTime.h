@@ -1,3 +1,4 @@
+//@author A0121023H
 #pragma once
 
 #include <string>
@@ -11,7 +12,6 @@
 #define hour(time) time / TIME_DIVISOR
 #define minute(time) time % TIME_DIVISOR
 
-//@author A0121023H
 class ClockTime{
 public:
 	ClockTime();

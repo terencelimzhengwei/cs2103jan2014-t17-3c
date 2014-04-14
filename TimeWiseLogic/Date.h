@@ -1,6 +1,7 @@
+//@author A0121023H
 #ifndef DATE_H
 #define DATE_H
-//@author A0121023H
+
 #pragma once
 
 #include <ctime>

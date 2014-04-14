@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Search.h"
 
-//@author A0097277M
 Command_Search::Command_Search(void){
 	_type = SEARCH;
 	_keyword = DEFAULT_EMPTY;

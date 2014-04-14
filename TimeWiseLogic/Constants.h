@@ -9,7 +9,6 @@
 //components.
 //*****************************************************************************************/
 
-
 static const int CMD_TYPE_COUNT		    = 13;
 static const int LOG_TYPE_COUNT			= 5;
 static const int TASK_STATUS_COUNT		= 3;

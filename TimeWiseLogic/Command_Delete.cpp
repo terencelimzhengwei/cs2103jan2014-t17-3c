@@ -1,7 +1,7 @@
+//@author A0097277M
 #pragma once
 #include "Command_Delete.h"
 
-//@author A0097277M
 Command_Delete::Command_Delete() {
         _type = DELETE;
         _deletionString = DEFAULT_EMPTY;

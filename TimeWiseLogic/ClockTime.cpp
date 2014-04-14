@@ -1,5 +1,5 @@
-#include "ClockTime.h"
 //@author A0121023H
+#include "ClockTime.h"
 
 ClockTime::ClockTime() {
 }

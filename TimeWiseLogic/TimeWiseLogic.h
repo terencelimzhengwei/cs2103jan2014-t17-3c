@@ -1,6 +1,7 @@
+//@author A0097277M
 #ifndef TIMEWISELOGIC_H
 #define TIMEWISELOGIC_H
-// @author A0097277M
+
 #pragma once
 
 #include "CommandCreator.h"

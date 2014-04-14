@@ -1,6 +1,6 @@
+//@author A0097277M-reused
 #include "Logger.h"
 
-//@author A0097277M-reused
 using namespace std;
 
 const int	 Logger::CONFIG_DETAILS_SIZE					= 3;

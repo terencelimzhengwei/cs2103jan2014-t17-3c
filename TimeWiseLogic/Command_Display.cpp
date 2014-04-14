@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Display.h"
 
-//@author A0097277M
 Command_Display::Command_Display(void){
 	_type = DISPLAY;
 }

@@ -1,5 +1,5 @@
 #include "Calendar.h"
-//@Tran Hue Mai A0099938B
+//@author A0099938B
 
 const int NOT_LEAP_YEAR = 0;
 const int LEAP_YEAR = 1;

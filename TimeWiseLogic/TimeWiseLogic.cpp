@@ -10,7 +10,6 @@ TimeWiseLogic::TimeWiseLogic(void){
 	initLogic();
 }
 
-
 TimeWiseLogic::~TimeWiseLogic(void){
 }
 

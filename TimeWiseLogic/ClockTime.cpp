@@ -1,7 +1,7 @@
 #include "ClockTime.h"
 
-#define hour(time) time/100
-#define minute(time) time%100
+#define hour(time) time / TIME_DIVISOR
+#define minute(time) time % TIME_DIVISOR
 
 ClockTime::ClockTime() {
 }
@@ -18,7 +18,7 @@ ClockTime::~ClockTime() {
 }
 
 void ClockTime::setTime(int time) {
-	if(time<0 || hour(time)>23 || minute(time)>59) {
+	if(time<ZERO || hour(time)>MAX_HOUR || minute(time)>MAX_MINUTE) {
 		throw InvalidDateTimeFormatException();
 	}
 	_time = time;
@@ -27,9 +27,9 @@ void ClockTime::setTime(int time) {
 bool ClockTime::checkOverdueTime() {
 	bool hasElapsed;
 	struct tm today;
-	time_t currentTime = time(0);	// get local time
-	int hr  = _time / 100,
-		min = _time % 100;
+	time_t currentTime = time(ZERO);	// get local time
+	int hr  = _time / TIME_DIVISOR,
+		min = _time % TIME_DIVISOR;
 
 	localtime_s( &today, &currentTime); // update tm struct to be local date and time
 
@@ -53,19 +53,23 @@ std::string ClockTime::toString() {
 	timeInString = stream.str();
 
 	switch(timeInString.size()) {
-	case 1:
-		if(timeInString[0]=='0') {
+	case 1:{
+		if(timeInString[ZERO]=='0') {
 			return "0000";
 		}else{
 			return "000"+timeInString;
 		}
 		break;
-	case 2:
+	}
+	case 2:{
 		return "00" + timeInString;
-	case 3:
+	}
+	case 3:{
 		return "0" + timeInString;
-	default:
+	}
+	default:{
 		return timeInString;
+	}
 	}
 }
 
@@ -84,7 +88,7 @@ int ClockTime::getTime() {
 	return _time;
 }
 
-// Opertaors
+// Operators
 bool ClockTime::operator==(ClockTime b) {
 	return this->_time == b._time;
 }

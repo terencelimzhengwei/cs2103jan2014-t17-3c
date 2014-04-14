@@ -5,7 +5,6 @@ Command_Undone::Command_Undone(void){
 	_type = UNDONE;
 }
 
-
 Command_Undone::~Command_Undone(void){
 	_undoneTaskIndex.clear();
 	_undoneTasks.clear();
@@ -48,30 +47,34 @@ void Command_Undone::addUndoneIndex(int index){
 void Command_Undone::setIndexToBoldInGUI(TaskList& tasklist){
 	unsigned int index;
 	switch(*_currentScreen){
-	case MAIN:
+	case MAIN:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			index = tasklist.getTaskIndex(_undoneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			index = tasklist.getTaskIndexInSearchedList(_undoneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			index = tasklist.getTaskIndexInFilteredList(_undoneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
-	case COMPLETED:
+	}
+	case COMPLETED:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			index = tasklist.getTaskIndexInCompletedList(_undoneTasks[i]);
 			tasklist.addBoldIndex(index);
 		}
 		break;
+	}
 	default:
 		break;
 	}
@@ -80,17 +83,21 @@ void Command_Undone::setIndexToBoldInGUI(TaskList& tasklist){
 void Command_Undone::saveTasks(TaskList& taskList){
 	std::vector<Task*>& taskVector=taskList.getCompletedTaskList();
 	switch(*_currentScreen){
-	case SEARCHED:
+	case SEARCHED:{
 		taskVector = taskList.getSearchResults();
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		taskVector = taskList.getFilterResults();
 		break;
-	case COMPLETE:
+	}
+	case COMPLETE:{
 		break;
+	}
 	default:
 		throw UnableToUndoneUncompletedTasks();
 	}
+
 	for(unsigned int i=0;i<_undoneTaskIndex.size();i++){
 		_undoneTasks.push_back(taskVector[_undoneTaskIndex[i]]);
 		if(_undoneTasks[i]->getTaskStatus()==UNCOMPLETED){
@@ -101,25 +108,28 @@ void Command_Undone::saveTasks(TaskList& taskList){
 
 void Command_Undone::setTasksAsUndone(TaskList& tasklist){
 	switch(*_currentScreen){
-	case COMPLETE:
+	case COMPLETE:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			int index = tasklist.getTaskIndexInCompletedList(_undoneTasks[i]);
 			tasklist.setTaskAsUndone(index);
 		}
 		*_currentScreen=MAIN;
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			int index = tasklist.getTaskIndexInSearchedList(_undoneTasks[i]);
 			tasklist.setSearchedTaskAsUndone(index);
 		}
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		for(unsigned int i=0;i<_undoneTasks.size();i++){
 			int index = tasklist.getTaskIndexInFilteredList(_undoneTasks[i]);
 			tasklist.setFilteredTaskAsUndone(index);
 		}
 		break;
+	}
 	default:
 		throw UnableToUndoneUncompletedTasks();
 	}

@@ -1,6 +1,6 @@
 #ifndef COMMAND_MANAGER_H
 #define COMMAND_MANAGER_H
-
+//@author A0097277M
 #pragma once
 
 #include <list>
@@ -60,6 +60,6 @@ private:
 	std::list<Command*>	undoList;
 	std::list<Command*>	redoList;
 	unsigned int allowableUndoLevel;
-	int m_nCleanCount;
+	int UndoRedoCount;
 };
 #endif

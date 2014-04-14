@@ -60,7 +60,7 @@ TASK_STATUS Task::getTaskStatus(){
 std::string Task::getTaskCategory(){
 	return _category;
 }
-//----Setter Functions----------------------------------------------------------------------------------------------------
+
 void Task::setDescription(std::string desc){
 	_taskDescription = desc;
 }

@@ -1,15 +1,14 @@
-//@Gian Jian Xiang A0097330H
 #ifndef TIMEWISEHELP_H
 #define TIMEWISEHELP_H
 
-#include <QWidget>
-#include <QPainter>
+//@author A0097330H
 #include <QFontDatabase>
+#include <QPainter>
+#include <QWidget>
 #include "ui_timewisehelp.h"
 #include "Constants_ui.h"
 
-class TimeWiseHelp : public QWidget
-{
+class TimeWiseHelp : public QWidget {
 	Q_OBJECT
 
 public:

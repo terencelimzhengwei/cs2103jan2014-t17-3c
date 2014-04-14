@@ -1,6 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
 
+// @author A0097277M
 #pragma once
 
 #include <string>
@@ -15,7 +16,6 @@
 //********************************************************************************
 // This class is used to store the details of user Task
 //********************************************************************************
-// @author A0097277M
 class Task{
 public:
 	Task(void);

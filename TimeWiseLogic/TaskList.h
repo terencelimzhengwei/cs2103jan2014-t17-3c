@@ -1,6 +1,6 @@
 #ifndef TASKLIST_H
 #define TASKLIST_H
-
+// @author A0097277M
 #pragma once
 
 #include <vector>
@@ -15,7 +15,6 @@
 // when their commands are called. Overdue and Clash will be updated when there is
 // an instance of overdue or clash.
 //********************************************************************************
-// @author A0097277M
 class TaskList
 {
 public:

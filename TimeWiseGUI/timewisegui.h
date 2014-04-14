@@ -1,24 +1,24 @@
-//@Gian Jian Xiang A0097330H
 #ifndef TIMEWISEGUI_H
 #define TIMEWISEGUI_H
 
-#include <QtWidgets/QMainWindow>
-#include <QStandardItemModel>
+//@author A0097330H
+#include <iostream>
+#include <QCompleter>
 #include <QDateTime>
-#include <QTimer>
 #include <QFont>
 #include <QFontDatabase>
-#include <QString>
-#include <QCompleter>
-#include <QLineEdit>
 #include <QKeyEvent>
+#include <QLineEdit>
+#include <QStandardItemModel>
+#include <QString>
+#include <QTimer>
+#include <QtWidgets/QMainWindow>
 #include <string>
-#include <iostream>
 #include "ui_timewisegui.h"
 #include "Constants_ui.h"
 #include "TimeWiseClock.h"
-#include "TimeWiseLogic.h"
 #include "timewisehelp.h"
+#include "TimeWiseLogic.h"
 
 class TimeWiseGUI : public QMainWindow {
 	Q_OBJECT
@@ -32,12 +32,17 @@ public:
 	void setupFont();
 	void setupHotKeys();
 	
-	//These are the functions that sets the data from Logic into table
+	//These are the functions that sets the data (main page and other pages separate functions) from Logic into table
 	void displayTaskList(DISPLAY_TYPE displayType);
 	void createMainTable();
-	void createOtherTables(std::vector<Task*>& taskList);
 	void setMainData(TaskList& tasklist, vector<int>& latestIndices);
+	void highlightMain(TaskList &taskList, int row, int column, vector<int> &boldedIndices);
+	void boldMain(vector<int> &boldedIndices, int row, int column); 
+
+	void createOtherTables(std::vector<Task*>& taskList);
 	void setOtherData(std::vector<Task*>& otherTaskList, vector<int>& latestIndices);
+	void boldOthers(vector<int> &boldedIndices, int row, int column);
+	void highlightOthers( std::vector<Task*>& otherTaskList, int row, int column);
 
 	//These are the functions that inform user of the number of overdue tasks.
 	void setOverdueMessage(int overdueCount);
@@ -66,15 +71,14 @@ signals:
 
 private:
 	Ui::TimeWiseGUIClass ui;
-	TimeWiseLogic _logic;
-	QCompleter *_descCompleter;
 	TimeWiseClock *_clock;
 	TimeWiseHelp *_helpScreen;
-
+	TimeWiseLogic _logic;
+	QCompleter *_autoCompleter;
+	
 	//these are for the history retrieval used in line Edit
 	int current_line;
 	QStringList lines;
 	QString unfinished;
 };
-
 #endif // TIMEWISEGUI_H

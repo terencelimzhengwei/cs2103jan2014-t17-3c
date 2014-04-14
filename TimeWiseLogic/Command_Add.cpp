@@ -1,4 +1,3 @@
-#pragma once
 #include "Command_Add.h"
 
 //@author A0097277M

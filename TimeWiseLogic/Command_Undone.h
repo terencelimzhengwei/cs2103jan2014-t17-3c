@@ -1,6 +1,6 @@
 #ifndef COMMAND_UNDONE_H
 #define COMMAND_UNDONE_H
-
+// @author A0097277M
 #pragma once
 
 #include "command.h"
@@ -8,7 +8,6 @@
 // This class is responsible for changing the status  an individual task
 // specified by its index.
 //**********************************************************************
-// @author A0097277M
 class Command_Undone :
 	public Command
 {

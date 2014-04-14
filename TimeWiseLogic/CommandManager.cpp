@@ -1,5 +1,5 @@
 #include "CommandManager.h"
-
+//@author A0097277M
 CommandManager::~CommandManager(void){
 	Clear();
 }

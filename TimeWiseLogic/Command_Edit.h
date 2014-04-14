@@ -1,6 +1,6 @@
 #ifndef COMMAND_EDIT_H
 #define COMMAND_EDIT_H
-
+// @author A0097277M
 #pragma once
 #include "command.h"
 //********************************************************************************
@@ -9,7 +9,6 @@
 // working with. Regardless of the display screen, it is always possible to edit a
 // task.
 //********************************************************************************
-// @author A0097277M
 class Command_Edit :public Command
 {
 public:

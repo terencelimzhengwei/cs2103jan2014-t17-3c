@@ -1,6 +1,6 @@
 #ifndef COMMAND_SEARCH_H
 #define COMMAND_SEARCH_H
-
+// @author A0097277M
 #pragma once
 #include "command.h"
 
@@ -8,7 +8,6 @@
 // This class takes in a keyword and searches for the keyword in tasklist and
 // populating the searchlist in tasklist.
 //********************************************************************************
-// @author A0097277M
 class Command_Search :public Command{
 public:
 	Command_Search(void);

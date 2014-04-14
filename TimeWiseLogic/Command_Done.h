@@ -1,6 +1,6 @@
 #ifndef COMMAND_DONE_H
 #define COMMAND_DONE_H
-
+// @author A0097277M
 #pragma once
 #include "command.h"
 //********************************************************************************
@@ -8,7 +8,6 @@
 // an individual task from UNDONE to DONE.
 // The individual task is specified by its index.
 //********************************************************************************
-// @author A0097277M
 class Command_Done : public Command{
 public:
 	Command_Done(void);

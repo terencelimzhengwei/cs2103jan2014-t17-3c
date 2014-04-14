@@ -1,6 +1,6 @@
 #ifndef COMMAND_ADD_H
 #define COMMAND_ADD_H
-
+// @author A0097277M
 #pragma once
 #include "Command.h"
 
@@ -10,7 +10,6 @@
 // adding it to the tasklist. By default task will be set as
 // floating task with no date and time parameters.
 //************************************************************
-// @author A0097277M
 class Command_Add: public Command {
 public:
 	Command_Add();

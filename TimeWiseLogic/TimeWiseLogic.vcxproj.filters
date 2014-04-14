@@ -100,7 +100,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Date.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Commons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,5 +176,8 @@
     <ClCompile Include="Date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

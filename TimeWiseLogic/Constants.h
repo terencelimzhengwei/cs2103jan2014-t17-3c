@@ -3,7 +3,7 @@
 #include <string>
 #include <ctime>
 
-//@Tran Hue Mai A0099938B
+//@author A0099938B
 
 /******************************************************************************************
 //This class is responsible for storing all the constants that would be used across all

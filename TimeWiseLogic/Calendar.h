@@ -1,6 +1,6 @@
 #ifndef _CALENDAR_H
 #define _CALENDAR_H
-//@Tran Hue Mai A0099938
+//@author A0099938
 //********************************************************************************
 // This class stores all the constants regarding date: days in week
 // days in month, months, years.

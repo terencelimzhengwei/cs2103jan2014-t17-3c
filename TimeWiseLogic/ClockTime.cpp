@@ -1,5 +1,5 @@
 #include "ClockTime.h"
-
+//@author A0121023H
 #define hour(time) time / TIME_DIVISOR
 #define minute(time) time % TIME_DIVISOR
 

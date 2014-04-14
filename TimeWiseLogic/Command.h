@@ -1,6 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
-
+// @author A0097277M
 #pragma once
 
 #include <assert.h>
@@ -11,13 +11,11 @@
 #include "Date.h"
 #include "Exceptions.h"
 #include "TaskList.h"
-
 //***************************************************************************
 //
 // Command Base Class
 //
 //***************************************************************************
-// @author A0097277M
 class Command
 {
 public:

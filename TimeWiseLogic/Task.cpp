@@ -499,8 +499,8 @@ bool Task::isDoubleTime()
 }
 
 void Task::convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase){
-	_parser.strToLower(keywordInLowerCase);
-	_parser.strToLower(taskInLowerCase);
+	keywordInLowerCase=_parser.strToLower(keywordInLowerCase);
+	taskInLowerCase=_parser.strToLower(taskInLowerCase);
 }
 
 unsigned int Task::findIndexOfKeywordInString(std::string taskInLowerCase, std::string keywordInLowerCase){

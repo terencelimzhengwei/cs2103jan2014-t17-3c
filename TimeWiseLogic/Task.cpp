@@ -1,10 +1,8 @@
 #include "Task.h"
 
-
 Task::Task(void){
 	initializeTask();
 }
-
 
 Task::~Task(void){
 	resetPointers();
@@ -104,44 +102,10 @@ void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime
 }
 void Task::setDateBasedOnTime(){
 	if(!hasEndDate()){
-		if(hasStartTime() && hasEndTime()){
-			if(*_startTime>*_endTime){
-				if(_startTime->checkOverdueTime()){
-					_startDate=new Date;
-					_startDate->setDateAsTomorrow();
-					_endDate=new Date;
-					_endDate->setDateAsDayAfterTomorrow();
-				}else{
-					_startDate=new Date;
-					_startDate->setDateAsToday();
-					_endDate=new Date;
-					_endDate->setDateAsTomorrow();
-				}
-			}else{
-				if(_startTime->checkOverdueTime()){
-					_endDate=new Date;
-					_endDate->setDateAsTomorrow();
-				}else{
-					_endDate=new Date;
-					_endDate->setDateAsToday();
-				}                       
-			}
-		}else if(!hasStartTime()&&hasEndTime()){
-			if(_endTime->checkOverdueTime()){
-				_endDate=new Date;
-				_endDate->setDateAsTomorrow();
-			}else{
-				_endDate=new Date;
-				_endDate->setDateAsToday();
-			}
-		}
+		setDateForFloatingTask();
 	}else if(!hasStartDate()&&hasEndDate()){
 		if(hasStartTime() && hasEndTime()){
-			if(*_startTime>*_endTime){
-				_startDate=_endDate;
-				_endDate=new Date(*_startDate);
-				_endDate->setNextDay();
-			}
+			setDateForDeadlineTaskAccordingToTime();
 		}
 	}
 }
@@ -167,9 +131,6 @@ void Task::editSchedule(ClockTime* sTime,ClockTime* eTime){
 	setTime();
 	setDateBasedOnTime();
 }
-
-
-
 
 //----Checker Functions-----------------------------------------------------------------------------------------------------
 
@@ -523,5 +484,63 @@ void Task::getTimeOfBothTaskInInt(int& sTime, int& eTime, int& othersTime, int& 
 		othereTime=task->getEndTime()->getTime();
 	}if(task->hasStartTime()){
 		othersTime=task->getStartTime()->getTime();
+	}
+}
+
+void Task::setDateForFloatingTask(){
+	if(hasStartTime() && hasEndTime()){
+		if(startTimeLaterThanEndTime()){
+			setStartAndEndDateAcordingToTime();
+		}else{
+			setEndDateAccordingToStartTime();
+		}
+	}else if(!hasStartTime()&&hasEndTime()){
+		setEndDateAccordingToEndTime();
+	}
+}
+
+bool Task::startTimeLaterThanEndTime(){
+	return *_startTime>*_endTime;
+}
+
+void Task::setStartAndEndDateAcordingToTime(){
+	if(_startTime->checkOverdueTime()){
+		_startDate=new Date;
+		_startDate->setDateAsTomorrow();
+		_endDate=new Date;
+		_endDate->setDateAsDayAfterTomorrow();
+	}else{
+		_startDate=new Date;
+		_startDate->setDateAsToday();
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}
+}
+
+void Task::setEndDateAccordingToStartTime(){
+	if(_startTime->checkOverdueTime()){
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}else{
+		_endDate=new Date;
+		_endDate->setDateAsToday();
+	}     
+}
+
+void Task::setEndDateAccordingToEndTime(){
+	if(_endTime->checkOverdueTime()){
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}else{
+		_endDate=new Date;
+		_endDate->setDateAsToday();
+	}     
+}
+
+void Task::setDateForDeadlineTaskAccordingToTime(){
+	if(startTimeLaterThanEndTime()){
+		_startDate=_endDate;
+		_endDate=new Date(*_startDate);
+		_endDate->setNextDay();
 	}
 }

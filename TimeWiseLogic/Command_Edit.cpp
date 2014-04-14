@@ -6,7 +6,6 @@ Command_Edit::Command_Edit(void){
 	initialiseParameters();
 }
 
-
 Command_Edit::~Command_Edit(void){
 }
 
@@ -35,7 +34,6 @@ void Command_Edit::setEndTime(ClockTime* endTime){
 }
 
 bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
-
 	getOriginalTask(tasklist);
 	saveOriginalTaskDetails();
 	editTaskWithNewParameters();
@@ -64,7 +62,7 @@ bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
 }
 
 bool Command_Edit::noDateAndTime(){
-	if(noDate()  && noTime()){
+	if(noDate() && noTime()){
 		return true;
 	}
 	return false;
@@ -92,7 +90,7 @@ void Command_Edit::resetTimeAndDate(){
 }
 
 bool Command_Edit::emptyParameters(){
-	if(noDescription()&&noCategory()&&noDateAndTime()){
+	if(noDescription() && noCategory() && noDateAndTime()){
 		return true;
 	}
 	return false;
@@ -149,18 +147,22 @@ void Command_Edit::saveOriginalTaskDetails(){
 
 void Command_Edit::getOriginalTask(TaskList& tasklist){
 	switch(_displayScreen){
-	case COMPLETE:
+	case COMPLETE:{
 		_editedTask = tasklist.getCompletedTask(_editIndex);
 		break;
-	case SEARCHED:
+	}
+	case SEARCHED:{
 		_editedTask = tasklist.getSearchedTask(_editIndex);
 		break;
-	case FILTERED:
+	}
+	case FILTERED:{
 		_editedTask = tasklist.getFilteredTask(_editIndex);
 		break;
-	default:
+	}
+	default:{
 		_editedTask = tasklist.getTask(_editIndex);
 		break;
+	}
 	}	
 }
 
@@ -171,8 +173,7 @@ void Command_Edit::editTaskWithNewParameters(){
 		_editedTask->setCategory(_editedCategory);
 	}if(emptyParameters()){
 		resetTimeAndDate();
-	}
-	if(!noDateAndTime()){
+	}if(!noDateAndTime()){
 		if(!noDate()){
 			if(!noEndDate()){
 				_editedTask->setEndDate(_editedEndDate);
@@ -199,22 +200,26 @@ void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
 	}else{
 		unsigned int index;
 		switch(_displayScreen){
-		case MAIN:
+		case MAIN:{
 			index = tasklist.getTaskIndex(_editedTask);
-			tasklist.addBoldIndex(index);
 			break;
-		case SEARCHED:
+		}
+		case SEARCHED:{
 			index = tasklist.getTaskIndexInSearchedList(_editedTask);
-			tasklist.addBoldIndex(index);
-		case FILTERED:
+			break;
+		}
+		case FILTERED:{
 			index = tasklist.getTaskIndexInFilteredList(_editedTask);
-			tasklist.addBoldIndex(index);
-		case COMPLETED:
+			break;
+		}
+		case COMPLETED:{
 			index = tasklist.getTaskIndexInCompletedList(_editedTask);
-			tasklist.addBoldIndex(index);
+			break;
+		}
 		default:
 			break;
 		}
+		tasklist.addBoldIndex(index);
 	}
 }
 

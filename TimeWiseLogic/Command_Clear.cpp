@@ -22,21 +22,25 @@ Command_Clear::~Command_Clear(void){
 
 bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 	switch(_clearType){
-	case ALL:
+	case ALL:{
 		clearAll(tasklist);
 		createFeedback(CLEAR_ALL_SUCCESS,feedback);
 		break;
-	case UNCOMPLETED_TASKS:
+	}
+	case UNCOMPLETED_TASKS:{
 		clearUncompletedTasks(tasklist);
 		createFeedback(CLEAR_UNCOMPLETED_SUCCESS,feedback);
 		break;
-	case COMPLETED_TASKS:
+	}
+	case COMPLETED_TASKS:{
 		clearCompletedTasks(tasklist);
 		createFeedback(CLEAR_COMPLETED_SUCCESS,feedback);
 		break;
-	case SCREEN:
+	}
+	case SCREEN:{
 		clearScreen(tasklist,feedback);
 		break;
+	}
 	default:
 		return false;
 	}
@@ -46,18 +50,22 @@ bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
 
 bool Command_Clear::undo(TaskList& tasklist, std::string& feedback){
 	switch(_clearType){
-	case ALL:
+	case ALL:{
 		undoAll(tasklist,feedback);
 		break;
-	case UNCOMPLETED_TASKS:
+	}
+	case UNCOMPLETED_TASKS:{
 		undoUncompletedTasks(tasklist, feedback);
 		break;
-	case COMPLETED_TASKS:
+	}
+	case COMPLETED_TASKS:{
 		undoCompletedTasks(tasklist,feedback);
 		break;
-	case SCREEN:
+	}
+	case SCREEN: {
 		undoScreenTasks(tasklist,feedback);
 		break;
+	}
 	default:
 		return false;
 	}

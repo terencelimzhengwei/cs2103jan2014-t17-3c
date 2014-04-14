@@ -613,6 +613,6 @@ void TimeWiseGUI::goToNextLine() {
 //                HELP PAGE SET-UP
 //=====================================================
 void TimeWiseGUI::showHelp() {
-	_helpScreen = new TimeWiseFeedback();
+	_helpScreen = new TimeWiseHelp();
 	_helpScreen->show();
 }

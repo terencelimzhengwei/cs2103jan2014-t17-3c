@@ -106,12 +106,12 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 				std::string details = Parser::removeFirstWord(userInput);
 				details = Parser::trim(details);
 				switch(taskHeader) {
-				case HEADER_1: {
+				case HEADER_DESCRIPTION: {
 					newTask->setDescription(details);
 					taskHeader++;
 					break;
 				}
-				case HEADER_2: {
+				case HEADER_START_DATE: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -126,7 +126,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_3: {
+				case HEADER_END_DATE: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -140,7 +140,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 						}					
 					} break;
 				}
-				case HEADER_4: {
+				case HEADER_START_TIME: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -155,7 +155,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_5: {
+				case HEADER_END_TIME: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -170,12 +170,12 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					} 
 					break;
 				}
-				case HEADER_6: {
+				case HEADER_CATEGORY: {
 					taskHeader++;
 					newTask->setCategory(details);
 					break;
 				}
-				case HEADER_7: {
+				case HEADER_STATUS: {
 					taskHeader++;
 					TASK_STATUS status = _parser.getTaskStatus(details);
 					newTask->setStatusAsDone();
@@ -211,12 +211,12 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 				details = Parser::trim(details);
 
 				switch(taskHeader){
-				case HEADER_1 : {
+				case HEADER_DESCRIPTION : {
 					newTask->setDescription(details);
 					taskHeader++;
 					break;
 				}
-				case HEADER_2: {
+				case HEADER_START_DATE: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -231,7 +231,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_3: {
+				case HEADER_END_DATE: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -246,7 +246,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_4: {
+				case HEADER_START_TIME: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -261,7 +261,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_5: {
+				case HEADER_END_TIME: {
 					taskHeader++;
 					if(details == DEFAULT_EMPTY || details == SPACE_PARAMETER) {
 						break;
@@ -276,12 +276,12 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 					}
 					break;
 				}
-				case HEADER_6: {
+				case HEADER_CATEGORY: {
 					taskHeader++;
 					newTask->setCategory(details);
 					break;
 				}
-				case HEADER_7: {
+				case HEADER_STATUS: {
 					taskHeader++;
 					TASK_STATUS status =_parser.getTaskStatus(details);
 					if(status == DONE) {

@@ -1,0 +1,4192 @@
+//@author: a0097277m
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command.cpp
+	 */
+
+#include "Command.h"
+
+Command::Command(void){
+	_type=UNDEFINED;
+}
+
+Command::~Command(void){
+}
+
+CMD_TYPE Command::getType(){
+	return _type;
+}
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command.h
+	 */
+
+#ifndef COMMAND_H
+#define COMMAND_H
+
+#pragma once
+
+#include <assert.h>
+#include <list>
+#include <string>
+#include "ClockTime.h"
+#include "Constants.h"
+#include "Date.h"
+#include "Exceptions.h"
+#include "TaskList.h"
+//***************************************************************************
+//
+// Command Base Class
+//
+//***************************************************************************
+class Command{
+public:
+	//Constructor & Destructor
+	Command(void);
+	virtual ~Command(void);
+
+	//Get the type of command
+	CMD_TYPE getType();
+
+	//virtual execute & undo methods for use as part of the command design pattern
+	virtual bool execute(TaskList& tasklist, std::string& feedback)=0;
+	virtual bool undo(TaskList& tasklist, std::string& feedback)=0;
+protected:
+	//Attributes
+	CMD_TYPE _type;
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\CommandManager.cpp
+	 */
+
+#include "CommandManager.h"
+
+CommandManager::~CommandManager(void){
+	Clear();
+}
+
+bool CommandManager::CanUndo() const{
+	return (undoList.size() > ZERO);
+}
+
+bool CommandManager::CanRedo() const{
+	return (redoList.size() > ZERO);
+}
+
+int CommandManager::getUndoLevel() const{
+	return allowableUndoLevel;
+}
+
+void CommandManager::setUndoLevel(int newValue){
+	allowableUndoLevel = newValue;
+}
+
+bool CommandManager::IsDirty() const{
+	return (UndoRedoCount != ZERO);
+}
+
+Command* CommandManager::getLastUndoCommand() const{
+	return undoList.back();
+}
+
+Command* CommandManager::getLastRedoCommand() const{
+	return redoList.back();
+}
+
+void CommandManager::DoCommand(Command* pCommand, std::string& feedback){
+	if(pCommand->getType() == UNDO){
+		Undo(feedback);
+	} else if(pCommand->getType() == REDO){
+		Redo();
+	} else {
+		// Clear redo list
+		if(pCommand->getType() != DISPLAY){
+			ClearRedoList();
+		}
+		// Execute the command and add it to undo list if succeeded
+		if (pCommand->execute(_taskList,feedback)){
+			if(undoable(pCommand)){
+				AddUndo(pCommand);
+			} else {
+				delete pCommand;
+				pCommand = NULL;
+			}
+		}
+	}
+}
+
+void CommandManager::Undo(std::string& feedback){
+	if (CanUndo()){
+		UndoRedoCount--;
+		Command* pCommand = getLastUndoCommand();
+		undoList.pop_back();
+		if (pCommand->undo(_taskList, feedback)){
+			AddRedo(pCommand);
+		} else {
+			delete pCommand;
+			pCommand = NULL;
+		}
+	}
+}
+
+void CommandManager::Redo(){
+	std::string feedback;
+	if (CanRedo()){
+		UndoRedoCount++;
+		Command* pCommand = getLastRedoCommand();
+		redoList.pop_back();
+		if (pCommand->execute(_taskList,feedback)){
+			AddUndo(pCommand);
+		} else {
+			delete pCommand;
+			pCommand = NULL;
+		}
+	}
+}
+
+void CommandManager::Clear(){
+	ClearUndoList();
+	ClearRedoList();
+}
+
+void CommandManager::SetClean(){
+	UndoRedoCount = ZERO;
+}
+
+void CommandManager::AddUndo(Command* pCommand){
+	if (undoList.size() >= allowableUndoLevel){
+		delete undoList.front();
+		undoList.pop_front();
+	}
+	undoList.push_back(pCommand);
+	if (UndoRedoCount < 0 && redoList.size() > ZERO){
+		UndoRedoCount = undoList.size() + redoList.size() + INCREMENT_VALUE;
+	} else {
+		UndoRedoCount++;
+	}
+}
+
+void CommandManager::AddRedo(Command* pCommand){
+	redoList.push_back(pCommand);
+}
+
+void CommandManager::ClearUndoList(){
+	ClearCommandList(&undoList);
+}
+
+void CommandManager::ClearRedoList(){
+	ClearCommandList(&redoList);
+}
+
+void CommandManager::ClearCommandList(std::list<Command*>* pList){
+	std::list<Command*>::iterator it;
+	for (it = pList->begin(); it != pList->end(); it++) {
+		delete *it;
+	}
+	pList->erase(pList->begin(), pList->end());
+}
+
+bool CommandManager::undoable(Command* pCommand){
+	if(pCommand->getType() == ADD){
+		return true;
+	}else if(pCommand->getType() == DELETE){
+		return true;
+	}else if(pCommand->getType() == CLEAR){
+		return true;
+	}else if(pCommand->getType() == UNDONE){
+		return true;
+	}else if(pCommand->getType() == DONE){
+		return true;
+	}else if(pCommand->getType() == SEARCH){
+		return true;
+	}else if(pCommand->getType() == FILTER){
+		return true;
+	}else if(pCommand->getType() == UNDO){
+		return true;
+	}else if(pCommand->getType() == EDIT){
+		return true;
+	}
+	return false;
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\CommandManager.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\CommandManager.h
+	 */
+
+#ifndef COMMAND_MANAGER_H
+#define COMMAND_MANAGER_H
+
+#pragma once
+
+#include <list>
+#include "Command.h"
+#include "TaskList.h"
+//***************************************************************************
+// This class is responsible for managing the undoing and redoing of the
+// abstract commands and execution of the commands
+//***************************************************************************
+class CommandManager{
+public: 
+	//in the constructor, the allowableUndoLevel is set to 10, which means that 
+	//the users can undo a maximum number of 10 times
+	CommandManager(TaskList& taskList):_taskList(taskList),allowableUndoLevel(10){};
+	~CommandManager(void);
+
+	//Check whether the undoList and redoList are empty
+	bool CanUndo() const;
+	bool CanRedo() const;
+
+	//getter and setter for allowableUndoLevel
+	int getUndoLevel() const;
+	void setUndoLevel(int);
+
+	//Check if the undoList contains commands to undo
+	bool IsDirty() const;
+
+	//Get the command at the back of the list to undo/redo
+	Command* getLastUndoCommand() const;
+	Command* getLastRedoCommand() const;
+
+	//Execute the command and assign a message to the feedback string
+	void DoCommand(Command*, std::string&);
+
+	//Carry out undoing and redoing of command
+	void Undo(std::string&);
+	void Redo();
+
+	//remove all the commands in the two lists
+	void Clear();
+	void SetClean();
+
+	// Add commands to the respective list
+	void AddUndo(Command*);
+	void AddRedo(Command*);
+
+	void ClearUndoList();
+	void ClearRedoList();
+	void ClearCommandList(std::list<Command*>*);
+
+	//Check whether the command is undoable
+	bool undoable(Command*);
+private:
+	TaskList& _taskList;
+	//Contains all commands that can be undone/redone.
+	//The next command to be undone/redone is at the back of the list
+	std::list<Command*>	undoList;
+	std::list<Command*>	redoList;
+	unsigned int allowableUndoLevel;
+	int UndoRedoCount;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\CommandManager.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Add.cpp
+	 */
+
+#include "Command_Add.h"
+
+Command_Add::Command_Add() {
+	initDefaultValues();
+}
+Command_Add::~Command_Add(void) {
+	resetDateAndTime();
+}
+
+//Setter functions for setting of attributes in the task
+void Command_Add::setDescription(std::string description){
+	_taskDescription = description;
+}
+void Command_Add::setCategory(std::string category) {
+	_category = category;
+}
+void Command_Add::setStartDate(Date& date) {
+	_startDate = new Date(date);
+}
+void Command_Add::setStartTime(ClockTime& startTime) {
+	_startTime = new ClockTime(startTime);
+}
+void Command_Add::setEndTime(ClockTime& endTime) {
+	_endTime = new ClockTime(endTime);
+}
+void Command_Add::setEndDate(Date& date){
+	_endDate = new Date(date);
+}
+void Command_Add::setPreviousScreen(DISPLAY_TYPE* screen){
+	_previousScreen = *screen;
+	_currentScreen = screen;
+}
+bool Command_Add::execute(TaskList& tasklist,std::string& feedback){
+	switchScreenTo(MAIN);
+	if(wasUndone()){
+		redo(tasklist);
+	} else {
+		createTask(tasklist);
+	}
+	createFeedback(tasklist,feedback);
+	lastCmdCalledIs(EXECUTE);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+bool Command_Add::undo(TaskList& taskList, std::string& feedback){
+	if (taskList.isEmpty()){
+		createFeedback(EMPTY_TASKLIST,feedback);
+		return false;
+	} else {
+		removeAddedTask(taskList);
+		createFeedback(UNDO_ADD_SUCCESS,feedback);
+		switchScreenTo(_previousScreen);
+		lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+		return true;
+	}
+}
+
+void Command_Add::initDefaultValues(){
+	_type = ADD;	
+	_taskDescription = DEFAULT_EMPTY;
+	_category = DEFAULT_EMPTY;
+	_endDate = NULL;
+	_endTime = NULL;
+	_startDate = NULL;
+	_startTime = NULL;
+	_addedTask = NULL;
+	_currentScreen = NULL;
+}
+
+void Command_Add::resetDateAndTime(){
+	resetStartTime();
+	resetStartDate();
+	resetEndDate();
+	resetEndTime();
+	resetTask();
+}
+
+bool Command_Add::hasStartTime(){
+	return _startTime!=NULL;
+}
+
+bool Command_Add::hasEndTime(){
+	return _endTime!=NULL;
+}
+
+bool Command_Add::hasEndDate(){
+	return _endDate!=NULL;
+}
+
+bool Command_Add::hasStartDate(){
+	return _startDate!=NULL;
+}
+
+void Command_Add::resetStartTime(){
+	if(hasStartTime()){
+		_startTime = NULL;
+	}
+}
+
+void Command_Add::resetEndTime(){
+	if(hasEndTime()){
+		_endTime = NULL;
+	}
+}
+
+void Command_Add::resetStartDate(){
+	if(hasStartDate()){
+		_startDate = NULL;
+	}
+}
+
+void Command_Add::resetEndDate(){
+	if(hasEndDate()){
+		_endDate = NULL;
+	}
+}
+
+void Command_Add::resetTask(){
+	_addedTask=NULL;
+}
+
+void Command_Add::redo(TaskList& tasklist){
+	tasklist.addTask(*_addedTask);
+	setIndexToBoldInGUI(tasklist);
+}
+
+bool Command_Add::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Add::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+
+void Command_Add::createTask(TaskList& tasklist){
+	_addedTask = new Task;
+	_addedTask->setDescription(_taskDescription);
+	_addedTask->setCategory(_category);
+	_addedTask->setSchedule(_startDate,_endDate,_startTime,_endTime);
+	tasklist.addTask(*_addedTask);
+}
+
+bool Command_Add::isClash(TaskList& tasklist){
+	if(!tasklist.getClashedTask().empty()){
+		return true;
+	}
+	return false;
+}
+
+void Command_Add::createFeedback(TaskList& tasklist,std::string& feedback){
+	if(isClash(tasklist)){
+		createFeedback(CLASH_EXIST, feedback);
+	}else{
+		createFeedback(ADD_SUCCESS, feedback);
+	}
+}
+
+void Command_Add::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Add::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
+
+void Command_Add::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+void Command_Add::setIndexToBoldInGUI(TaskList& tasklist){
+	if(!tasklist.getClashedTask().empty()){
+		std::vector<Task*> clashlist = tasklist.getClashedTask();
+		for(unsigned int i=0;i<clashlist.size();i++){
+			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
+			tasklist.addBoldIndex(index);
+		}
+	}else{
+		unsigned int index = tasklist.getTaskIndex(_addedTask);
+		tasklist.addBoldIndex(index);
+	}
+}
+
+void Command_Add::removeAddedTask(TaskList& tasklist){
+	unsigned int index = tasklist.getTaskIndex(_addedTask);
+	tasklist.deleteTaskFromUncompletedList(index);
+}
+
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Add.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Add.h
+	 */
+
+#ifndef COMMAND_ADD_H
+#define COMMAND_ADD_H
+
+#pragma once
+#include "Command.h"
+
+//************************************************************
+// This class is responsible getting the attribute to be added
+// to a task. It will set the attributes to the task before
+// adding it to the tasklist. By default task will be set as
+// floating task with no date and time parameters.
+//************************************************************
+class Command_Add: public Command {
+public:
+	Command_Add();
+	~Command_Add(void);
+
+	//Set attributes to be included into the new task
+	void setDescription(std::string);
+	void setCategory(std::string);
+	void setEndDate(Date&);
+	void setStartDate(Date&);
+	void setStartTime(ClockTime&);
+	void setEndTime(ClockTime&);
+	void setPreviousScreen(DISPLAY_TYPE*);
+
+	//adds the task into the tasklist and returns the feedback
+	virtual bool execute(TaskList&,std::string&);
+
+	//Undo the task by deleting the task
+	virtual bool undo(TaskList&, std::string&);
+
+private:
+	//For Initialization
+	void initDefaultValues();
+	//For Destruction
+	void resetEndDate();
+	void resetStartDate();
+	void resetEndTime();
+	void resetTask();
+	void resetDateAndTime() ;
+	void resetStartTime();
+	//Checking for Presence of Time and Date
+	bool hasStartTime();
+	bool hasStartDate();
+	bool hasEndDate();
+	bool hasEndTime();
+	//Checking for which was the last executed command
+	bool wasUndone();
+	bool wasExecuted();
+	//Creation of feedback
+	void createFeedback(TaskList& taskList,std::string& feedback);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	//Adding and Deletion of tasks
+	void redo(TaskList& tasklist);
+	void createTask(TaskList& tasklist);
+	void removeAddedTask(TaskList& tasklist);
+	//Others
+	bool isClash(TaskList& tasklist);
+	void switchScreenTo(DISPLAY_TYPE screen);
+	void lastCmdCalledIs(std::string cmd);
+	void setIndexToBoldInGUI(TaskList& tasklist);
+
+	//Attributes
+	std::string _taskDescription;
+	std::string _category;
+
+	Date* _startDate;
+	Date* _endDate;
+	ClockTime* _startTime;
+	ClockTime* _endTime;
+	Task* _addedTask;
+
+	//currentScreen holds the pointer to the actual screen the UI is displaying
+	//previous screen holds the screen that user was on before adding task
+	//These 2 variables are mainly used in undo and redo to ensure correct changing of screens
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+
+	//lastCmdCalled is used to track whether undo or redo was called to execute the correct commands;
+	std::string _lastCmdCalled;
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Add.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Clear.cpp
+	 */
+
+#include "Command_Clear.h"
+
+Command_Clear::Command_Clear(void){
+	_type = CLEAR;
+	_displayScreen = MAIN;
+}
+
+Command_Clear::Command_Clear(CLEAR_TYPE clearType){
+	_type = CLEAR;
+	_clearType = clearType;
+	_displayScreen = MAIN;
+}
+
+Command_Clear::~Command_Clear(void){
+	if(wasExecuted()){
+		permanantlyDeleteTasks();
+		_deletedUndoneTasks.clear();
+	}else{
+		_deletedUndoneTasks.clear();
+	}
+}
+
+bool Command_Clear::execute(TaskList& tasklist, std::string& feedback){
+	switch(_clearType){
+	case ALL:{
+		clearAll(tasklist);
+		createFeedback(CLEAR_ALL_SUCCESS,feedback);
+		break;
+	}
+	case UNCOMPLETED_TASKS:{
+		clearUncompletedTasks(tasklist);
+		createFeedback(CLEAR_UNCOMPLETED_SUCCESS,feedback);
+		break;
+	}
+	case COMPLETED_TASKS:{
+		clearCompletedTasks(tasklist);
+		createFeedback(CLEAR_COMPLETED_SUCCESS,feedback);
+		break;
+	}
+	case SCREEN:{
+		clearScreen(tasklist,feedback);
+		break;
+	}
+	default:
+		return false;
+	}
+	lastCmdCalledIs(EXECUTE);
+	return true;
+}
+
+bool Command_Clear::undo(TaskList& tasklist, std::string& feedback){
+	switch(_clearType){
+	case ALL:{
+		undoAll(tasklist,feedback);
+		break;
+	}
+	case UNCOMPLETED_TASKS:{
+		undoUncompletedTasks(tasklist, feedback);
+		break;
+	}
+	case COMPLETED_TASKS:{
+		undoCompletedTasks(tasklist,feedback);
+		break;
+	}
+	case SCREEN: {
+		undoScreenTasks(tasklist,feedback);
+		break;
+	}
+	default:
+		return false;
+	}
+	lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	return true;
+}
+
+void Command_Clear::clearCompletedTasks(TaskList& tasklist){
+	if(!wasUndone()){
+		for(unsigned int i = 0; i < tasklist.doneSize(); i++){
+			_deletedDoneTasks.push_back(tasklist.getCompletedTask(i));
+		} 
+	}
+	tasklist.clearCompletedTasks();
+}
+
+void Command_Clear::clearUncompletedTasks(TaskList& tasklist){
+	if(!wasUndone()){
+		for(unsigned int i = 0; i <tasklist.undoneSize(); i++){
+			_deletedUndoneTasks.push_back(tasklist.getTask(i));
+		}
+	}
+	tasklist.clearTask();
+}
+
+void Command_Clear::clearAll(TaskList& tasklist){
+	clearCompletedTasks(tasklist);
+	clearUncompletedTasks(tasklist);
+	tasklist.resetSearchedTasks();
+	tasklist.resetFilteredTasks();
+}
+
+void Command_Clear::undoCompletedTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i = 0; i <_deletedDoneTasks.size(); i++){
+		tasklist.addTaskToDoneList(*_deletedDoneTasks[i]);
+	}
+	createFeedback(UNDO_CLEAR_COMPLETED_SUCCESS,feedback);
+}
+
+void Command_Clear::undoUncompletedTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i = 0;i < _deletedUndoneTasks.size();i++){
+		tasklist.addTask(*_deletedUndoneTasks[i]);
+		createFeedback(UNDO_CLEAR_UNCOMPLETED_SUCCESS,feedback);
+	}
+}
+
+void Command_Clear::undoAll(TaskList& tasklist, std::string& feedback){
+	undoUncompletedTasks(tasklist,feedback);
+	undoCompletedTasks(tasklist,feedback);
+	if(_displayScreen == SEARCHED){
+		repopulateSearchList(tasklist);
+	}else if(_displayScreen == FILTERED){
+		repopulateFilterList(tasklist);
+	}
+	createFeedback(UNDO_CLEAR_ALL_SUCCESS,feedback);
+}
+
+void Command_Clear::clearScreen(TaskList& tasklist,std::string& feedback) {
+	if(_displayScreen == SEARCHED){
+		if(!wasUndone()){
+			saveSearchedTasks(tasklist);
+		}
+		tasklist.clearSearchedTasks(); 
+		createFeedback(CLEAR_SEARCHED_SUCCESS,feedback);
+	} else if(_displayScreen == COMPLETE){
+		clearCompletedTasks(tasklist);
+		createFeedback(CLEAR_COMPLETED_SUCCESS,feedback);
+	}else if(_displayScreen == MAIN){
+		clearUncompletedTasks(tasklist);
+		createFeedback(CLEAR_UNCOMPLETED_SUCCESS,feedback);
+	}else if(_displayScreen == FILTERED){
+		if(_lastCmdCalled != CMD_TYPE_STRING[UNDO]){
+			saveFilteredTasks(tasklist);
+		}
+		tasklist.clearFilteredTasks();
+		createFeedback(CLEAR_FILTERED_SUCCESS,feedback);
+	}
+	return;
+}
+
+void Command_Clear::setDisplayScreen(DISPLAY_TYPE displayType){
+	_displayScreen = displayType;
+}
+
+void Command_Clear::saveSearchedTasks(TaskList &tasklist) {
+	std::vector<Task*> searchedTask=tasklist.getSearchResults();
+	for(unsigned int i = 0;i < searchedTask.size();i++){
+		_deletedSearchedTasks.push_back(searchedTask[i]);
+	}
+}
+
+void Command_Clear::saveFilteredTasks(TaskList &tasklist) {
+	std::vector<Task*> filteredTask=tasklist.getFilterResults();
+	for(unsigned int i = 0;i < filteredTask.size();i++){
+		_deletedFilteredTasks.push_back(filteredTask[i]);
+	}
+}
+
+void Command_Clear::repopulateSearchList(TaskList &tasklist){
+	tasklist.resetSearchedTasks();
+	for(unsigned int i = 0; i < _deletedSearchedTasks.size(); i++){
+		tasklist.addTaskToSearchedList(*_deletedSearchedTasks[i]);
+	}
+}
+
+void Command_Clear::repopulateFilterList(TaskList &tasklist){
+	tasklist.resetFilteredTasks();
+	for(unsigned int i = 0; i < _deletedFilteredTasks.size(); i++){
+		tasklist.addTaskToFilteredList(*_deletedFilteredTasks[i]);
+	}
+}
+
+void Command_Clear::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+bool Command_Clear::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+void Command_Clear::permanantlyDeleteTasks(){
+	for(unsigned int i = 0;i < _deletedUndoneTasks.size();i++){
+		delete _deletedUndoneTasks[i];
+		_deletedUndoneTasks[i] = NULL;
+	}
+}
+
+void Command_Clear::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Clear::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+void Command_Clear::undoFilteredTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i=0;i<_deletedFilteredTasks.size();i++){
+		if(_deletedFilteredTasks[i]->getTaskStatus()==COMPLETED){
+			tasklist.addTaskToDoneList(*_deletedFilteredTasks[i]);
+		}else{
+			tasklist.addTask(*_deletedFilteredTasks[i]);
+		}
+	}
+	repopulateFilterList(tasklist);
+	createFeedback(UNDO_CLEAR_FILTERED_SUCCESS,feedback);
+}
+
+void Command_Clear::undoSearchedTasks(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i=0;i<_deletedSearchedTasks.size();i++){
+		if(_deletedSearchedTasks[i]->getTaskStatus()==COMPLETED){
+			tasklist.addTaskToDoneList(*_deletedSearchedTasks[i]);
+		}else{
+			tasklist.addTask(*_deletedSearchedTasks[i]);
+		}
+	}
+	repopulateSearchList(tasklist);
+	createFeedback(UNDO_CLEAR_SEARCHED_SUCCESS,feedback);
+}
+
+void Command_Clear::undoScreenTasks(TaskList& tasklist, std::string& feedback){
+	if(_displayScreen == COMPLETE){
+		undoCompletedTasks(tasklist,feedback);
+	} else if(_displayScreen==MAIN) {
+		undoUncompletedTasks(tasklist,feedback);
+	} else if(_displayScreen==FILTERED){
+		undoFilteredTasks(tasklist,feedback);
+	} else if(_displayScreen==SEARCHED){
+		undoSearchedTasks(tasklist,feedback);
+	}
+}
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Clear.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Clear.h
+	 */
+
+#ifndef COMMAND_CLEAR_H
+#define COMMAND_CLEAR_H
+
+#pragma once
+#include "Command.h"
+//********************************************************************************
+// This class is responsible for deleting multiple tasks at once depending on the
+// the display screen that the user is currently working with.
+// It contains methods which allows users to clear:
+// 1. all tasks from the schedule
+// 2. all completed tasks 
+// 3. all uncompleted tasks
+// 4. all tasks that contain the same search key word.
+// 5. all tasks that are in the same filtered list
+//********************************************************************************
+class Command_Clear:public Command{
+public:
+	Command_Clear(void);
+	Command_Clear(CLEAR_TYPE);
+	~Command_Clear(void);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+	void setDisplayScreen(DISPLAY_TYPE);
+private:
+
+	void saveSearchedTasks(TaskList&);
+	void saveFilteredTasks(TaskList&);
+
+	void clearScreen(TaskList&, std::string&);
+	void clearCompletedTasks(TaskList&);
+	void clearUncompletedTasks(TaskList&);
+	void clearAll(TaskList&);
+
+	void undoCompletedTasks(TaskList&, std::string&);
+	void undoUncompletedTasks(TaskList&, std::string&);
+
+	void repopulateFilterList(TaskList&);
+	void repopulateSearchList(TaskList&);
+
+	void undoScreenTasks(TaskList& tasklist, std::string& feedback);
+	void undoFilteredTasks(TaskList& tasklist, std::string& feedback);
+	void undoSearchedTasks(TaskList& tasklist, std::string& feedback);
+	void undoAll(TaskList&, std::string&);
+
+	//Helper Functions
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void permanantlyDeleteTasks();
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	bool wasExecuted();
+
+	//Attributes
+	DISPLAY_TYPE _displayScreen;
+	CLEAR_TYPE _clearType;
+	//Vector to store pointers of deletedTasks so that command can be undone
+	std::vector<Task*> _deletedUndoneTasks;
+	std::vector<Task*> _deletedDoneTasks;
+	std::vector<Task*> _deletedSearchedTasks;
+	std::vector<Task*> _deletedFilteredTasks;
+	std::string _lastCmdCalled;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Clear.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Delete.cpp
+	 */
+
+#pragma once
+#include "Command_Delete.h"
+
+Command_Delete::Command_Delete() {
+        _type = DELETE;
+        _deletionString = DEFAULT_EMPTY;
+        //The default index is set to -1 when a new Command_Delete is dynamically created
+        //so that it will not clash with any other task index
+}
+
+Command_Delete::~Command_Delete(){
+	if(wasExecuted()){
+		permanantlyDeleteTask();
+	}else{
+		_deletedTasks.clear();
+	}
+}
+
+bool Command_Delete::execute(TaskList& taskList, std::string& feedback){
+
+	if(wasUndone()){
+		redo(taskList);
+		lastCmdCalledIs(EXECUTE);
+		createFeedback(DELETE_SUCCESS,feedback);
+		return true;
+	}else{
+		backUpTasks(taskList);
+		deleteTasks(taskList);
+		lastCmdCalledIs(EXECUTE);
+		createFeedback(DELETE_SUCCESS,feedback);
+		return true;
+	}
+}
+
+bool Command_Delete::undo(TaskList& taskList, std::string& feedback){
+	switch(_displayType){
+	case MAIN:
+		for(unsigned int i=0;i<_deletedTasks.size();i++){
+			taskList.addTask(*_deletedTasks[i]);
+		}
+		break;
+	case COMPLETE:
+		for(unsigned int i=0;i<_deletedTasks.size();i++){
+			taskList.addTaskToDoneList(*_deletedTasks[i]);
+		}
+		break;
+	case SEARCHED:
+		for(unsigned int i=0;i<_deletedTasks.size();i++){
+			taskList.addTask(*_deletedTasks[i]);
+			taskList.addTaskToSearchedList(*_deletedTasks[i]);
+		}
+		break;
+	
+	case FILTERED:
+		for(unsigned int i=0;i<_deletedTasks.size();i++){
+			taskList.addTask(*_deletedTasks[i]);
+			taskList.addTaskToFilteredList(*_deletedTasks[i]);
+		}
+		break;		
+	default:
+		break;
+	}
+	lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(UNDO_DELETE_SUCCESS,feedback);
+	return true;
+}
+
+void Command_Delete::setDisplayScreen(DISPLAY_TYPE display){
+        _displayType = display;
+}
+
+void Command_Delete::addDeletionIndex(int index){
+	_deletedTaskIndex.push_back(index);
+}
+
+void Command_Delete::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Delete::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Delete::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+
+void Command_Delete::permanantlyDeleteTask(){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		delete _deletedTasks[i];
+		_deletedTasks[i]=NULL;
+	}
+}
+
+void Command_Delete::redo(TaskList& taskList){
+	deleteTasks(taskList);
+	lastCmdCalledIs(EXECUTE);
+}
+
+void Command_Delete::deleteTasks(TaskList& taskList){
+	switch(_displayType){
+	case MAIN:
+		deleteMainTasks(taskList);
+		break;
+	case COMPLETE:
+		deleteCompletedTasks(taskList);
+		break;
+	case SEARCHED:
+		deleteSearchedTasks(taskList);
+		break;
+	case FILTERED:
+		deleteFilterTasks(taskList);
+		break;
+	default:
+		break;
+	}
+
+}
+
+void Command_Delete::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Delete::backUpTasks(TaskList &taskList){
+	switch(_displayType){
+	case MAIN:
+		backUpMainTasks(taskList);
+		break;
+	case COMPLETE:
+		backUpCompletedTasks(taskList);
+		break;
+	case SEARCHED:
+		backUpSearchedTasks(taskList);
+		break;
+	case FILTERED:
+		backUpFilteredTasks(taskList);
+		break;
+	default:
+		break;
+	}
+}
+
+void Command_Delete::backUpMainTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::backUpCompletedTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getCompletedTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::backUpSearchedTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getSearchedTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+void Command_Delete::deleteMainTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndex(_deletedTasks[i]);
+		taskList.deleteTaskFromUncompletedList(index);
+	}
+}
+void Command_Delete::deleteCompletedTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInCompletedList(_deletedTasks[i]);
+		taskList.deleteTaskFromCompletedList(index);
+	}
+}
+void Command_Delete::deleteSearchedTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInSearchedList(_deletedTasks[i]);
+		taskList.deleteTaskFromSearchList(index);
+	}
+}
+void Command_Delete::deleteFilterTasks(TaskList& taskList){
+	for(unsigned int i=0;i<_deletedTasks.size();i++){
+		unsigned int index = taskList.getTaskIndexInFilteredList(_deletedTasks[i]);
+		taskList.deleteTaskFromFilterList(index);
+	}
+}
+
+void Command_Delete::backUpFilteredTasks(TaskList &taskList){
+	for(unsigned int i =0;i<_deletedTaskIndex.size();i++){
+		if(_deletedTaskIndex[i] != DEFAULT_INDEX ){
+			_deletedTasks.push_back(taskList.getFilteredTask(_deletedTaskIndex[i]));
+		}
+	}
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Delete.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Delete.h
+	 */
+
+#ifndef COMMAND_DELETE_H
+#define COMMAND_DELETE_H
+
+#pragma once
+
+#include "Command.h"
+#include <stack>
+
+//************************************************************
+// This class is responsible for deleting an individual task
+// specified by its index
+//************************************************************
+class Command_Delete : public Command{
+public:
+	Command_Delete(void);
+	~Command_Delete(void);
+	//adds Deletion Index to be deleted
+	void addDeletionIndex(int);
+	//Setting Display so Command knows which tasklist to delete from
+	void setDisplayScreen(DISPLAY_TYPE display);
+	
+	virtual bool execute(TaskList&, std::string&);
+	virtual bool undo(TaskList&, std::string&);
+
+private:
+	//Functions to assist in executing/undoing/redoing
+	void redo(TaskList& taskList);
+	void deleteTasks(TaskList& taskList);
+
+	void backUpTasks(TaskList &taskList);
+
+	void backUpFilteredTasks(TaskList &taskList);
+
+	void backUpSearchedTasks(TaskList &taskList);
+
+	void backUpCompletedTasks(TaskList &taskList);
+
+	void backUpMainTasks(TaskList &taskList);
+
+	//For destruction of tasks. Task will only be destructed in either commandDelete or commandClear
+	void permanantlyDeleteTask();
+
+	//Helper Functions
+	bool wasUndone();
+	bool wasExecuted();
+	void lastCmdCalledIs(std::string cmd);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void deleteMainTasks(TaskList& taskList);
+	void deleteCompletedTasks(TaskList& taskList);
+	void deleteSearchedTasks(TaskList& taskList);
+	void deleteFilterTasks(TaskList& taskList);
+
+	//Attributes
+	std::string _deletionString;
+	std::string _lastCmdCalled;
+	DISPLAY_TYPE _displayType;
+	std::vector<Task*> _deletedTasks;
+	std::vector<unsigned int> _deletedTaskIndex;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Delete.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Display.cpp
+	 */
+
+#include "Command_Display.h"
+
+Command_Display::Command_Display(void){
+	_type = DISPLAY;
+}
+
+Command_Display::~Command_Display(void){
+}
+
+void Command_Display::setCurrentScreen(DISPLAY_TYPE* screen){
+	_currentScreen = screen;
+}
+
+void Command_Display::setNextScreen(DISPLAY_TYPE screen){
+	_nextScreen = screen;
+}
+
+bool Command_Display::execute(TaskList&, std::string&){
+	*_currentScreen = _nextScreen;
+	return true;
+}
+
+bool Command_Display::undo(TaskList&, std::string&){
+	return false;
+}
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Display.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Display.h
+	 */
+
+#ifndef COMMAND_DISPLAY_H
+#define COMMAND_DISPLAY_H
+
+#pragma once
+
+#include "command.h"
+//************************************************************
+// This class is responsible for setting the display screen:
+// MAIN,SEARCHED,COMPLETE,FILTERED
+// 1. MAIN SCREEN: displays all uncompleted tasks.
+// 2. SEARCHED SCREEN: displays all searched tasks.
+// 3. COMPLETE SCREEN: displays all completed tasks.
+// 4. FILTERED SCREEN: displays all filtered tasks.
+//************************************************************
+class Command_Display :public Command{
+public:
+	Command_Display(void);
+	~Command_Display(void);
+	
+	void setCurrentScreen(DISPLAY_TYPE* screen);
+	void setNextScreen(DISPLAY_TYPE screen);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&,std::string&);
+
+private:
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _nextScreen;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Display.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Done.cpp
+	 */
+
+#include "Command_Done.h"
+
+Command_Done::Command_Done(void){
+	_type = DONE;
+	_currentScreen=NULL;
+}
+
+Command_Done::~Command_Done(void){
+	_currentScreen=NULL;
+}
+
+bool Command_Done::execute(TaskList& tasklist, std::string& feedback){
+	if(wasUndone()){
+		setTasksAsDone(tasklist);
+	}else{
+		saveTasks(tasklist);
+		setTasksAsDone(tasklist);
+	}
+	createFeedback(DONE_SUCCESS,feedback);
+	lastCmdCalledIs(EXECUTE);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+
+bool Command_Done::undo(TaskList& tasklist, std::string& feedback){
+	setDoneTasksAsUndone(tasklist);
+    lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(UNDONE_SUCCESS,feedback);
+	switchScreenTo(_previousScreen);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+
+void Command_Done::setPreviousScreen(DISPLAY_TYPE* screen){
+	_currentScreen=screen;
+	_previousScreen=*screen;
+}
+
+void Command_Done::addDoneIndex(int index){
+	_doneTaskIndex.push_back(index);
+}
+
+void Command_Done::setIndexToBoldInGUI(TaskList& tasklist){
+	unsigned int index;
+	switch(*_currentScreen){
+	case MAIN:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			index = tasklist.getTaskIndex(_doneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case SEARCHED:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			index = tasklist.getTaskIndexInSearchedList(_doneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case FILTERED:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			index = tasklist.getTaskIndexInFilteredList(_doneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case COMPLETED:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void Command_Done::saveTasks(TaskList& taskList){
+	std::vector<Task*>& taskVector=taskList.getUncompletedTaskList();
+
+	switch(*_currentScreen){
+	case SEARCHED:{
+		taskVector = taskList.getSearchResults();
+		break;
+	}
+	case FILTERED:{
+		taskVector = taskList.getFilterResults();
+		break;
+	}
+	case MAIN: {
+		break;
+	}
+	default:
+		throw UnableToSetAsDone();
+	}
+
+	for(unsigned int i=0;i<_doneTaskIndex.size();i++){
+		_doneTasks.push_back(taskVector[_doneTaskIndex[i]]);
+		if(_doneTasks[i]->getTaskStatus()==COMPLETED){
+			throw UnableToSetAsDone();
+		}
+	}
+}
+
+void Command_Done::setTasksAsDone(TaskList& tasklist){
+	switch(*_currentScreen){
+	case MAIN:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			int index = tasklist.getTaskIndex(_doneTasks[i]);
+			tasklist.setTaskAsDone(index);
+		}
+		*_currentScreen=COMPLETE;
+		break;
+	}
+	case SEARCHED:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			int index = tasklist.getTaskIndexInSearchedList(_doneTasks[i]);
+			tasklist.setSearchedTaskAsDone(index);
+		}
+		break;
+	}
+	case FILTERED:{
+		for(unsigned int i=0;i<_doneTasks.size();i++){
+			int index = tasklist.getTaskIndexInFilteredList(_doneTasks[i]);
+			tasklist.setFilteredTaskAsDone(index);
+		}
+		break;
+	}
+	default:
+		throw UnableToSetAsDone();
+	}
+}
+
+void Command_Done::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
+
+void Command_Done::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Done::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Done::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Done::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+void Command_Done::setDoneTasksAsUndone(TaskList& tasklist){
+	for(unsigned int i=0;i<_doneTasks.size();i++){
+		unsigned int index = tasklist.getTaskIndexInCompletedList(_doneTasks[i]);
+		tasklist.setTaskAsUndone(index);
+	}
+}
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Done.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Done.h
+	 */
+
+#ifndef COMMAND_DONE_H
+#define COMMAND_DONE_H
+#pragma once
+
+#include "command.h"
+//********************************************************************************
+// This class contains methods which are responsible for changing the status of
+// an individual task from UNDONE to DONE.
+// The individual task is specified by its index.
+//********************************************************************************
+class Command_Done : public Command{
+public:
+	Command_Done(void);
+	~Command_Done(void);
+	//Adds index of task to be done
+	void addDoneIndex(int);
+	//Sets screen so that Command will know which tasklist to done task
+	void setPreviousScreen(DISPLAY_TYPE* screen);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+
+private:
+
+	void saveTasks(TaskList& taskList);
+	void setTasksAsDone(TaskList& tasklist);
+	void setDoneTasksAsUndone(TaskList& tasklist);
+
+	bool checkDoneStatus();
+
+	void switchScreenTo(DISPLAY_TYPE screen);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	bool wasExecuted();
+
+	//Sets Index of Done Task to bold
+	void setIndexToBoldInGUI(TaskList& tasklist);
+
+	//Attributes
+	std::vector<Task*> _doneTasks;
+	std::vector<unsigned int> _doneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE  _previousScreen;
+	std::string   _lastCmdCalled;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Done.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Edit.cpp
+	 */
+
+#include "Command_Edit.h"
+
+Command_Edit::Command_Edit(void){
+	_type = EDIT;
+	initialiseParameters();
+}
+
+Command_Edit::~Command_Edit(void){
+}
+
+void Command_Edit::setDescription(std::string description){
+	_editedDescription = description;
+}
+
+void Command_Edit::setCategory(std::string category){
+	_editedCategory = category;
+}
+
+void Command_Edit::setEndDate(Date* endDate){
+	_editedEndDate = endDate;
+}
+
+void Command_Edit::setStartDate(Date* startDate){
+	_editedStartDate = startDate;
+}
+
+void Command_Edit::setStartTime(ClockTime* startTime){
+	_editedStartTime = startTime;
+}
+
+void Command_Edit::setEndTime(ClockTime* endTime){
+	_editedEndTime = endTime;
+}
+
+bool Command_Edit::execute(TaskList& tasklist, std::string& feedback){
+	getOriginalTask(tasklist);
+	saveOriginalTaskDetails();
+	editTaskWithNewParameters();
+	createFeedback(EDIT_SUCCESS,feedback);
+	tasklist.updateClashStatus();
+	tasklist.shiftTask(_editedTask);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+
+void Command_Edit::setDisplayScreen(DISPLAY_TYPE screen){
+	_displayScreen = screen;
+}
+
+void Command_Edit::setIndex(int index){
+	_editIndex = index;
+}
+
+bool Command_Edit::undo(TaskList& tasklist, std::string& feedback){
+	revertParameters();
+	tasklist.updateClashStatus();
+	tasklist.shiftTask(_editedTask);
+	setIndexToBoldInGUI(tasklist);
+	createFeedback(UNDO_EDIT_SUCCESS,feedback);
+	return true;
+}
+
+bool Command_Edit::noDateAndTime(){
+	if(noDate() && noTime()){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noDate(){
+	if(noEndDate() && noStartDate()){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noTime(){
+	if(noEndTime() && noStartTime()){
+		return true;
+	}
+	return false;
+}
+
+void Command_Edit::resetTimeAndDate(){
+	_editedTask->setEndDate(NULL);
+	_editedTask->setEndTime(NULL);
+	_editedTask->setStartTime(NULL);
+	_editedTask->setStartDate(NULL);
+}
+
+bool Command_Edit::emptyParameters(){
+	if(noDescription() && noCategory() && noDateAndTime()){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noDescription(){
+	if(_editedDescription == DEFAULT_EMPTY){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noCategory(){
+	if(_editedCategory == DEFAULT_EMPTY){
+		return true;
+	}
+	return false;
+}
+bool Command_Edit::noEndDate(){
+	if(_editedEndDate == NULL){
+		return true;
+	}
+	return false;
+}
+bool Command_Edit::noStartDate(){
+	if(_editedStartDate == NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noStartTime(){
+	if(_editedStartTime == NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Edit::noEndTime(){
+	if(_editedEndTime == NULL){
+		return true;
+	}
+	return false;
+}
+
+void Command_Edit::saveOriginalTaskDetails(){
+	_originalDescription = _editedTask->getDescription();
+	_originalCategory = _editedTask->getTaskCategory();
+	_originalEndDate = _editedTask->getEndDate();
+	_originalStartDate = _editedTask->getStartDate();
+	_originalEndTime = _editedTask->getEndTime();
+	_originalStartTime =_editedTask->getStartTime();
+}
+
+void Command_Edit::getOriginalTask(TaskList& tasklist){
+	switch(_displayScreen){
+	case COMPLETE:{
+		_editedTask = tasklist.getCompletedTask(_editIndex);
+		break;
+	}
+	case SEARCHED:{
+		_editedTask = tasklist.getSearchedTask(_editIndex);
+		break;
+	}
+	case FILTERED:{
+		_editedTask = tasklist.getFilteredTask(_editIndex);
+		break;
+	}
+	default:{
+		_editedTask = tasklist.getTask(_editIndex);
+		break;
+	}
+	}	
+}
+
+void Command_Edit::editTaskWithNewParameters(){
+	if(!noDescription()){
+		_editedTask->setDescription(_editedDescription);
+	}if(!noCategory()){
+		_editedTask->setCategory(_editedCategory);
+	}if(emptyParameters()){
+		resetTimeAndDate();
+	}if(!noDateAndTime()){
+		if(!noDate()){
+			if(!noEndDate()){
+				_editedTask->setEndDate(_editedEndDate);
+			}if(!noStartDate()){
+				_editedTask->setStartDate(_editedStartDate);
+			}else{
+				_editedTask->setStartDate(NULL);
+			}
+		}
+		if(!noTime()){
+			_editedTask->editSchedule(_editedStartTime,_editedEndTime);
+		}
+	}
+}
+
+
+void Command_Edit::setIndexToBoldInGUI(TaskList& tasklist){
+	if(!tasklist.getClashedTask().empty()){
+		std::vector<Task*> clashlist = tasklist.getClashedTask();
+		for(unsigned int i=0;i<clashlist.size();i++){
+			unsigned int index = tasklist.getTaskIndex(clashlist[i]);
+			tasklist.addBoldIndex(index);
+		}
+	}else{
+		unsigned int index;
+		switch(_displayScreen){
+		case MAIN:{
+			index = tasklist.getTaskIndex(_editedTask);
+			break;
+		}
+		case SEARCHED:{
+			index = tasklist.getTaskIndexInSearchedList(_editedTask);
+			break;
+		}
+		case FILTERED:{
+			index = tasklist.getTaskIndexInFilteredList(_editedTask);
+			break;
+		}
+		case COMPLETED:{
+			index = tasklist.getTaskIndexInCompletedList(_editedTask);
+			break;
+		}
+		default:
+			break;
+		}
+		tasklist.addBoldIndex(index);
+	}
+}
+
+void Command_Edit::initialiseParameters(){
+	_editedDescription = DEFAULT_EMPTY;
+	_editedCategory = DEFAULT_EMPTY;
+	_editedEndDate = NULL;
+	_editedStartDate = NULL;
+	_editedEndTime = NULL;
+	_editedStartTime = NULL;
+
+	_originalDescription = DEFAULT_EMPTY;
+	_originalCategory = DEFAULT_EMPTY;
+	_originalEndDate = NULL;
+	_originalStartDate = NULL;
+	_originalEndTime = NULL;
+	_originalStartTime = NULL;
+
+	_editedTask = NULL;
+}
+
+void Command_Edit::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Edit::revertParameters(){
+	_editedTask->setDescription(_originalDescription);
+	_editedTask->setCategory(_originalCategory);
+	_editedTask->setEndDate(_originalEndDate);
+	_editedTask->setEndTime(_originalEndTime);
+	_editedTask->setStartDate(_originalStartDate);
+	_editedTask->setStartTime(_originalStartTime);
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Edit.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Edit.h
+	 */
+
+#ifndef COMMAND_EDIT_H
+#define COMMAND_EDIT_H
+#pragma once
+
+#include "command.h"
+//********************************************************************************
+// This class contains methods which are responsible for modifying fields of an
+// individual task specified by its index on the display screen that the users are
+// working with. Regardless of the display screen, it is always possible to edit a
+// task.
+//********************************************************************************
+class Command_Edit :public Command
+{
+public:
+	Command_Edit(void);
+	~Command_Edit(void);
+
+	// setter methods for fields. They take in the new content for each field 
+	// from the user and reset the task accordingly.
+	void setIndex(int);
+	void setDescription(std::string);
+	void setCategory(std::string);
+	void setEndDate(Date*);
+	void setStartDate(Date*);
+	void setStartTime(ClockTime*);
+	void setEndTime(ClockTime*);
+	void setDisplayScreen(DISPLAY_TYPE);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+
+private:
+	//For initialization
+	void initialiseParameters();
+
+	//For undoing of task
+	void saveOriginalTaskDetails();
+	void getOriginalTask(TaskList& tasklist);
+	void revertParameters();
+	
+	//For execution of task
+	void resetTimeAndDate();
+	void editTaskWithNewParameters();
+
+	//check for missing parameters
+	bool noDateAndTime();
+	bool noDate();
+	bool noTime();
+	bool emptyParameters();
+	bool noCategory();
+	bool noDescription();
+	bool noEndTime();
+	bool noStartTime();
+	bool noStartDate();
+	bool noEndDate();
+
+	//Helper Functions
+	void setIndexToBoldInGUI(TaskList& tasklist);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+
+	//Attributes
+	int _editIndex;
+	std::string _editedDescription;
+	std::string _editedCategory;
+	Date* _editedEndDate;
+	Date* _editedStartDate;
+	ClockTime* _editedEndTime;
+	ClockTime* _editedStartTime;
+
+	std::string _originalDescription;
+	std::string _originalCategory;
+	Date* _originalEndDate;
+	Date* _originalStartDate;
+	ClockTime* _originalEndTime;
+	ClockTime* _originalStartTime;
+
+	Task* _editedTask;
+
+	DISPLAY_TYPE _displayScreen;
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Edit.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Filter.cpp
+	 */
+
+#include "Command_Filter.h"
+
+Command_Filter::Command_Filter(void){
+	_type = FILTER;
+	_filterType = CATEGORY;
+	_category = DEFAULT_EMPTY;
+	_date = NULL;
+}
+Command_Filter::~Command_Filter(void){
+}
+
+bool Command_Filter::execute(TaskList& tasklist, std::string& feedback){
+	*_currentScreen = FILTERED;
+	switch(_filterType){
+	case CATEGORY:{
+		tasklist.populateFilterList(_category);
+		int size = tasklist.filteredSize();
+		if (size > ZERO){
+			feedback = FILTER_CATEGORY_RESULTS[ALL_TASK_CATEGORY] + _category + CATEGORY_STRING;
+		} else {
+			feedback = FILTER_CATEGORY_RESULTS[NO_TASK_CATEGORY] + _category + CATEGORY_STRING;
+		}
+		return true;
+	}
+	case DATE:{
+		tasklist.populateFilterList(_date);
+		int size = tasklist.filteredSize();
+		if (size > ZERO){
+			feedback = FILTER_CATEGORY_RESULTS[ALL_TASK_DATE] + _date->toString();
+		} else {
+			feedback = FILTER_CATEGORY_RESULTS[NO_TASK_CATEGORY] + _date->toString();
+		}
+		return true;
+	}
+	default:
+		return false;
+	}
+}
+
+bool Command_Filter::undo(TaskList& tasklist, std::string& feedback){
+	*_currentScreen =_previousScreen;
+	return true;
+}
+
+void Command_Filter::setCategory(std::string category){
+	_filterType = CATEGORY;
+	_category = category;
+}
+
+void Command_Filter::setDate(Date* date){
+	_filterType = DATE;
+	_date = new Date(*date);
+}
+
+void Command_Filter::setPreviousScreen(DISPLAY_TYPE* screen){
+	_previousScreen = *screen;
+	_currentScreen = screen;
+}
+
+void Command_Filter::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
+ 
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Filter.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Filter.h
+	 */
+
+#ifndef COMMAND_FILTER_H
+#define COMMAND_FILTER_H
+#pragma once
+
+#include "command.h"
+//********************************************************************************
+// This class is responsible for filtering out tasks which are scheduled on the 
+// same dates (due dates or end dates) or belong to the same category
+//********************************************************************************
+class Command_Filter :public Command{
+public:
+	Command_Filter(void);
+	~Command_Filter(void);
+
+	void setCategory(std::string);
+	void setDate(Date*);
+	void setPreviousScreen(DISPLAY_TYPE*);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+
+private:
+	void switchScreenTo(DISPLAY_TYPE screen);
+
+	//Attributes
+	FILTER_TYPE _filterType;
+	std::string _category;
+	Date* _date;
+
+	DISPLAY_TYPE _previousScreen;
+	DISPLAY_TYPE* _currentScreen;
+
+};
+#endif
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Filter.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Redo.cpp
+	 */
+
+#include "Command_Redo.h"
+
+Command_Redo::Command_Redo(void){
+	_type = REDO;
+}
+
+Command_Redo::~Command_Redo(void){
+}
+
+bool Command_Redo::execute(TaskList& tasklist, std::string& feedback){
+	feedback = SUCCESS;
+	return true;
+}
+
+bool Command_Redo::undo(TaskList& tasklist, std::string&){
+	return false;
+}
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Redo.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Redo.h
+	 */
+
+#ifndef COMMAND_REDO_H
+#define COMMAND_REDO_H
+
+#pragma once
+#include "command.h"
+//********************************************************************************
+// This class calls for Redo in Command Manger to execute redo in previously
+// undone command
+//********************************************************************************
+
+class Command_Redo :public Command{
+public:
+	Command_Redo(void);
+	~Command_Redo(void);
+	virtual bool execute(TaskList&, std::string&);
+	virtual bool undo(TaskList&, std::string&);
+};
+#endif
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Redo.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Search.cpp
+	 */
+
+#include "Command_Search.h"
+
+Command_Search::Command_Search(void){
+	_type = SEARCH;
+	_keyword = DEFAULT_EMPTY;
+	_currentScreen = NULL;
+}
+
+Command_Search::~Command_Search(void){
+}
+
+void Command_Search::setKeyword(std::string keyword){
+	_keyword = keyword;
+}
+
+bool Command_Search::execute(TaskList& tasklist, std::string& feedback){
+	switchScreenTo(SEARCHED);
+	tasklist.populateSearchList(_keyword);
+	int size = tasklist.searchedSize();
+	if(size > ZERO) {
+		feedback = SEARCH_RESULTS[ALL_TASK] + _keyword + CLOSING_BRACKET;
+	} else {
+		feedback = SEARCH_RESULTS[NO_TASK] + _keyword + CLOSING_BRACKET;
+	}
+	return true;
+}
+
+bool Command_Search::undo(TaskList& tasklist, std::string&){
+	switchScreenTo(_previousScreen);
+	return true;
+}
+
+void Command_Search::setPreviousScreen(DISPLAY_TYPE* screen){
+	_previousScreen = *screen;
+	_currentScreen = screen;
+} 
+
+void Command_Search::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Search.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Search.h
+	 */
+
+#ifndef COMMAND_SEARCH_H
+#define COMMAND_SEARCH_H
+
+#pragma once
+#include "command.h"
+//********************************************************************************
+// This class takes in a keyword and searches for the keyword in tasklist and
+// populating the searchlist in tasklist.
+//********************************************************************************
+class Command_Search :public Command{
+public:
+	Command_Search(void);
+	~Command_Search(void);
+
+	void setKeyword(std::string);
+	void setPreviousScreen(DISPLAY_TYPE*);
+
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+
+private:
+	void switchScreenTo(DISPLAY_TYPE screen);
+
+	//Attributes
+	std::string _keyword;
+
+	DISPLAY_TYPE _previousScreen;
+	DISPLAY_TYPE* _currentScreen;
+};
+#endif
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Search.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Undo.cpp
+	 */
+
+#include "Command_Undo.h"
+
+Command_Undo::Command_Undo(void){
+	_type = UNDO;
+}
+
+Command_Undo::~Command_Undo(void){
+}
+
+bool Command_Undo::execute(TaskList& tasklist, std::string& feedback){
+	feedback = SUCCESS;
+	return true;
+}
+
+bool Command_Undo::undo(TaskList& tasklist, std::string&){
+	return false;
+}
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Undo.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Undo.h
+	 */
+
+#ifndef COMMAND_UNDO_H
+#define COMMAND_UNDO_H
+
+#pragma once
+#include "command.h"
+//********************************************************************************
+// This class calls for Undo in Command Manger to execute undo in previously
+// executed command
+//********************************************************************************
+
+class Command_Undo :
+	public Command
+{
+public:
+	Command_Undo(void);
+	~Command_Undo(void);
+	virtual bool execute(TaskList&, std::string&);
+	virtual bool undo(TaskList&, std::string&);
+};
+#endif
+
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Undo.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Undone.cpp
+	 */
+
+#include "Command_Undone.h"
+
+Command_Undone::Command_Undone(void){
+	_type = UNDONE;
+}
+
+Command_Undone::~Command_Undone(void){
+	_undoneTaskIndex.clear();
+	_undoneTasks.clear();
+}
+
+bool Command_Undone::execute(TaskList& tasklist, std::string& feedback){
+	if(wasUndone()){
+		setTasksAsUndone(tasklist);
+	}else{
+		saveTasks(tasklist);
+		setTasksAsUndone(tasklist);
+	}
+	lastCmdCalledIs(EXECUTE);
+	createFeedback(UNDONE_SUCCESS,feedback);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+
+bool Command_Undone::undo(TaskList& tasklist, std::string& feedback){
+	for(unsigned int i=0;i<_undoneTasks.size();i++){
+		int index = tasklist.getTaskIndex(_undoneTasks[i]);
+		tasklist.setTaskAsDone(index);
+	}
+	lastCmdCalledIs(CMD_TYPE_STRING[UNDO]);
+	createFeedback(DONE_SUCCESS,feedback);
+	switchScreenTo(_previousScreen);
+	setIndexToBoldInGUI(tasklist);
+	return true;
+}
+
+void Command_Undone::setPreviousScreen(DISPLAY_TYPE* screen){
+	_currentScreen=screen;
+	_previousScreen=*screen;
+}
+
+void Command_Undone::addUndoneIndex(int index){
+	_undoneTaskIndex.push_back(index);
+}
+
+void Command_Undone::setIndexToBoldInGUI(TaskList& tasklist){
+	unsigned int index;
+	switch(*_currentScreen){
+	case MAIN:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			index = tasklist.getTaskIndex(_undoneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case SEARCHED:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			index = tasklist.getTaskIndexInSearchedList(_undoneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case FILTERED:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			index = tasklist.getTaskIndexInFilteredList(_undoneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	case COMPLETED:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			index = tasklist.getTaskIndexInCompletedList(_undoneTasks[i]);
+			tasklist.addBoldIndex(index);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void Command_Undone::saveTasks(TaskList& taskList){
+	std::vector<Task*>& taskVector=taskList.getCompletedTaskList();
+	switch(*_currentScreen){
+	case SEARCHED:{
+		taskVector = taskList.getSearchResults();
+		break;
+	}
+	case FILTERED:{
+		taskVector = taskList.getFilterResults();
+		break;
+	}
+	case COMPLETE:{
+		break;
+	}
+	default:
+		throw UnableToUndoneUncompletedTasks();
+	}
+
+	for(unsigned int i=0;i<_undoneTaskIndex.size();i++){
+		_undoneTasks.push_back(taskVector[_undoneTaskIndex[i]]);
+		if(_undoneTasks[i]->getTaskStatus()==UNCOMPLETED){
+			throw UnableToUndoneUncompletedTasks();
+		}
+	}
+}
+
+void Command_Undone::setTasksAsUndone(TaskList& tasklist){
+	switch(*_currentScreen){
+	case COMPLETE:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			int index = tasklist.getTaskIndexInCompletedList(_undoneTasks[i]);
+			tasklist.setTaskAsUndone(index);
+		}
+		*_currentScreen=MAIN;
+		break;
+	}
+	case SEARCHED:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			int index = tasklist.getTaskIndexInSearchedList(_undoneTasks[i]);
+			tasklist.setSearchedTaskAsUndone(index);
+		}
+		break;
+	}
+	case FILTERED:{
+		for(unsigned int i=0;i<_undoneTasks.size();i++){
+			int index = tasklist.getTaskIndexInFilteredList(_undoneTasks[i]);
+			tasklist.setFilteredTaskAsUndone(index);
+		}
+		break;
+	}
+	default:
+		throw UnableToUndoneUncompletedTasks();
+	}
+}
+
+void Command_Undone::switchScreenTo(DISPLAY_TYPE screen){
+	*_currentScreen = screen;
+}
+
+void Command_Undone::createFeedback(std::string taskFeedback,std::string& feedback){
+	feedback=taskFeedback;
+}
+
+void Command_Undone::lastCmdCalledIs(std::string cmd){
+	_lastCmdCalled=cmd;
+}
+
+bool Command_Undone::wasUndone(){
+	if(_lastCmdCalled==CMD_TYPE_STRING[UNDO]){
+		return true;
+	}
+	return false;
+}
+
+bool Command_Undone::wasExecuted(){
+	if(_lastCmdCalled==EXECUTE){
+		return true;
+	}
+	return false;
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Undone.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Command_Undone.h
+	 */
+
+#ifndef COMMAND_UNDONE_H
+#define COMMAND_UNDONE_H
+
+#pragma once
+#include "command.h"
+//**********************************************************************
+// This class is responsible for changing the status  an individual task
+// specified by its index.
+//**********************************************************************
+class Command_Undone : public Command{
+public:
+	Command_Undone(void);
+	~Command_Undone(void);
+	bool execute(TaskList&, std::string&);
+	bool undo(TaskList&, std::string&);
+	void addUndoneIndex(int index);
+	void setPreviousScreen(DISPLAY_TYPE* screen);
+
+private:
+	void setIndexToBoldInGUI(TaskList& tasklist);
+	void saveTasks(TaskList& taskList);
+	void setTasksAsUndone(TaskList& tasklist);
+	void switchScreenTo(DISPLAY_TYPE screen);
+	void createFeedback(std::string taskFeedback,std::string& feedback);
+	void lastCmdCalledIs(std::string cmd);
+	bool wasUndone();
+	bool wasExecuted();
+
+	//Attributes
+	std::vector<Task*> _undoneTasks;
+	std::vector<unsigned int> _undoneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+	std::string _lastCmdCalled;
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Command_Undone.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Task.cpp
+	 */
+
+#include "Task.h"
+
+Task::Task(void){
+	initializeTask();
+}
+
+Task::~Task(void){
+	resetPointers();
+}
+
+void Task::initializeTask(){
+	_taskDescription=DEFAULT_EMPTY;
+	_taskStatus = DEFAULT_TASK_STATUS;
+	_category=DEFAULT_EMPTY;
+	_startTime = NULL;
+	_endTime = NULL;
+	_startDate = NULL;
+	_endDate = NULL;
+	_clashStatus=false;
+}
+
+void Task::resetPointers(){
+	if(!hasStartTime()){
+		delete _startTime;
+		_startTime=NULL;
+	}
+	if(!hasStartDate()){
+		delete _startDate;
+		_startDate=NULL;
+	}
+	if(!hasEndDate()){
+		delete _endDate;
+		_endDate=NULL;
+	}
+	if(!hasEndTime()){
+		delete _endTime;
+		_endTime=NULL;
+	}
+}
+
+std::string Task::getDescription(){
+	return _taskDescription;
+}
+Date* Task::getEndDate(){
+	return _endDate;
+}
+Date* Task::getStartDate(){
+	return _startDate;
+}
+ClockTime* Task::getEndTime(){
+	return _endTime;
+}
+ClockTime* Task::getStartTime(){
+	return _startTime;
+}
+TASK_STATUS Task::getTaskStatus(){
+	return _taskStatus;
+}
+std::string Task::getTaskCategory(){
+	return _category;
+}
+
+void Task::setDescription(std::string desc){
+	_taskDescription = desc;
+}
+void Task::setStatusAsDone(){
+	_taskStatus = COMPLETED;
+}
+void Task::setStatusasUndone(){
+	_taskStatus = UNCOMPLETED;
+}
+void Task::setStatusAsOverdue(){
+	_taskStatus= OVERDUE;
+}
+void Task::setStartTime(ClockTime* startTime){
+	_startTime = startTime;
+}
+void Task::setEndTime(ClockTime* endTime){
+	_endTime = endTime;
+}
+void Task::setCategory(std::string category){
+	_category = category;
+}
+void Task::setEndDate(Date* endDate){
+	_endDate = endDate;
+}
+void Task::setStartDate(Date* startDate){
+	_startDate = startDate;
+}
+void Task::setClash(bool clash){
+	_clashStatus=clash;
+}
+void Task::setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime){
+	setStartDate(sDate);
+	setEndDate(eDate);
+	setStartTime(sTime);
+	setEndTime(eTime);
+	checkInvalidDate();
+	setTime();
+	setDateBasedOnTime();
+}
+void Task::setDateBasedOnTime(){
+	if(!hasEndDate()){
+		setDateForFloatingTask();
+	}else if(!hasStartDate()&&hasEndDate()){
+		if(hasStartTime() && hasEndTime()){
+			setDateForDeadlineTaskAccordingToTime();
+		}
+	}
+}
+void Task::setTime(){
+	if(isDoubleDate()){
+		if(!hasStartTime()&&hasEndTime()){
+			_startTime=_endTime;
+			_endTime=NULL;
+		}
+	}
+	if(hasStartTime()&&hasEndTime()){
+		if(*_startTime==*_endTime){
+			if(!isDoubleDate()){
+				delete _startTime;
+				_startTime=NULL;
+			}
+		}
+	}
+}
+void Task::editSchedule(ClockTime* sTime,ClockTime* eTime){
+	setStartTime(sTime);
+	setEndTime(eTime);
+	setTime();
+	setDateBasedOnTime();
+}
+
+
+bool Task::checkOverdue(){
+	if(!hasEndDate()){
+		return false;
+	}else{
+		if(_endDate->checkOverdue()==LATER){
+			return true;
+		}else if(_endDate->checkOverdue()==SAME){
+			if(!hasEndTime()){
+				return false;
+			}else if(_endTime->checkOverdueTime()){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool Task::checkLater(Task* otherTask){
+	if(!hasEndDate()){
+		return false;
+	}
+	if(_endDate->isLater(otherTask->getEndDate())==LATER){
+		return true;
+	}else if(_endDate->isLater(otherTask->getEndDate())==EARLIER){
+		return false;
+	}else{
+		if(!hasEndTime()){
+			return false;
+		}
+		if(_endTime->isLater(otherTask->getEndTime())==LATER){
+			return true;
+		}else if(_endTime->isLater(otherTask->getEndTime())==EARLIER){
+			return false;
+		}
+	}
+	return true;
+}
+bool Task::checkClash(Task* task){
+	bool clash=false;
+	if(isSingleDate()&&task->isSingleDate()){
+		checkClashForSingleDate(task, clash);
+	}else if(isDoubleDate()&&task->isDoubleDate()){
+		checkClashForDoubleDate(task, clash);
+	}else if(isDoubleDate()&&task->isSingleDate()){
+		checkClashDoubleDateSingleDate(task, clash);
+	}else if(isSingleDate()&&task->isDoubleDate()){
+		checkClashSingleDateDoubleDate(task, clash);
+	}
+	return clash;
+}
+bool Task::checkNewOverdue(){
+	if(checkOverdue()){
+		if(getTaskStatus()!=OVERDUE){
+			setStatusAsOverdue();
+			return true;
+		}
+	}else{
+		if(getTaskStatus()==OVERDUE){
+			setStatusasUndone();
+			return true;
+		}
+	}
+	return false;
+}
+bool Task::checkTimeClashForDeadlineTask(Task* task){
+	int sTime=DEFAULT_INDEX;
+	int eTime=DEFAULT_INDEX;
+	int othersTime = DEFAULT_INDEX;
+	int othereTime = DEFAULT_INDEX;
+	getTimeOfBothTaskInInt(sTime,eTime,othersTime,othereTime,task);
+
+	if(isDoubleTime()&&task->isDoubleTime()){
+		if(sTime<othereTime&&othersTime<eTime){
+			return true;
+		}
+	}else if(isSingleTime()&&task->isDoubleTime()){
+		if(eTime<othereTime&&eTime>othersTime){
+			return true;
+		}
+	}else if(task->isSingleTime()&&isDoubleTime()){
+		if(othereTime<eTime&&othereTime>sTime){
+			return true;
+		}
+	}
+	return false;
+}
+void Task::checkInvalidDate(){
+	if(hasEndDate()&&hasStartDate()){
+		if(*_endDate<*_startDate){
+			throw InvalidStartEndDateTime();
+		}else if(*_endDate==*_startDate){
+			delete _startDate;
+			_startDate=NULL;
+		}
+	}
+}
+bool Task::checkClashDate(Task* task){
+	return *_startDate<*task->getEndDate() && *task->getStartDate()<*_endDate;
+}
+
+bool Task::hasKeyword(std::string keyword){
+	unsigned int index;
+	std::string keywordInLowerCase = keyword;
+	std::string taskInLowerCase = _taskDescription;
+
+	convertToLowerCase(keywordInLowerCase,taskInLowerCase);
+	index = findIndexOfKeywordInString(taskInLowerCase,keywordInLowerCase);
+
+	return isValidIndex(index);
+}
+bool Task::hasDate(Date* date){
+	if(!hasEndDate()||date==NULL){
+		return false;
+	}
+	if(!hasStartDate()){
+		if(_endDate->compare(date)){
+			return true;
+		}
+	}else{
+		if(*date>=*_startDate&&*date<=*_endDate){
+			return true;
+		}
+	}
+	return false;
+}
+bool Task::hasCategory(std::string category){
+	unsigned int index;
+	std::string keywordInLowerCase = category;
+	std::string categoryInLowerCase = _category;
+
+	convertToLowerCase(keywordInLowerCase,categoryInLowerCase);
+	index = findIndexOfKeywordInString(categoryInLowerCase,keywordInLowerCase);
+
+	return isValidIndex(index);
+}
+
+void Task::resetClash(){
+	_clashStatus=false;
+}
+bool Task::isClash(){
+	return _clashStatus;
+}
+bool Task::isFloating(){
+	if(!hasEndDate() && !hasStartDate() && !hasEndTime() && !hasStartTime()){
+		return true;
+	}
+	return false;
+}
+bool Task::isSingleDate(){
+	if(hasEndDate() && !hasStartDate()){
+		return true;
+	}
+	return false;
+}
+bool Task::isDoubleDate(){
+	if(hasEndDate() && hasStartDate()){
+		return true;
+	}
+	return false;
+}
+bool Task::withTime(){
+	if(hasStartTime()||hasEndTime()){
+		return true;
+	}
+	return false;
+}
+std::string Task::getDayString(){
+	if(hasStartDate()){
+		if(_startDate->isToday()){
+			return TODAY_DISPLAY;
+		}else if(_startDate->isTomorrow()){
+			return TMR_DISPLAY;
+		}else{
+			return _startDate->getDayOfTheWeek();
+		}
+	}else if(hasEndDate()){
+		if(_endDate->isToday()){
+			return TODAY_DISPLAY;
+		}else if(_endDate->isTomorrow()){
+			return TMR_DISPLAY;
+		}else{
+			return _endDate->getDayOfTheWeek();
+		}
+	}
+	return DEFAULT_EMPTY;
+}
+
+bool Task::isSingleTime(){
+	if(!hasStartTime()&&hasEndTime()||hasStartTime()&&!hasEndTime()){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasStartTime(){
+	if(_startTime!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasEndTime(){
+	if(_endTime!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasEndDate(){
+	if(_endDate!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::hasStartDate(){
+	if(_startDate!=NULL){
+		return true;
+	}
+	return false;
+}
+
+bool Task::isDoubleTime(){
+	if(hasStartTime()&&hasEndTime()){
+		return true;
+	}
+	return false;
+}
+
+void Task::convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase){
+	keywordInLowerCase=_parser.strToLower(keywordInLowerCase);
+	taskInLowerCase=_parser.strToLower(taskInLowerCase);
+}
+
+unsigned int Task::findIndexOfKeywordInString(std::string taskInLowerCase, std::string keywordInLowerCase){
+	return taskInLowerCase.find(keywordInLowerCase);
+}
+
+bool Task::isValidIndex(unsigned int index){
+	if(index!=std::string::npos){
+		return true;
+	}
+	return false;
+}
+
+void Task::getTimeOfBothTaskInInt(int& sTime, int& eTime, int& othersTime, int& othereTime, Task* task){
+	if(hasStartTime()){
+		sTime=_startTime->getTime();
+	}if(hasEndTime()){
+		eTime=_endTime->getTime();
+	}if(task->hasEndTime()){
+		othereTime=task->getEndTime()->getTime();
+	}if(task->hasStartTime()){
+		othersTime=task->getStartTime()->getTime();
+	}
+}
+
+void Task::setDateForFloatingTask(){
+	if(hasStartTime() && hasEndTime()){
+		if(startTimeLaterThanEndTime()){
+			setStartAndEndDateAcordingToTime();
+		}else{
+			setEndDateAccordingToStartTime();
+		}
+	}else if(!hasStartTime()&&hasEndTime()){
+		setEndDateAccordingToEndTime();
+	}
+}
+
+bool Task::startTimeLaterThanEndTime(){
+	return *_startTime>*_endTime;
+}
+
+void Task::setStartAndEndDateAcordingToTime(){
+	if(_startTime->checkOverdueTime()){
+		_startDate=new Date;
+		_startDate->setDateAsTomorrow();
+		_endDate=new Date;
+		_endDate->setDateAsDayAfterTomorrow();
+	}else{
+		_startDate=new Date;
+		_startDate->setDateAsToday();
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}
+}
+
+void Task::setEndDateAccordingToStartTime(){
+	if(_startTime->checkOverdueTime()){
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}else{
+		_endDate=new Date;
+		_endDate->setDateAsToday();
+	}     
+}
+
+void Task::setEndDateAccordingToEndTime(){
+	if(_endTime->checkOverdueTime()){
+		_endDate=new Date;
+		_endDate->setDateAsTomorrow();
+	}else{
+		_endDate=new Date;
+		_endDate->setDateAsToday();
+	}     
+}
+
+void Task::setDateForDeadlineTaskAccordingToTime(){
+	if(startTimeLaterThanEndTime()){
+		_startDate=_endDate;
+		_endDate=new Date(*_startDate);
+		_endDate->setNextDay();
+	}
+}
+
+void Task::checkClashForDoubleDate(Task* task, bool& clash){
+	if(checkClashDate(task)){
+		clash=true;
+	}else if(*_startDate==*task->getEndDate()){
+		if(hasStartTime()&&task->hasEndTime()){
+			if(*_startTime<*_endTime){
+				clash=true;
+			}
+		}
+	}else if(_endDate==task->getStartDate()){
+		if(hasEndTime()&&task->hasStartTime()){
+			if(*_endTime>*_startTime){
+				clash=true;
+			}
+		}
+	}
+}
+
+void Task::checkClashForSingleDate(Task* task, bool& clash)
+{
+	if(*_endDate==*task->getEndDate()){
+		if(isDoubleTime()&&task->isDoubleTime()){
+			clash=checkTimeClashForDeadlineTask(task);
+		}
+	}
+}
+
+void Task::checkClashDoubleDateSingleDate(Task* task, bool& clash){
+	if(*task->getEndDate()<*_endDate&&*task->getEndDate()>*_startDate){
+		clash = true;
+	}else if(*task->getEndDate()==*_startDate){
+		if(hasStartTime()&&task->isDoubleTime()){
+			if(*task->getStartTime()>*_startTime){
+				clash = true;
+			}
+		}
+	}else if(*task->getEndDate()==*_endDate){
+		if(hasEndTime()&&task->isDoubleTime()){
+			if(*task->getEndTime()<*_endTime){
+				clash = true;
+			}
+		}
+	}
+}
+
+void Task::checkClashSingleDateDoubleDate(Task* task, bool& clash){
+	if(*task->getEndDate()>*_endDate&&*task->getStartDate()<*_endDate){
+		clash = true;
+	}else if(*task->getStartDate()==*_endDate){
+		if(task->hasStartTime()&&isDoubleTime()){
+			if(*task->getStartTime()>*_startTime){
+				clash = true;
+			}
+		}
+	}else if(*task->getEndDate()==*_endDate){
+		if(task->hasEndTime()&&isDoubleTime()){
+			if(*task->getEndTime()>*_endTime){
+				clash = true;
+			}
+		}
+	}
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Task.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\Task.h
+	 */
+
+#ifndef TASK_H
+#define TASK_H
+
+#pragma once
+
+#include <string>
+#include <algorithm>
+#include <assert.h>
+
+#include "Constants.h"
+#include "ClockTime.h"
+#include "Date.h"
+#include "Parser.h"
+
+//********************************************************************************
+// This class is used to store the details of user Task
+//********************************************************************************
+class Task{
+public:
+	Task(void);
+	~Task(void);
+
+	//Getter functions
+	std::string getDescription();
+	Date* getEndDate();
+	Date* getStartDate();
+	ClockTime* getEndTime();
+	ClockTime* getStartTime();
+	TASK_STATUS getTaskStatus();
+	std::string getTaskCategory();
+
+	//Setter functions
+	void setDescription(std::string desc);
+	void setCategory(std::string category);
+	void setEndDate(Date* endDate);
+	void setStartDate(Date* startDate);
+	void setStartTime(ClockTime* startTime);
+	void setEndTime(ClockTime* endTime);
+	void setStatusAsDone();
+	void setStatusasUndone();
+	void setStatusAsOverdue();
+
+	//Overdue Checker
+	bool checkOverdue();
+	bool checkNewOverdue();
+
+	//Clash Checker
+	bool checkClash(Task* task);
+	void setClash(bool clash);
+	bool isClash();
+	void resetClash();
+
+
+	//Check for presence of attribute for filter
+	bool hasKeyword(std::string keyword);
+	bool hasDate(Date* date);
+	bool hasCategory(std::string category);
+
+	//For sorting task by date
+	bool checkLater(Task* otherTask);
+
+	//Schedule Setter
+	void setSchedule(Date* sDate,Date* eDate,ClockTime* sTime,ClockTime* eTime);
+	void editSchedule(ClockTime* sTime,ClockTime* eTime);
+
+	//Get Task Day in String
+	std::string getDayString();
+
+protected:
+	std::string _taskDescription;
+	TASK_STATUS _taskStatus;
+	std::string _category;
+	bool _clashStatus;
+
+	Date *_endDate;
+	Date *_startDate;
+	ClockTime *_startTime;
+	ClockTime *_endTime;
+	Parser _parser;
+
+	//Initializer Helper Functions
+	void initializeTask();
+
+	//Destructor helper functions
+	void resetPointers();
+
+	//Clash Helper Functions
+	void getTimeOfBothTaskInInt(int& sTime, int& eTime, int& othersTime, int& othereTime, Task* task);
+	bool isSingleTime();
+	bool isDoubleTime();
+	bool hasStartDate();
+	bool hasEndDate();
+	bool hasStartTime();
+	bool hasEndTime();
+	bool checkClashDate(Task* task);
+	bool checkTimeClashForDeadlineTask(Task* task);
+	bool isFloating();
+	bool isSingleDate();
+	bool isDoubleDate();
+	void checkClashSingleDateDoubleDate(Task* task, bool& clash);
+	void checkClashDoubleDateSingleDate(Task* task, bool& clash);
+	void checkClashForSingleDate(Task* task, bool& clash);
+	void checkClashForDoubleDate(Task* task, bool& clash);
+
+	//Helper functions to help in search
+	void convertToLowerCase(std::string& keywordInLowerCase, std::string& taskInLowerCase);
+	unsigned int findIndexOfKeywordInString(std::string taskInLowerCase, std::string keywordInLowerCase);
+	bool isValidIndex(unsigned int index);
+
+	//Assist in adding schedule
+	void setTime();
+	bool withTime();
+	void checkInvalidDate();
+	void setDateBasedOnTime();
+	void setDateForDeadlineTaskAccordingToTime();
+	void setDateForFloatingTask();
+	void setEndDateAccordingToStartTime();
+	void setStartAndEndDateAcordingToTime();
+	bool startTimeLaterThanEndTime();
+	void setEndDateAccordingToEndTime();
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\Task.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\TaskList.cpp
+	 */
+
+#include "TaskList.h"
+
+TaskList::TaskList(void){
+}
+
+TaskList::~TaskList(void){
+	_uncompletedTaskList.clear();
+}
+
+void TaskList::addTask(Task& task){
+	clearClashedTaskList();
+	for(unsigned int i = 0;i <undoneSize();i++){
+		checkClash(task,*_uncompletedTaskList[i]);
+		if(!task.checkLater(_uncompletedTaskList[i])){
+			_uncompletedTaskList.insert(_uncompletedTaskList.begin()+i,&task);
+			updateClashStatus();
+			return;
+		}
+	}  
+	_uncompletedTaskList.push_back(&task);
+	updateClashStatus();
+}
+
+bool TaskList::deleteTaskFromUncompletedList(unsigned int& index){
+	if(validIndex(index)){
+		removeTaskAtIndex(index);
+		updateClashStatus();
+		return true;
+	}else {
+		throw OutOfRangeException();
+	}
+}
+
+Task* TaskList::getTask(unsigned int index){
+	if (validIndex(index)) {
+		return _uncompletedTaskList[index];
+	} else {
+		throw OutOfRangeException();
+	}
+}
+
+bool TaskList::isEmpty(){
+	return (undoneSize()==ZERO);
+}
+
+unsigned int TaskList::undoneSize(){
+	return _uncompletedTaskList.size();
+}
+
+int TaskList::getTaskIndex(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<undoneSize();i++){
+		if(task==getTask(i)){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+void TaskList::clearTask(){
+	_uncompletedTaskList.clear();
+}
+
+void TaskList::populateSearchList(std::string& keyword){
+	resetSearchedTasks();
+	for(unsigned int i=0;i<undoneSize();i++){
+		if(_uncompletedTaskList[i]->hasKeyword(keyword)){
+			addTaskToSearchedList(*_uncompletedTaskList[i]);
+		}
+	}
+	for(unsigned int i = 0;i<_completedTaskList.size();i++){
+		if(_completedTaskList[i]->hasKeyword(keyword)){
+			_searchedTaskList.push_back(_completedTaskList[i]);
+		}
+	}
+	return;
+}
+
+std::vector<Task*> TaskList::getSearchResults(){
+	return _searchedTaskList;
+}
+
+bool TaskList::updateOverdueTaskList(){
+	clearOverdueTaskList();
+	bool overdue=false;
+	for(unsigned int i=0;i<undoneSize();i++){
+		if(_uncompletedTaskList[i]->checkOverdue()){
+			addTaskToOverdueList(*_uncompletedTaskList[i]);
+			overdue=true;
+		}
+	}
+	return overdue;
+}
+
+void TaskList::clearCompletedTasks(){
+	_completedTaskList.clear();
+}
+
+std::vector<Task*> TaskList::getOverdueTaskList(){
+	return _overdueTaskList;
+}
+
+void TaskList::addTaskToDoneList(Task& task){
+	for(unsigned int i=0;i<_completedTaskList.size();i++){
+		if(!task.checkLater(_completedTaskList[i])){
+			_completedTaskList.insert(_completedTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_completedTaskList.push_back(&task);
+}
+
+Task* TaskList::setTaskAsDone(unsigned int index){
+	if (validIndex(index)) {
+		Task* task;
+		task=_uncompletedTaskList[index];
+		task->setStatusAsDone();
+		addTaskToDoneList(*task);
+		deleteTaskFromUncompletedList(index);
+		return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+}
+
+Task* TaskList::setTaskAsUndone(unsigned int index){
+	if(index <_completedTaskList.size()) {
+		Task* task;
+		task=_completedTaskList[index];
+		task->setStatusasUndone();
+		addTask(*task);
+		deleteTaskFromCompletedList(index);
+		return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+}
+
+Task* TaskList::setSearchedTaskAsUndone(unsigned int index){
+	if(index <_searchedTaskList.size()) {
+		Task* task = getSearchedTask(index);
+		task->setStatusasUndone();
+		addTask(*task);
+		unsigned int completedListIndex = getTaskIndexInCompletedList(task);
+		deleteTaskFromCompletedList(completedListIndex);
+		return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+}
+
+Task* TaskList::setFilteredTaskAsUndone(unsigned int index){
+	if(index <_filteredTaskList.size()) {
+		Task* task = getFilteredTask(index);
+		task->setStatusasUndone();
+		addTask(*task);
+		unsigned int completedListIndex = getTaskIndexInCompletedList(task);
+		deleteTaskFromCompletedList(completedListIndex);
+		return task;
+	} else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+}
+
+bool TaskList::deleteTaskFromCompletedList(unsigned int& index){
+	if (index <_completedTaskList.size()) {
+		_completedTaskList.erase(_completedTaskList.begin() + index);
+		return true;
+	} else {
+		throw OutOfRangeException();
+		return false;
+	}
+}
+
+int TaskList::getTaskIndexInCompletedList(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<_completedTaskList.size();i++){
+		if(task==_completedTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+Task* TaskList::getCompletedTask(unsigned int index){
+	if(index < _completedTaskList.size()) {
+		return _completedTaskList[index];
+	}
+	else {
+		throw OutOfRangeException();
+		return NULL;
+	}
+}
+
+unsigned int TaskList::doneSize(){
+	return _completedTaskList.size();
+}
+
+unsigned int TaskList::filteredSize(){
+	return _filteredTaskList.size();
+}
+
+unsigned int TaskList::searchedSize(){
+	return _searchedTaskList.size();
+
+}
+void TaskList::populateFilterList(std::string& category){
+	_filteredTaskList.clear();
+	for(unsigned int i = 0;i<_uncompletedTaskList.size();i++){
+		if(_uncompletedTaskList[i]->hasCategory(category)){
+			_filteredTaskList.push_back(_uncompletedTaskList[i]);
+		}
+	}
+	return;
+}
+
+void TaskList::populateFilterList(Date* date){
+	_filteredTaskList.clear();
+
+	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+		if(_uncompletedTaskList[i]->hasDate(date)){
+			_filteredTaskList.push_back(_uncompletedTaskList[i]);
+		}
+	}
+	return;
+}
+
+std::vector<Task*> TaskList::getFilterResults(){
+	return _filteredTaskList;
+}
+
+void TaskList::clearSearchedTasks(){
+	while(!_searchedTaskList.empty()){
+		deleteTaskFromSearchList(0);
+	}
+}
+
+void TaskList::clearFilteredTasks(){
+	while(!_filteredTaskList.empty()){
+		deleteTaskFromFilterList(0);
+	}
+}
+
+bool TaskList::deleteTaskFromOverdueList(unsigned int& index){
+	if (index < _overdueTaskList.size()) {
+		Task* task=_overdueTaskList[index];
+		unsigned int deletionIndex;
+		for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+			if(_uncompletedTaskList[i]==task){
+				deletionIndex=i;
+				break;
+			}
+		}
+		deleteTaskFromUncompletedList(deletionIndex);
+		_overdueTaskList.erase(_overdueTaskList.begin()+index);
+		return true;
+	} else {
+		throw OutOfRangeException();
+		return false;
+	}
+}
+
+bool TaskList::deleteTaskFromSearchList(unsigned int index){
+	Task* task=getSearchedTask(index);
+	unsigned int deletionIndex;
+	if(task->getTaskStatus()==COMPLETED) {
+		for(unsigned int i = 0; i < doneSize();i++){
+			if(_completedTaskList[i]==task){
+				deletionIndex=i;
+				break;
+			}
+		}
+		deleteTaskFromCompletedList(deletionIndex);
+	}else{
+		for(unsigned int i=0;i<undoneSize();i++){
+			if(_uncompletedTaskList[i]==task){
+				deletionIndex=i;
+				break;
+			}
+		}
+		deleteTaskFromUncompletedList(deletionIndex);
+	}
+	_searchedTaskList.erase(_searchedTaskList.begin()+index);
+	return true;
+}
+
+bool TaskList::deleteTaskFromFilterList(unsigned int index){
+	Task* task=_filteredTaskList[index];
+	unsigned int deletionIndex;
+	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+		if(_uncompletedTaskList[i]==task){
+			deletionIndex=i;
+			break;
+		}
+	}
+	deleteTaskFromUncompletedList(deletionIndex);
+	_filteredTaskList.erase(_filteredTaskList.begin()+index);
+	return true;
+}
+
+Task* TaskList::getSearchedTask(int index){
+	return _searchedTaskList[index];
+}
+
+Task* TaskList::getFilteredTask(int index){
+	return _filteredTaskList[index];
+}
+
+Task* TaskList::getOverdueTask(int index){
+	return _overdueTaskList[index];
+}
+
+std::vector<Task*> TaskList::getCompletedTaskList(){
+	return _completedTaskList;
+}
+
+std::vector<Task*> TaskList::getUncompletedTaskList(){
+	return _uncompletedTaskList;
+}
+
+Task* TaskList::setOverdueTaskAsDone(unsigned int index){
+	Task* task;
+	task=_overdueTaskList[index];
+	task->setStatusAsDone();
+	addTaskToDoneList(*task);
+	deleteTaskFromOverdueList(index);
+	return task;
+}
+
+Task* TaskList::setSearchedTaskAsDone(unsigned int index){
+	Task* task;
+	task=_searchedTaskList[index];
+	if(task->getTaskStatus()==DONE){
+		throw UnableToSetAsDone();
+	}
+	task->setStatusAsDone();
+	addTaskToDoneList(*task);
+	unsigned int uncompletedIndex = getTaskIndex(task);
+	deleteTaskFromUncompletedList(uncompletedIndex);
+	return task;
+}
+
+Task* TaskList::setFilteredTaskAsDone(unsigned int index){
+	Task* task;
+	task=_filteredTaskList[index];
+	if(task->getTaskStatus()==DONE){
+		throw UnableToSetAsDone();
+	}
+	task->setStatusAsDone();
+	addTaskToDoneList(*task);
+	unsigned int uncompletedIndex = getTaskIndexInFilteredList(task);
+	deleteTaskFromUncompletedList(uncompletedIndex);
+	return task;
+}
+
+void TaskList::addTaskToSearchedList(Task& task){
+	for(unsigned int i=0;i<_searchedTaskList.size();i++){
+		if(!task.checkLater(_searchedTaskList[i])){
+			_searchedTaskList.insert(_searchedTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_searchedTaskList.push_back(&task);
+}
+
+void TaskList::addTaskToFilteredList(Task& task){
+	for(unsigned int i=0;i<_filteredTaskList.size();i++){
+		if(!task.checkLater(_filteredTaskList[i])){
+			_filteredTaskList.insert(_filteredTaskList.begin()+i,&task);
+			return;
+		}
+	} 
+	_filteredTaskList.push_back(&task);
+}
+
+bool TaskList::checkNewOverdue(){
+	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+		if(_uncompletedTaskList[i]->checkNewOverdue()){
+			return true;
+		}
+	}
+	return false;
+}
+
+void TaskList::addTaskToOverdueList(Task& task){
+	_overdueTaskList.push_back(&task);
+}
+
+
+int TaskList::getTaskIndexInSearchedList(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<_searchedTaskList.size();i++){
+		if(task==_searchedTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+int TaskList::getTaskIndexInFilteredList(Task* task){
+	assert(task!=NULL);
+	for(unsigned int i=0;i<_filteredTaskList.size();i++){
+		if(task==_filteredTaskList[i]){
+			return i;
+		}
+	}
+	return DEFAULT_INDEX;
+}
+
+void TaskList::resetSearchedTasks(){
+	_searchedTaskList.clear();
+}
+
+void TaskList::resetFilteredTasks(){
+	_filteredTaskList.clear();
+}
+void TaskList::resetClash(){
+	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+		_uncompletedTaskList[i]->resetClash();
+	}
+}
+
+void TaskList::updateClashStatus(){
+	if(_uncompletedTaskList.empty()){
+		return;
+	}
+	resetClash();
+	for(unsigned int i=0;i<_uncompletedTaskList.size();i++){
+		for(unsigned int j=i+1;j<_uncompletedTaskList.size();j++){
+			if(_uncompletedTaskList[i]->checkClash(_uncompletedTaskList[j])){
+				_uncompletedTaskList[i]->setClash(true);
+				_uncompletedTaskList[j]->setClash(true);
+			}
+		}
+	}
+}
+
+std::vector<Task*> TaskList::getClashedTask(){
+	return _clashedTask;
+}
+
+void TaskList::shiftTask(Task* task){
+	unsigned int index = getTaskIndex(task);
+	deleteTaskFromUncompletedList(index);
+	addTask(*task);
+}
+
+void TaskList::resetBoldIndexList(){
+	_boldIndexList.clear();
+}
+
+void TaskList::addBoldIndex(unsigned int index){
+	_boldIndexList.push_back(index);
+}
+
+std::vector<int> TaskList::getBoldIndexList(){
+	return _boldIndexList;
+}
+
+void TaskList::clearClashedTaskList(){
+	_clashedTask.clear();
+}
+
+void TaskList::clearOverdueTaskList(){
+	_overdueTaskList.clear();
+}
+
+void TaskList::addClashedTask(Task& task,Task& otherTask){
+	if(_clashedTask.empty()){
+		_clashedTask.push_back(&task);
+	}
+	_clashedTask.push_back(&otherTask);
+}
+
+void TaskList::checkClash(Task& task, Task& otherTask){
+	if(task.checkClash(&otherTask)){
+		addClashedTask(task,otherTask);
+	}
+}
+
+bool TaskList::validIndex(unsigned int& index){
+	return (index < _uncompletedTaskList.size());
+}
+
+void TaskList::removeTaskAtIndex(unsigned int& index){
+	_uncompletedTaskList.erase(_uncompletedTaskList.begin() + index);
+}
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\TaskList.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\TaskList.h
+	 */
+
+#ifndef TASKLIST_H
+#define TASKLIST_H
+
+#pragma once
+
+#include <vector>
+#include "Exceptions.h"
+#include "Task.h"
+//********************************************************************************
+// This class acts as the datastore for the programme storing the Task in virtual
+// memory. There are 2 main tasklist vectors, the completed and uncompleted tasklist
+// which will be used to store and display completed and uncompleted task.
+// There are also 4 other tasklist vectors. Searched and filter will be populated
+// when their commands are called. Overdue and Clash will be updated when there is
+// an instance of overdue or clash.
+//********************************************************************************
+class TaskList
+{
+public:
+	TaskList(void);
+	~TaskList(void);
+
+	void addTask(Task&);
+	void addTaskToDoneList(Task&);
+	void addTaskToSearchedList(Task&);
+	void addTaskToOverdueList(Task&);
+	Task* setTaskAsDone(unsigned int index);
+	Task* setTaskAsUndone(unsigned int index);
+	Task* getTask(unsigned int index);
+	Task* setOverdueTaskAsDone(unsigned int index);
+	Task* setSearchedTaskAsDone(unsigned int index);
+	Task* getCompletedTask(unsigned int index);
+	Task* getSearchedTask(int);
+	Task* getOverdueTask(int);
+	bool deleteTaskFromUncompletedList(unsigned int& index);
+	bool deleteTaskFromCompletedList(unsigned int& index);
+	bool deleteTaskFromOverdueList(unsigned int&);
+	bool deleteTaskFromSearchList(unsigned int index);
+
+	int getTaskIndex(Task* task);
+	int getTaskIndexInCompletedList(Task* task);
+	int getTaskIndexInSearchedList(Task* task);
+	void clearTask();
+	void populateSearchList(std::string& keyword);
+	void populateFilterList(std::string& category);
+	void populateFilterList(Date* date);
+
+	std::vector<Task*> getSearchResults();
+	std::vector<Task*> getOverdueTaskList();
+	std::vector<Task*> getFilterResults();
+	std::vector<Task*> getCompletedTaskList();
+	std::vector<Task*> getUncompletedTaskList();
+	bool updateOverdueTaskList();
+	bool checkNewOverdue();
+	void clearCompletedTasks();
+	//-----CHECKER AND GETTER FUNCTIONS-------------------------------------------------------------------------------
+	bool isEmpty();
+	unsigned int undoneSize();
+	unsigned int doneSize();
+	unsigned int filteredSize();
+	unsigned int searchedSize();
+	void updateClashStatus();
+	void resetClash();
+	void resetSearchedTasks();
+	Task* deleteEditTask();
+	Task* deleteEditTaskFromSearch();
+	void clearFilteredTasks();
+	void clearSearchedTasks();
+	void resetFilteredTasks();
+	void addTaskToFilteredList(Task& task);
+	Task* getFilteredTask(int index);
+	std::vector<Task*> getClashedTask();
+	void shiftTask(Task* task);
+	bool deleteTaskFromFilterList(unsigned int index);
+	Task* setFilteredTaskAsDone(unsigned int index);
+	void addBoldIndex(unsigned int index);
+	void resetBoldIndexList();
+	std::vector<int> getBoldIndexList();
+	int getTaskIndexInFilteredList(Task* task);
+	Task* setSearchedTaskAsUndone(unsigned int index);
+	Task* setFilteredTaskAsUndone(unsigned int index);
+	void clearClashedTaskList();
+	void checkClash(Task& task, Task& otherTask);
+	void addClashedTask(Task& task,Task& otherTask);
+	bool validIndex(unsigned int& index);
+	void removeTaskAtIndex(unsigned int& index);
+	void clearOverdueTaskList();
+private:
+	std::vector<Task*> _uncompletedTaskList;
+	std::vector<Task*> _overdueTaskList;
+	std::vector<Task*> _completedTaskList;
+	std::vector<Task*> _searchedTaskList;
+	std::vector<Task*> _filteredTaskList;
+	std::vector<Task*> _clashedTask;
+	int _lastTaskIndex;
+	std::vector<int> _boldIndexList;
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\TaskList.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\TimeWiseLogic.cpp
+	 */
+
+#include "TimeWiseLogic.h"
+
+TimeWiseLogic::TimeWiseLogic(void){
+	_manager = new CommandManager(_taskList);
+	_logger = Logger::getLogger();
+	_displayType=MAIN;
+	_cmd = NULL;
+	initLogic();
+}
+
+TimeWiseLogic::~TimeWiseLogic(void){
+}
+
+std::string TimeWiseLogic::processCommand(std::string commandLine){
+	if (emptyCommandLine(commandLine)) {
+		_logger->log("TimeWiseLogic","Empty User Input");
+		Date date;
+		return NO_COMMAND_LINE;
+	} else {
+		_taskList.resetBoldIndexList();
+
+		if(!parseCommand(commandLine)){
+			return _creator.getFeedback();
+	    } else {
+			try {
+				std::string feedback;
+				_manager->DoCommand(_cmd, feedback);
+				_storage.saveFile(_taskList);
+				return feedback;
+			} catch (OutOfRangeException& oore) {
+				delete _cmd;
+				_cmd = NULL;
+				return oore.what();
+			} catch (UnableToSetAsDone& usad) {
+				delete _cmd;
+				_cmd = NULL;
+				return usad.what();
+			} catch (UnableToUndoneUncompletedTasks&  uuuct) {
+				delete _cmd;
+				_cmd = NULL;
+				return uuuct.what();
+			} catch (InvalidDateTimeFormatException& idtfe){
+				delete _cmd;
+				_cmd = NULL;
+				return idtfe.what();
+			} catch (InvalidStartEndDateTime& isedt) {
+				delete _cmd;
+				_cmd = NULL;
+				return isedt.what();
+			} catch (NoArgumentException& nae) {
+				delete _cmd;
+				_cmd = NULL;
+				return nae.what();
+			} catch (InvalidAddCommandInputException& iacie) {
+				delete _cmd;
+				_cmd = NULL;
+				return iacie.what();
+			} catch (NotANumberException& nane) {
+				delete _cmd;
+				_cmd = NULL;
+				return nane.what();
+			} catch (InvalidFilterCommandInputException& ifp) {
+				delete _cmd;
+				_cmd = NULL;
+				return ifp.what();
+			} 
+		}
+	}
+}
+
+bool TimeWiseLogic::parseCommand(std::string commandLine){
+	try{
+		_cmd = _creator.interpretCommand(commandLine,_displayType,_userInput,_taskList);
+	}catch(...){
+		return false;
+	}
+	return true;
+}
+
+TaskList TimeWiseLogic::getTaskList(){
+	return _taskList;
+}
+
+void TimeWiseLogic::initLogic(){
+	_logger->log("TimeWiseLogic","Initializing Logic");
+	_storage.retrieveFile(_taskList);
+	_taskList.updateOverdueTaskList();
+}
+
+DISPLAY_TYPE TimeWiseLogic::getScreenToDisplay(){
+	return _displayType;
+}
+
+bool TimeWiseLogic::emptyCommandLine(std::string commandLine){
+	return (commandLine==DEFAULT_EMPTY);
+}
+
+bool TimeWiseLogic::isCorruptedStorage(){
+	return _storage.isCorrupted();
+}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\TimeWiseLogic.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseLogic\TimeWiseLogic.h
+	 */
+
+#ifndef TIMEWISELOGIC_H
+#define TIMEWISELOGIC_H
+
+#pragma once
+
+#include "CommandCreator.h"
+#include "CommandManager.h"
+#include "Constants.h"
+#include "Logger.h"
+#include "Storage.h"
+#include "TaskList.h"
+
+//********************************************************************************
+// This class acts as the facade class linking GUI to the rest of the other components.
+// Its main usage is to take in input from the user from the GUI and processing the command
+// It also returns a tasklist for the GUI to populate the display screen depending on the
+// screen to display.
+//********************************************************************************
+class TimeWiseLogic
+{
+public:
+	TimeWiseLogic(void);
+	~TimeWiseLogic(void);
+
+	TaskList getTaskList();
+	std::string processCommand(std::string commandLine);
+	DISPLAY_TYPE getScreenToDisplay();
+	bool isCorruptedStorage();
+private:
+	CommandCreator _creator ;
+	TaskList _taskList;
+	Storage _storage;
+	CommandManager *_manager;
+	Logger* _logger;
+
+	Command* _cmd;
+	std::string _feedback;
+	std::string _userInput;
+
+	DISPLAY_TYPE _displayType;
+
+	void initLogic();
+	bool parseCommand(std::string commandLine);
+	bool emptyCommandLine(std::string commandLine);
+
+};
+#endif
+	// End of segment: D:\TiMEWiSE\TimeWiseLogic\TimeWiseLogic.h
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandAddTest) {
+			//equivalence partition: floating task, timed task, deadline task
+			TaskList _taskList;
+			std::vector<Command_Add*> commandToBeExecuted;
+			ClockTime startTime(1200);
+			ClockTime endTime(1600);
+			Date startDate(10,3,2014);
+			Date endDate(12,3,2014);
+			std::string feedback;
+			DISPLAY_TYPE displayScreen = MAIN;
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[0]->setDescription("check for floating task without category");
+			commandToBeExecuted[0]->setPreviousScreen(&displayScreen);
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[1]->setDescription("check for floating task with category");
+			commandToBeExecuted[1]->setCategory("test");
+			commandToBeExecuted[1]->setPreviousScreen(&displayScreen);
+
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[2]->setDescription("check for deadline task with category");
+			commandToBeExecuted[2]->setEndDate(endDate);
+			commandToBeExecuted[2]->setEndTime(endTime);
+			commandToBeExecuted[2]->setCategory("test");
+			commandToBeExecuted[2]->setPreviousScreen(&displayScreen);
+
+
+			commandToBeExecuted.push_back(new Command_Add);
+			commandToBeExecuted[3]->setDescription("check for timed task with category");
+			commandToBeExecuted[3]->setStartDate(startDate);
+			commandToBeExecuted[3]->setStartTime(startTime);
+			commandToBeExecuted[3]->setEndDate(endDate);
+			commandToBeExecuted[3]->setEndTime(endTime);
+			commandToBeExecuted[3]->setCategory("test");
+			commandToBeExecuted[3]->setPreviousScreen(&displayScreen);
+
+			
+			commandToBeExecuted[0]->execute(_taskList,feedback);
+			Assert::AreEqual("check for floating task without category",_taskList.getTask(0)->getDescription().c_str());
+
+			commandToBeExecuted[1]->execute(_taskList, feedback);
+			Assert::AreEqual("check for floating task with category",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("test",_taskList.getTask(0)->getTaskCategory().c_str());
+
+			commandToBeExecuted[2]->execute(_taskList, feedback);
+			Assert::AreEqual("check for deadline task with category",_taskList.getTask(2)->getDescription().c_str());
+			Assert::AreEqual("1600",_taskList.getTask(2)->getEndTime()->toString().c_str());
+			Assert::AreEqual("12 Mar",_taskList.getTask(2)->getEndDate()->toString().c_str());
+
+			commandToBeExecuted[3]->execute(_taskList,feedback);
+			Assert::AreEqual("check for timed task with category",_taskList.getTask(3)->getDescription().c_str());
+			Assert::AreEqual("1600",_taskList.getTask(3)->getEndTime()->toString().c_str());
+			Assert::AreEqual("12 Mar",_taskList.getTask(3)->getEndDate()->toString().c_str());
+			Assert::AreEqual("1200",_taskList.getTask(3)->getStartTime()->toString().c_str());
+			Assert::AreEqual("10 Mar",_taskList.getTask(3)->getStartDate()->toString().c_str());
+			
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandDeleteTest) {
+			
+			TaskList _taskList;
+			std::string feedback;
+			for(int i=0;i<10;i++){
+				Task* task = new Task();
+				task->setDescription("a"+i);
+				_taskList.addTask(*task);
+			}
+			Command_Delete* _cmd = new Command_Delete;
+			_cmd->addDeletionIndex(0);
+			_cmd->setDisplayScreen(MAIN);
+			_cmd->execute(_taskList,feedback);
+			Assert::AreEqual(9,static_cast<int>(_taskList.undoneSize()));
+			delete _cmd;
+			_cmd=NULL;
+			_cmd = new Command_Delete;
+			for(int i=0;i<3;i++){
+				_cmd->addDeletionIndex(0+i);
+				_cmd->setDisplayScreen(MAIN);
+			}
+			_cmd->execute(_taskList,feedback);
+			Assert::AreEqual(6,static_cast<int>(_taskList.undoneSize()));
+			
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandClearTest) {
+			//Equivalence partitioning: Clear from Screen, Clear from Main, Clear from Completed, Clear All
+			TaskList _taskList;
+			std::string feedback;
+			for(int i=0;i<10;i++){
+				Task* task = new Task();
+				task->setDescription("a"+i);
+				_taskList.addTask(*task);
+			}
+			Command_Clear* clear = new Command_Clear(ALL);
+			clear->execute(_taskList, feedback);
+			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
+			clear->undo(_taskList,feedback);
+			Assert::AreEqual(10,static_cast<int>(_taskList.undoneSize()));
+			Command_Clear* clear1 = new Command_Clear(UNCOMPLETED_TASKS);
+			clear1->execute(_taskList,feedback);
+			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
+			clear1->undo(_taskList,feedback);
+			Command_Clear* clear2 = new Command_Clear(SCREEN);
+			clear2->setDisplayScreen(MAIN);
+			clear->execute(_taskList,feedback);
+			Assert::AreEqual(0,static_cast<int>(_taskList.undoneSize()));
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandEditTest) {
+			//Equivalence Partition: Edit Description, Edit Schedule
+			TaskList _taskList;
+			std::string feedback;
+			Task* task=new Task;
+			task->setDescription("test");
+			_taskList.addTask(*task);
+			Command_Edit* cmd = new Command_Edit;
+			cmd->setDescription("test success");
+			cmd->setIndex(0);
+			cmd->setDisplayScreen(MAIN);
+			cmd->execute(_taskList,feedback);
+			Assert::AreEqual("test success",_taskList.getTask(0)->getDescription().c_str());
+			Command_Edit* cmd1 = new Command_Edit;
+			cmd1->setDescription("test for date and time");
+			cmd1->setEndDate(new Date(12,12,2014));
+			cmd1->setStartDate(new Date(11,12,2014));
+			cmd1->setStartTime(new ClockTime(1200));
+			cmd1->setEndTime(new ClockTime(1300));
+			cmd1->setIndex(0);
+			cmd1->setDisplayScreen(MAIN);
+			cmd1->execute(_taskList,feedback);
+			Assert::AreEqual("test for date and time",_taskList.getTask(0)->getDescription().c_str());
+			Assert::AreEqual("12 Dec",_taskList.getTask(0)->getEndDate()->toString().c_str());
+			Assert::AreEqual("11 Dec",_taskList.getTask(0)->getStartDate()->toString().c_str());
+			Assert::AreEqual("1200",_taskList.getTask(0)->getStartTime()->toString().c_str());
+			Assert::AreEqual("1300",_taskList.getTask(0)->getEndTime()->toString().c_str());
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandDoneUndoneTest) {
+			TaskList _taskList;
+			std::string feedback;
+			DISPLAY_TYPE type = MAIN;
+			for(int i=0;i<10;i++){
+				Task* task = new Task();
+				task->setDescription("a"+i);
+				_taskList.addTask(*task);
+			}
+			Command_Done* cmd = new Command_Done;
+			for(int i=0;i<3;i++){
+				cmd->addDoneIndex(i);
+			}
+			cmd->setPreviousScreen(&type);
+			cmd->execute(_taskList,feedback);
+			Assert::AreEqual(7,static_cast<int>(_taskList.undoneSize()));
+			Assert::AreEqual(3,static_cast<int>(_taskList.doneSize()));
+			type = COMPLETE;
+			Command_Undone* cmd1 = new Command_Undone;
+			for(int i=0;i<3;i++){
+				cmd1->addUndoneIndex(i);
+			}
+			cmd1->setPreviousScreen(&type);
+			cmd1->execute(_taskList,feedback);
+			Assert::AreEqual(10,static_cast<int>(_taskList.undoneSize()));
+			Assert::AreEqual(0,static_cast<int>(_taskList.doneSize()));
+
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(CommandSearchKeywordTest) {
+			TaskList _taskList;
+			std::string feedback;
+			DISPLAY_TYPE type = MAIN;
+			for(int i=0;i<5;i++){
+				Task* task = new Task();
+				task->setDescription("Hello");
+				_taskList.addTask(*task);
+			}
+			for(int i=0;i<5;i++){
+				Task* task = new Task();
+				task->setDescription("Bingo");
+				_taskList.addTask(*task);
+			}
+			Command_Search* cmd = new Command_Search;
+			cmd->setKeyword("hel");
+			cmd->setPreviousScreen(&type);
+			cmd->execute(_taskList,feedback);
+			Assert::AreEqual(5,static_cast<int>(_taskList.searchedSize()));
+			for(int i=0;i<5;i++){
+				Assert::AreEqual("Hello",_taskList.getSearchedTask(i)->getDescription().c_str());
+			}
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(ClockTimeTest) {
+			//equivalence partition: set time as negative, set time as positive and below 2359, set time above 2359
+			//Boundary Value analysis: set time as -1, set time as 0000, set time as 2400,set time as 2359, set time as 2360
+			ClockTime* newTime = new ClockTime(2359);
+			ClockTime* otherTime = new ClockTime(0000);
+			Assert::AreEqual(2359, newTime->getTime());
+			Assert::AreEqual("2359",newTime->toString().c_str());
+			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newTime->isLater(otherTime)));
+			try{
+				newTime->setTime(-1);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newTime->setTime(2360);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try{
+				newTime->setTime(2400);
+			}catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			delete newTime;
+			delete otherTime;
+		}
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+
+	/**
+	 * origin: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+	 */
+
+		TEST_METHOD(DateTest) {
+			//equivalence partition: negative day month year, positive day month year=> leapYear, nonleapYEar=>validDayMonthYear InvalidDayMonthYear
+			//Boundary Value analysis: set day month year as negative or zero, set month above 12, set day above valid day
+			Date* newDate = new Date(31,12,2014);
+			Date* otherDate = new Date(1,1,2014);
+			Assert::AreEqual(2014, newDate->getYear());
+			Assert::AreEqual(12, newDate->getMonth());
+			Assert::AreEqual(31, newDate->getDay());
+			Assert::AreEqual(static_cast<int>(LATER),static_cast<int>(newDate->isLater(otherDate)));
+			try {
+				newDate->setDate(0,0,0);
+			} catch(InvalidDateTimeFormatException& e) {
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try {
+				newDate->setDate(31,2,2014);
+			} catch(InvalidDateTimeFormatException& e) {
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try {
+				newDate->setDate(31,13,2014);
+			} catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			try {
+				newDate->setDate(29,2,2014);
+			} catch(InvalidDateTimeFormatException& e){
+				Assert::AreEqual(INVALID_USER_INPUT_DATE_TIME,e.what());
+			}
+			Assert::AreEqual(true, Date::isLeapYear(2016));
+			newDate->setDate(29,2,2016);
+
+			delete newDate;
+			delete otherDate;
+		}
+
+	// End of segment: D:\TiMEWiSE\TimeWiseUnitTest\unittest1.cpp
+
+
+
+
+

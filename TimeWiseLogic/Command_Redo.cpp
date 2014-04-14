@@ -1,5 +1,6 @@
 #include "Command_Redo.h"
 
+//@author A0097277M
 Command_Redo::Command_Redo(void){
 	_type = REDO;
 }

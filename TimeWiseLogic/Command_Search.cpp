@@ -1,9 +1,6 @@
 #include "Command_Search.h"
-//**************************************************************
-// This class is responsible for finding tasks which contain the
-// keyword specified by the users
-//**************************************************************
 
+//@author A0097277M
 Command_Search::Command_Search(void){
 	_type = SEARCH;
 	_keyword = DEFAULT_EMPTY;

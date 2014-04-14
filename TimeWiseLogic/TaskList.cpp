@@ -1,9 +1,8 @@
 #include "TaskList.h"
 
-// @author A0097277M
+//@author A0097277M
 TaskList::TaskList(void){
 }
-
 
 TaskList::~TaskList(void){
 	_uncompletedTaskList.clear();

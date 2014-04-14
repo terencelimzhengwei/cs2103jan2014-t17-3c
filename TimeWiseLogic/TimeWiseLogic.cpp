@@ -1,7 +1,6 @@
-
 #include "TimeWiseLogic.h"
 
-
+//@author A0097277M
 TimeWiseLogic::TimeWiseLogic(void){
 	_manager = new CommandManager(_taskList);
 	_logger = Logger::getLogger();

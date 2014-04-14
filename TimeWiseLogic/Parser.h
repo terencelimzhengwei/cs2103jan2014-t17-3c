@@ -19,58 +19,48 @@ public:
 	Parser();
 	~Parser();
 
-	static CMD_TYPE determineCommandType(std::string);
-	
-	// Parser functions
+	static CMD_TYPE determineCommandType(string);
+	static TASK_STATUS getTaskStatus(string);
+	static bool isCategory(string);
+	static bool isPreposition(string);
+	static string removePunctuation(string);
+
+	// Date and time related functions
+	static Date* Parser::createDate(string);
+	static ClockTime* createTime(string);
 	static void extractDateTime(string, string&, vector<Date>&, vector<ClockTime>&);
-
-	static bool isCategory(std::string&);
-	static bool isPreposition(std::string);
-	static TASK_STATUS getTaskStatus(std::string);
-
-	static ClockTime* createTime(string time);
-	static ClockTime* createTime(int time);
-
-	static Date* createDate(std::string date);
-
 	static bool isDate(string);
 	static bool isDate(string, Date&);
 	static bool isTime(string);
 	static bool isTime(string, ClockTime&);
-
-	static string regexDateTime(string);
+	static bool isValidConvertedDate(string&);
 	static bool isValidConvertedDate(string&, Date&);
+	static bool isValidConvertedTime(string&);
 	static bool isValidConvertedTime(string&, ClockTime&);
-
-	// String functions
-	static vector<string> explode(char delimiter, string input);
-	static bool isAllNumbers(std::string);
-	static bool stringExists(string, string);
-
+	static string markupDateTime(string);
+	
+	// String processing functions
+	static vector<string> explode(char, string);
+	static bool isAllDigit(string);
+	static string strConcat(vector<string>);
+	static string strConcat(vector<string>, unsigned int, unsigned int);
 	static string strIReplace(string, string, string);
-
+	static string strToLower(string);
 	static string strReplace(string, string, string);
 	static vector<string> strReplace(string, string, vector<string>);
-	static string strReplace(vector<string>, string, string);
-	static string strReplace(vector<string>, vector<string>, string);
-
 	static int strSearch(string, string);
 	static int strSearch(string, string, int);
-
 	static string strTruncate(string);
-
-	static string strToLower(string str);
 	static string strVal(int);
 	static vector<string> strVal(vector<int>);
-	static int toNum(string);
+	static int toInt(string);
 	static string trim(string);
 
-	// String shortcut functions
 	static string getFirstWord(string);
 	static string removeFirstWord(string);
 	static string getLastWord(string);
 	static string removeLastWord(string);
-	static vector<string> splitBySpace(string input);
+	static vector<string> splitBySpace(string);
 };
 
 #endif

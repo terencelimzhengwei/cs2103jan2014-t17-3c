@@ -13,7 +13,8 @@
 static const int CMD_TYPE_COUNT		    = 13;
 static const int LOG_TYPE_COUNT			= 5;
 static const int TASK_STATUS_COUNT		= 3;
-static const int MAX_PREPOSITION        = 12;
+static const int PREPOSITION_NUM        = 12;
+static const int PUNCTUATION_NUM        = 2;
 static const int HEADER_COUNT			= 8;
 static const int TIME_COUNT             = 2;
 static const int FILTER_COUNT           = 4;
@@ -57,7 +58,8 @@ static const std::string DISPLAY_TYPE_STRING[DISPLAY_TYPE_COUNT] = {"main", "", 
 static const std::string TASK_STATUS_STRING[TASK_STATUS_COUNT]	 = {"undone","overdue","done"};
 static const std::string HEADER_STRING[HEADER_COUNT]             = {"description", "startDate", "startTime","dueDate", "dueTime", "category"};
 static const std::string TIME_INDICATOR[TIME_COUNT]              = {"pm", "am"};
-static const std::string PREPOSITION[MAX_PREPOSITION]            = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in", "due"};
+static const std::string PREPOSITION[PREPOSITION_NUM]            = {"at", "from", "to", "until", "on", "between", "by", "till", "before", "next", "in", "due"};
+static const std::string PUNCTUATION[PUNCTUATION_NUM]            = {",", "."};
 
 const char TASK_SPECIFIER  = '#';
 const char DATE_SEPARATOR  = '-';
@@ -68,6 +70,9 @@ const CMD_TYPE DEFAULT_COMMAND_TYPE   = UNDEFINED;
 const int DEFAULT_INDEX               = -1;
 const TASK_STATUS DEFAULT_TASK_STATUS = UNCOMPLETED;
 
+const int MAX_DATE_NUM_IN_CMD = 2;
+const int MAX_TIME_NUM_IN_CMD = 2;
+
 const std::string DEFAULT_EMPTY      = "";
 const std::string SPACE_PARAMETER    = " ";
 const std::string SLASH_PARAMETER    = "/";
@@ -75,6 +80,17 @@ const std::string CATEGORY_SPECIFIER = "#";
 const std::string NEW_LINE           = "\n";
 const std::string TODAY_DISPLAY      = "Today";
 const std::string TMR_DISPLAY        = "Tmrw";
+
+const std::string MARKUP_START       = "<";
+const std::string MARKUP_END         = ">";
+const std::string MARKUP_ATTRB       = "=";
+const std::string MARKUP_MONTH       = "month";
+const std::string MARKUP_DATE        = "date";
+const std::string MARKUP_DATE_DELIM  = "/";
+const std::string MARKUP_TIME_24HR   = "time";
+const std::string MARKUP_TIME_AM     = "timeAM";
+const std::string MARKUP_TIME_PM     = "timePM";
+const std::string MARKUP_TIME_DELIM  = ":";
 
 // These strings store exception messages to be displayed by TiMEWiSE! in the CLI in case of user input errors.
 static const char* INVALID_USER_INPUT_DATE_TIME             = "Error! The date or time that you entered has an invalid format.";
@@ -139,7 +155,6 @@ const std::string STATUS_FIELD                              = "Status: ";
 const std::string SEPARATOR                                 = "==========";
 
 //These are the constants used for dates
-const int PRECEDING_YEAR_OFFEST = -33;
 const int MONTH_WORD_NUM = 24;
 const std::string MONTH_WORD[] = {     
 	"January",
@@ -200,6 +215,7 @@ const std::string DAY_WORD[] = {
 	"ytd",
 	"today",
 	"tomorrow",
+	"tmrw",
 	"tmr"
 };
 const int DAY_WORD_OFFSET[] = {
@@ -207,7 +223,8 @@ const int DAY_WORD_OFFSET[] = {
 	-1,	// ytd
 	 0,	// today
 	 1,	// tomorrow
-	 1	// tmr
+	 1,	// tmr
+	 1	// tmrw
 };
 
 const int WDAY_WORD_NUM = 24;

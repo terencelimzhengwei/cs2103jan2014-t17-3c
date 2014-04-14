@@ -1,7 +1,5 @@
 #include "ClockTime.h"
 //@author A0121023H
-#define hour(time) time / TIME_DIVISOR
-#define minute(time) time % TIME_DIVISOR
 
 ClockTime::ClockTime() {
 }
@@ -33,13 +31,11 @@ bool ClockTime::checkOverdueTime() {
 
 	localtime_s( &today, &currentTime); // update tm struct to be local date and time
 
-	if( hr < today.tm_hour ){
+	if( hr < today.tm_hour ) {
 		hasElapsed = true;
-	}
-	else if ( hr == today.tm_hour && min <= today.tm_min) {
+	} else if ( hr == today.tm_hour && min <= today.tm_min) {
 		hasElapsed = true; 
-	}
-	else{
+	} else{
 		hasElapsed = false;
 	}
 	return hasElapsed;
@@ -53,23 +49,19 @@ std::string ClockTime::toString() {
 	timeInString = stream.str();
 
 	switch(timeInString.size()) {
-	case 1:{
+	case 1:
 		if(timeInString[ZERO]=='0') {
 			return "0000";
-		}else{
+		} else {
 			return "000"+timeInString;
 		}
 		break;
-	}
-	case 2:{
+	case 2:
 		return "00" + timeInString;
-	}
-	case 3:{
+	case 3:
 		return "0" + timeInString;
-	}
-	default:{
+	default:
 		return timeInString;
-	}
 	}
 }
 
@@ -89,6 +81,7 @@ int ClockTime::getTime() {
 }
 
 // Operators
+
 bool ClockTime::operator==(ClockTime b) {
 	return this->_time == b._time;
 }

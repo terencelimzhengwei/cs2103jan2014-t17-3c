@@ -1,6 +1,6 @@
 #ifndef COMMAND_CLEAR_H
 #define COMMAND_CLEAR_H
-
+// @author A0097277M
 #pragma once
 #include "Command.h"
 //********************************************************************************
@@ -13,7 +13,6 @@
 // 4. all tasks that contain the same search key word.
 // 5. all tasks that are in the same filtered list
 //********************************************************************************
-// @author A0097277M
 class Command_Clear:public Command{
 public:
 	Command_Clear(void);
@@ -54,7 +53,6 @@ private:
 	//Attributes
 	DISPLAY_TYPE _displayScreen;
 	CLEAR_TYPE _clearType;
-
 	//Vector to store pointers of deletedTasks so that command can be undone
 	std::vector<Task*> _deletedUndoneTasks;
 	std::vector<Task*> _deletedDoneTasks;

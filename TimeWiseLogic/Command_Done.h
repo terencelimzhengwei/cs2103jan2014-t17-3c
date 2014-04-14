@@ -1,6 +1,6 @@
 #ifndef COMMAND_DONE_H
 #define COMMAND_DONE_H
-
+// @author A0097277M
 #pragma once
 #include "command.h"
 //********************************************************************************
@@ -8,7 +8,6 @@
 // an individual task from UNDONE to DONE.
 // The individual task is specified by its index.
 //********************************************************************************
-// @author A0097277M
 class Command_Done : public Command{
 public:
 	Command_Done(void);
@@ -22,11 +21,6 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
-	std::vector<Task*> _doneTasks;
-	std::vector<unsigned int> _doneTaskIndex;
-	DISPLAY_TYPE* _currentScreen;
-	DISPLAY_TYPE  _previousScreen;
-	std::string   _lastCmdCalled;
 
 	void saveTasks(TaskList& taskList);
 	void setTasksAsDone(TaskList& tasklist);
@@ -42,5 +36,12 @@ private:
 
 	//Sets Index of Done Task to bold
 	void setIndexToBoldInGUI(TaskList& tasklist);
+
+	//Attributes
+	std::vector<Task*> _doneTasks;
+	std::vector<unsigned int> _doneTaskIndex;
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE  _previousScreen;
+	std::string   _lastCmdCalled;
 };
 #endif

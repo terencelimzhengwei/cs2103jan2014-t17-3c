@@ -8,8 +8,8 @@
 #include "Exceptions.h"
 #include "Constants.h"
 
-class ClockTime
-{
+//@author A0121023H
+class ClockTime{
 public:
 	ClockTime();
 	ClockTime(int time);

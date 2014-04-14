@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
-
+// @author A0097277M - reused
 #include <fstream>
 #include <string>
 #include <ctime>
@@ -9,7 +9,6 @@
 #include "Constants.h"
 
 //a singleton for the whole program
-// @author A0097277M - reused
 class Logger {
 public:
 	void setMinLevelToLog		(LOG_TYPE);

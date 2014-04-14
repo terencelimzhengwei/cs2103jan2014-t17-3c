@@ -1,7 +1,7 @@
-//@Gian Jian Xiang A0097330H
 #ifndef CONSTANTS_UI_H
 #define CONSTANTS_UI_H
 
+//@author A0097330H
 #include <string>
 
 namespace {
@@ -113,5 +113,4 @@ namespace {
 	const int MAX_LETTERS        = 256;
 	char buffer[MAX_LETTERS];
 }
-
 #endif

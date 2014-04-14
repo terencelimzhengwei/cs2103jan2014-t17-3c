@@ -1,6 +1,7 @@
-#pragma once
 #ifndef PARSER_H
 #define PARSER_H
+//@author A0121023H
+#pragma once
 
 #include <string>
 #include <stack>
@@ -13,7 +14,6 @@
 #include "Date.h"
 #include "Calendar.h"
 using namespace std;
-
 class Parser {
 public:
 	Parser();

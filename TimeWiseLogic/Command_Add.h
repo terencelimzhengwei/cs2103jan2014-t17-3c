@@ -1,6 +1,6 @@
 #ifndef COMMAND_ADD_H
 #define COMMAND_ADD_H
-
+// @author A0097277M
 #pragma once
 #include "Command.h"
 
@@ -10,7 +10,6 @@
 // adding it to the tasklist. By default task will be set as
 // floating task with no date and time parameters.
 //************************************************************
-// @author A0097277M
 class Command_Add: public Command {
 public:
 	Command_Add();
@@ -32,28 +31,6 @@ public:
 	virtual bool undo(TaskList&, std::string&);
 
 private:
-	//These are the attributes for Command_Add
-	//These 2 strings hold the task description and category of the task to be added
-	std::string _taskDescription;
-	std::string _category;
-	//These 4 variables hold the time and date values for the task. If no date or time, these values will be null
-	Date* _startDate;
-	Date* _endDate;
-	ClockTime* _startTime;
-	ClockTime* _endTime;
-	//This variable pointer points to the task to be added
-	Task* _addedTask;
-	//currentScreen holds the pointer to the actual screen the UI is displaying
-	//previous screen holds the screen that user was on before adding task
-	//These 2 variables are mainly used in undo and redo to ensure correct changing of screens
-	DISPLAY_TYPE* _currentScreen;
-	DISPLAY_TYPE _previousScreen;
-	
-	//lastCmdCalled is used to track whether undo or redo was called to execute the correct commands;
-	std::string _lastCmdCalled;
-
-
-//---Helper Functions-----------------------------------------------------------------
 	//For Initialization
 	void initDefaultValues();
 	//For Destruction
@@ -83,5 +60,24 @@ private:
 	void switchScreenTo(DISPLAY_TYPE screen);
 	void lastCmdCalledIs(std::string cmd);
 	void setIndexToBoldInGUI(TaskList& tasklist);
+
+	//Attributes
+	std::string _taskDescription;
+	std::string _category;
+
+	Date* _startDate;
+	Date* _endDate;
+	ClockTime* _startTime;
+	ClockTime* _endTime;
+	Task* _addedTask;
+
+	//currentScreen holds the pointer to the actual screen the UI is displaying
+	//previous screen holds the screen that user was on before adding task
+	//These 2 variables are mainly used in undo and redo to ensure correct changing of screens
+	DISPLAY_TYPE* _currentScreen;
+	DISPLAY_TYPE _previousScreen;
+
+	//lastCmdCalled is used to track whether undo or redo was called to execute the correct commands;
+	std::string _lastCmdCalled;
 };
 #endif

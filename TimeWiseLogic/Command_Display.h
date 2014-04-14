@@ -1,6 +1,6 @@
 #ifndef COMMAND_DISPLAY_H
 #define COMMAND_DISPLAY_H
-
+// @author A0097277M
 #pragma once
 
 #include "command.h"
@@ -12,7 +12,6 @@
 // 3. COMPLETE SCREEN: displays all completed tasks.
 // 4. FILTERED SCREEN: displays all filtered tasks.
 //************************************************************
-// @author A0097277M
 class Command_Display :public Command{
 public:
 	Command_Display(void);

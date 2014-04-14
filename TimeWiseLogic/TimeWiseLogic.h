@@ -1,6 +1,6 @@
 #ifndef TIMEWISELOGIC_H
 #define TIMEWISELOGIC_H
-
+// @author A0097277M
 #pragma once
 
 #include "CommandCreator.h"
@@ -16,7 +16,6 @@
 // It also returns a tasklist for the GUI to populate the display screen depending on the
 // screen to display.
 //********************************************************************************
-// @author A0097277M
 class TimeWiseLogic
 {
 public:

@@ -1,6 +1,6 @@
 #ifndef COMMAND_DELETE_H
 #define COMMAND_DELETE_H
-
+// @author A0097277M
 #pragma once
 
 #include "Command.h"
@@ -10,7 +10,6 @@
 // This class is responsible for deleting an individual task
 // specified by its index
 //************************************************************
-// @author A0097277M
 class Command_Delete : public Command{
 public:
 	Command_Delete(void);
@@ -50,6 +49,8 @@ private:
 	void deleteCompletedTasks(TaskList& taskList);
 	void deleteSearchedTasks(TaskList& taskList);
 	void deleteFilterTasks(TaskList& taskList);
+
+	//Attributes
 	std::string _deletionString;
 	std::string _lastCmdCalled;
 	DISPLAY_TYPE _displayType;

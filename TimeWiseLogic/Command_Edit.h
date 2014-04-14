@@ -1,6 +1,6 @@
 #ifndef COMMAND_EDIT_H
 #define COMMAND_EDIT_H
-
+// @author A0097277M
 #pragma once
 #include "command.h"
 //********************************************************************************
@@ -9,7 +9,6 @@
 // working with. Regardless of the display screen, it is always possible to edit a
 // task.
 //********************************************************************************
-// @author A0097277M
 class Command_Edit :public Command
 {
 public:
@@ -31,25 +30,6 @@ public:
 	bool undo(TaskList&, std::string&);
 
 private:
-	int _editIndex;
-	std::string _editedDescription;
-	std::string _editedCategory;
-	Date* _editedEndDate;
-	Date* _editedStartDate;
-	ClockTime* _editedEndTime;
-	ClockTime* _editedStartTime;
-
-	std::string _originalDescription;
-	std::string _originalCategory;
-	Date* _originalEndDate;
-	Date* _originalStartDate;
-	ClockTime* _originalEndTime;
-	ClockTime* _originalStartTime;
-
-	Task* _editedTask;
-
-	DISPLAY_TYPE _displayScreen;
-
 	//For initialization
 	void initialiseParameters();
 
@@ -77,5 +57,25 @@ private:
 	//Helper Functions
 	void setIndexToBoldInGUI(TaskList& tasklist);
 	void createFeedback(std::string taskFeedback,std::string& feedback);
+
+	//Attributes
+	int _editIndex;
+	std::string _editedDescription;
+	std::string _editedCategory;
+	Date* _editedEndDate;
+	Date* _editedStartDate;
+	ClockTime* _editedEndTime;
+	ClockTime* _editedStartTime;
+
+	std::string _originalDescription;
+	std::string _originalCategory;
+	Date* _originalEndDate;
+	Date* _originalStartDate;
+	ClockTime* _originalEndTime;
+	ClockTime* _originalStartTime;
+
+	Task* _editedTask;
+
+	DISPLAY_TYPE _displayScreen;
 };
 #endif

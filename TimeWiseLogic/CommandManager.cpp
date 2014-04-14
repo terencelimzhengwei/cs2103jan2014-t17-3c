@@ -1,5 +1,5 @@
 #include "CommandManager.h"
-
+//@author A0097277M
 CommandManager::~CommandManager(void){
 	Clear();
 }
@@ -21,7 +21,7 @@ void CommandManager::setUndoLevel(int newValue){
 }
 
 bool CommandManager::IsDirty() const{
-	return (m_nCleanCount != ZERO);
+	return (UndoRedoCount != ZERO);
 }
 
 Command* CommandManager::getLastUndoCommand() const{
@@ -56,7 +56,7 @@ void CommandManager::DoCommand(Command* pCommand, std::string& feedback){
 
 void CommandManager::Undo(std::string& feedback){
 	if (CanUndo()){
-		m_nCleanCount--;
+		UndoRedoCount--;
 		Command* pCommand = getLastUndoCommand();
 		undoList.pop_back();
 		if (pCommand->undo(_taskList, feedback)){
@@ -71,7 +71,7 @@ void CommandManager::Undo(std::string& feedback){
 void CommandManager::Redo(){
 	std::string feedback;
 	if (CanRedo()){
-		m_nCleanCount++;
+		UndoRedoCount++;
 		Command* pCommand = getLastRedoCommand();
 		redoList.pop_back();
 		if (pCommand->execute(_taskList,feedback)){
@@ -89,7 +89,7 @@ void CommandManager::Clear(){
 }
 
 void CommandManager::SetClean(){
-	m_nCleanCount = ZERO;
+	UndoRedoCount = ZERO;
 }
 
 void CommandManager::AddUndo(Command* pCommand){
@@ -98,10 +98,10 @@ void CommandManager::AddUndo(Command* pCommand){
 		undoList.pop_front();
 	}
 	undoList.push_back(pCommand);
-	if (m_nCleanCount < 0 && redoList.size() > ZERO){
-		m_nCleanCount = undoList.size() + redoList.size() + INCREMENT_VALUE;
+	if (UndoRedoCount < 0 && redoList.size() > ZERO){
+		UndoRedoCount = undoList.size() + redoList.size() + INCREMENT_VALUE;
 	} else {
-		m_nCleanCount++;
+		UndoRedoCount++;
 	}
 }
 

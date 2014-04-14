@@ -1,6 +1,6 @@
+//@author A0097330H
 #include "timewiseclock.h"
 
-//@author A0097330H
 TimeWiseClock::TimeWiseClock() {
 	_date = QDate::currentDate();
 	_time = QTime::currentTime();

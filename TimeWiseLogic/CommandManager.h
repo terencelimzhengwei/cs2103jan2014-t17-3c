@@ -1,6 +1,7 @@
+//@author A0097277M
 #ifndef COMMAND_MANAGER_H
 #define COMMAND_MANAGER_H
-//@author A0097277M
+
 #pragma once
 
 #include <list>

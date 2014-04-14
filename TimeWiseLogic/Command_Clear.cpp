@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Clear.h"
 
-//@author A0097277M
 Command_Clear::Command_Clear(void){
 	_type = CLEAR;
 	_displayScreen = MAIN;

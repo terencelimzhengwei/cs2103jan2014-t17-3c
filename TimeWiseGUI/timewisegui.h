@@ -1,18 +1,22 @@
+//@author A0097330H
 #ifndef TIMEWISEGUI_H
 #define TIMEWISEGUI_H
 
-//@author A0097330H
 #include <iostream>
 #include <QCompleter>
 #include <QDateTime>
+#include <QHeaderView>
 #include <QFont>
 #include <QFontDatabase>
 #include <QKeyEvent>
 #include <QLineEdit>
+#include <QShortcut>
 #include <QStandardItemModel>
 #include <QString>
 #include <QTimer>
 #include <QtWidgets/QMainWindow>
+#include <stdio.h>
+#include <stdexcept>
 #include <string>
 #include "ui_timewisegui.h"
 #include "Constants_ui.h"
@@ -55,6 +59,7 @@ public:
 
 	//other functions
 	void autoComplete();
+	int checkEmpty(QString input);
 	void showHelp();
 
 private slots:

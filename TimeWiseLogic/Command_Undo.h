@@ -1,13 +1,14 @@
+//@author A0097277M
 #ifndef COMMAND_UNDO_H
 #define COMMAND_UNDO_H
-// @author A0097277M
-#pragma once
 
+#pragma once
+#include "command.h"
 //********************************************************************************
 // This class calls for Undo in Command Manger to execute undo in previously
 // executed command
 //********************************************************************************
-#include "command.h"
+
 class Command_Undo :
 	public Command
 {

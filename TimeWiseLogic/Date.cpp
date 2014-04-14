@@ -1,8 +1,7 @@
-#include "Date.h"
 //@author A0121023H
+#include "Date.h"
 
-// Constructors
-
+// Constructor
 Date::Date() {
 	this->setDateAsToday();
 }

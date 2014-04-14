@@ -1,6 +1,7 @@
+//@author A0097277M
 #ifndef COMMAND_H
 #define COMMAND_H
-// @author A0097277M
+
 #pragma once
 
 #include <assert.h>
@@ -16,8 +17,7 @@
 // Command Base Class
 //
 //***************************************************************************
-class Command
-{
+class Command{
 public:
 	//Constructor & Destructor
 	Command(void);

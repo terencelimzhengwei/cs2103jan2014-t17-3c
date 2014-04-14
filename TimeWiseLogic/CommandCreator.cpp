@@ -1,5 +1,5 @@
-#include "CommandCreator.h"
 //@author A0121023H
+#include "CommandCreator.h"
 
 CommandCreator::CommandCreator(void) {
 }

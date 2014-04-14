@@ -1,6 +1,6 @@
+//@author A0097277M
 #include "Command_Done.h"
 
-//@author A0097277M
 Command_Done::Command_Done(void){
 	_type = DONE;
 	_currentScreen=NULL;

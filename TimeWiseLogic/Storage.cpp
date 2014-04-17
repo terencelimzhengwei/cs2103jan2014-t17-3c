@@ -184,6 +184,7 @@ void Storage::retrieveDoneTasks(TaskList& listOfTasks) {
 					break;
 				}
 				default: {
+					taskHeader++;
 					_corrupted = true;
 					break;
 				}
@@ -308,6 +309,7 @@ void Storage::retrieveUndoneTasks(TaskList& listOfTasks) {
 					}
 				}
 				default:
+					taskHeader++;
 					_corrupted = true;
 					break;
 				}

@@ -152,6 +152,7 @@ void Parser::extractDateTime(string cmd, string& dateTimeRemoved, vector<Date>& 
 		if( dateCount<MAX_DATE_NUM_IN_CMD && isValidConvertedDate(dateTimeCandidate) ||
 			timeCount<MAX_TIME_NUM_IN_CMD && isValidConvertedTime(dateTimeCandidate) ) {
 
+			checkingResultArray = splitBySpace(checkingSentenceMarkup);
 			nonDateTimeWordNum = checkingResultArray.size() - 1;				// Once a date/time is marked-up, the remaining words are not date and time.
 
 			// Once a date or time is marked-up, we put the non-date/time part into "dateTimeRemoved".
